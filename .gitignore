@@ -22,3 +22,5 @@ yarn-error.log*
 
 # Log file
 *.log
+.eslintcache
+.eslintcache

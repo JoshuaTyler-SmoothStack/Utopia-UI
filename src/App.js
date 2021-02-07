@@ -18,8 +18,8 @@ class App extends Component {
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
 
     this.state = {
-      currentPage: "BootPage",
-      previousPage: "LandingPage",
+      currentPage: "BOOTPAGE",
+      previousPage: "LANDINGPAGE",
       isInitialSizeSet: false,
       sizing: {},
     };
@@ -29,17 +29,17 @@ class App extends Component {
     const { currentPage, sizing } = this.state;
     return (
       <main className="framedscreen">
-        {currentPage === "LandingPage" && (
+        {currentPage === "LANDINGPAGE" && (
           <LandingPage
             sizing={sizing}
-            onPageSelect={(e) => this.handlePageSelect(e)}
+            onSelectPage={(e) => this.handleSelectPage(e)}
           />
         )}
 
-        {currentPage === "BootPage" && (
+        {currentPage === "BOOTPAGE" && (
           <BootPage
             sizing={sizing}
-            onPageSelect={(e) => this.handlePageSelect(e)}
+            onSelectPage={(e) => this.handleSelectPage(e)}
           />
         )}
       </main>
@@ -53,7 +53,7 @@ class App extends Component {
     });
   }
 
-  handlePageSelect = (newPage) => {
+  handleSelectPage = (newPage) => {
     const { currentPage, previousPage } = this.state;
     if (newPage === "") {
       newPage = previousPage;

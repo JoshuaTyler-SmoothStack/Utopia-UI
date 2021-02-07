@@ -11,7 +11,7 @@ class StartupPage extends Component {
   constructor(props) {
     super(props);
     // @PROP: sizing - obj{}
-    // @PROP: onPageSelect - f()
+    // @PROP: onSelectPage - f()
 
     this.state = {
       animationXOffset: 0,
@@ -29,9 +29,9 @@ class StartupPage extends Component {
   handleLoadingProgressCheck() {
     // const { loadingProgress } = this.state;
     // if(loadingProgress === 100) {
-    //   this.props.onPageSelect("LandingPage");
+    //   this.props.onSelectPage("LANDINGPAGE");
     // }
-    this.props.onPageSelect("LandingPage");
+    this.props.onSelectPage("LANDINGPAGE");
   }
 
   render() {
@@ -98,14 +98,14 @@ class StartupPage extends Component {
 
         {/* Loading Text */}
         <div 
-          className="mt-1 mb-auto color-custom-cream text-shadow" 
+          className="mt-1 mb-auto color-custom-cream text-shadow-light" 
           style={{fontSize:sizing.h1+"px", textAlign:"center"}}
         >
           {loadingText}
         </div>
 
         {/* Copyright */}
-        <div className="mb-1 text-shadow d-flex flex-column justify-content-end align-items-center mb-1">
+        <div className="mb-1 d-flex flex-column justify-content-end align-items-center">
           <a href="https://github.com/JoshuaTyler-SmoothStack/Utopia-UI" 
             style={{fontSize: sizing.h2+"px"}}
           >

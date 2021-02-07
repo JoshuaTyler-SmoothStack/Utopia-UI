@@ -67,6 +67,9 @@ Text Styling
 .color-custom-lightgrey {
   color: var(--vLightGrey);
 }
+.color-custom-orange {
+  color: var(--vOrange);
+}
 .color-custom-red {
   color: var(--vRed);
 }
@@ -74,11 +77,38 @@ Text Styling
   color: var(--vYellow);
 }
 
+.svg-color-custom-blue {
+  fill: var(--vBlue);
+}
+.svg-color-custom-cream {
+  fill: var(--vCream);
+}
+.svg-color-custom-grey {
+  fill: var(--vGrey);
+}
+.svg-color-custom-green {
+  fill: var(--vGreen);
+}
+.svg-color-custom-lightgrey {
+  fill: var(--vLightGrey);
+}
+.svg-color-custom-red {
+  fill: var(--vRed);
+}
+.svg-color-custom-yellow {
+  fill: var(--vYellow);
+}
+
 .text-align-center {
   text-align: center;
 }
+
 .text-shadow {
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.text-shadow-light {
+  text-shadow: 0 0 1px var(--vCream);
 }
 
 .text-shadow-custom {
@@ -138,8 +168,17 @@ Backgrounds
 .bg-custom-green {
   background-color: var(--vGreen);
 }
+.bg-custom-orange {
+  background-color: var(--vOrange);
+}
 .bg-custom-red {
   background-color: var(--vRed);
+}
+.bg-custom-teal {
+  background-color: var(--vTeal);
+}
+.bg-custom-turqouise {
+  background-color: var(--vTurqouise);
 }
 .bg-custom-yellow {
   background-color: var(--vYellow);
@@ -149,7 +188,6 @@ Backgrounds
   filter: blur(8px);
   -webkit-filter: blur(8px);
 }
-
 .bg-noblur {
   filter: blur(0px);
   -webkit-filter: blur(0px);
@@ -210,7 +248,6 @@ Buttons
 }
 
 .btn-custom:hover {
-  background-color: rgba(46, 42, 43, 0.1);
   box-shadow: 0 2px 6px var(--vBoxShadow);
   opacity: 100%;
 }
