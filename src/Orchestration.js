@@ -2,14 +2,24 @@ class Orchestration {
   
   static contentType = "json";
 
-  static createRequest(requestPath, onError, onSuccess) {
+  static createRequest(requestPath, requestType, onError, onSuccess) {
+    
+    // Set requestType to Orchestration.contentType if not specified
+    requestType = requestType || Orchestration.contentType;
+    
+    // Process the request
     fetch("http://localhost:8080/" + requestPath, {
       headers: {
         "Accept": "application/" + Orchestration.contentType,
         "Content-Type": "application/" + Orchestration.contentType,
       },
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if(Orchestration.contentType === "json") {
+        return response.clone().json().catch(() => response.text());
+      }
+      return response.text();
+    })
     .then((data) => {
       onSuccess(data);
     })
@@ -20,7 +30,7 @@ class Orchestration {
   }
 
   static validate(onError, onSuccess) {
-    Orchestration.createRequest("actuator/health", onError2 => {
+    Orchestration.createRequest("actuator/health", "json", onError2 => {
       console.error("[ERROR] could not validate Orchestrator Service!");
       onError(onError2);
     }, onSuccess2 => {
@@ -30,11 +40,12 @@ class Orchestration {
   }
 
   static findActiveServices(onError, onSuccess) {
-    Orchestration.createRequest("services", onError2 => {
+    Orchestration.createRequest("services", "text", onError2 => {
       onError(onError2);
     }, onSuccess2 => {
-      console.log("[INCOMING FROM SPRING] services:\n" + onSuccess2);
-      onSuccess(onSuccess2);
+      const data = onSuccess2;
+      console.log("[INCOMING FROM SPRING] services:\n" + data);
+      onSuccess(data);
     });
   }
 
@@ -44,7 +55,7 @@ class Orchestration {
 
   // Airports
   static findAllAirports(onError, onSuccess) {
-    Orchestration.createRequest("airports", onError2 => {
+    Orchestration.createRequest("airports", null, onError2 => {
       onError(onError2);
     }, onSuccess2 => {
       onSuccess(onSuccess2);
@@ -52,7 +63,7 @@ class Orchestration {
   }
 
   static findAirportByIataId(iataId, onError, onSuccess) {
-    Orchestration.createRequest("airports/" + iataId, onError2 => {
+    Orchestration.createRequest("airports/" + iataId, null, onError2 => {
       onError(onError2);
     }, onSuccess2 => {
       onSuccess(onSuccess2);
@@ -61,7 +72,7 @@ class Orchestration {
 
   // Routes
   static findAllRoutes(onError, onSuccess) {
-    Orchestration.createRequest("routes", onError2 => {
+    Orchestration.createRequest("routes", null, onError2 => {
       onError(onError2);
     }, onSuccess2 => {
       onSuccess(onSuccess2);
@@ -70,7 +81,7 @@ class Orchestration {
 
   // Users
   static findAllUsers(onError, onSuccess) {
-    Orchestration.createRequest("users", onError2 => {
+    Orchestration.createRequest("users", null, onError2 => {
       onError(onError2);
     }, onSuccess2 => {
       onSuccess(onSuccess2);

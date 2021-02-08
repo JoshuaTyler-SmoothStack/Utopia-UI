@@ -280,7 +280,9 @@ class MapPage extends Component {
       this.handleRouteDashboardUpdate(null);
       this.handleUserDashboardUpdate(null); 
     }, onSuccess => {
-      const services = onSuccess.map((i) => i.toUpperCase());
+      const services = onSuccess.toUpperCase()
+      .replace("[", "").replace("]", "").split(", ");
+      
       for(var item in services) {
         if(services[item].includes("AIRPORT")) {
           this.handleAirportDashboardUpdate("http://" + services[item]);
