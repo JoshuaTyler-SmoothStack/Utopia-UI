@@ -1,48 +1,62 @@
 // Libraries
 import _ from "lodash";
 import React, { Component } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+} from "react-router-dom";
+import constants from "./constants.json"
+import navigationReducer, {defaultNavigationState} from "./reducers/NavigationReducer";
+import orchestrationReducer, {defaultOrchestrationState} from "./reducers/OrchestrationReducer";
+import orchestrationDashboardReducer, {defaultOrchestrationDashboardState} from "./reducers/OrchestrationDashboardReducer";
 
 // Components
 import BootPage from "./pages/BootPage_v0.0.1";
 import LandingPage from "./pages/LandingPage_v0.0.1";
+import OrchestrationVisual from "./pages/OrchestrationPage_v0.0.1";
 
 // Styles
 import sizes from "./styles_v0.0.1/Sizing.json";
 import "./styles_v0.0.1/KitStyles.css";
-import "bootstrap/dist/css/bootstrap.css";
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
-
     this.state = {
-      currentPage: "BOOTPAGE",
-      previousPage: "LANDINGPAGE",
-      isInitialSizeSet: false,
-      sizing: {},
+      sizing: sizes.xx_small,
     };
   }
 
   render() {
-    const { currentPage, sizing } = this.state;
     return (
-      <main className="framedscreen">
-        {currentPage === "LANDINGPAGE" && (
-          <LandingPage
-            sizing={sizing}
-            onSelectPage={(e) => this.handleSelectPage(e)}
-          />
-        )}
-
-        {currentPage === "BOOTPAGE" && (
-          <BootPage
-            sizing={sizing}
-            onSelectPage={(e) => this.handleSelectPage(e)}
-          />
-        )}
-      </main>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <BootPage
+              constants={constants}
+              reduce={this.handleStateUpdate}
+              state={this.state}
+            />
+          </Route>
+          <Route path="/home">
+            <OrchestrationVisual
+              constants={constants}
+              reduce={this.handleStateUpdate}
+              state={this.state}
+            />
+          </Route>
+          <Route path="/orchestration">
+            <OrchestrationVisual
+              constants={constants}
+              reduce={this.handleStateUpdate}
+              state={this.state}
+            />
+          </Route>
+        </Switch>
+      </Router>
     );
   }
 
@@ -51,19 +65,12 @@ class App extends Component {
     window.addEventListener("resize", () => {
       this.handleResize();
     });
+    this.handleSynchronizeReducerStates();
   }
 
-  handleSelectPage = (newPage) => {
-    const { currentPage, previousPage } = this.state;
-    if (newPage === "") {
-      newPage = previousPage;
-    }
-
-    this.setState({
-      currentPage: newPage,
-      previousPage: currentPage !== previousPage ? currentPage : previousPage,
-    });
-  };
+  componentDidUpdate() {
+    console.log(this.state);
+  }
 
   handleResize = () => {
     let newSizing = sizes.xx_small;
@@ -121,5 +128,33 @@ class App extends Component {
       sizing: { ...newSizing, resizeKey: _.uniqueId("resize-") },
     });
   };
+
+  handleStateUpdate = (action) => {
+    switch(action.type.split("_")[0]) {
+      
+      // Navigation
+      case constants.navigation.root:
+        this.setState({navigation: navigationReducer(action)});
+      break;
+
+      // Orchestration
+      case constants.orchestration.root:
+        this.setState({orchestration: orchestrationReducer(action)});
+      break;
+
+      // Orchestration Dashboard
+      case constants.orchestrationDashboard.root:
+        this.setState({orchestrationDashboard: orchestrationDashboardReducer(action)});
+      break;
+    }
+  }
+
+  handleSynchronizeReducerStates = () => {
+    this.setState({
+      navigation: defaultNavigationState,
+      orchestration: defaultOrchestrationState,
+      orchestrationDashboard: defaultOrchestrationDashboardState
+    });
+  }
 }
 export default App;

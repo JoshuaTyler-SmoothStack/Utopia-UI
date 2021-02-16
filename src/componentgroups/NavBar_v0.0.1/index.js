@@ -1,5 +1,6 @@
 // Libraries
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // Components
 import PopContext from '../../components/PopContext_v0.0.1';
@@ -12,36 +13,40 @@ class NavBar extends Component {
     // @PROP: onSelectPage - Function()
 
     this.state = {
-      isActive_notYetImplemented: false,
+      isActivePopContext: false,
     };
   }
 
   render() {
     const { sizing } = this.props;
-    const { isActive_notYetImplemented } = this.state;
+    const { isActivePopContext } = this.state;
 
     const popContent = 
     <button
-      className={"btn-custom bg-custom-yellow color-custom-cream m-2 no-user"}
+      className={"btn bg-yellow color-cream no-user"}
       style={{
         height: sizing.button + "px",
         width: (sizing.button*3) + "px",
       }}
-      onClick={() => this.props.onSelectPage("BOOTPAGE")}
     >
-      {"View Boot Page"}
+      <Link to={"/"}>
+        {"View Boot Page"}
+      </Link>
     </button>;
     
     return (
       <div>
         {/* NavBar */}
         <div 
-          className="gradient-red d-flex flex-row justify-content-start align-items-center" 
-          style={{height: "100%", width:"100%"}}>
+          className="gradient-red flex-row-start" 
+          style={{
+            height: "100%", 
+            width:"100%",
+          }}>
             
             {/* Icon - Hamburger  */}
             <svg 
-              className="ml-2 icon-light svg-color-custom-cream" 
+              className="icon-light svg-color-cream" 
               height={sizing.button} 
               width={sizing.button} 
               viewBox="0 0 16 16"
@@ -52,7 +57,7 @@ class NavBar extends Component {
         </div>
 
         {/* Pop Context */}
-        {isActive_notYetImplemented && 
+        {isActivePopContext && 
           <PopContext
             buttonSize={sizing.buttonSmall}
             elementHeight={sizing.screenbarLarge}
@@ -68,8 +73,8 @@ class NavBar extends Component {
   }
 
   handlePopContextToggle = () => {
-    const { isActive_notYetImplemented } = this.state;
-    this.setState({isActive_notYetImplemented: !isActive_notYetImplemented});
+    const { isActivePopContext } = this.state;
+    this.setState({isActivePopContext: !isActivePopContext});
   }
 }
 export default NavBar;

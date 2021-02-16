@@ -1,0 +1,23 @@
+{
+  "navigation": {
+    "error": "NAVIGATION_ERROR",
+    "load": "NAVIGATION_LOAD",
+    "pages": {
+      "boot": "/",
+      "landing": "/home"
+    },
+    "redirect": "NAVIGATION_REDIRECT",
+    "root": "NAVIGATION"
+  },
+
+  "orchestration": {
+    "error": "ORCHESTRATION_ERROR",
+    "ready": "ORCHESTRATION_READY",
+    "root": "ORCHESTRATION",
+    "start": "ORCHESTRATION_START"
+  },
+
+  "orchestrationDashboard": {
+    "root": "ORCHESTRATIONDASHBOARD"
+  }
+}

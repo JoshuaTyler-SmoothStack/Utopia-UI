@@ -1,4 +1,4 @@
-.framedscreen {
+#root {
   position: absolute;
   overflow: auto;
   height: 100vh;
@@ -52,50 +52,50 @@ Text Styling
   font-family: 'Brush Script MT', cursive;
 }
 
-.color-custom-blue {
+.color-blue {
   color: var(--vBlue);
 }
-.color-custom-cream {
+.color-cream {
   color: var(--vCream);
 }
-.color-custom-grey {
+.color-grey {
   color: var(--vGrey);
 }
-.color-custom-green {
+.color-green {
   color: var(--vGreen);
 }
-.color-custom-lightgrey {
+.color-lightgrey {
   color: var(--vLightGrey);
 }
-.color-custom-orange {
+.color-orange {
   color: var(--vOrange);
 }
-.color-custom-red {
+.color-red {
   color: var(--vRed);
 }
-.color-custom-yellow {
+.color-yellow {
   color: var(--vYellow);
 }
 
-.svg-color-custom-blue {
+.svg-color-blue {
   fill: var(--vBlue);
 }
-.svg-color-custom-cream {
+.svg-color-cream {
   fill: var(--vCream);
 }
-.svg-color-custom-grey {
+.svg-color-grey {
   fill: var(--vGrey);
 }
-.svg-color-custom-green {
+.svg-color-green {
   fill: var(--vGreen);
 }
-.svg-color-custom-lightgrey {
+.svg-color-lightgrey {
   fill: var(--vLightGrey);
 }
-.svg-color-custom-red {
+.svg-color-red {
   fill: var(--vRed);
 }
-.svg-color-custom-yellow {
+.svg-color-yellow {
   fill: var(--vYellow);
 }
 
@@ -141,46 +141,46 @@ Text Styling
 /*====================
 Backgrounds
 ====================*/
-.bg-custom-white {
+.bg-white {
   background-color: white;
 }
-.bg-custom-smoke {
+.bg-smoke {
   background-color: whitesmoke;
 }
-.bg-custom-smoke-light {
+.bg-smoke-light {
   background-color: rgba(250, 250, 250, 0.5);
 }
-.bg-custom-lightgrey {
+.bg-lightgrey {
   background-color: var(--vLightGrey);
 }
-.bg-custom-grey {
+.bg-grey {
   background-color: var(--vGrey);
 }
-.bg-custom-black {
+.bg-black {
   background-color: black;
 }
-.bg-custom-blue {
+.bg-blue {
   background-color: var(--vBlue);
 }
-.bg-custom-cream {
+.bg-cream {
   background-color: var(--vCream);
 }
-.bg-custom-green {
+.bg-green {
   background-color: var(--vGreen);
 }
-.bg-custom-orange {
+.bg-orange {
   background-color: var(--vOrange);
 }
-.bg-custom-red {
+.bg-red {
   background-color: var(--vRed);
 }
-.bg-custom-teal {
+.bg-teal {
   background-color: var(--vTeal);
 }
-.bg-custom-turqouise {
+.bg-turqouise {
   background-color: var(--vTurqouise);
 }
-.bg-custom-yellow {
+.bg-yellow {
   background-color: var(--vYellow);
 }
 
@@ -240,27 +240,60 @@ Borders
 /*====================
 Buttons
 ====================*/
-.btn-custom {
+.btn {
   border: none;
   border-radius: 5px;
   outline: none;
   vertical-align: middle;
 }
 
-.btn-custom:hover {
+.btn:hover {
   box-shadow: 0 2px 6px var(--vBoxShadow);
   opacity: 100%;
 }
 
-.btn-custom:active {
+.btn:active {
   opacity: 100%;
   transition: 0ms;
   transform: translate(0px, 5px);
   -webkit-transform: translate(0px, 5px);
 }
 
-.btn-custom:focus {
+.btn:focus {
   outline: none;
+}
+
+/*====================
+Flex Box
+====================*/
+.flex-column, .flex-column-start, .flex-column-end,
+.flex-row, .flex-row-start, .flex-row-end {
+  display: flex;
+  align-items: center;
+}
+
+.flex-column, .flex-column-start, .flex-column-end {
+  flex-direction: column;
+}
+
+.flex-row, .flex-row-start, .flex-row-end {
+  flex-direction: row;
+}
+
+.flex-column, .flex-row {
+  justify-content: center;
+}
+
+.flex-column-start, .flex-row-start {
+  justify-content: start;
+}
+
+.flex-column-end, .flex-row-end {
+  justify-content: end;
+}
+
+.flex-column-around, .flex-row-around {
+  justify-content: space-around;
 }
 
 /*====================
