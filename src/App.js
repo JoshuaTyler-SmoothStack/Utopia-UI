@@ -42,7 +42,7 @@ class App extends Component {
             />
           </Route>
           <Route path="/home">
-            <OrchestrationVisual
+            <LandingPage
               constants={constants}
               reduce={this.handleStateUpdate}
               state={this.state}
