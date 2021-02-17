@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 // Components
-import InputText from '../InputText_v0.0.1';
+import InputText from "../../components/InputText_0.0.1";
 
 // Styles
 import "../../styles_v0.0.1/KitStyles.css";

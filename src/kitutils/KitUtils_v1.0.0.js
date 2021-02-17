@@ -65,7 +65,7 @@ class KitUtils {
         (async () => {
           try {
             await nextAsync[1]();
-          } catch(error) {console.log("[ERROR] Async function failed: " + error);}
+          } catch(error) {console.error("[ERROR] Async function failed: " + error);}
         })().then(() => {
           KitUtils.AsyncNext();
         });

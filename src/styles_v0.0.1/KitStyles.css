@@ -1,4 +1,4 @@
-.framedscreen {
+#root {
   position: absolute;
   overflow: auto;
   height: 100vh;
@@ -52,50 +52,50 @@ Text Styling
   font-family: 'Brush Script MT', cursive;
 }
 
-.color-custom-blue {
+.color-blue {
   color: var(--vBlue);
 }
-.color-custom-cream {
+.color-cream {
   color: var(--vCream);
 }
-.color-custom-grey {
+.color-grey {
   color: var(--vGrey);
 }
-.color-custom-green {
+.color-green {
   color: var(--vGreen);
 }
-.color-custom-lightgrey {
+.color-lightgrey {
   color: var(--vLightGrey);
 }
-.color-custom-orange {
+.color-orange {
   color: var(--vOrange);
 }
-.color-custom-red {
+.color-red {
   color: var(--vRed);
 }
-.color-custom-yellow {
+.color-yellow {
   color: var(--vYellow);
 }
 
-.svg-color-custom-blue {
+.svg-color-blue {
   fill: var(--vBlue);
 }
-.svg-color-custom-cream {
+.svg-color-cream {
   fill: var(--vCream);
 }
-.svg-color-custom-grey {
+.svg-color-grey {
   fill: var(--vGrey);
 }
-.svg-color-custom-green {
+.svg-color-green {
   fill: var(--vGreen);
 }
-.svg-color-custom-lightgrey {
+.svg-color-lightgrey {
   fill: var(--vLightGrey);
 }
-.svg-color-custom-red {
+.svg-color-red {
   fill: var(--vRed);
 }
-.svg-color-custom-yellow {
+.svg-color-yellow {
   fill: var(--vYellow);
 }
 
@@ -141,48 +141,44 @@ Text Styling
 /*====================
 Backgrounds
 ====================*/
-.bg-custom-white {
-  background-color: white;
-}
-.bg-custom-smoke {
-  background-color: whitesmoke;
-}
-.bg-custom-smoke-light {
-  background-color: rgba(250, 250, 250, 0.5);
-}
-.bg-custom-lightgrey {
-  background-color: var(--vLightGrey);
-}
-.bg-custom-grey {
-  background-color: var(--vGrey);
-}
-.bg-custom-black {
-  background-color: black;
-}
-.bg-custom-blue {
-  background-color: var(--vBlue);
-}
-.bg-custom-cream {
-  background-color: var(--vCream);
-}
-.bg-custom-green {
-  background-color: var(--vGreen);
-}
-.bg-custom-orange {
-  background-color: var(--vOrange);
-}
-.bg-custom-red {
-  background-color: var(--vRed);
-}
-.bg-custom-teal {
-  background-color: var(--vTeal);
-}
-.bg-custom-turqouise {
-  background-color: var(--vTurqouise);
-}
-.bg-custom-yellow {
-  background-color: var(--vYellow);
-}
+.bg-white {background-color: white;}
+.bg-white-hover:hover {background-color: white;}
+
+.bg-smoke {background-color: whitesmoke;}
+.bg-smoke-hover:hover {background-color: whitesmoke;}
+
+.bg-lightgrey {background-color: var(--vLightGrey);}
+.bg-lightgrey-hover:hover {background-color: var(--vLightGrey);}
+
+.bg-grey {background-color: var(--vGrey);}
+.bg-grey-hover:hover {background-color: var(--vGrey);}
+
+.bg-black {background-color: black;}
+.bg-black-hover:hover {background-color: black;}
+
+.bg-blue {background-color: var(--vBlue);}
+.bg-blue-hover:hover {background-color: var(--vBlue);}
+
+.bg-cream {background-color: var(--vCream);}
+.bg-cream-hover:hover {background-color: var(--vCream);}
+
+.bg-green {background-color: var(--vGreen);}
+.bg-green-hover:hover {background-color: var(--vGreen);}
+
+.bg-orange {background-color: var(--vOrange);}
+.bg-orange-hover:hover {background-color: var(--vOrange);}
+
+.bg-red {background-color: var(--vRed);}
+.bg-red-hover:hover {background-color: var(--vRed);}
+
+.bg-teal {background-color: var(--vTeal);}
+.bg-teal-hover:hover {background-color: var(--vTeal);}
+
+.bg-turqouise {background-color: var(--vTurqouise);}
+.bg-turqouise-hover:hover {background-color: var(--vTurqouise);}
+
+.bg-yellow {background-color: var(--vYellow);}
+.bg-yellow-hover:hover {background-color: var(--vYellow);}
 
 .bg-blur {
   filter: blur(8px);
@@ -240,27 +236,60 @@ Borders
 /*====================
 Buttons
 ====================*/
-.btn-custom {
+.btn {
   border: none;
   border-radius: 5px;
   outline: none;
   vertical-align: middle;
 }
 
-.btn-custom:hover {
+.btn:hover {
   box-shadow: 0 2px 6px var(--vBoxShadow);
   opacity: 100%;
 }
 
-.btn-custom:active {
+.btn:active {
   opacity: 100%;
   transition: 0ms;
   transform: translate(0px, 5px);
   -webkit-transform: translate(0px, 5px);
 }
 
-.btn-custom:focus {
+.btn:focus {
   outline: none;
+}
+
+/*====================
+Flex Box
+====================*/
+.flex-column, .flex-column-start, .flex-column-end,
+.flex-row, .flex-row-start, .flex-row-end {
+  display: flex;
+  align-items: center;
+}
+
+.flex-column, .flex-column-start, .flex-column-end {
+  flex-direction: column;
+}
+
+.flex-row, .flex-row-start, .flex-row-end {
+  flex-direction: row;
+}
+
+.flex-column, .flex-row {
+  justify-content: center;
+}
+
+.flex-column-start, .flex-row-start {
+  justify-content: start;
+}
+
+.flex-column-end, .flex-row-end {
+  justify-content: end;
+}
+
+.flex-column-around, .flex-row-around {
+  justify-content: space-around;
 }
 
 /*====================
@@ -296,7 +325,7 @@ Gradients
   background-size: 1000% 600%;
 }
 
-.gradient-grey-90 {
+.gradient-grey90 {
   background: linear-gradient(240deg, #000000, var(--vGrey));
   background-size: 1000% 600%;
 }
@@ -304,6 +333,11 @@ Gradients
 .gradient-red {
   background: linear-gradient(90deg, var(--vRed), var(--vOrange));
   background-size: 1800% 600%;
+}
+
+.gradient-smoke {
+  background: linear-gradient(60deg, whitesmoke, white, whitesmoke);
+  background-size: 1000% 600%;
 }
 
 .gradient-yellow {
@@ -492,4 +526,348 @@ Scrolling
 }
 .scroll-smooth {
   scroll-behavior: smooth;
+}
+
+/*====================
+Spinner
+====================*/
+@-webkit-keyframes spinner-border {
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-border {
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: spinner-border .75s linear infinite;
+  animation: spinner-border .75s linear infinite;
+}
+
+/*====================
+Margin & Padding
+====================*/
+.m-auto {
+  margin: auto !important;
+}
+
+.mt-auto,
+.my-auto {
+  margin-top: auto !important;
+}
+
+.mr-auto,
+.mx-auto {
+  margin-right: auto !important;
+}
+
+.mb-auto,
+.my-auto {
+  margin-bottom: auto !important;
+}
+
+.ml-auto,
+.mx-auto {
+  margin-left: auto !important;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+
+.mt-0,
+.my-0 {
+  margin-top: 0 !important;
+}
+
+.mr-0,
+.mx-0 {
+  margin-right: 0 !important;
+}
+
+.mb-0,
+.my-0 {
+  margin-bottom: 0 !important;
+}
+
+.ml-0,
+.mx-0 {
+  margin-left: 0 !important;
+}
+
+.m-1 {
+  margin: 0.25rem !important;
+}
+
+.mt-1,
+.my-1 {
+  margin-top: 0.25rem !important;
+}
+
+.mr-1,
+.mx-1 {
+  margin-right: 0.25rem !important;
+}
+
+.mb-1,
+.my-1 {
+  margin-bottom: 0.25rem !important;
+}
+
+.ml-1,
+.mx-1 {
+  margin-left: 0.25rem !important;
+}
+
+.m-2 {
+  margin: 0.5rem !important;
+}
+
+.mt-2,
+.my-2 {
+  margin-top: 0.5rem !important;
+}
+
+.mr-2,
+.mx-2 {
+  margin-right: 0.5rem !important;
+}
+
+.mb-2,
+.my-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.ml-2,
+.mx-2 {
+  margin-left: 0.5rem !important;
+}
+
+.m-3 {
+  margin: 1rem !important;
+}
+
+.mt-3,
+.my-3 {
+  margin-top: 1rem !important;
+}
+
+.mr-3,
+.mx-3 {
+  margin-right: 1rem !important;
+}
+
+.mb-3,
+.my-3 {
+  margin-bottom: 1rem !important;
+}
+
+.ml-3,
+.mx-3 {
+  margin-left: 1rem !important;
+}
+
+.m-4 {
+  margin: 1.5rem !important;
+}
+
+.mt-4,
+.my-4 {
+  margin-top: 1.5rem !important;
+}
+
+.mr-4,
+.mx-4 {
+  margin-right: 1.5rem !important;
+}
+
+.mb-4,
+.my-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+.ml-4,
+.mx-4 {
+  margin-left: 1.5rem !important;
+}
+
+.m-5 {
+  margin: 3rem !important;
+}
+
+.mt-5,
+.my-5 {
+  margin-top: 3rem !important;
+}
+
+.mr-5,
+.mx-5 {
+  margin-right: 3rem !important;
+}
+
+.mb-5,
+.my-5 {
+  margin-bottom: 3rem !important;
+}
+
+.ml-5,
+.mx-5 {
+  margin-left: 3rem !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+
+.pt-0,
+.py-0 {
+  padding-top: 0 !important;
+}
+
+.pr-0,
+.px-0 {
+  padding-right: 0 !important;
+}
+
+.pb-0,
+.py-0 {
+  padding-bottom: 0 !important;
+}
+
+.pl-0,
+.px-0 {
+  padding-left: 0 !important;
+}
+
+.p-1 {
+  padding: 0.25rem !important;
+}
+
+.pt-1,
+.py-1 {
+  padding-top: 0.25rem !important;
+}
+
+.pr-1,
+.px-1 {
+  padding-right: 0.25rem !important;
+}
+
+.pb-1,
+.py-1 {
+  padding-bottom: 0.25rem !important;
+}
+
+.pl-1,
+.px-1 {
+  padding-left: 0.25rem !important;
+}
+
+.p-2 {
+  padding: 0.5rem !important;
+}
+
+.pt-2,
+.py-2 {
+  padding-top: 0.5rem !important;
+}
+
+.pr-2,
+.px-2 {
+  padding-right: 0.5rem !important;
+}
+
+.pb-2,
+.py-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.pl-2,
+.px-2 {
+  padding-left: 0.5rem !important;
+}
+
+.p-3 {
+  padding: 1rem !important;
+}
+
+.pt-3,
+.py-3 {
+  padding-top: 1rem !important;
+}
+
+.pr-3,
+.px-3 {
+  padding-right: 1rem !important;
+}
+
+.pb-3,
+.py-3 {
+  padding-bottom: 1rem !important;
+}
+
+.pl-3,
+.px-3 {
+  padding-left: 1rem !important;
+}
+
+.p-4 {
+  padding: 1.5rem !important;
+}
+
+.pt-4,
+.py-4 {
+  padding-top: 1.5rem !important;
+}
+
+.pr-4,
+.px-4 {
+  padding-right: 1.5rem !important;
+}
+
+.pb-4,
+.py-4 {
+  padding-bottom: 1.5rem !important;
+}
+
+.pl-4,
+.px-4 {
+  padding-left: 1.5rem !important;
+}
+
+.p-5 {
+  padding: 3rem !important;
+}
+
+.pt-5,
+.py-5 {
+  padding-top: 3rem !important;
+}
+
+.pr-5,
+.px-5 {
+  padding-right: 3rem !important;
+}
+
+.pb-5,
+.py-5 {
+  padding-bottom: 3rem !important;
+}
+
+.pl-5,
+.px-5 {
+  padding-left: 3rem !important;
 }
