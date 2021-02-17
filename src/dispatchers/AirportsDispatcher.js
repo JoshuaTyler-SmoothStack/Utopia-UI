@@ -1,37 +1,57 @@
-import constants from "../constants.json"
+import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
 
 class AirportsDispatcher {
 
   static onFindAll(reduce) {
-    console.log("called");
-    reduce({
-      type: constants.orchestration.airports,
-      payload: {
-        list: [],
-        status: "PENDING"
-      }
-    });
+    reduce({type: constants.airports.request});
 
-    Orchestration.findAllAirports(
+    Orchestration.createRequest(
+      constants.httpRequest.get,
+      "airports", 
+      null,
       onError => {
         reduce({
-          type: constants.orchestration.airports,
-          payload: {
-            list: [],
-            status: "ERROR"
-          }
+          type: constants.airports.error,
+          payload: onError
         });
       }, 
       onSuccess => {
         reduce({
-          type: constants.orchestration.airports,
-          payload: {
-            list: onSuccess,
-            status: "REGISTERED"
-          }
+          type: constants.airports.response,
+          payload: onSuccess
         });
     });
+  }
+
+    static onPostAirplane(reduce, payload) {
+      reduce({
+        type: constants.orchestration.airports,
+        payload: payload
+      });
+  
+      Orchestration.createRequest(
+        constants.httpRequest.post, 
+        "airports", 
+        payload,
+        onError => {
+          reduce({
+            type: constants.orchestration.airports,
+            payload: {
+              list: [],
+              status: "ERROR"
+            }
+          });
+        }, 
+        onSuccess => {
+          reduce({
+            type: constants.orchestration.airports,
+            payload: {
+              list: onSuccess,
+              status: "REGISTERED"
+            }
+          });
+      });
   }
 }
 export default AirportsDispatcher;

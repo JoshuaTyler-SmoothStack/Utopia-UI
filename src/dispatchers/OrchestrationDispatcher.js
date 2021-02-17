@@ -1,4 +1,4 @@
-import constants from "../constants.json"
+import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
 
 class OrchestrationDispatcher {

@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import InputText from "../../components/InputText_0.0.1";
 
 // Styles
-import "../../styles_v0.0.1/KitStyles.css";
+import "../../styles/KitStyles.css";
 
 class ConfirmationMenu extends Component {
   constructor(props) {

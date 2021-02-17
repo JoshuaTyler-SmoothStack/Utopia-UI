@@ -1,16 +1,8 @@
-import constants from "../constants.json"
+import constants from "../resources/constants.json"
 
 const OrchestrationReducer = (action) => {
   const orchestration = constants.orchestration;
-  switch(action.type) {
-    case orchestration.airports:
-      return {
-        airports: {
-          list: action.payload.list,
-          status: action.payload.status
-        }
-      };
-    
+  switch(action.type) {    
     case orchestration.contentNegotiation:
       return {
         contentNegotiation: action.payload || "JSON"
@@ -52,16 +44,12 @@ const OrchestrationReducer = (action) => {
 export default OrchestrationReducer;
 
 export const defaultOrchestrationState = {
-  airports: {
-    list: [],
-    status: "UNKNOWN"
-  },
   contentNegotiation: "JSON",
   error: "",
   ready: false,
   services: {
     list: [],
-    status: "UNKNOWN"
+    status: "UNKNOWN",
   },
   status: "INACTIVE"
 };

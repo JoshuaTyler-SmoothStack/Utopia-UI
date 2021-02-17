@@ -2,7 +2,12 @@
 import React from "react";
 
 // Components
-import AirportDashboard from './AirportDashboard';
+import AirplanesDashboard from './AirplanesDashboard';
+import AirportsDashboard from './AirportsDashboard';
+import BookingsDashboard from './BookingsDashboard';
+import FlightsDashboard from './FlightsDashboard';
+import RoutesDashboard from './RoutesDashboard';
+import UsersDashboard from './UsersDashboard';
 import ErrorMessage from '../../../components/ErrorMessage_v0.0.1';
 
 const ServicesDisplay = (props) => {
@@ -46,22 +51,44 @@ const ServicesDisplay = (props) => {
 
       {/* Active Services Display */}
       {services.status === "REGISTERED" && services.list.length > 0 && 
-        <div 
-          className="gradient-lightgrey90 border-radius-xsm border-shadow flex-row"
-        >
-          <AirportDashboard 
+        <div className="flex-column-around">
+          <AirplanesDashboard 
+            isActive={services.list.includes("airplane-service")}
+            reduce={reduce}
+            state={state}
+          />
+
+          <AirportsDashboard 
             isActive={services.list.includes("airport-service")}
+            reduce={reduce}
+            state={state}
+          />
+
+          <BookingsDashboard 
+            isActive={services.list.includes("booking-service")}
+            reduce={reduce}
+            state={state}
+          />
+
+          <FlightsDashboard 
+            isActive={services.list.includes("flight-service")}
+            reduce={reduce}
+            state={state}
+          />
+
+          <RoutesDashboard 
+            isActive={services.list.includes("flight-service")}
+            reduce={reduce}
+            state={state}
+          />
+
+          <UsersDashboard 
+            isActive={services.list.includes("flight-service")}
             reduce={reduce}
             state={state}
           />
         </div>
       }
-
-      {/* Airport Service */} 
-
-      {/* Route Service */}
-
-      {/* User Service */}
     </div>
   );
 };

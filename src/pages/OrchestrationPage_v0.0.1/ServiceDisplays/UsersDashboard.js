@@ -2,15 +2,16 @@
 import React, { Component } from 'react';
 
 // Components
-import PathIndicator from '../PathIndicator';
-import StatusIndicator from '../StatusIndicator';
+import MSTitle from './MSTitle';
+import PathIndicator from './PathIndicator';
+import StatusIndicator from './StatusIndicator';
 
 // Styles
-import "../../../styles_v0.0.1/KitStyles.css";
-import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
+import "../../../styles/KitStyles.css";
+import UsersDispatcher from '../../../dispatchers/UsersDispatcher';
 import PopContent from '../../../components/PopContent_v0.0.1';
 
-class AirportDashboard extends Component {
+class UsersDashboard extends Component {
   constructor(props) {
     super(props)
     // @PROP: isActive - bool
@@ -25,13 +26,18 @@ class AirportDashboard extends Component {
   }
 
   render() {
-    const { isActive, reduce, state } = this.props;
+    const { isActive, state } = this.props;
     const { sizing } = state;
 
     const buttonSize = sizing.button || 30;
-    const airports = state.orchestration
-    ? state.orchestration.airports
-    : {list: [], status: "UNKNOWN"};
+
+    const searchResults = state.users
+    ? state.users.searchResults
+    : [];
+
+    const status = state.users
+    ? state.users.status
+    : "UNKNOWN";
 
     return ( 
       <div
@@ -39,7 +45,8 @@ class AirportDashboard extends Component {
         style={{
           height: isActive ? "150px" : "75px", 
           width:"100%", 
-          overflow:"hidden"
+          overflow:"hidden",
+          marginBottom: buttonSize * 0.75 + "px"
         }}
       >
         {/* Header */}
@@ -48,16 +55,12 @@ class AirportDashboard extends Component {
           style={{height: "40%", width:"100%"}}
         >
           {/* Title */}
-          <div 
-            className={"border-radius-sm border-shadow no-user flex-row " + (isActive ? "bg-green" : "bg-red")}
-            style={{
-              height: buttonSize + "px",
-              width: (buttonSize * 4) + "px",
-              fontSize: buttonSize * 0.33 + "px",
-              marginLeft: buttonSize * 0.5 + "px",
-            }}
-          >
-            {"Airport MS"}
+          <div style={{marginLeft: buttonSize * 0.5 + "px"}}>
+            <MSTitle
+              buttonSize={buttonSize}
+              isActive={isActive}
+              text={"User MS"}
+            />
           </div>
 
           {/* Status Indicator */}
@@ -71,7 +74,7 @@ class AirportDashboard extends Component {
           {/* URI Path Text */}
           <div style={{marginRight: buttonSize * 0.5 +"px"}}>
             <PathIndicator 
-              location={"http://airport-service"}
+              location={"http://user-service"}
               size={buttonSize * 0.8}
             />
           </div>
@@ -104,9 +107,9 @@ class AirportDashboard extends Component {
                 height: buttonSize + "px", 
                 width: (buttonSize * 3.5) + "px",
               }}
-              onClick={() => this.findAllAirports()}
+              onClick={() => this.findAllUsers()}
             >
-              {airports.status === "PENDING" 
+              {status === "PENDING" 
                 ? <div
                     className="spinner-border color-cream"
                     style={{
@@ -114,7 +117,7 @@ class AirportDashboard extends Component {
                       width: buttonSize * 0.5 + "px",
                     }}
                   />
-                : "findAllAirports()"
+                : "findAllUsers()"
               }
             </button>
           </div>
@@ -129,28 +132,28 @@ class AirportDashboard extends Component {
           elementOffsetX={(window.innerWidth - (window.innerWidth * 0.9)) * 0.5}
           elementOffsetY={(window.innerHeight - (window.innerHeight * 0.75)) * 0.5}
           onClose={() => this.setState({isActive_PopContent: false})}
-          content={this.handleRenderAirportList(airports.list)}
+          content={this.handleRenderUserList(searchResults)}
         />
       }
       </div>
     );
   }
 
-  findAllAirports = () => {
+  findAllUsers = () => {
     const { reduce } = this.props;
-    AirportsDispatcher.onFindAll(reduce);
+    UsersDispatcher.onFindAll(reduce);
     this.setState({isActive_PopContent: true});
   }
 
-  handleRenderAirportList = (airportsList) => {
-    let airportsTable = [];
-    for(var i in airportsList) {
-      airportsTable.push(
-        <div 
+  handleRenderUserList = (usersList) => {
+    let usersTable = [];
+    for(var i in usersList) {
+      usersTable.push(
+        <div
+          key={"user-" + usersList[i].id}
           className="bg-yellow border-radius-xsm border-shadow flex-row-start m-1"
           style={{
             fontSize: "20px",
-            height: "50px",
             width:"95%",
             paddingLeft: "10px"
           }}
@@ -159,12 +162,13 @@ class AirportDashboard extends Component {
             className="bg-smoke border-radius-xsm border-shadow flex-row"
             style={{width:"50px"}}
           >
-            {airportsList[i].iataId}
+            {usersList[i].id}
           </div>
-          <div
-            className="ml-auto mr-auto"
+          <div 
+            className="ml-auto mr-auto flex-row"
+            style={{height:"40px"}}
           >
-            {airportsList[i].city}
+            {usersList[i].confirmationCode}
           </div>
         </div>
       );
@@ -175,14 +179,13 @@ class AirportDashboard extends Component {
         style={{
           height: "95%",
           width: "95%",
-          flexWrap: "wrap",
-          overflow: "auto"
+          overflowY: "auto"
         }}
       >
-        {airportsTable}
+        {usersTable}
       </div>
     );
   };
 
 }
-export default AirportDashboard;
+export default UsersDashboard;
