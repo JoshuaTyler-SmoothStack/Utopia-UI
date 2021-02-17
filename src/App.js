@@ -36,21 +36,18 @@ class App extends Component {
         <Switch>
           <Route exact path="/">
             <BootPage
-              constants={constants}
               reduce={this.handleStateUpdate}
               state={this.state}
             />
           </Route>
           <Route path="/home">
             <LandingPage
-              constants={constants}
               reduce={this.handleStateUpdate}
               state={this.state}
             />
           </Route>
           <Route path="/orchestration">
             <OrchestrationVisual
-              constants={constants}
               reduce={this.handleStateUpdate}
               state={this.state}
             />
@@ -65,7 +62,7 @@ class App extends Component {
     window.addEventListener("resize", () => {
       this.handleResize();
     });
-    this.handleSynchronizeReducerStates();
+    this.handleSynchronizeDefaultReducerStates();
   }
 
   componentDidUpdate() {
@@ -76,54 +73,43 @@ class App extends Component {
     let newSizing = sizes.xx_small;
 
     // Extra Extra Small
-    //================================
     if (window.innerWidth < 375) {
-      console.log(sizes.xx_small.breakPoint);
       newSizing = sizes.xx_small;
     }
 
     // Extra Small
-    //================================
     else if (window.innerWidth < 576) {
-      console.log(sizes.x_small.breakPoint);
       newSizing = sizes.x_small;
     }
 
     // Small
-    //================================
     else if (window.innerWidth < 768) {
       console.log(sizes.small.breakPoint);
       newSizing = sizes.small;
     }
 
     // Medium
-    //================================
     else {
       //if(window.innerWidth < 992) {
-      console.log(sizes.medium.breakPoint);
       newSizing = sizes.medium;
     }
 
     // Large
-    //================================
     // else if(window.innerWidth < 1200) {
-    //   console.log(sizes.large.breakPoint);
     //   newSizing = sizes.large;
     // }
 
     // Extra Large
-    //================================
     // else if(window.innerWidth < 1400) {
-    //   console.log(sizes.x_large.breakPoint);
     //   newSizing = sizes.x_large;
     // }
 
     // Extra Extra Large
-    //================================
     // else {
-    //   console.log(sizes.xx_large.breakPoint);
     //   newSizing = sizes.xx_large;
     // }
+
+    console.log(newSizing.breakPoint);
     this.setState({
       sizing: { ...newSizing, resizeKey: _.uniqueId("resize-") },
     });
@@ -134,22 +120,37 @@ class App extends Component {
       
       // Navigation
       case constants.navigation.root:
-        this.setState({navigation: navigationReducer(action)});
+        this.setState((state) => ({
+          navigation: {
+            ...state.navigation, 
+            ...navigationReducer(action)
+          }
+        }));
       break;
 
       // Orchestration
       case constants.orchestration.root:
-        this.setState({orchestration: orchestrationReducer(action)});
+        this.setState((state) => ({ 
+          orchestration: {
+            ...state.orchestration,
+            ...orchestrationReducer(action)
+          }
+        }));
       break;
 
       // Orchestration Dashboard
       case constants.orchestrationDashboard.root:
-        this.setState({orchestrationDashboard: orchestrationDashboardReducer(action)});
+        this.setState((state) => ({
+          orchestrationDashboard: {
+            ...state.orchestrationDashboard, 
+            ...orchestrationDashboardReducer(action)
+          }
+        }));
       break;
     }
   }
 
-  handleSynchronizeReducerStates = () => {
+  handleSynchronizeDefaultReducerStates = () => {
     this.setState({
       navigation: defaultNavigationState,
       orchestration: defaultOrchestrationState,

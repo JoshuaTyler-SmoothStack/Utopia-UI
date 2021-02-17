@@ -141,48 +141,44 @@ Text Styling
 /*====================
 Backgrounds
 ====================*/
-.bg-white {
-  background-color: white;
-}
-.bg-smoke {
-  background-color: whitesmoke;
-}
-.bg-smoke-light {
-  background-color: rgba(250, 250, 250, 0.5);
-}
-.bg-lightgrey {
-  background-color: var(--vLightGrey);
-}
-.bg-grey {
-  background-color: var(--vGrey);
-}
-.bg-black {
-  background-color: black;
-}
-.bg-blue {
-  background-color: var(--vBlue);
-}
-.bg-cream {
-  background-color: var(--vCream);
-}
-.bg-green {
-  background-color: var(--vGreen);
-}
-.bg-orange {
-  background-color: var(--vOrange);
-}
-.bg-red {
-  background-color: var(--vRed);
-}
-.bg-teal {
-  background-color: var(--vTeal);
-}
-.bg-turqouise {
-  background-color: var(--vTurqouise);
-}
-.bg-yellow {
-  background-color: var(--vYellow);
-}
+.bg-white {background-color: white;}
+.bg-white-hover:hover {background-color: white;}
+
+.bg-smoke {background-color: whitesmoke;}
+.bg-smoke-hover:hover {background-color: whitesmoke;}
+
+.bg-lightgrey {background-color: var(--vLightGrey);}
+.bg-lightgrey-hover:hover {background-color: var(--vLightGrey);}
+
+.bg-grey {background-color: var(--vGrey);}
+.bg-grey-hover:hover {background-color: var(--vGrey);}
+
+.bg-black {background-color: black;}
+.bg-black-hover:hover {background-color: black;}
+
+.bg-blue {background-color: var(--vBlue);}
+.bg-blue-hover:hover {background-color: var(--vBlue);}
+
+.bg-cream {background-color: var(--vCream);}
+.bg-cream-hover:hover {background-color: var(--vCream);}
+
+.bg-green {background-color: var(--vGreen);}
+.bg-green-hover:hover {background-color: var(--vGreen);}
+
+.bg-orange {background-color: var(--vOrange);}
+.bg-orange-hover:hover {background-color: var(--vOrange);}
+
+.bg-red {background-color: var(--vRed);}
+.bg-red-hover:hover {background-color: var(--vRed);}
+
+.bg-teal {background-color: var(--vTeal);}
+.bg-teal-hover:hover {background-color: var(--vTeal);}
+
+.bg-turqouise {background-color: var(--vTurqouise);}
+.bg-turqouise-hover:hover {background-color: var(--vTurqouise);}
+
+.bg-yellow {background-color: var(--vYellow);}
+.bg-yellow-hover:hover {background-color: var(--vYellow);}
 
 .bg-blur {
   filter: blur(8px);
@@ -329,7 +325,7 @@ Gradients
   background-size: 1000% 600%;
 }
 
-.gradient-grey-90 {
+.gradient-grey90 {
   background: linear-gradient(240deg, #000000, var(--vGrey));
   background-size: 1000% 600%;
 }
@@ -337,6 +333,11 @@ Gradients
 .gradient-red {
   background: linear-gradient(90deg, var(--vRed), var(--vOrange));
   background-size: 1800% 600%;
+}
+
+.gradient-smoke {
+  background: linear-gradient(60deg, whitesmoke, white, whitesmoke);
+  background-size: 1000% 600%;
 }
 
 .gradient-yellow {
@@ -525,6 +526,35 @@ Scrolling
 }
 .scroll-smooth {
   scroll-behavior: smooth;
+}
+
+/*====================
+Spinner
+====================*/
+@-webkit-keyframes spinner-border {
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-border {
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: spinner-border .75s linear infinite;
+  animation: spinner-border .75s linear infinite;
 }
 
 /*====================

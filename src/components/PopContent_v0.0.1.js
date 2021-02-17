@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 
-class ConfirmationMenu extends Component {
+class PopContent extends Component {
   constructor(props) {
     super(props);
     // @PROP: buttonSize - num
+    // @PROP: content - obj{}(HTML Elements)
     // @PROP: elementHeight - num
     // @PROP: elementWidth - num
     // @PROP: elementOffsetX - num
     // @PROP: elementOffsetY - num
-    // @PROP: passedContent - obj{}(HTML Elements)
     // @PROP: onClose - f()
 
     this.state = {
@@ -18,12 +18,12 @@ class ConfirmationMenu extends Component {
 
   render() {
     const {
+      buttonSize,
+      content,
       elementHeight,
       elementWidth,
       elementOffsetX,
       elementOffsetY,
-      passedContent,
-      buttonSize,
     } = this.props;
     const { isDisabled } = this.state;
 
@@ -50,7 +50,7 @@ class ConfirmationMenu extends Component {
                 overflowY: "auto",
               }}
             >
-              {passedContent}
+              {content}
             </div>
 
             {/* Close Button */}
@@ -79,4 +79,4 @@ class ConfirmationMenu extends Component {
     }
   };
 }
-export default ConfirmationMenu;
+export default PopContent;

@@ -11,10 +11,14 @@
   },
 
   "orchestration": {
+    "airports": "ORCHESTRATION_AIRPORTS",
+    "contentNegotiation": "ORCHESTRATION_CONTENTNEGOTIATION",
     "error": "ORCHESTRATION_ERROR",
     "ready": "ORCHESTRATION_READY",
     "root": "ORCHESTRATION",
-    "start": "ORCHESTRATION_START"
+    "services": "ORCHESTRATION_SERVICES",
+    "start": "ORCHESTRATION_START",
+    "stop": "ORCHESTRATION_STOP"
   },
 
   "orchestrationDashboard": {

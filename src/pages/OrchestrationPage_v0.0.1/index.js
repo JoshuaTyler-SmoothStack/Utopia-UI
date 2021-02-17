@@ -4,11 +4,12 @@ import React, { Component } from 'react';
 
 // Components
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
-import OrchestratorDashboard from './OrchestratorDashboard';
+import OrchestratorDashboard from './OrchestrationDashboard';
 
 // Styles
 import "../../styles_v0.0.1/KitStyles.css";
 import KitUtils from '../../kitutils/KitUtils_v1.0.0';
+import ServicesDisplay from './ServiceDisplay';
 
 class OrchestrationPage extends Component {
   constructor(props) {
@@ -22,12 +23,16 @@ class OrchestrationPage extends Component {
   }
 
   render() { 
-    const { constants, state, reduce } = this.props;
-    const { orchestrationDashboard, sizing } = state;
+    const { state, reduce } = this.props;
+    const { orchestration, sizing } = state;
 
-    const isActive_OrchestrationDashboard = orchestrationDashboard
-      ? orchestrationDashboard.isActive
+    const isActive_OrchestrationDashboard = orchestration
+      ? orchestration.status === "ACTIVE"
       : false;
+
+    const services = orchestration
+    ? orchestration.services
+    : {list: [], status: "UNKNOWN"};
 
     return ( 
       <div 
@@ -49,36 +54,35 @@ class OrchestrationPage extends Component {
             maxWidth: "100%",
           }}
         >
-          {/* Orchestrator */}
+          {/* OrchestratorMS */}
           <div 
               style={{
                 height: isActive_OrchestrationDashboard
                   ? "200px"
                   : "100px",
                 width: "100%",
-                maxHeight: "30%",
                 marginBottom: sizing.button + "px"
               }}
             >
             <OrchestratorDashboard
-              buttonSize={sizing.button}
-              isActive={isActive_OrchestrationDashboard}
-              onOrchestratorConnect={this.handleSelectOrchestratorConnect}
-              onOrchestratorDisconnect={this.handleSelectOrchestratorDisconnect}
-              onFindActiveServices={this.handleFindActiveServices}
-
-              constants={constants}
               state={state}
               reduce={reduce}
             />
           </div>
 
-          {/* Airport Service */}
-
-          {/* Route Service */}
-
-          {/* User Service */}
-          
+          {/* MS Container */}
+          {isActive_OrchestrationDashboard &&
+          <div
+              style={{
+                height: "auto",
+                width: "100%",
+              }}
+            >
+            <ServicesDisplay 
+              reduce={reduce}
+              state={state}
+            />
+          </div>}         
         </div>
 
         {/* Navbar */}
@@ -130,8 +134,8 @@ class OrchestrationPage extends Component {
     this.handleUserDashboardUpdate(null);
   }
 
-  handleSetPopContext = (context) => {
-    this.setState({isActive_PopContext: true, popContext: JSON.stringify(context)});
+  handleSetPopContent = (context) => {
+    this.setState({isActive_PopContent: true, popContext: JSON.stringify(context)});
   }
   
   handleServicesReload = () => {
@@ -253,9 +257,9 @@ class OrchestrationPage extends Component {
   //#region Orchestrator Buttons
   handleOrchestratorButton1 = () => {
     Orchestration.findActiveServices(onError => {
-      this.handleSetPopContext(onError);
+      this.handleSetPopContent(onError);
     }, onSuccess => {
-      this.handleSetPopContext(onSuccess);
+      this.handleSetPopContent(onSuccess);
     });
   }
   //#endregion
@@ -263,9 +267,9 @@ class OrchestrationPage extends Component {
   //#region Airport Buttons
   handleFindAllAirports = () => {
     Orchestration.findAllAirports(onError => {
-      this.handleSetPopContext(onError);
+      this.handleSetPopContent(onError);
     }, onSuccess => {
-      this.handleSetPopContext(onSuccess);
+      this.handleSetPopContent(onSuccess);
     });
   }
 
@@ -275,9 +279,9 @@ class OrchestrationPage extends Component {
       this.setState({isActive_InputText: false});
       Orchestration.findAirportByIataId(iataId,
       onError => {
-        this.handleSetPopContext(onError);
+        this.handleSetPopContent(onError);
       }, onSuccess => {
-        this.handleSetPopContext(onSuccess);
+        this.handleSetPopContent(onSuccess);
       });
     }
     this.setState({
@@ -292,9 +296,9 @@ class OrchestrationPage extends Component {
   //#region Route Buttons
   handleFindAllRoutes = () => {
     Orchestration.findAllRoutes(onError => {
-      this.handleSetPopContext(onError);
+      this.handleSetPopContent(onError);
     }, onSuccess => {
-      this.handleSetPopContext(onSuccess);
+      this.handleSetPopContent(onSuccess);
     });
   }
   //#endregion
@@ -302,9 +306,9 @@ class OrchestrationPage extends Component {
   //#region User Buttons
   handleFindAllUsers = () => {
     Orchestration.findAllUsers(onError => {
-      this.handleSetPopContext(onError);
+      this.handleSetPopContent(onError);
     }, onSuccess => {
-      this.handleSetPopContext(onSuccess);
+      this.handleSetPopContent(onSuccess);
     });
   }
   //#endregion

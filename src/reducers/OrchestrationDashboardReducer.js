@@ -8,7 +8,7 @@ const OrchestrationDashboardReducer = (action) => {
         orchestrationDashboard: {
           error: "",
           ready: false,
-          status: "inactive",
+          status: "INACTIVE",
         },
       };
 
@@ -20,65 +20,62 @@ export default OrchestrationDashboardReducer;
 
 export const defaultOrchestrationDashboardState = {
   orchestratorMS: {
-    error: "",
-    isActive: false,
-    location: "Not connected.",
-    status: "inactive",
+    location: "http://localhost:8080",
   },
 
   airplaneMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   airportMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   authenticationMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   bookingMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   flightMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   paymentMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   routeMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 
   userMS: {
     error: "",
     isActive: false,
     location: "Not connected.",
-    status: "inactive",
+    status: "INACTIVE",
   },
 };
