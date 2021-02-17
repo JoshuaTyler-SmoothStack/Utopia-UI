@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 
 // Styles
-import "../../styles_v0.0.1/KitStyles.css";
+import "../../styles/KitStyles.css";
 
 class OrchestrationPage extends Component {
   constructor(props) {
@@ -51,8 +51,8 @@ class OrchestrationPage extends Component {
           }}
         >
           <NavBar
+            reduce={reduce}
             sizing={sizing}
-            onSelectPage={(e) => this.props.onSelectPage(e)}
           />
         </div>
       </div>

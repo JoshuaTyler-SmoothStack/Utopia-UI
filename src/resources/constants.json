@@ -1,0 +1,76 @@
+{
+  "airplanes": {
+    "root": "AIRPLANES",
+    "error": "AIRPLANES_ERROR",
+    "request": "AIRPLANES_REQUEST",
+    "response": "AIRPLANES_RESPONSE"
+  },
+
+  "airports": {
+    "root": "AIRPORTS",
+    "error": "AIRPORTS_ERROR",
+    "request": "AIRPORTS_REQUEST",
+    "response": "AIRPORTS_RESPONSE"
+  },
+  
+  "authentication": {
+    "root": "AUTHENTICATION",
+    "cancel": "AUTHENTICATION_CANCEL",
+    "error": "AUTHENTICATION_ERROR",
+    "login": "AUTHENTICATION_LOGIN",
+    "logout": "AUTHENTICATION_LOGOUT",
+    "prompt": "AUTHENTICATION_PROMPT"
+  },
+
+  "bookings": {
+    "root": "BOOKINGS",
+    "error": "BOOKINGS_ERROR",
+    "request": "BOOKINGS_REQUEST",
+    "response": "BOOKINGS_RESPONSE"
+  },
+
+  "flights": {
+    "root": "FLIGHTS",
+    "error": "FLIGHTS_ERROR",
+    "request": "FLIGHTS_REQUEST",
+    "response": "FLIGHTS_RESPONSE"
+  },
+
+  "httpRequest": {
+    "delete": "DELETE",
+    "get": "GET",
+    "post": "POST",
+    "put": "PUT"
+  },
+
+  "orchestration": {
+    "root": "ORCHESTRATION",
+    "contentNegotiation": "ORCHESTRATION_CONTENTNEGOTIATION",
+    "error": "ORCHESTRATION_ERROR",
+    "ready": "ORCHESTRATION_READY",
+    "services": "ORCHESTRATION_SERVICES",
+    "start": "ORCHESTRATION_START",
+    "stop": "ORCHESTRATION_STOP"
+  },
+
+  "payments": {
+    "root": "PAYMENTS",
+    "error": "PAYMENTS_ERROR",
+    "request": "PAYMENTS_REQUEST",
+    "response": "PAYMENTS_RESPONSE"
+  },
+
+  "routes": {
+    "root": "ROUTES",
+    "error": "ROUTES_ERROR",
+    "request": "ROUTES_REQUEST",
+    "response": "ROUTES_RESPONSE"
+  },
+
+  "users": {
+    "root": "USERS",
+    "error": "USERS_ERROR",
+    "request": "USERS_REQUEST",
+    "response": "USERS_RESPONSE"
+  }
+}

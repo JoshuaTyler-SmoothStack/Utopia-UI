@@ -6,19 +6,26 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import constants from "./constants.json"
-import navigationReducer, {defaultNavigationState} from "./reducers/NavigationReducer";
+import constants from "./resources/constants.json"
+import airplanesReducer, { defaultAirplanesState } from "./reducers/AirplanesReducer";
+import airportsReducer, { defaultAirportsState } from "./reducers/AirportsReducer";
+import authenticationReducer, {defaultAuthenticationState} from "./reducers/AuthenticationReducer";
+import bookingsReducer, { defaultBookingsState } from "./reducers/BookingsReducer";
+import flightsReducer, { defaultFlightsState } from "./reducers/FlightsReducer";
 import orchestrationReducer, {defaultOrchestrationState} from "./reducers/OrchestrationReducer";
-import orchestrationDashboardReducer, {defaultOrchestrationDashboardState} from "./reducers/OrchestrationDashboardReducer";
+import paymentsReducer, { defaultPaymentsState } from "./reducers/PaymentsReducer";
+import routesReducer, { defaultRoutesState } from "./reducers/RoutesReducer";
+import usersReducer, { defaultUsersState } from "./reducers/UsersReducer";
 
 // Components
 import BootPage from "./pages/BootPage_v0.0.1";
 import LandingPage from "./pages/LandingPage_v0.0.1";
+import Login from "./componentgroups/Login_v0.0.1";
 import OrchestrationVisual from "./pages/OrchestrationPage_v0.0.1";
 
 // Styles
-import sizes from "./styles_v0.0.1/Sizing.json";
-import "./styles_v0.0.1/KitStyles.css";
+import sizes from "./styles/Sizing.json";
+import "./styles/KitStyles.css";
 
 class App extends Component {
   constructor(props) {
@@ -31,29 +38,44 @@ class App extends Component {
   }
 
   render() {
+    const { authentication } = this.state;
+    const isActive_Login = authentication ? authentication.isActive_LoginUI : false;
+
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <BootPage
-              reduce={this.handleStateUpdate}
-              state={this.state}
-            />
-          </Route>
-          <Route path="/home">
-            <LandingPage
-              reduce={this.handleStateUpdate}
-              state={this.state}
-            />
-          </Route>
-          <Route path="/orchestration">
-            <OrchestrationVisual
-              reduce={this.handleStateUpdate}
-              state={this.state}
-            />
-          </Route>
-        </Switch>
-      </Router>
+      <main>
+
+        {/* Pages */}
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <BootPage
+                reduce={this.handleStateUpdate}
+                state={this.state}
+              />
+            </Route>
+            <Route path="/home">
+              <LandingPage
+                reduce={this.handleStateUpdate}
+                state={this.state}
+              />
+            </Route>
+            <Route path="/orchestration">
+              <OrchestrationVisual
+                reduce={this.handleStateUpdate}
+                state={this.state}
+              />
+            </Route>
+          </Switch>
+        </Router>
+
+        {/* Login */}
+        {isActive_Login && 
+          <Login 
+            reduce={this.handleStateUpdate}
+            state={this.state}
+          />
+        }
+      </main>
     );
   }
 
@@ -118,17 +140,57 @@ class App extends Component {
   handleStateUpdate = (action) => {
     switch(action.type.split("_")[0]) {
       
-      // Navigation
-      case constants.navigation.root:
+      // airplanes
+      case constants.airplanes.root:
         this.setState((state) => ({
-          navigation: {
-            ...state.navigation, 
-            ...navigationReducer(action)
+          airplanes: {
+            ...state.airplanes, 
+            ...airplanesReducer(action)
           }
         }));
       break;
 
-      // Orchestration
+      // airports
+      case constants.airports.root:
+        this.setState((state) => ({
+          airports: {
+            ...state.airports, 
+            ...airportsReducer(action)
+          }
+        }));
+      break;
+
+      // authentication
+      case constants.authentication.root:
+        this.setState((state) => ({
+          authentication: {
+            ...state.authentication, 
+            ...authenticationReducer(action)
+          }
+        }));
+      break;
+
+      // bookings
+      case constants.bookings.root:
+        this.setState((state) => ({
+          bookings: {
+            ...state.bookings, 
+            ...bookingsReducer(action)
+          }
+        }));
+      break;
+
+      // flights
+      case constants.flights.root:
+        this.setState((state) => ({
+          flights: {
+            ...state.flights, 
+            ...flightsReducer(action)
+          }
+        }));
+      break;
+
+      // orchestration
       case constants.orchestration.root:
         this.setState((state) => ({ 
           orchestration: {
@@ -138,12 +200,32 @@ class App extends Component {
         }));
       break;
 
-      // Orchestration Dashboard
-      case constants.orchestrationDashboard.root:
+      // payments
+      case constants.payments.root:
         this.setState((state) => ({
-          orchestrationDashboard: {
-            ...state.orchestrationDashboard, 
-            ...orchestrationDashboardReducer(action)
+          payments: {
+            ...state.payments, 
+            ...paymentsReducer(action)
+          }
+        }));
+      break;
+
+      // routes
+      case constants.routes.root:
+        this.setState((state) => ({
+          routes: {
+            ...state.routes, 
+            ...routesReducer(action)
+          }
+        }));
+      break;
+
+      // users
+      case constants.users.root:
+        this.setState((state) => ({
+          users: {
+            ...state.users, 
+            ...usersReducer(action)
           }
         }));
       break;
@@ -152,9 +234,15 @@ class App extends Component {
 
   handleSynchronizeDefaultReducerStates = () => {
     this.setState({
-      navigation: defaultNavigationState,
+      airplanes: defaultAirplanesState,
+      airports: defaultAirportsState,
+      authentication: defaultAuthenticationState,
+      bookings: defaultBookingsState,
+      flights: defaultFlightsState,
       orchestration: defaultOrchestrationState,
-      orchestrationDashboard: defaultOrchestrationDashboardState
+      payments: defaultPaymentsState,
+      routes: defaultRoutesState,
+      users: defaultUsersState
     });
   }
 }

@@ -1,6 +1,6 @@
 // Libraries
 import React from 'react';
-import OrchestrationDispatcher from '../../dispatchers/OrchestrationDispatcher';
+import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatcher';
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
@@ -8,11 +8,11 @@ import PathIndicator from './PathIndicator';
 import StatusIndicator from './StatusIndicator';
 
 // Styles
-import "../../styles_v0.0.1/KitStyles.css";
+import "../../../styles/KitStyles.css";
 
 const OrchestrationDashboard = (props) => {
   const { state, reduce } = props;
-  const { orchestration, orchestrationDashboard, sizing } = state;
+  const { orchestration, sizing } = state;
 
   const buttonSize = sizing 
     ? sizing.button
@@ -22,9 +22,7 @@ const OrchestrationDashboard = (props) => {
     ? orchestration.contentNegotiation
     : "JSON";
 
-  const location = orchestrationDashboard 
-    ? orchestrationDashboard.orchestratorMS.location 
-    : "No connection.";
+  const location = "http://localhost:8080";
 
   const isActive = orchestration 
     ? orchestration.ready

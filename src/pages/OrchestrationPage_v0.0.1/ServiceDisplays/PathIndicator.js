@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Styles
-import "../../styles_v0.0.1/KitStyles.css";
+import "../../../styles/KitStyles.css";
 
 const PathIndicator = (props) => {
   //@PROP: location - string

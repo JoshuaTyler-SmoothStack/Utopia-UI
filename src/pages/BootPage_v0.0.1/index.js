@@ -1,5 +1,6 @@
 // Libraries
 import React, { Component } from "react";
+import constants from "../../resources/constants.json"
 
 // Images
 import gifEarthSpinning from "../../images/EarthWithHotAirBalloon.gif";
@@ -19,7 +20,7 @@ class StartupPage extends Component {
     // if(loadingProgress === 100) {
     // 
     // }
-    window.location.href = this.props.constants.navigation.pages.landing;
+    window.location.href = "http://localhost:3000/home";
   }
 
   render() {
