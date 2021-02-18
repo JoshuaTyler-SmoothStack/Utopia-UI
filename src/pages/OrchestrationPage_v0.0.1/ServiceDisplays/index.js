@@ -9,13 +9,12 @@ import FlightsDashboard from './FlightsDashboard';
 import RoutesDashboard from './RoutesDashboard';
 import UsersDashboard from './UsersDashboard';
 import ErrorMessage from '../../../components/ErrorMessage_v0.0.1';
+import FlexBox from "../../../components/FlexBox";
 
 const ServicesDisplay = (props) => {
 
   const { reduce, state } = props;
-  const { sizing } = state;
 
-  const buttonSize = sizing.button || 30;
   const services = state.orchestration
   ? state.orchestration.services
   : {list: [], status: "UNKNOWN"};
@@ -24,34 +23,23 @@ const ServicesDisplay = (props) => {
     <div>
 
       {/* Loading Spinner */}
-      {services.status === "PENDING" && 
-        <div
-          className="spinner-border color-cream"
-          style={{
-            height: buttonSize * 0.5 + "px",
-            width: buttonSize * 0.5 + "px",
-          }}
-        />
-      }
+      {services.status === "PENDING" && <div className="spinner-border kit-color-cream"/>}
 
       {/* No Active Services Error */}
       {services.status === "REGISTERED" && services.list.length < 1 && 
-        <div 
-          className="color-red bg-smoke border-radius-xsm border-shadow flex-row"
-          style={{
-            height: "50px",
-            width: "50%"
-          }}
+        <FlexBox 
+          className="h1 text-warning bg-smoke rounded kit-border-shadow"
+          style={{width: "50%"}}
         >
           <ErrorMessage 
             message={"No Active Services!"}
           />
-        </div>
+        </FlexBox>
       }
 
       {/* Active Services Display */}
       {services.status === "REGISTERED" && services.list.length > 0 && 
-        <div className="flex-column-around">
+        <FlexBox justify={"around"} type={"column"}>
           <AirplanesDashboard 
             isActive={services.list.includes("airplane-service")}
             reduce={reduce}
@@ -87,7 +75,7 @@ const ServicesDisplay = (props) => {
             reduce={reduce}
             state={state}
           />
-        </div>
+        </FlexBox>
       }
     </div>
   );

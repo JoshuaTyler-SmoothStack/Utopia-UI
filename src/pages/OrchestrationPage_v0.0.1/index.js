@@ -5,16 +5,13 @@ import React, { Component } from 'react';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 import OrchestratorDashboard from './ServiceDisplays/OrchestrationDashboard';
 import ServicesDisplay from './ServiceDisplays';
-
-// Styles
-import "../../styles/KitStyles.css";
+import FlexBox from '../../components/FlexBox';
 
 class OrchestrationPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      // InputText
       isActive_InputText: false,
       inputTextLabel: "",
     };
@@ -22,77 +19,69 @@ class OrchestrationPage extends Component {
 
   render() { 
     const { state, reduce } = this.props;
-    const { orchestration, sizing } = state;
+    const { orchestration } = state;
 
     const isActive_OrchestrationDashboard = orchestration
       ? orchestration.status === "ACTIVE"
       : false;
 
     return ( 
-      <div 
-        className={"bg-blue flex-column"}
-        style={{ 
-          position: "absolute", 
-          height: "100vh", 
-          width: "100vw",
-        }}
-       >
-
-        {/* Content */}
-        <div 
-          className={"flex-column-around"}
-          style={{
-            height: (sizing.buttonLarge * 4 + sizing.button * 8) + "px",
-            width: (sizing.buttonLarge * 7) + "px",
-            maxHeight: "100%",
-            maxWidth: "100%",
+      <div>
+        <FlexBox
+          className={"kit-bg-blue"}
+          type={"column"}
+          style={{ 
+            position: "absolute", 
+            height: "100vh", 
+            width: "100vw",
           }}
         >
-          {/* OrchestratorMS */}
-          <div 
+
+          {/* Content */}
+          <FlexBox 
+            justify={"around"}
+            type={"column"}
+            style={{
+              minHeight: "25%",
+              minWidth: "25%",
+            }}
+          >
+            {/* OrchestratorMS */}
+            <div 
+              className="kit-bg-grey mb-2"
               style={{
                 height: isActive_OrchestrationDashboard
-                  ? "200px"
-                  : "100px",
-                width: "100%",
-                marginBottom: sizing.button + "px"
+                  ? "15rem"
+                  : "7.5rem",
+                width: "33rem",
               }}
             >
-            <OrchestratorDashboard
-              state={state}
-              reduce={reduce}
-            />
-          </div>
+              <OrchestratorDashboard
+                state={state}
+                reduce={reduce}
+              />
+            </div>
 
-          {/* MS Container */}
-          {isActive_OrchestrationDashboard &&
-          <div
-              style={{
-                height: "auto",
-                width: "100%",
-              }}
-            >
-            <ServicesDisplay 
-              reduce={reduce}
-              state={state}
-            />
-          </div>}         
-        </div>
-
+            {/* MS Container */}
+            {isActive_OrchestrationDashboard &&
+            <div
+                style={{
+                  height: "auto",
+                  width: "100%",
+                }}
+              >
+              <ServicesDisplay 
+                reduce={reduce}
+                state={state}
+              />
+            </div>}         
+          </FlexBox>
+        </FlexBox>
         {/* Navbar */}
-        <div 
-          style={{
-            position: "absolute", 
-            height: sizing.screenbar+"px",
-            width: "100vw",
-            top:"0", 
-          }}
-        >
-          <NavBar
-            reduce={reduce}
-            sizing={sizing}
-          />
-        </div>
+        <NavBar
+          reduce={reduce}
+          state={state}
+        />
       </div>
     );
   }

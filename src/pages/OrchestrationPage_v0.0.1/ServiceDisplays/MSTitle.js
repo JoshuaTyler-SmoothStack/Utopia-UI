@@ -1,9 +1,6 @@
 // Libraries
 import React from 'react';
 
-// Styles
-import "../../../styles/KitStyles.css";
-
 const MSTitle = (props) => {
   //@PROP: buttonSize - num
   //@PROP: isActive - bool
@@ -14,7 +11,7 @@ const MSTitle = (props) => {
 
   return ( 
     <div 
-      className={"border-radius-sm border-shadow no-user flex-row " + (isActive ? "bg-green" : "bg-yellow")}
+      className={"rounded border-shadow kit-no-user flex-row " + (isActive ? "bg-green" : "bg-yellow")}
       style={{
         height: buttonSize + "px",
         width: (buttonSize * 4) + "px",

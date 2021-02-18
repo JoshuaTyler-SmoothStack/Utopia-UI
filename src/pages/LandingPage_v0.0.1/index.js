@@ -4,9 +4,6 @@ import React, { Component } from 'react';
 // Components
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 
-// Styles
-import "../../styles/KitStyles.css";
-
 class OrchestrationPage extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +17,7 @@ class OrchestrationPage extends Component {
 
     return ( 
       <div 
-        className={"bg-blue flex-column"}
+        className={"kit-bg-blue flex-column"}
         style={{ 
           position: "absolute", 
           height: "100vh", 
@@ -32,8 +29,8 @@ class OrchestrationPage extends Component {
         <div 
           className={"bg-red flex-column-around"}
           style={{
-            height: (sizing.buttonLarge * 4 + sizing.button * 8) + "px",
-            width: (sizing.buttonLarge * 7) + "px",
+            height: "20rem",
+            width: "40rem",
             maxHeight: "100%",
             maxWidth: "100%",
           }}
@@ -42,17 +39,17 @@ class OrchestrationPage extends Component {
         </div>
 
         {/* Navbar */}
-        <div 
+        <div
+          className="nav"
           style={{
             position: "absolute", 
-            height: sizing.screenbar+"px",
             width: "100vw",
             top:"0", 
           }}
         >
           <NavBar
             reduce={reduce}
-            sizing={sizing}
+            state={state}
           />
         </div>
       </div>

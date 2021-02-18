@@ -9,9 +9,6 @@ import InputText from "../../components/InputText_0.0.1";
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
 
-// Styles
-import "../../styles/KitStyles.css";
-
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +38,7 @@ class Login extends Component {
         }}
       >
         <div
-          className="gradient-smoke border-radius-sm border-shadow flex-column-start"
+          className="gradient-smoke rounded border-shadow flex-column-start"
           style={{
             height: sizing.screenbarLarge * 6 + "px",
             width: sizing.screenbarLarge * 5 + "px",
@@ -58,7 +55,7 @@ class Login extends Component {
           >
             {/* Icon - Back  */}
             <svg 
-              className="ml-2 mr-auto icon-light" 
+              className="ml-2 mr-auto kit-icon-light" 
               height={sizing.button} 
               width={sizing.button} 
               fill={"white"}
@@ -88,7 +85,7 @@ class Login extends Component {
           >
             {/* Label */}
             <div
-              className="bg-blue color-cream border-radius-sm border-shadow m-2 flex-column"
+              className="bg-blue kit-color-cream rounded border-shadow m-2 flex-column"
               style={{
                 height: sizing.button * 1.5 + "px",
                 width: sizing.button * 8 + "px",
@@ -97,12 +94,12 @@ class Login extends Component {
               }}
             >
               <div>{"Login or create an account."}</div>
-              {warning !== "" && <div className="color-custom-red shake">{warning}</div>}
+              {warning !== "" && <div className="color-custom-red kit-shake">{warning}</div>}
             </div>
 
             {/* Email */}
             <div
-              className="border-radius-sm border-shadow m-2"
+              className="rounded border-shadow m-2"
               style={{
                 height: sizing.button * 1.25 + "px",
                 width: sizing.button * 6 + "px",
@@ -118,7 +115,7 @@ class Login extends Component {
 
             {/* Password */}
             <div
-              className="border-radius-sm border-shadow m-2"
+              className="rounded border-shadow m-2"
               style={{
                 height: sizing.button * 1.25 + "px",
                 width: sizing.button * 6 + "px",
@@ -143,7 +140,7 @@ class Login extends Component {
             >
               {/* Login */}
               <button
-                className="btn bg-green color-cream border-radius-sm border-shadow-hover text-shadow-thin"
+                className="btn bg-green kit-color-cream rounded border-shadow-hover text-shadow-thin"
                 style={{
                   height: sizing.button * 1.25 + "px",
                   width: sizing.button * 3 + "px",
@@ -156,20 +153,20 @@ class Login extends Component {
 
               {/* Request Account */}
               <button
-                className="btn bg-cream border-radius-sm border-shadow-hover"
+                className="btn bg-cream rounded border-shadow-hover"
                 style={{
                   height: sizing.button * 1.25 + "px",
                   width: sizing.button * 3 + "px",
                   fontSize: sizing.font + "px"
                 }}
-                onClick={() => this.handleRequestAccount()}
+                onClick={() => this.handleCreateAccount()}
               >
                 {"Create An Account"}
               </button>
 
               {/* Reset Password */}
               <button
-                className="btn bg-cream border-radius-sm border-shadow-hover"
+                className="btn bg-cream rounded border-shadow-hover"
                 style={{
                   height: sizing.button * 1.25 + "px",
                   width: sizing.button * 3 + "px",
@@ -191,31 +188,16 @@ class Login extends Component {
     const { email, password } = this.state;
 
 
-    // DatabaseManager.signIn(email, password, 
-    // onError => {
-    //   KitUtils.soundAlert();
-    //   this.setState({warning: "Incorrect username or password."});
-    // }, onSuccess => {
-    //   KitUtils.soundSuccess();
-    //   this.props.onClose();
-    // });
+    AuthenticationDispatcher.onLogin(email, password)
   }
 
   handleForgotPassword= () => {
     const { email } = this.state;
 
-
-    // DatabaseManager.requestNewUserPassword(email, 
-    // onError => {
-    //   KitUtils.soundAlert();
-    //   this.setState({warning: "No user found with email: " + email});
-    // }, onSuccess => {
-    //   KitUtils.soundSuccess();
-    //   this.setState({warning: "Password reset sent, check inbox for: " + email});
-    // });
+    AuthenticationDispatcher.forgotPassword()
   }
 
-  handleRequestAccount = () => {
+  handleCreateAccount = () => {
     const { email } = this.state;
     if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(email)) {
       KitUtils.soundSuccess();

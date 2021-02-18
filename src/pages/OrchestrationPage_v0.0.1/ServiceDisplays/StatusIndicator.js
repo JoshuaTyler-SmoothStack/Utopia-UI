@@ -1,56 +1,23 @@
 // Libraries
 import React from 'react';
 
-// Styles
-import "../../../styles/KitStyles.css";
-
 const StatusIndicator = (props) => {
   //@PROP: size - num
   //@PROP: status - string
-  const size = props.size || 30;
+  const size = props.size || "30px";
   const status = props.status || "INACTIVE";
+  let classColorName = "kit-bg-red ";
+  if(status === "ACTIVE") classColorName = "kit-bg-green ";
+  if(status === "PENDING") classColorName = "kit-bg-yellow ";
 
   return (
-    <div>
-      {status === "ACTIVE" &&
-        <div 
-          className={"bg-green border-shadow"}
-          style={{
-            height: size + "px",
-            width: size + "px",
-            borderRadius: "50%",
-          }}
-        />
-      }
-      {status === "PENDING" && 
-        <div 
-          className={"bg-yellow border-shadow flex-column"}
-          style={{
-            height: size + "px",
-            width: size + "px",
-            borderRadius: "50%",
-          }}
-        >
-          <div
-            className="spinner-border color-cream"
-            style={{
-              height: size * 0.5 + "px",
-              width: size * 0.5 + "px",
-            }}
-          />
-        </div>
-      }
-      {status === "INACTIVE" && 
-        <div 
-          className={"bg-red border-shadow"}
-          style={{
-            height: size + "px",
-            width: size + "px",
-            borderRadius: "50%",
-          }}
-        />
-      }
-    </div>
+    <div 
+      className={classColorName + "kit-border-shadow rounded-circle"}
+      style={{
+        height: size,
+        width: size,
+      }}
+    />
   );
 }
 export default StatusIndicator;

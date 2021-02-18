@@ -1,5 +1,5 @@
 import constants from "../resources/constants.json"
-// import Orchestration from "../Orchestration";
+import Orchestration from "../Orchestration";
 
 class AuthenticationDispatcher {
 
@@ -7,20 +7,39 @@ class AuthenticationDispatcher {
     reduce({type: constants.authentication.cancel});
   }
 
-  static onLogin(reduce, payload) {
-    reduce({
-      type: constants.authentication.login,
-      payload: {status: "PENDING"},
-    });
+  static onLogin(reduce, httpRequestBody) {
+    reduce({type: constants.authentication.login});
 
     // Orchestration.createRequest(
     //   constants.httpsRequest.post, 
     //   "users/login", 
-    //   payload,
+    //   httpRequestBody,
     // onError => {
-    // 
+    //   // no connection
+    //   const errorMsg = onError;
+    //   reduce({
+    //     type: constants.authentication.error,
+    //     payload: errorMsg
+    //   })
+
     // }, onSuccess => {
-    // 
+    //   const user = onSuccess;
+
+    //   // check status code
+    //   if(404) {
+    //     const errorMsg = onSuccess;
+    //     reduce({
+    //       type: constants.authentication.error,
+    //       payload: errorMsg
+    //     })
+    //   }
+
+    //   if(validUser(user)){ 
+    //     reduce({
+    //       type: constants.authentication.onSuccess,
+    //       payload: user
+    //     })
+    //   }
     // });
   }
 

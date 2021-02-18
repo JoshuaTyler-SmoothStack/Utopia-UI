@@ -1,5 +1,4 @@
 // Libraries
-import _ from "lodash";
 import React, { Component } from "react";
 import {
   BrowserRouter as Router,
@@ -7,6 +6,14 @@ import {
   Switch,
 } from "react-router-dom";
 import constants from "./resources/constants.json"
+
+// Components
+import BootPage from "./pages/BootPage_v0.0.1";
+import LandingPage from "./pages/LandingPage_v0.0.1";
+import Login from "./componentgroups/Login_v0.0.1";
+import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
+
+// Reducers
 import airplanesReducer, { defaultAirplanesState } from "./reducers/AirplanesReducer";
 import airportsReducer, { defaultAirportsState } from "./reducers/AirportsReducer";
 import authenticationReducer, {defaultAuthenticationState} from "./reducers/AuthenticationReducer";
@@ -17,24 +24,14 @@ import paymentsReducer, { defaultPaymentsState } from "./reducers/PaymentsReduce
 import routesReducer, { defaultRoutesState } from "./reducers/RoutesReducer";
 import usersReducer, { defaultUsersState } from "./reducers/UsersReducer";
 
-// Components
-import BootPage from "./pages/BootPage_v0.0.1";
-import LandingPage from "./pages/LandingPage_v0.0.1";
-import Login from "./componentgroups/Login_v0.0.1";
-import OrchestrationVisual from "./pages/OrchestrationPage_v0.0.1";
-
 // Styles
-import sizes from "./styles/Sizing.json";
-import "./styles/KitStyles.css";
+import "./styles/UtopiaBootstrap.css";
+import "./styles/UtopiaKit.css";
 
 class App extends Component {
   constructor(props) {
     super(props);
-
-    this.handleResize = _.throttle(this.handleResize.bind(this), 100);
-    this.state = {
-      sizing: sizes.xx_small,
-    };
+    this.state = {};
   }
 
   render() {
@@ -60,7 +57,7 @@ class App extends Component {
               />
             </Route>
             <Route path="/orchestration">
-              <OrchestrationVisual
+              <OrchestrationPage
                 reduce={this.handleStateUpdate}
                 state={this.state}
               />
@@ -69,73 +66,23 @@ class App extends Component {
         </Router>
 
         {/* Login */}
-        {isActive_Login && 
+        {/* {isActive_Login && 
           <Login 
             reduce={this.handleStateUpdate}
             state={this.state}
           />
-        }
+        } */}
       </main>
     );
   }
 
   componentDidMount() {
-    this.handleResize();
-    window.addEventListener("resize", () => {
-      this.handleResize();
-    });
     this.handleSynchronizeDefaultReducerStates();
   }
 
   componentDidUpdate() {
     console.log(this.state);
   }
-
-  handleResize = () => {
-    let newSizing = sizes.xx_small;
-
-    // Extra Extra Small
-    if (window.innerWidth < 375) {
-      newSizing = sizes.xx_small;
-    }
-
-    // Extra Small
-    else if (window.innerWidth < 576) {
-      newSizing = sizes.x_small;
-    }
-
-    // Small
-    else if (window.innerWidth < 768) {
-      console.log(sizes.small.breakPoint);
-      newSizing = sizes.small;
-    }
-
-    // Medium
-    else {
-      //if(window.innerWidth < 992) {
-      newSizing = sizes.medium;
-    }
-
-    // Large
-    // else if(window.innerWidth < 1200) {
-    //   newSizing = sizes.large;
-    // }
-
-    // Extra Large
-    // else if(window.innerWidth < 1400) {
-    //   newSizing = sizes.x_large;
-    // }
-
-    // Extra Extra Large
-    // else {
-    //   newSizing = sizes.xx_large;
-    // }
-
-    console.log(newSizing.breakPoint);
-    this.setState({
-      sizing: { ...newSizing, resizeKey: _.uniqueId("resize-") },
-    });
-  };
 
   handleStateUpdate = (action) => {
     switch(action.type.split("_")[0]) {

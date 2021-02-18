@@ -1,5 +1,6 @@
 // Libraries
 import React from 'react';
+import FlexBox from '../../../components/FlexBox';
 import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatcher';
 
 // Components
@@ -7,16 +8,9 @@ import ContentNegotiationIndicator from './ContentNegotiationIndicator';
 import PathIndicator from './PathIndicator';
 import StatusIndicator from './StatusIndicator';
 
-// Styles
-import "../../../styles/KitStyles.css";
-
 const OrchestrationDashboard = (props) => {
   const { state, reduce } = props;
-  const { orchestration, sizing } = state;
-
-  const buttonSize = sizing 
-    ? sizing.button
-    : 30;
+  const { orchestration } = state;
   
   const contentNegotiation = orchestration
     ? orchestration.contentNegotiation
@@ -37,8 +31,8 @@ const OrchestrationDashboard = (props) => {
     : "INACTIVE";
 
   return ( 
-    <div
-      className={"gradient-lightgrey90 border-radius-sm border-shadow flex-column"}
+    <FlexBox
+      className={"kit-gradient-lightgrey90 rounded kit-border-shadow"}
       style={{height:"100%", width:"100%", overflow:"hidden"}}
     >
       {/* Header */}
@@ -49,25 +43,13 @@ const OrchestrationDashboard = (props) => {
         {/* Connection Button */}
         {isActive
           ? <button 
-              className={"btn bg-red color-cream no-user"}
-              style={{
-                height: buttonSize + "px",
-                width: (buttonSize * 4.5) + "px",
-                fontSize: buttonSize * 0.33 + "px",
-                marginLeft: buttonSize * 0.5 + "px",
-              }}
+              className={"btn kit-bg-red kit-color-cream kit-no-user ml-2"}
               onClick={() => OrchestrationDispatcher.onStop(reduce)}
             >
               {"Disconnect Orchestrator"}
             </button>
           : <button 
-              className={"btn bg-green no-user"}
-              style={{
-                height: buttonSize + "px",
-                width: (buttonSize * 4.5) + "px",
-                fontSize: buttonSize * 0.33 + "px",
-                marginLeft: buttonSize * 0.5 + "px",
-              }}
+              className={"btn kit-bg-green kit-no-user ml-2"}
               onClick={() => OrchestrationDispatcher.onStart(reduce)}
             >
               {"Connect Orchestrator"}
@@ -75,18 +57,21 @@ const OrchestrationDashboard = (props) => {
         }
 
         {/* Status Indicator */}
-        <div style={{marginLeft:"auto", marginRight: buttonSize * 0.25 +"px"}}>
+        <div className={"ml-auto mr-2"}>
           <StatusIndicator 
             status={status}
-            size={buttonSize * 0.75}
+            size={"2rem"}
           />
         </div>
 
         {/* URI Path Text */}
-        <div style={{marginRight: buttonSize * 0.5 +"px"}}>
+        <div className={"mr-2"}>
           <PathIndicator 
             location={location}
-            size={buttonSize * 0.8}
+            style={{
+              height:"2rem",
+              width:"10rem"
+            }}
           />
         </div>
       </div>
@@ -96,7 +81,6 @@ const OrchestrationDashboard = (props) => {
         <div style={{width: "100%"}}>
           <ContentNegotiationIndicator
             contentNegotiation={contentNegotiation}
-            size={buttonSize}
             onSelectContentNegotiation={(e) => OrchestrationDispatcher.onContentNegotiation(reduce, e)}  
           />
         </div>
@@ -104,34 +88,25 @@ const OrchestrationDashboard = (props) => {
 
       {/* Function Buttons */}
       {isActive &&
-      <div
-        className={"flex-row-start"}
+      <FlexBox
+        justify={"start"}
+        wrap={"wrap"}
         style={{
           height: "50%", 
           width:"95%",
-          flexWrap: "wrap"
         }}
       >
         <button
-          className={"btn bg-cream bg-yellow-hover border-radius-sm border-shadow border-shadow-hover flex-column"}
-          style={{
-            height: buttonSize + "px", 
-            width: (buttonSize * 3.5) + "px",
-          }}
+          className={"btn kit-bg-cream kit-bg-yellow-hover rounded kit-border-shadow kit-border-shadow-hover"}
+          type={"column"}
           onClick={() => OrchestrationDispatcher.onServices(reduce)}
         >
           {services.status === "PENDING" 
-            ? <div
-                className="spinner-border color-cream"
-                style={{
-                  height: buttonSize * 0.5 + "px",
-                  width: buttonSize * 0.5 + "px",
-                }}
-              />
+            ? <div className="spinner-border kit-color-cream"/>
             : "findActiveServices()"
           }
         </button>
-      </div>}
+      </FlexBox>}
     </div>
   );
 }

@@ -1,15 +1,13 @@
 // Libraries
 import React, { Component } from 'react';
+import FlightsDispatcher from '../../../dispatchers/FlightsDispatcher';
 
 // Components
 import MSTitle from './MSTitle';
 import PathIndicator from './PathIndicator';
+import PopContent from '../../../components/PopContent_v0.0.1';
 import StatusIndicator from './StatusIndicator';
 
-// Styles
-import "../../../styles/KitStyles.css";
-import FlightsDispatcher from '../../../dispatchers/FlightsDispatcher';
-import PopContent from '../../../components/PopContent_v0.0.1';
 
 class FlightsDashboard extends Component {
   constructor(props) {
@@ -41,7 +39,7 @@ class FlightsDashboard extends Component {
 
     return ( 
       <div
-        className={"gradient-lightgrey90 border-radius-sm border-shadow flex-column"}
+        className={"gradient-lightgrey90 rounded border-shadow flex-column"}
         style={{
           height: isActive ? "150px" : "75px", 
           width:"100%", 
@@ -102,7 +100,7 @@ class FlightsDashboard extends Component {
             }}
           >
             <button
-              className={"btn bg-cream bg-yellow-hover border-radius-sm border-shadow border-shadow-hover flex-column"}
+              className={"btn bg-cream bg-yellow-hover rounded border-shadow border-shadow-hover flex-column"}
               style={{
                 height: buttonSize + "px", 
                 width: (buttonSize * 3.5) + "px",
@@ -111,7 +109,7 @@ class FlightsDashboard extends Component {
             >
               {status === "PENDING" 
                 ? <div
-                    className="spinner-border color-cream"
+                    className="spinner-border kit-color-cream"
                     style={{
                       height: buttonSize * 0.5 + "px",
                       width: buttonSize * 0.5 + "px",
@@ -151,7 +149,7 @@ class FlightsDashboard extends Component {
       flightsTable.push(
         <div
           key={"flight-" + flightsList[i].id}
-          className="bg-yellow border-radius-xsm border-shadow flex-row-start m-1"
+          className="bg-yellow rounded border-shadow flex-row-start m-1"
           style={{
             fontSize: "20px",
             width:"95%",
@@ -159,7 +157,7 @@ class FlightsDashboard extends Component {
           }}
         >
           <div
-            className="bg-smoke border-radius-xsm border-shadow flex-row"
+            className="bg-smoke rounded border-shadow flex-row"
             style={{width:"50px"}}
           >
             {flightsList[i].id}
@@ -175,7 +173,7 @@ class FlightsDashboard extends Component {
     }
     return (
       <div
-        className="bg-smoke border-radius-xsm border-shadow flex-column-start"
+        className="bg-smoke rounded border-shadow flex-column-start"
         style={{
           height: "95%",
           width: "95%",

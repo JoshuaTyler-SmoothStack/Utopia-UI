@@ -1,41 +1,31 @@
 // Libraries
 import React from 'react';
-
-// Styles
-import "../../../styles/KitStyles.css";
+import FlexBox from '../../../components/FlexBox';
 
 const ContentNegotiationIndicator = (props) => {
   // @PROP: contentNegotiation - string
-  // @PROP: size - num
   // @PROP: onSelectContentNegotiation - f()
   const contentNegotiation = props.contentNegotiation || "JSON";
-  const size = props.size || 30;
 
   return ( 
-    <div className={"gradient-smoke border-shadow flex-row-start"}>
+    <FlexBox 
+      className={"kit-gradient-smoke kit-border-shadow"}
+      justify={"start"}
+    >
       {/* "Send Request As" Label */}
-      <div 
-        className={"flex-row"}
-        style={{
-          height: size + "px",
-          width: (size * 3) +"px",
-        }}
-      >
+      <FlexBox>
         {"Send requests as: "}
-      </div>
+      </FlexBox >
 
       {/* JSON / XML Toggle */}
-      <div
-        className={"border-radius-sm border-shadow flex-row-start"}
-        style={{
-          height: size * 0.75 + "px",
-          width: (size * 3.5) + "px",
-          overflow: "hidden",
-        }}
+      <FlexBox 
+        className={"rounded kit-border-shadow"}
+        justify={"start"}
+        style={{overflow: "hidden"}}
       >
         {/* JSON */}
         <button
-          className={"btn " + (contentNegotiation === "JSON" && "bg-green")}
+          className={"btn " + (contentNegotiation === "JSON" && "kit-bg-green")}
           style={{
             height: "150%",
             width: "49%",
@@ -47,7 +37,7 @@ const ContentNegotiationIndicator = (props) => {
 
         {/* Divider */}
         <div
-          className="bg-yellow"
+          className="kit-bg-yellow"
           style={{
             height: "100%",
             width: "2%",
@@ -56,7 +46,7 @@ const ContentNegotiationIndicator = (props) => {
 
         {/* XML */}
         <button
-          className={"btn " + (contentNegotiation === "XML" && "bg-green")}
+          className={"btn " + (contentNegotiation === "XML" && "kit-bg-green")}
           style={{
             height: "150%",
             width: "49%",
@@ -65,8 +55,8 @@ const ContentNegotiationIndicator = (props) => {
         >
           {"XML"}
         </button>
-      </div>
-    </div>
+      </FlexBox >
+    </FlexBox >
   );
 }
 export default ContentNegotiationIndicator;
