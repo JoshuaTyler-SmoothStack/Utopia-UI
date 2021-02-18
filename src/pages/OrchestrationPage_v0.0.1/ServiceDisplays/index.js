@@ -10,10 +10,14 @@ import RoutesDashboard from './RoutesDashboard';
 import UsersDashboard from './UsersDashboard';
 import ErrorMessage from '../../../components/ErrorMessage_v0.0.1';
 import FlexBox from "../../../components/FlexBox";
+import ServiceDisplay from "../ServiceDisplay";
 
 const ServicesDisplay = (props) => {
 
   const { reduce, state } = props;
+
+  const serviceHeight = "10rem";
+  const serviceWidth = "30rem";
 
   const services = state.orchestration
   ? state.orchestration.services
@@ -40,6 +44,23 @@ const ServicesDisplay = (props) => {
       {/* Active Services Display */}
       {services.status === "REGISTERED" && services.list.length > 0 && 
         <FlexBox justify={"around"} type={"column"}>
+
+          <ServiceDisplay 
+            className="kit-gradient-lightgrey90 rounded kit-border-shadow"
+            isActive={services.list.includes("airplane-service")}
+            location={"http://airplane-service"}
+            name={"Airplane MS"}
+            reduce={reduce}
+            state={state}
+            style={{
+              height: serviceHeight,
+              width: serviceWidth
+            }}
+          >
+
+
+          </ServiceDisplay>
+
           <AirplanesDashboard 
             isActive={services.list.includes("airplane-service")}
             reduce={reduce}
