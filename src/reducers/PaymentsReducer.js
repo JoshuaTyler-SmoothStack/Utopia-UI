@@ -24,6 +24,9 @@ const PaymentsReducer = (action) => {
 
     case payments.stop:
       return defaultPaymentsState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default PaymentsReducer;

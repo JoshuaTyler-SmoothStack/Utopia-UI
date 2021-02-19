@@ -1,6 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
+import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import FlexBox from '../../../components/FlexBox';
@@ -18,14 +19,14 @@ class AirportsDashboard extends Component {
   }
 
   render() {
-    const { state } = this.props;
+    const { airports } = RootReducer.getState();
 
-    const searchResults = state.airports
-    ? state.airports.searchResults
+    const searchResults = airports
+    ? airports.searchResults
     : [];
 
-    const status = state.airports
-    ? state.airports.status
+    const status = airports
+    ? airports.status
     : "INACTIVE";
 
     return (
@@ -67,17 +68,17 @@ class AirportsDashboard extends Component {
   }
 
   findAllAirports = () => {
-    const { reduce } = this.props;
-    AirportsDispatcher.onFindAll(reduce);
+    AirportsDispatcher.onFindAll();
     this.setState({isActive_PopContent: true});
   }
 
   handleRenderAirportList = (airportsList) => {
     let airportsTable = [];
     for(var i in airportsList) {
+      const index = Number(i) + 1;
       airportsTable.push(
-        <tr>
-          <th scrop="row">{Number(i) + 1}</th>
+        <tr key={index}>
+          <th scrop="row">{index}</th>
           <td>{airportsList[i].iataId}</td>
           <td>{airportsList[i].city}</td>
         </tr>

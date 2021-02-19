@@ -1,23 +1,24 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class AirportsDispatcher {
 
-  static onFindAll(reduce) {
-    reduce({type: constants.airports.request});
+  static onFindAll() {
+   RootReducer.reduce({type: constants.airports.request});
 
     Orchestration.createRequest(
       constants.httpRequest.get,
       "airports", 
       null,
       onError => {
-        reduce({
+       RootReducer.reduce({
           type: constants.airports.error,
           payload: onError
         });
       }, 
       onSuccess => {
-        reduce({
+       RootReducer.reduce({
           type: constants.airports.response,
           payload: onSuccess
         });
@@ -25,7 +26,7 @@ class AirportsDispatcher {
   }
 
     static onPostAirplane(reduce, payload) {
-      reduce({
+     RootReducer.reduce({
         type: constants.orchestration.airports,
         payload: payload
       });
@@ -35,7 +36,7 @@ class AirportsDispatcher {
         "airports", 
         payload,
         onError => {
-          reduce({
+         RootReducer.reduce({
             type: constants.orchestration.airports,
             payload: {
               list: [],
@@ -44,7 +45,7 @@ class AirportsDispatcher {
           });
         }, 
         onSuccess => {
-          reduce({
+         RootReducer.reduce({
             type: constants.orchestration.airports,
             payload: {
               list: onSuccess,

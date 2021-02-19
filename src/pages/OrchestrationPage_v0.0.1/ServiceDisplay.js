@@ -12,7 +12,7 @@ const ServiceDisplay = (props) => {
     isActive,
     location,
     name,
-    status,
+    // status,
     style,
   } = props;
 

@@ -17,10 +17,7 @@ const AuthenticationReducer = (action) => {
       return {isActive_LoginUI: true};
 
     case authentication.loginRequest:
-      return {
-        status: "PENDING",
-        userId: "1"
-      };
+      return {status: "PENDING"};
 
     case authentication.loginError:
       return {
@@ -30,13 +27,19 @@ const AuthenticationReducer = (action) => {
       };
 
     case authentication.loginSuccess:
+      console.log(action.payload);
       return {
-        status: "SUCCESS",
-        userId: action.payload.userId
+        status: "ACTIVE",
+        userId: action.payload 
+        ? action.payload.id
+        : "UNKNOWN"
       };
 
     case authentication.logout:
       return defaultAuthenticationState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default AuthenticationReducer;

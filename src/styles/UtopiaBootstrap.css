@@ -1407,7 +1407,7 @@ pre {
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .form-control {
       transition: none; } }
   .form-control::-ms-expand {
@@ -1761,7 +1761,7 @@ textarea.form-control {
   line-height: 1.5;
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .btn {
       transition: none; } }
   .btn:hover {
@@ -2193,7 +2193,7 @@ input[type="button"].btn-block {
 
 .fade {
   transition: opacity 0.15s linear; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .fade {
       transition: none; } }
   .fade:not(.show) {
@@ -2207,7 +2207,7 @@ input[type="button"].btn-block {
   height: 0;
   overflow: hidden;
   transition: height 0.35s ease; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .collapsing {
       transition: none; } }
 
@@ -2751,7 +2751,7 @@ input[type="button"].btn-block {
     background-color: #adb5bd;
     border-radius: 0.5rem;
     transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:RootReducer.reduce) {
       .custom-switch .custom-control-label::after {
         transition: none; } }
   .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
@@ -2888,7 +2888,7 @@ input[type="button"].btn-block {
     border-radius: 1rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     appearance: none; }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:RootReducer.reduce) {
       .custom-range::-webkit-slider-thumb {
         transition: none; } }
     .custom-range::-webkit-slider-thumb:active {
@@ -2909,7 +2909,7 @@ input[type="button"].btn-block {
     border-radius: 1rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     appearance: none; }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:RootReducer.reduce) {
       .custom-range::-moz-range-thumb {
         transition: none; } }
     .custom-range::-moz-range-thumb:active {
@@ -2933,7 +2933,7 @@ input[type="button"].btn-block {
     border-radius: 1rem;
     transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     appearance: none; }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:RootReducer.reduce) {
       .custom-range::-ms-thumb {
         transition: none; } }
     .custom-range::-ms-thumb:active {
@@ -2968,7 +2968,7 @@ input[type="button"].btn-block {
 .custom-file-label,
 .custom-select {
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .custom-control-label::before,
     .custom-file-label,
     .custom-select {
@@ -3576,7 +3576,7 @@ input[type="button"].btn-block {
   vertical-align: baseline;
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .badge {
       transition: none; } }
   a.badge:hover, a.badge:focus {
@@ -3806,7 +3806,7 @@ input[type="button"].btn-block {
   white-space: nowrap;
   background-color: #c11a2b;
   transition: width 0.6s ease; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .progress-bar {
       transition: none; } }
 
@@ -3816,7 +3816,7 @@ input[type="button"].btn-block {
 
 .progress-bar-animated {
   animation: progress-bar-stripes 1s linear infinite; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .progress-bar-animated {
       animation: none; } }
 
@@ -4138,7 +4138,7 @@ a.close.disabled {
   .modal.fade .modal-dialog {
     transition: transform 0.3s ease-out;
     transform: translate(0, -50px); }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:RootReducer.reduce) {
       .modal.fade .modal-dialog {
         transition: none; } }
   .modal.show .modal-dialog {
@@ -4494,7 +4494,7 @@ a.close.disabled {
   margin-right: -100%;
   backface-visibility: hidden;
   transition: transform 0.6s ease-in-out; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .carousel-item {
       transition: none; } }
 
@@ -4527,7 +4527,7 @@ a.close.disabled {
   z-index: 0;
   opacity: 0;
   transition: opacity 0s 0.6s; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .carousel-fade .active.carousel-item-left,
     .carousel-fade .active.carousel-item-right {
       transition: none; } }
@@ -4546,7 +4546,7 @@ a.close.disabled {
   text-align: center;
   opacity: 0.5;
   transition: opacity 0.15s ease; }
-  @media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion:RootReducer.reduce) {
     .carousel-control-prev,
     .carousel-control-next {
       transition: none; } }
@@ -4604,7 +4604,7 @@ a.close.disabled {
     border-bottom: 10px solid transparent;
     opacity: .5;
     transition: opacity 0.6s ease; }
-    @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion:RootReducer.reduce) {
       .carousel-indicators li {
         transition: none; } }
   .carousel-indicators .active {

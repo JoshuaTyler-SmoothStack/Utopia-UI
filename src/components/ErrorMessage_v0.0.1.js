@@ -6,7 +6,7 @@ const ErrorMessage = (props) => {
     if(props.soundAlert) {
       KitUtils.soundAlert();
     }
-  }, []);
+  });
 
   const message = props.message || "Error";
   return (

@@ -11,6 +11,7 @@ import ServiceDisplay from './ServiceDisplay';
 // Components - Dashboards
 import AirplanesDashboard from './ServiceDisplays/AirplanesDashboard';
 import AirportsDashboard from './ServiceDisplays/AirportsDashboard';
+import RootReducer from '../../reducers/RootReducer';
 
 class OrchestrationPage extends Component {
   constructor(props) {
@@ -23,15 +24,14 @@ class OrchestrationPage extends Component {
   }
 
   render() { 
-    const { state, reduce } = this.props;
-    const { orchestration } = state;
+    const { orchestration } = RootReducer.getState();
 
     const isActive_OrchestrationDashboard = orchestration
       ? orchestration.status === "ACTIVE"
       : false;
 
-    const services = state.orchestration
-      ? state.orchestration.services
+    const services = orchestration
+      ? orchestration.services
       : {list: [], status: "UNKNOWN"};
 
     return ( 
@@ -48,8 +48,6 @@ class OrchestrationPage extends Component {
           {/* OrchestratorMS */}
           <OrchestratorDashboard
             className="kit-bg-grey mb-3"
-            state={state}
-            reduce={reduce}
             style={{
               height: isActive_OrchestrationDashboard
               ? "12rem"
@@ -83,36 +81,23 @@ class OrchestrationPage extends Component {
                 isActive={services.list.includes("airplane-service")}
                 location={"http://airplane-service"}
                 name={"Airplane MS"}
-                reduce={reduce}
-                state={state}
               >
-                <AirplanesDashboard 
-                  reduce={reduce}
-                  state={state}
-                />
+                <AirplanesDashboard/>
               </ServiceDisplay>
 
               <ServiceDisplay 
                 isActive={services.list.includes("airport-service")}
                 location={"http://airport-service"}
                 name={"Airport MS"}
-                reduce={reduce}
-                state={state}
               >
-                <AirportsDashboard 
-                  reduce={reduce}
-                  state={state}
-                />
+                <AirportsDashboard/>
               </ServiceDisplay>
-            </FlexBox>}       
+            </FlexBox>}
           </FlexBox>}
         </FlexBox>
 
         {/* Navbar */}
-        <NavBar
-          reduce={reduce}
-          state={state}
-        />
+        <NavBar/>
       </div>
     );
   }

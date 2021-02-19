@@ -2,14 +2,14 @@
 import React from 'react';
 import FlexBox from '../../../components/FlexBox';
 import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatcher';
+import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
 import StatusIndicator from '../StatusIndicator';
 
 const OrchestrationDashboard = (props) => {
-  const { state, reduce } = props;
-  const { orchestration } = state;
+  const { orchestration } = RootReducer.getState();
   
   const contentNegotiation = orchestration
     ? orchestration.contentNegotiation
@@ -46,13 +46,13 @@ const OrchestrationDashboard = (props) => {
         {isActive
           ? <button 
               className={"btn btn-warning ml-2"}
-              onClick={() => OrchestrationDispatcher.onStop(reduce)}
+              onClick={() => OrchestrationDispatcher.onStop()}
             >
               {"Disconnect Orchestrator"}
             </button>
           : <button 
               className={"btn btn-success ml-2"}
-              onClick={() => OrchestrationDispatcher.onStart(reduce)}
+              onClick={() => OrchestrationDispatcher.onStart()}
             >
               {"Connect Orchestrator"}
             </button>
@@ -75,7 +75,7 @@ const OrchestrationDashboard = (props) => {
         <div style={{width: "100%"}}>
           <ContentNegotiationIndicator
             contentNegotiation={contentNegotiation}
-            onSelectContentNegotiation={(e) => OrchestrationDispatcher.onContentNegotiation(reduce, e)}  
+            onSelectContentNegotiation={(e) => OrchestrationDispatcher.onContentNegotiation(e)}  
           />
         </div>
       }
@@ -86,10 +86,10 @@ const OrchestrationDashboard = (props) => {
         <button
           className={"btn btn-info"}
           type={"column"}
-          onClick={() => OrchestrationDispatcher.onServices(reduce)}
+          onClick={() => OrchestrationDispatcher.onServices()}
         >
           {services.status === "PENDING" 
-            ? <div className="spinner-border kit-color-cream"/>
+            ? <div className="spinner-border"/>
             : "findActiveServices()"
           }
         </button>

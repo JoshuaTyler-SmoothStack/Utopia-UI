@@ -1,8 +1,10 @@
 // Libraries
 import React, { Component } from 'react';
 import AirplanesDispatcher from '../../../dispatchers/AirplanesDispatcher';
+import RootReducer from '../../../reducers/RootReducer';
 
 // Components
+import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent_v0.0.1';
 
 class AirplanesDashboard extends Component {
@@ -17,11 +19,15 @@ class AirplanesDashboard extends Component {
   }
 
   render() {
-    const { state } = this.props;
+    const { airplanes } = RootReducer.getState();
 
-    const searchResults = state.airplanes
-    ? state.airplanes.searchResults
+    const searchResults = airplanes
+    ? airplanes.searchResults
     : [];
+
+    const status = airplanes
+    ? airplanes.status
+    : "INACTIVE";
 
     return (
     <div>
@@ -61,17 +67,17 @@ class AirplanesDashboard extends Component {
   }
 
   findAllAirplanes = () => {
-    const { reduce } = this.props;
-    AirplanesDispatcher.onFindAll(reduce);
+    AirplanesDispatcher.onFindAll();
     this.setState({isActive_PopContent: true});
   }
 
   handleRenderAirplaneList = (airplanesList) => {
     let airplanesTable = [];
     for(var i in airplanesList) {
+      const index = Number(i) + 1;
       airplanesTable.push(
-        <tr>
-          <th scrop="row">{i}</th>
+        <tr key={index}>
+          <th scrop="row">{index}</th>
           <td>{airplanesList[i].iataId}</td>
           <td>{airplanesList[i].city}</td>
         </tr>
