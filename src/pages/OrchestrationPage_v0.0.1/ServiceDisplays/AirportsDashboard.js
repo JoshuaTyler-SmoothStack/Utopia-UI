@@ -6,6 +6,8 @@ import RootReducer from '../../../reducers/RootReducer';
 // Components
 import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent_v0.0.1';
+import ErrorMessage from '../../../components/ErrorMessage_v0.0.1';
+// import Orchestration from '../../../Orchestration';
 
 class AirportsDashboard extends Component {
   constructor(props) {
@@ -40,10 +42,7 @@ class AirportsDashboard extends Component {
           className={"btn btn-info rounded"}
           onClick={() => this.findAllAirports()}
         >
-          {status === "PENDING" 
-            ? <div className="spinner-border text-light"/>
-            : "findAllAirports()"
-          }
+          {"findAllAirports()"}
         </button>
       </FlexBox>
 
@@ -61,6 +60,16 @@ class AirportsDashboard extends Component {
           }}
           onClose={() => this.setState({isActive_PopContent: false})}
         >
+          {status === "PENDING" &&
+            <div className="spinner-border text-light"/>
+          }
+
+          {status === "ERROR" &&
+            <ErrorMessage soundAlert={true}>
+              Error
+            </ErrorMessage>
+          }
+
           {this.handleRenderAirportList(searchResults)}
         </PopContent>
       }
@@ -69,6 +78,30 @@ class AirportsDashboard extends Component {
 
   findAllAirports = () => {
     AirportsDispatcher.onFindAll();
+
+    // RootReducer.setState((state) => ({
+    //   ...state,
+    //   airports: {status: "PENDING"}
+    // }));
+
+    // Orchestration.createRequest("/airports", onSuccess => {
+    //   RootReducer.setState((state) => ({
+    //     ...state,
+    //     airports: {
+    //       searchresults: onSuccess,
+    //       status: "REGISTERED"
+    //     }
+    //   }));
+    // }, onError => {
+    //   RootReducer.setState((state) => ({
+    //     ...state,
+    //     airports: {
+    //       searchresults: onSuccess,
+    //       status: "REGISTERED"
+    //     }
+    //   }));
+    // });
+
     this.setState({isActive_PopContent: true});
   }
 

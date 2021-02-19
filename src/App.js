@@ -50,6 +50,16 @@ class App extends Component {
               <OrchestrationPage/>
             </Route>
 
+            {/* Orchestration Page */}
+            <Route path="/logint">
+              <div style={{
+                height: "100vh",
+                width: "100vw"
+              }}>
+                <Login/>
+              </div>
+            </Route>
+
           </Switch>
         </Router>
 

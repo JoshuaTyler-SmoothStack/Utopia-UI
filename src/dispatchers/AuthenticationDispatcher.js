@@ -9,11 +9,27 @@ class AuthenticationDispatcher {
   }
 
   static onForgotPassword(email) {
-    // TODO
-    // RootReducer.reduce({
-    //   type: constants.authentication.forgotPassword,
-    //   payload: email
-    // });
+    RootReducer.reduce({type: constants.authentication.forgotPasswordRequest});
+
+    const httpBody = {
+      email: email
+    }
+
+    Orchestration.createRequest(
+      constants.httpRequest.post,
+      "/users/forgotpassword",
+      httpBody,
+      onError => {
+        RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+      }, httpResponse => {
+        console.log(httpResponse);
+        if(httpResponse.error) {
+          RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+        } else {
+          RootReducer.reduce({type: constants.authentication.forgotPasswordSuccess});
+        }
+      }
+    )
   }
 
   static onCreateAccount(email) {
@@ -90,6 +106,7 @@ class AuthenticationDispatcher {
   }
 
   static onPrompt() {
+    console.log("Called");
    RootReducer.reduce({type: constants.authentication.prompt});
   }
 }

@@ -30,6 +30,18 @@ const AuthenticationReducer = (action) => {
         status: "ERROR"
       };
 
+    case authentication.forgotPasswordRequest:
+      return {status: "PENDING"};
+
+    case authentication.forgotPasswordError:
+      return {
+        status: "ERROR",
+        error: "Did not work ERROR"
+      };
+
+    case authentication.forgotPasswordSuccess:
+      return {status: "SUCCESS"};
+
     case authentication.prompt:
       return {
         error: "",
@@ -68,6 +80,7 @@ export default AuthenticationReducer;
 export const defaultAuthenticationState = {
   error: "",
   isActive_LoginUI: false,
+  forgotPasswordStatus: "",
   status: "INACTIVE",
   userId: "UNKNOWN"
 };

@@ -7,6 +7,7 @@ class AirportsDispatcher {
   static onFindAll() {
    RootReducer.reduce({type: constants.airports.request});
 
+   setTimeout(() => {
     Orchestration.createRequest(
       constants.httpRequest.get,
       "airports", 
@@ -19,13 +20,13 @@ class AirportsDispatcher {
       }, 
       onSuccess => {
        RootReducer.reduce({
-          type: constants.airports.response,
-          payload: onSuccess
+          type: constants.airports.error
         });
     });
+   }, 500);
   }
 
-    static onPostAirplane(reduce, payload) {
+    static onPostAirplane(payload) {
      RootReducer.reduce({
         type: constants.orchestration.airports,
         payload: payload
