@@ -21,7 +21,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    RootReducer.setState = (...state) => this.setState(...state);
+    RootReducer.setState = (e) => this.setState(e);
     RootReducer.getState = () => this.state;
   }
 

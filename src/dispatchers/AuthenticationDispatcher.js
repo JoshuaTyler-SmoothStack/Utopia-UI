@@ -16,8 +16,13 @@ class AuthenticationDispatcher {
     // });
   }
 
-  static onLogin(httpRequestBody) {
+  static onLogin(email, password) {
    RootReducer.reduce({type: constants.authentication.loginRequest});
+
+    const httpRequestBody = {
+      email: email,
+      password: password,
+    };
 
     Orchestration.createRequest(
       constants.httpRequest.get, 
@@ -32,6 +37,7 @@ class AuthenticationDispatcher {
 
     }, onSuccess => {
       const user = onSuccess;
+      console.log(user);
 
       // check content is not error msg
       // if(404) {

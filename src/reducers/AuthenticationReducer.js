@@ -14,7 +14,11 @@ const AuthenticationReducer = (action) => {
       };
 
     case authentication.prompt:
-      return {isActive_LoginUI: true};
+      return {
+        error: "",
+        isActive_LoginUI: true,
+        status: "INACTIVE",
+      };
 
     case authentication.loginRequest:
       return {status: "PENDING"};
@@ -27,7 +31,7 @@ const AuthenticationReducer = (action) => {
       };
 
     case authentication.loginSuccess:
-      console.log(action.payload);
+      console.log("UserMS - Login payload: ", action.payload);
       return {
         status: "ACTIVE",
         userId: action.payload 
