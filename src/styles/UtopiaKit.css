@@ -38,6 +38,10 @@
   -o-user-drag: none;
 }
 
+.kit-no-pointer {
+  pointer-events: none;
+}
+
 .kit-no-select,
 .kit-no-user {
   -webkit-user-select: none;

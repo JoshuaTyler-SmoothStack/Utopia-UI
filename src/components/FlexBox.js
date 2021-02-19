@@ -1,15 +1,12 @@
 import React from "react";
 
 const FlexBox = (props) => {
-  // @PROP: align
-  // @PROP: justify
-  // @PROP: reverse
-  // @PROP: size
-  // @PROP: type
-
-  const className = props.className
-  ? " " + props.className
-  : "";
+  // @PROP: align - string
+  // @PROP: grow - num
+  // @PROP: justify - string
+  // @PROP: reverse - bool
+  // @PROP: size - string
+  // @PROP: type - string
 
   let align = "center";
   if(props.align === "baseline")  align = "baseline";
@@ -36,8 +33,8 @@ const FlexBox = (props) => {
   let type = "row";
   if(props.type === "column") type = "column";
 
-  let wrap = "no-wrap"
-  if(props.wrap === "wrap") wrap = "wrap";
+  let wrap = "wrap"
+  if(props.wrap === "no-wrap") wrap = "no-wrap";
 
   return (
     <div
@@ -55,10 +52,16 @@ const FlexBox = (props) => {
         "flex-" +
         size +
         wrap + 
-        reverse + " " +
-        className
+        reverse +
+        (props.className 
+          ? " " + props.className
+          : ""
+        )
       }
-      style={props.style}
+      style={{
+        ...props.style, 
+        flexGrow: props.grow ? props.grow : 0
+      }}
       onClick={props.onClick}
     >
       {props.children}

@@ -66,12 +66,12 @@ class App extends Component {
         </Router>
 
         {/* Login */}
-        {/* {isActive_Login && 
+        {isActive_Login && 
           <Login 
             reduce={this.handleStateUpdate}
             state={this.state}
           />
-        } */}
+        }
       </main>
     );
   }

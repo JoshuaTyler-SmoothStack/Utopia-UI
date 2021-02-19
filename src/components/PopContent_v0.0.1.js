@@ -4,7 +4,6 @@ import FlexBox from "./FlexBox";
 class PopContent extends Component {
   constructor(props) {
     super(props);
-    // @PROP: buttonClassName - string
     // @PROP: onClose - f()
 
     this.state = {
@@ -13,7 +12,7 @@ class PopContent extends Component {
   }
 
   render() {
-    const { buttonClassName, children, className, style } = this.props;
+    const { children, className, style } = this.props;
     const { isDisabled } = this.state;
 
     return (
@@ -22,6 +21,7 @@ class PopContent extends Component {
           <FlexBox
             className={className}
             style={style}
+            wrap={"no-wrap"}
           >
             {/* Content */}
             <FlexBox

@@ -1,94 +1,82 @@
 // Libraries
-import React from 'react';
-import FlexBox from '../../../components/FlexBox';
+import React from "react";
+import FlexBox from "../../components/FlexBox";
 
 // Components
-import PathIndicator from './PathIndicator';
-import StatusIndicator from './StatusIndicator';
+import StatusIndicator from "./StatusIndicator";
 
 const ServiceDisplay = (props) => {
-  const { children, className, isActive, location, 
-    name, status, reduce, state, style } = props;
-  const {  } = state;
+  const {
+    children,
+    className,
+    isActive,
+    location,
+    name,
+    status,
+    style,
+  } = props;
 
   const _isActive = isActive || false;
   const _location = location || "UNKOWN";
   const _name = name || "UNKOWN";
   const _status = status || "INACTIVE";
 
-  return ( 
-    <FlexBox
-      className={className}
-      style={{height:"100%", width:"100%", overflow:"hidden"}}
+  return (
+    <FlexBox 
+      className={(className || "" ) + " kit-gradient-lightgrey90 rounded kit-border-shadow mb-3"} 
+      style={{
+        ...style,
+        height: _isActive
+        ? "10rem"
+        : "5rem",
+        width: "100%"
+      }}
     >
+      
       {/* Header */}
-      <div
-        className={"flex-row-start"}
-        style={{height: "40%", width:"100%"}}
+      <FlexBox
+        justify={"start"}
+        style={{ height: "40%", width: "100%" }}
       >
         {/* Title */}
-        <MSTitle
-          className="ml-2"
-          isActive={isActive}
-          text={_name}
-        />
+        <FlexBox 
+          className={
+            " btn rounded no-user kit-border-shadow kit-no-pointer ml-2 " + 
+            (_isActive ? "kit-bg-green" : "kit-bg-yellow")
+          }
+          style={{width: "10rem"}}
+        >
+          {_name}
+        </FlexBox>
 
         {/* Status Indicator */}
-        <StatusIndicator
-          className="ml-auto mr-2"
-          status={_status}
-        />
-        
+        <StatusIndicator className="ml-auto mr-2" status={_status} />
+
         {/* URI Path Text */}
-        <PathIndicator
-          className="mr-2"
-          location={_location}
-          size={buttonSize * 0.8}
-        />
-    </div>
-
-    {/* Divider */}
-    {isActive &&
-    <div 
-        className={"gradient-smoke border-shadow flex-row-start"}
-        style={{
-        height:"5%",
-        width:"100%"
-        }}
-    />
-    }
-
-    {/* Function Buttons */}
-    {isActive &&
-    <div
-        className={"flex-row-start"}
-        style={{
-        height: "55%", 
-        width:"95%",
-        flexWrap: "wrap"
-        }}
-    >
-        <button
-        className={"btn bg-cream bg-yellow-hover rounded border-shadow border-shadow-hover flex-column"}
-        style={{
-            height: buttonSize + "px", 
-            width: (buttonSize * 3.5) + "px",
-        }}
-        onClick={() => this.findAllAirports()}
+        <FlexBox 
+          className={"rounded kit-bg-smoke rounded kit-border-shadow mr-2"}
+          style={{height: "2rem", width: "33%"}}
         >
-        {status === "PENDING" 
-            ? <div
-                className="spinner-border kit-color-cream"
-                style={{
-                height: buttonSize * 0.5 + "px",
-                width: buttonSize * 0.5 + "px",
-                }}
-            />
-            : "findAllAirports()"
-        }
-        </button>
-    </div>
+          {_location}
+        </FlexBox>
+      </FlexBox>
+
+      {/* Divider */}
+      {_isActive &&
+      <div
+        className="kit-bg-white"
+        style={{
+          height: "5%",
+          width: "100%",
+        }}
+      />}
+
+      {/* Service Dashboard */}
+      {_isActive &&
+      <div style={{ height: "55%", width: "100%" }}>
+         {children}
+      </div>}
     </FlexBox>
   );
-}
+};
 export default ServiceDisplay;

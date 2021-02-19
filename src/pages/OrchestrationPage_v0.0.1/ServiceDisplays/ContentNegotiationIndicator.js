@@ -9,7 +9,7 @@ const ContentNegotiationIndicator = (props) => {
 
   return ( 
     <FlexBox 
-      className={"kit-gradient-smoke kit-border-shadow"}
+      className={"kit-gradient-smoke kit-border-shadow p-1"}
       justify={"start"}
     >
       {/* "Send Request As" Label */}
@@ -19,38 +19,22 @@ const ContentNegotiationIndicator = (props) => {
 
       {/* JSON / XML Toggle */}
       <FlexBox 
-        className={"rounded kit-border-shadow"}
+        className={"rounded kit-bg-grey kit-border-shadow ml-2"}
         justify={"start"}
-        style={{overflow: "hidden"}}
       >
         {/* JSON */}
         <button
-          className={"btn " + (contentNegotiation === "JSON" && "kit-bg-green")}
-          style={{
-            height: "150%",
-            width: "49%",
-          }}
+          className={"btn" + (contentNegotiation === "JSON" ? " btn-success" : "")}
+          style={{width: "4rem"}}
           onClick={() => props.onSelectContentNegotiation("JSON")}
         >
           {"JSON"}
         </button>
 
-        {/* Divider */}
-        <div
-          className="kit-bg-yellow"
-          style={{
-            height: "100%",
-            width: "2%",
-          }}
-        />
-
         {/* XML */}
         <button
-          className={"btn " + (contentNegotiation === "XML" && "kit-bg-green")}
-          style={{
-            height: "150%",
-            width: "49%",
-          }}
+          className={"btn" + (contentNegotiation === "XML" ? " btn-success" : "")}
+          style={{width: "4rem"}}
           onClick={() => props.onSelectContentNegotiation("XML")}
         >
           {"XML"}

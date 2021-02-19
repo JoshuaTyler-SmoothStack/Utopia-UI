@@ -8,6 +8,7 @@ import InputText from "../../components/InputText_0.0.1";
 
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
+import FlexBox from "../../components/FlexBox";
 
 class Login extends Component {
   constructor(props) {
@@ -24,40 +25,36 @@ class Login extends Component {
 
   render() {
     const { reduce, state } = this.props;
-    const { sizing } = state;
     const { warning } = this.state;
 
     return (
-      <div
-        className="bg-smoke-light flex-column"
+      <FlexBox
+        className="kit-bg-smoke-light"
         style={{
           position: "absolute",
           height: "100vh",
           width: "100vw",
           top: "0",
         }}
+        type={"column"}
       >
-        <div
-          className="gradient-smoke rounded border-shadow flex-column-start"
-          style={{
-            height: sizing.screenbarLarge * 6 + "px",
-            width: sizing.screenbarLarge * 5 + "px",
-            overflow: "hidden",
-          }}
+        <FlexBox
+          className="kit-gradient-smoke rounded kitborder-shadow"
+          justify={"start"}
+          style={{width: "30rem", overflow: "hidden"}}
+          type={"column"}
+          wrap={"no-wrap"}
         >
           {/* Header */}
-          <div
-            className="gradient-red border-shadow mb-2 flex-row"
-            style={{
-              height: sizing.button * 1.5 + "px",
-              width: "100%",
-            }}
+          <FlexBox
+            className="kit-gradient-red kit-border-shadow mb-2"
+            style={{height: "4rem", width: "100%"}}
           >
             {/* Icon - Back  */}
             <svg 
               className="ml-2 mr-auto kit-icon-light" 
-              height={sizing.button} 
-              width={sizing.button} 
+              height={"3rem"} 
+              width={"3rem"} 
               fill={"white"}
               viewBox="0 0 16 16"
               onClick={() => AuthenticationDispatcher.onCancel(reduce)}
@@ -67,120 +64,99 @@ class Login extends Component {
 
             {/* Utopia WorldBalloonGif */}
             <img src={gifWorldBalloon} alt=""
-              className="mr-2"
-              style={{
-                height: sizing.button * 1.25 +"px",
-                borderRadius: "50%"
-              }}
+              className="mr-2 rounded-circle"
+              style={{ height: "3rem"}}
             />
-          </div>
+          </FlexBox>
 
           {/* Body */}
-          <div
+          <FlexBox
             className="flex-column-around"
-            style={{
-              height: "75%",
-              width: "100%"
-            }}
+            justify={"around"}
+            style={{height: "30rem", width: "100%"}}
+            type={"column"}
+            wrap={"no-wrap"}
           >
             {/* Label */}
-            <div
-              className="bg-blue kit-color-cream rounded border-shadow m-2 flex-column"
-              style={{
-                height: sizing.button * 1.5 + "px",
-                width: sizing.button * 8 + "px",
-                fontSize: sizing.h1+"px",
-                textAlign: "center",
-              }}
+            <FlexBox
+              className="card text-white bg-dark mt-5 mb-3"
+              type={"column"}
+              style={{width: "75%"}}
             >
-              <div>{"Login or create an account."}</div>
-              {warning !== "" && <div className="color-custom-red kit-shake">{warning}</div>}
-            </div>
+              <h5 className="card-header">{"Login or create an account."}</h5>
+              {warning !== "" && <div className="text-warning kit-shake">{warning}</div>}
+            </FlexBox>
 
-            {/* Email */}
-            <div
-              className="rounded border-shadow m-2"
-              style={{
-                height: sizing.button * 1.25 + "px",
-                width: sizing.button * 6 + "px",
-                overflow: "hidden",
-              }}
+            {/* Inputs */}
+            <FlexBox
+              className="mb-auto"
+              type={"column"}
+              style={{width: "100%"}}
+              wrap={"no-wrap"}
             >
+              {/* Email */}
               <InputText
+                className="rounded kit-border-shadow m-3"
                 label={"Email"}
-                fontSize={sizing.h2}
+                labelClassName={"text-info"}
+                fontClass={"h4"}
+                style={{
+                  height: "4rem",
+                  width: "66%"
+                }}
                 onChange={(e) => this.setState({ email: e })}
               />
-            </div>
 
-            {/* Password */}
-            <div
-              className="rounded border-shadow m-2"
-              style={{
-                height: sizing.button * 1.25 + "px",
-                width: sizing.button * 6 + "px",
-                overflow: "hidden",
-              }}
-            >
+              {/* Password */}
               <InputText
+                className="rounded kit-border-shadow m-3"
                 label={"Password"}
-                fontSize={sizing.h2}
+                labelClassName={"text-info"}
+                fontClass={"h4"}
                 isHidden={true}
-                onChange={(e) => this.setState({ password: e })}
+                style={{
+                  height: "4rem",
+                  width: "66%"
+                }}
+                onChange={(e) => this.setState({ email: e })}
               />
-            </div>
+            </FlexBox>
 
             {/* Actions */}
-            <div
-              className="bg-grey m-2 flex-row-around"
-              style={{
-                height: sizing.button * 2 + "px",
-                width: "100%",
-              }}
+            <FlexBox
+              className="bg-light mb-2"
+              justify={"around"}
+              style={{height:"5rem", width: "100%"}}
             >
-              {/* Login */}
+              {/* Create Account */}
               <button
-                className="btn bg-green kit-color-cream rounded border-shadow-hover text-shadow-thin"
-                style={{
-                  height: sizing.button * 1.25 + "px",
-                  width: sizing.button * 3 + "px",
-                  fontSize: sizing.h2 + "px"
-                }}
-                onClick={() => this.handleLogin()}
-              >
-                {"Login"}
-              </button>
-
-              {/* Request Account */}
-              <button
-                className="btn bg-cream rounded border-shadow-hover"
-                style={{
-                  height: sizing.button * 1.25 + "px",
-                  width: sizing.button * 3 + "px",
-                  fontSize: sizing.font + "px"
-                }}
+                className="btn btn-secondary"
                 onClick={() => this.handleCreateAccount()}
               >
-                {"Create An Account"}
+                {"Create Account"}
               </button>
 
               {/* Reset Password */}
               <button
-                className="btn bg-cream rounded border-shadow-hover"
-                style={{
-                  height: sizing.button * 1.25 + "px",
-                  width: sizing.button * 3 + "px",
-                  fontSize: sizing.font + "px"
-                }}
+                className="btn btn-secondary"
                 onClick={() => this.handleForgotPassword()}
               >
-                {"Forgot Password?"}
+                {"Forgot Password"}
               </button>
-            </div>
-          </div>
 
-        </div>
-      </div>
+              {/* Login */}
+              <button
+                className="btn btn-success btn-lg"
+                onClick={() => this.handleLogin()}
+                style={{width: "33%"}}
+              >
+                {"Login"}
+              </button>
+
+            </FlexBox>
+          </FlexBox>
+        </FlexBox>
+      </FlexBox>
     );
   }
 

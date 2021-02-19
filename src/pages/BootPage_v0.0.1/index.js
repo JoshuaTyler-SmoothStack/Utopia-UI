@@ -75,7 +75,7 @@ class StartupPage extends Component {
         </div>
 
         {/* Loading Text */}
-        <div className="h2 kit-color-cream kit-text-shadow-light mt-3 mb-auto">
+        <div className="h3 kit-color-cream kit-text-shadow-light mt-3 mb-auto">
           {loadingText}
         </div>
 
@@ -83,7 +83,7 @@ class StartupPage extends Component {
         <FlexBox>
           <a 
             href="https://github.com/JoshuaTyler-SmoothStack/Utopia-UI" 
-            className="h4 kit-link mb-2"
+            className="h5 kit-link mb-2"
           >
             {"©2021 Utopia Airlines"}
           </a>

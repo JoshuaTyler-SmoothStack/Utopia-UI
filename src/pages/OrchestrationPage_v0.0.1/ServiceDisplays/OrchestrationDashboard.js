@@ -5,8 +5,7 @@ import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatche
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
-import PathIndicator from './PathIndicator';
-import StatusIndicator from './StatusIndicator';
+import StatusIndicator from '../StatusIndicator';
 
 const OrchestrationDashboard = (props) => {
   const { state, reduce } = props;
@@ -32,24 +31,24 @@ const OrchestrationDashboard = (props) => {
 
   return ( 
     <FlexBox
-      className={"kit-gradient-lightgrey90 rounded kit-border-shadow"}
-      style={{height:"100%", width:"100%", overflow:"hidden"}}
+      className={(props.className || "") + " kit-gradient-lightgrey90 rounded kit-border-shadow"}
+      style={props.style}
     >
       {/* Header */}
-      <div
-        className={"flex-row-start"}
-        style={{height: "30%", width:"100%"}}
+      <FlexBox
+        justify={"start"}
+        style={{height: isActive ? "10%" : "100%", width:"100%"}}
       >
         {/* Connection Button */}
         {isActive
           ? <button 
-              className={"btn kit-bg-red kit-color-cream kit-no-user ml-2"}
+              className={"btn btn-warning ml-2"}
               onClick={() => OrchestrationDispatcher.onStop(reduce)}
             >
               {"Disconnect Orchestrator"}
             </button>
           : <button 
-              className={"btn kit-bg-green kit-no-user ml-2"}
+              className={"btn btn-success ml-2"}
               onClick={() => OrchestrationDispatcher.onStart(reduce)}
             >
               {"Connect Orchestrator"}
@@ -57,24 +56,16 @@ const OrchestrationDashboard = (props) => {
         }
 
         {/* Status Indicator */}
-        <div className={"ml-auto mr-2"}>
-          <StatusIndicator 
-            status={status}
-            size={"2rem"}
-          />
-        </div>
+        <StatusIndicator className="ml-auto mr-2" status={status} />
 
         {/* URI Path Text */}
-        <div className={"mr-2"}>
-          <PathIndicator 
-            location={location}
-            style={{
-              height:"2rem",
-              width:"10rem"
-            }}
-          />
-        </div>
-      </div>
+        <FlexBox 
+          className={"rounded kit-bg-smoke rounded kit-border-shadow mr-2"}
+          style={{height: "2rem", width: "33%"}}
+        >
+          {location}
+        </FlexBox>
+      </FlexBox>
 
       {/* XML / JSON Toggle */}
       {isActive &&
@@ -90,14 +81,10 @@ const OrchestrationDashboard = (props) => {
       {isActive &&
       <FlexBox
         justify={"start"}
-        wrap={"wrap"}
-        style={{
-          height: "50%", 
-          width:"95%",
-        }}
+        style={{width:"95%"}}
       >
         <button
-          className={"btn kit-bg-cream kit-bg-yellow-hover rounded kit-border-shadow kit-border-shadow-hover"}
+          className={"btn btn-info"}
           type={"column"}
           onClick={() => OrchestrationDispatcher.onServices(reduce)}
         >
@@ -107,7 +94,7 @@ const OrchestrationDashboard = (props) => {
           }
         </button>
       </FlexBox>}
-    </div>
+    </FlexBox>
   );
 }
 export default OrchestrationDashboard;

@@ -8,7 +8,7 @@ class AuthenticationDispatcher {
   }
 
   static onLogin(reduce, httpRequestBody) {
-    reduce({type: constants.authentication.login});
+    reduce({type: constants.authentication.pending});
 
     // Orchestration.createRequest(
     //   constants.httpsRequest.post, 
