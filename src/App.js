@@ -6,16 +6,18 @@ import {
   Switch,
 } from "react-router-dom";
 
-// Components
+// Pages
 import BootPage from "./pages/BootPage_v0.0.1";
+import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1";
 import LandingPage from "./pages/LandingPage_v0.0.1";
-import Login from "./componentgroups/Login_v0.0.1";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1";
 import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
 
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
 import RootReducer from "./reducers/RootReducer";
+
 
 class App extends Component {
   constructor(props) {
@@ -26,9 +28,6 @@ class App extends Component {
   }
 
   render() {
-    const { authentication } = this.state;
-    const isActive_Login = authentication ? authentication.isActive_LoginUI : false;
-
     return (
       <main>
         {/* Pages */}
@@ -50,21 +49,18 @@ class App extends Component {
               <OrchestrationPage/>
             </Route>
 
-            {/* Orchestration Page */}
-            <Route path="/logint">
-              <div style={{
-                height: "100vh",
-                width: "100vw"
-              }}>
-                <Login/>
-              </div>
+            {/* Create Account Page */}
+            <Route path="/createaccount">
+              <CreateAccountPage/>
+            </Route>
+
+            {/* Forgot Password Page */}
+            <Route path="/forgotpassword">
+              <ForgotPasswordPage/>
             </Route>
 
           </Switch>
         </Router>
-
-        {/* Login */}
-        {isActive_Login && <Login/>}
       </main>
     );
   }
