@@ -9,17 +9,16 @@ class RoutesDispatcher {
     Orchestration.createRequest(
       constants.httpRequest.get,
       "routes", 
-      null,
       onError => {
        RootReducer.reduce({
           type: constants.routes.error,
           payload: onError
         });
       }, 
-      onSuccess => {
+      httpResponseBody => {
        RootReducer.reduce({
           type: constants.routes.response,
-          payload: onSuccess
+          payload: httpResponseBody
         });
     });
   }

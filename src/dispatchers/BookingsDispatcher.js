@@ -8,18 +8,17 @@ class BookingsDispatcher {
 
     Orchestration.createRequest(
       constants.httpRequest.get,
-      "bookings", 
-      null,
+      "bookings",
       onError => {
        RootReducer.reduce({
           type: constants.bookings.error,
           payload: onError
         });
       }, 
-      onSuccess => {
+      httpResponseBody => {
        RootReducer.reduce({
           type: constants.bookings.response,
-          payload: onSuccess
+          payload: httpResponseBody
         });
     });
   }

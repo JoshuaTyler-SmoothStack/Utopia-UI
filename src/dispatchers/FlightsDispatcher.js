@@ -8,18 +8,17 @@ class FlightsDispatcher {
 
     Orchestration.createRequest(
       constants.httpRequest.get,
-      "flights", 
-      null,
+      "flights",
       onError => {
        RootReducer.reduce({
           type: constants.flights.error,
           payload: onError
         });
       }, 
-      onSuccess => {
+      httpResponseBody => {
        RootReducer.reduce({
           type: constants.flights.response,
-          payload: onSuccess
+          payload: httpResponseBody
         });
     });
   }

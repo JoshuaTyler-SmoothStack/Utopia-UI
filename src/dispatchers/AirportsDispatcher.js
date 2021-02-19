@@ -11,16 +11,16 @@ class AirportsDispatcher {
     Orchestration.createRequest(
       constants.httpRequest.get,
       "airports", 
-      null,
       onError => {
        RootReducer.reduce({
           type: constants.airports.error,
           payload: onError
         });
       }, 
-      onSuccess => {
+      httpResponseBody => {
        RootReducer.reduce({
-          type: constants.airports.error
+          type: constants.airports.response,
+          payload: httpResponseBody
         });
     });
    }, 500);
@@ -32,7 +32,7 @@ class AirportsDispatcher {
         payload: payload
       });
   
-      Orchestration.createRequest(
+      Orchestration.createRequestWithBody(
         constants.httpRequest.post, 
         "airports", 
         payload,
@@ -45,11 +45,11 @@ class AirportsDispatcher {
             }
           });
         }, 
-        onSuccess => {
+        httpResponseBody => {
          RootReducer.reduce({
             type: constants.orchestration.airports,
             payload: {
-              list: onSuccess,
+              list: httpResponseBody,
               status: "REGISTERED"
             }
           });
