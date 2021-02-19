@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 import FlexBox from '../../components/FlexBox';
 
 const LocalPageButtonsPopContent = (props) => {
+  const buttonClassName = "btn btn-secondary m-1";
+  const buttonStyle = {width: "12rem"};
+
   return (
     <FlexBox
       align={"start"}
@@ -16,30 +19,35 @@ const LocalPageButtonsPopContent = (props) => {
     >
       {/* Boot Page */}
       <Link to={"/"}>
-        <button 
-          className="btn btn-secondary m-1"
-          style={{width: "12rem"}}
-        >
+        <button className={buttonClassName} style={buttonStyle}>
           {"Boot Page"}
         </button>
       </Link>
       
+      {/* Create Account Page */}
+      <Link to={"/createaccount"}>
+        <button className={buttonClassName} style={buttonStyle}>
+          {"Create Account Page"}
+        </button>
+      </Link> 
+
+      {/* Forgot Password Page */}
+      <Link to={"/forgotpassword"}>
+        <button className={buttonClassName} style={buttonStyle}>
+          {"Forgot Password Page"}
+        </button>
+      </Link> 
+
       {/* Landing Page */}
       <Link to={"/home"}>
-        <button 
-          className="btn btn-secondary m-1"
-          style={{width: "12rem"}}
-        >
+        <button className={buttonClassName} style={buttonStyle}>
           {"Landing Page"}
         </button>
       </Link>  
 
       {/* Orchestration Page */}
       <Link to={"/orchestration"}>
-        <button 
-          className="btn btn-secondary m-1"
-          style={{width: "12rem"}}
-        >
+        <button className={buttonClassName} style={buttonStyle}>
           {"Orchestration Page"}
         </button>
       </Link>    
