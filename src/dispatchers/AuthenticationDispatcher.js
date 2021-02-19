@@ -9,15 +9,51 @@ class AuthenticationDispatcher {
   }
 
   static onForgotPassword(email) {
-    // TODO
-    // RootReducer.reduce({
-    //   type: constants.authentication.forgotPassword,
-    //   payload: email
-    // });
+    RootReducer.reduce({type: constants.authentication.forgotPasswordRequest});
+
+    const httpBody = {
+      email: email
+    }
+
+    Orchestration.createRequest(
+      constants.httpRequest.post,
+      "/users/forgotpassword",
+      httpBody,
+      onError => {
+        RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+      }, httpResponse => {
+        console.log(httpResponse);
+        if(httpResponse.error) {
+          RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+        } else {
+          RootReducer.reduce({type: constants.authentication.forgotPasswordSuccess});
+        }
+      }
+    )
   }
 
-  static onLogin(httpRequestBody) {
+  static onCreateAccount(email) {
+    RootReducer.reduce({type: constants.authentication.createAccountRequest});
+
+    Orchestration.createRequest(
+      constants.httpRequest.post,
+      "/users/create",
+      {email: email},
+      onError => {
+        RootReducer.reduce({type: constants.authentication.createAccountError});
+      }, onSuccess => {
+        RootReducer.reduce({type: constants.authentication.createAccountSuccess});
+      }
+    );
+  }
+
+  static onLogin(email, password) {
    RootReducer.reduce({type: constants.authentication.loginRequest});
+
+    const httpRequestBody = {
+      email: email,
+      password: password,
+    };
 
     Orchestration.createRequest(
       constants.httpRequest.get, 
@@ -32,6 +68,7 @@ class AuthenticationDispatcher {
 
     }, onSuccess => {
       const user = onSuccess;
+      console.log(user);
 
       // check content is not error msg
       // if(404) {
@@ -69,6 +106,7 @@ class AuthenticationDispatcher {
   }
 
   static onPrompt() {
+    console.log("Called");
    RootReducer.reduce({type: constants.authentication.prompt});
   }
 }

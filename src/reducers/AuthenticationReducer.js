@@ -7,14 +7,47 @@ const AuthenticationReducer = (action) => {
     case authentication.cancel:
       return {isActive_LoginUI: false};
 
+    case authentication.createAccountRequest:
+      return {status: "PENDING"};
+
+    case authentication.createAccountError:
+      return {
+        error: action.payload,
+        status: "ERROR",
+        userId: "UNKNOWN"
+      };
+
+    case authentication.createAccountSuccess:
+      console.log("UserMS - Login payload: ", action.payload);
+      return {
+        status: "ACTIVE",
+        userId: action.payload.id
+      };
+
     case authentication.error:
       return {
         errpr: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
+    case authentication.forgotPasswordRequest:
+      return {status: "PENDING"};
+
+    case authentication.forgotPasswordError:
+      return {
+        status: "ERROR",
+        error: "Did not work ERROR"
+      };
+
+    case authentication.forgotPasswordSuccess:
+      return {status: "SUCCESS"};
+
     case authentication.prompt:
-      return {isActive_LoginUI: true};
+      return {
+        error: "",
+        isActive_LoginUI: true,
+        status: "INACTIVE",
+      };
 
     case authentication.loginRequest:
       return {status: "PENDING"};
@@ -27,7 +60,7 @@ const AuthenticationReducer = (action) => {
       };
 
     case authentication.loginSuccess:
-      console.log(action.payload);
+      console.log("UserMS - Login payload: ", action.payload);
       return {
         status: "ACTIVE",
         userId: action.payload 
@@ -47,6 +80,7 @@ export default AuthenticationReducer;
 export const defaultAuthenticationState = {
   error: "",
   isActive_LoginUI: false,
+  forgotPasswordStatus: "",
   status: "INACTIVE",
   userId: "UNKNOWN"
 };

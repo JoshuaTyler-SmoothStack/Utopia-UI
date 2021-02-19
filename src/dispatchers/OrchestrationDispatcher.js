@@ -4,7 +4,7 @@ import RootReducer from "../reducers/RootReducer";
 
 class OrchestrationDispatcher {
   
-  static onContentNegotiation(reduce, payload) {
+  static onContentNegotiation(payload) {
    RootReducer.reduce({
       type: constants.orchestration.contentNegotiation, 
       payload: payload

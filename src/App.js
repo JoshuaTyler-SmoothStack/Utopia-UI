@@ -21,7 +21,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    RootReducer.setState = (...state) => this.setState(...state);
+    RootReducer.setState = (e) => this.setState(e);
     RootReducer.getState = () => this.state;
   }
 
@@ -48,6 +48,16 @@ class App extends Component {
             {/* Orchestration Page */}
             <Route path="/orchestration">
               <OrchestrationPage/>
+            </Route>
+
+            {/* Orchestration Page */}
+            <Route path="/logint">
+              <div style={{
+                height: "100vh",
+                width: "100vw"
+              }}>
+                <Login/>
+              </div>
             </Route>
 
           </Switch>

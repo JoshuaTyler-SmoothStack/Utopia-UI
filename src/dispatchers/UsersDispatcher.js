@@ -16,10 +16,10 @@ class UsersDispatcher {
           payload: onError
         });
       }, 
-      onSuccess => {
+      httpBody => {
        RootReducer.reduce({
           type: constants.users.response,
-          payload: onSuccess
+          payload: httpBody
         });
     });
   }

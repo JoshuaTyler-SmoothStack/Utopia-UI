@@ -16,7 +16,13 @@
   "authentication": {
     "root": "AUTHENTICATION",
     "cancel": "AUTHENTICATION_CANCEL",
+    "createAccountError": "AUTHENTICATION_CREATE_ACCOUNT_ERROR",
+    "createAccountRequest": "AUTHENTICATION_CREATE_ACCOUNT_REQUEST",
+    "createAccountSuccess": "AUTHENTICATION_CREATE_ACCOUNT_SUCCESS",
     "error": "AUTHENTICATION_ERROR",
+    "forgotPasswordError": "AUTHENTICATION_FORGOT_PASSWORD_ERROR",
+    "forgotPasswordRequest": "AUTHENTICATION_FORGOT_PASSWORD_REQUEST",
+    "forgotPasswordSuccess": "AUTHENTICATION_FORGOT_PASSWORD_SUCCESS",
     "loginError": "AUTHENTICATION_LOGIN_ERROR",
     "loginRequest": "AUTHENTICATION_LOGIN_REQUEST",
     "loginSuccess": "AUTHENTICATION_LOGIN_SUCCESS",

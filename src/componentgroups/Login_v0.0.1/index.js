@@ -207,7 +207,8 @@ class Login extends Component {
     const { email } = this.state;
     if (this.validateEmail(email)) {
       KitUtils.soundSuccess();
-      // request account
+      AuthenticationDispatcher.onCreateAccount(email);
+
     } else {
       KitUtils.soundAlert();
       this.setState({

@@ -11,6 +11,7 @@ import ServiceDisplay from './ServiceDisplay';
 // Components - Dashboards
 import AirplanesDashboard from './ServiceDisplays/AirplanesDashboard';
 import AirportsDashboard from './ServiceDisplays/AirportsDashboard';
+import UsersDashboard from './ServiceDisplays/UsersDashboard';
 import RootReducer from '../../reducers/RootReducer';
 
 class OrchestrationPage extends Component {
@@ -92,6 +93,15 @@ class OrchestrationPage extends Component {
               >
                 <AirportsDashboard/>
               </ServiceDisplay>
+
+              <ServiceDisplay 
+                isActive={services.list.includes("user-service")}
+                location={"http://user-service"}
+                name={"User MS"}
+              >
+                <UsersDashboard/>
+              </ServiceDisplay>
+
             </FlexBox>}
           </FlexBox>}
         </FlexBox>
