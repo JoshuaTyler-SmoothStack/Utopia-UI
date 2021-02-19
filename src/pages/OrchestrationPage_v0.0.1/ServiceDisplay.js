@@ -19,7 +19,9 @@ const ServiceDisplay = (props) => {
   const _isActive = isActive || false;
   const _location = location || "UNKOWN";
   const _name = name || "UNKOWN";
-  const _status = status || "INACTIVE";
+  const _status = _isActive 
+    ? "ACTIVE" 
+    : "INACTIVE";
 
   return (
     <FlexBox 

@@ -31,7 +31,10 @@ const OrchestrationDashboard = (props) => {
 
   return ( 
     <FlexBox
-      className={(props.className || "") + " kit-gradient-lightgrey90 rounded kit-border-shadow"}
+      className={ 
+        "kit-gradient-lightgrey90 rounded kit-border-shadow " +
+        (props.className || "")
+      }
       style={props.style}
     >
       {/* Header */}
@@ -79,10 +82,7 @@ const OrchestrationDashboard = (props) => {
 
       {/* Function Buttons */}
       {isActive &&
-      <FlexBox
-        justify={"start"}
-        style={{width:"95%"}}
-      >
+      <FlexBox className="p-2" justify={"start"} style={{width:"100%"}}>
         <button
           className={"btn btn-info"}
           type={"column"}

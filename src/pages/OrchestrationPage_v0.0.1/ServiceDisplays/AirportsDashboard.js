@@ -31,7 +31,8 @@ class AirportsDashboard extends Component {
     return (
     <div style={{height:" 100%", width: "100%"}}>
       <FlexBox
-        className={"kit-gradient-lightgrey90 rounded kit-border-shadow"}
+        className={"kit-gradient-lightgrey90 rounded kit-border-shadow p-2"}
+        justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
       >
         <button
