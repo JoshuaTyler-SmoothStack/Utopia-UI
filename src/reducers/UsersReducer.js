@@ -24,6 +24,9 @@ const UsersReducer = (action) => {
 
     case users.stop:
       return defaultUsersState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default UsersReducer;

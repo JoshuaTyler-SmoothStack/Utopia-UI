@@ -1,17 +1,18 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class OrchestrationDispatcher {
   
   static onContentNegotiation(reduce, payload) {
-    reduce({
+   RootReducer.reduce({
       type: constants.orchestration.contentNegotiation, 
       payload: payload
     });
   }
 
-  static onServices(reduce) {
-    reduce({
+  static onServices() {
+   RootReducer.reduce({
       type: constants.orchestration.services,
       payload: {
         list: [],
@@ -21,7 +22,7 @@ class OrchestrationDispatcher {
 
     Orchestration.findActiveServices(
       onError => {
-        reduce({
+       RootReducer.reduce({
           type: constants.orchestration.services,
           payload: {
             list: [],
@@ -30,7 +31,7 @@ class OrchestrationDispatcher {
         });
       }, 
       onSuccess => {
-        reduce({
+       RootReducer.reduce({
           type: constants.orchestration.services,
           payload: {
             list: onSuccess,
@@ -40,24 +41,24 @@ class OrchestrationDispatcher {
     });
   }
 
-  static onStart(reduce) {
-    reduce({type: constants.orchestration.start});
+  static onStart() {
+   RootReducer.reduce({type: constants.orchestration.start});
     Orchestration.validate(
       onError => {
-      reduce({
+     RootReducer.reduce({
         type: constants.orchestration.error, 
         payload: onError
       });
     }, onSuccess => {
-      reduce({
+     RootReducer.reduce({
         type: constants.orchestration.ready, 
         payload: onSuccess
       });
     });
   }
 
-  static onStop(reduce) {
-    reduce({type: constants.orchestration.stop});
+  static onStop() {
+   RootReducer.reduce({type: constants.orchestration.stop});
   }
 }
 export default OrchestrationDispatcher;

@@ -1,31 +1,64 @@
 import constants from "../resources/constants.json"
-// import Orchestration from "../Orchestration";
+import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class AuthenticationDispatcher {
 
-  static onCancel(reduce) {
-    reduce({type: constants.authentication.cancel});
+  static onCancel() {
+   RootReducer.reduce({type: constants.authentication.cancel});
   }
 
-  static onLogin(reduce, payload) {
-    reduce({
-      type: constants.authentication.login,
-      payload: {status: "PENDING"},
-    });
-
-    // Orchestration.createRequest(
-    //   constants.httpsRequest.post, 
-    //   "users/login", 
-    //   payload,
-    // onError => {
-    // 
-    // }, onSuccess => {
-    // 
+  static onForgotPassword(email) {
+    // TODO
+    // RootReducer.reduce({
+    //   type: constants.authentication.forgotPassword,
+    //   payload: email
     // });
   }
 
-  static onLogout(reduce) {
-    reduce({type: constants.authentication.logout});
+  static onLogin(httpRequestBody) {
+   RootReducer.reduce({type: constants.authentication.loginRequest});
+
+    Orchestration.createRequest(
+      constants.httpRequest.get, 
+      "users", 
+      httpRequestBody,
+      onError => {
+      const errorMsg = onError;
+      RootReducer.reduce({
+        type: constants.authentication.loginError,
+        payload: errorMsg
+      })
+
+    }, onSuccess => {
+      const user = onSuccess;
+
+      // check content is not error msg
+      // if(404) {
+      // const errorMsg = onSuccess;
+      //  RootReducer.reduce({
+      //     type: constants.authentication.error,
+      //     payload: errorMsg
+      //   })
+      // }
+      if(user.error) {
+        // invalid
+        RootReducer.reduce({
+          type: constants.authentication.loginError,
+          payload: user.error
+        });
+      } else {
+        // valid
+        RootReducer.reduce({
+          type: constants.authentication.loginSuccess,
+          payload: user
+        });
+      }
+    });
+  }
+
+  static onLogout() {
+   RootReducer.reduce({type: constants.authentication.logout});
 
     // Clear Authentication
     // onError => {
@@ -35,8 +68,8 @@ class AuthenticationDispatcher {
     // });
   }
 
-  static onPrompt(reduce) {
-    reduce({type: constants.authentication.prompt});
+  static onPrompt() {
+   RootReducer.reduce({type: constants.authentication.prompt});
   }
 }
 export default AuthenticationDispatcher;

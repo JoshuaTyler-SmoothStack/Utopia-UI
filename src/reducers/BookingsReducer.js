@@ -24,6 +24,9 @@ const BookingsReducer = (action) => {
 
     case bookings.stop:
       return defaultBookingsState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default BookingsReducer;

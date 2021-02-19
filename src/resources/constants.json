@@ -17,7 +17,9 @@
     "root": "AUTHENTICATION",
     "cancel": "AUTHENTICATION_CANCEL",
     "error": "AUTHENTICATION_ERROR",
-    "login": "AUTHENTICATION_LOGIN",
+    "loginError": "AUTHENTICATION_LOGIN_ERROR",
+    "loginRequest": "AUTHENTICATION_LOGIN_REQUEST",
+    "loginSuccess": "AUTHENTICATION_LOGIN_SUCCESS",
     "logout": "AUTHENTICATION_LOGOUT",
     "prompt": "AUTHENTICATION_PROMPT"
   },

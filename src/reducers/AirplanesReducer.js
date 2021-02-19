@@ -24,6 +24,9 @@ const AirplanesReducer = (action) => {
 
     case airplanes.stop:
       return defaultAirplanesState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default AirplanesReducer;

@@ -1,22 +1,15 @@
 // Libraries
 import React, { Component } from 'react';
+import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
+import RootReducer from '../../../reducers/RootReducer';
 
 // Components
-import MSTitle from './MSTitle';
-import PathIndicator from './PathIndicator';
-import StatusIndicator from './StatusIndicator';
-
-// Styles
-import "../../../styles/KitStyles.css";
-import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
+import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent_v0.0.1';
 
 class AirportsDashboard extends Component {
   constructor(props) {
     super(props)
-    // @PROP: isActive - bool
-    // @PROP: reduce - f()
-    // @PROP: state - obj{}
 
     this.state = {
       onCancel: null,
@@ -26,165 +19,91 @@ class AirportsDashboard extends Component {
   }
 
   render() {
-    const { isActive, state } = this.props;
-    const { sizing } = state;
+    const { airports } = RootReducer.getState();
 
-    const buttonSize = sizing.button || 30;
-
-    const searchResults = state.airports
-    ? state.airports.searchResults
+    const searchResults = airports
+    ? airports.searchResults
     : [];
 
-    const status = state.airports
-    ? state.airports.status
-    : "UNKNOWN";
+    const status = airports
+    ? airports.status
+    : "INACTIVE";
 
-    return ( 
-      <div
-        className={"gradient-lightgrey90 border-radius-sm border-shadow flex-column"}
-        style={{
-          height: isActive ? "150px" : "75px", 
-          width:"100%", 
-          overflow:"hidden",
-          marginBottom: buttonSize * 0.75 + "px"
-        }}
+    return (
+    <div style={{height:" 100%", width: "100%"}}>
+      <FlexBox
+        className={"kit-gradient-lightgrey90 rounded kit-border-shadow p-2"}
+        justify={"start"}
+        style={{height:" 100%", overflow: "hidden"}}
       >
-        {/* Header */}
-        <div
-          className={"flex-row-start"}
-          style={{height: "40%", width:"100%"}}
+        <button
+          className={"btn btn-info rounded"}
+          onClick={() => this.findAllAirports()}
         >
-          {/* Title */}
-          <div style={{marginLeft: buttonSize * 0.5 + "px"}}>
-            <MSTitle
-              buttonSize={buttonSize}
-              isActive={isActive}
-              text={"Airport MS"}
-            />
-          </div>
-
-          {/* Status Indicator */}
-          <div style={{marginLeft:"auto", marginRight: buttonSize * 0.25 +"px"}}>
-            <StatusIndicator 
-              status={isActive ? "ACTIVE" : "INACTIVE"}
-              size={buttonSize * 0.75}
-            />
-          </div>
-
-          {/* URI Path Text */}
-          <div style={{marginRight: buttonSize * 0.5 +"px"}}>
-            <PathIndicator 
-              location={"http://airport-service"}
-              size={buttonSize * 0.8}
-            />
-          </div>
-        </div>
-
-        {/* Divider */}
-        {isActive &&
-          <div 
-            className={"gradient-smoke border-shadow flex-row-start"}
-            style={{
-              height:"5%",
-              width:"100%"
-            }}
-          />
-        }
-
-        {/* Function Buttons */}
-        {isActive &&
-          <div
-            className={"flex-row-start"}
-            style={{
-              height: "55%", 
-              width:"95%",
-              flexWrap: "wrap"
-            }}
-          >
-            <button
-              className={"btn bg-cream bg-yellow-hover border-radius-sm border-shadow border-shadow-hover flex-column"}
-              style={{
-                height: buttonSize + "px", 
-                width: (buttonSize * 3.5) + "px",
-              }}
-              onClick={() => this.findAllAirports()}
-            >
-              {status === "PENDING" 
-                ? <div
-                    className="spinner-border color-cream"
-                    style={{
-                      height: buttonSize * 0.5 + "px",
-                      width: buttonSize * 0.5 + "px",
-                    }}
-                  />
-                : "findAllAirports()"
-              }
-            </button>
-          </div>
-        }
+          {status === "PENDING" 
+            ? <div className="spinner-border text-light"/>
+            : "findAllAirports()"
+          }
+        </button>
+      </FlexBox>
 
       {/* Pop Content */}
       {this.state.isActive_PopContent &&
-        <PopContent 
-          buttonSize={buttonSize}
-          elementHeight={window.innerHeight * 0.75}
-          elementWidth={window.innerWidth * 0.9}
-          elementOffsetX={(window.innerWidth - (window.innerWidth * 0.9)) * 0.5}
-          elementOffsetY={(window.innerHeight - (window.innerHeight * 0.75)) * 0.5}
+        <PopContent
+          className="kit-bg-smoke kit-border-shadow rounded"
+          style={{
+            position: "absolute",
+            height: window.innerHeight * 0.75,
+            width: window.innerWidth * 0.9,
+            top: (window.innerHeight - (window.innerHeight * 0.75)) * 0.5,
+            left: (window.innerWidth - (window.innerWidth * 0.9)) * 0.5,
+            overflow: "hidden"
+          }}
           onClose={() => this.setState({isActive_PopContent: false})}
-          content={this.handleRenderAirportList(searchResults)}
-        />
+        >
+          {this.handleRenderAirportList(searchResults)}
+        </PopContent>
       }
-      </div>
-    );
+    </div>);
   }
 
   findAllAirports = () => {
-    const { reduce } = this.props;
-    AirportsDispatcher.onFindAll(reduce);
+    AirportsDispatcher.onFindAll();
     this.setState({isActive_PopContent: true});
   }
 
   handleRenderAirportList = (airportsList) => {
     let airportsTable = [];
     for(var i in airportsList) {
+      const index = Number(i) + 1;
       airportsTable.push(
-        <div
-          key={"airport-" + airportsList[i].iataId}
-          className="bg-yellow border-radius-xsm border-shadow flex-row-start m-1"
-          style={{
-            fontSize: "20px",
-            height: "50px",
-            width:"95%",
-            paddingLeft: "10px"
-          }}
-        >
-          <div
-            className="bg-smoke border-radius-xsm border-shadow flex-row"
-            style={{width:"50px"}}
-          >
-            {airportsList[i].iataId}
-          </div>
-          <div
-            className="ml-auto mr-auto"
-          >
-            {airportsList[i].city}
-          </div>
-        </div>
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{airportsList[i].iataId}</td>
+          <td>{airportsList[i].city}</td>
+        </tr>
       );
     }
+
     return (
-      <div
-        className="bg-smoke border-radius-xsm border-shadow flex-column-start"
-        style={{
-          height: "95%",
-          width: "95%",
-          flexWrap: "wrap",
-          overflow: "auto"
-        }}
+      <FlexBox
+        justify={"start"}
+        style={{height: "99%", width: "99%"}}
+        type={"column"}
       >
-        {airportsTable}
-      </div>
+        <table className="table kit-border-shadow">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">IATA Code</th>
+              <th scope="col">City</th>
+            </tr>
+          </thead>
+          <tbody>
+            {airportsTable}
+          </tbody>
+        </table>
+      </FlexBox>
     );
   };
 

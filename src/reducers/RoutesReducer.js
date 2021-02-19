@@ -24,6 +24,9 @@ const RoutesReducer = (action) => {
 
     case routes.stop:
       return defaultRoutesState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default RoutesReducer;

@@ -39,6 +39,9 @@ const OrchestrationReducer = (action) => {
 
     case orchestration.stop:
       return defaultOrchestrationState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default OrchestrationReducer;
