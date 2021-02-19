@@ -16,6 +16,9 @@
   "authentication": {
     "root": "AUTHENTICATION",
     "cancel": "AUTHENTICATION_CANCEL",
+    "createAccountError": "AUTHENTICATION_CREATE_ACCOUNT_ERROR",
+    "createAccountRequest": "AUTHENTICATION_CREATE_ACCOUNT_REQUEST",
+    "createAccountSuccess": "AUTHENTICATION_CREATE_ACCOUNT_SUCCESS",
     "error": "AUTHENTICATION_ERROR",
     "loginError": "AUTHENTICATION_LOGIN_ERROR",
     "loginRequest": "AUTHENTICATION_LOGIN_REQUEST",

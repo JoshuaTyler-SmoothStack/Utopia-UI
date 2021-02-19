@@ -86,7 +86,7 @@ class UsersDashboard extends Component {
   }
 
   triggerError = () => {
-    Orchestration.createRequest("POST", "/notexist", {},
+    Orchestration.createRequest("POST", "/users", {},
       onError => {
         console.log(onError);
     }, onSuccess => {

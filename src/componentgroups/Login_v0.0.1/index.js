@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
+import constants from "../../resources/constants.json"
 
 // Components
 import InputText from "../../components/InputText_0.0.1";
@@ -10,6 +11,8 @@ import RootReducer from "../../reducers/RootReducer";
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
 import FlexBox from "../../components/FlexBox";
+import Orchestration from "../../Orchestration";
+import userEvent from "@testing-library/user-event";
 
 class Login extends Component {
   constructor(props) {
@@ -207,7 +210,8 @@ class Login extends Component {
     const { email } = this.state;
     if (this.validateEmail(email)) {
       KitUtils.soundSuccess();
-      // request account
+      AuthenticationDispatcher.onCreateAccount(email);
+
     } else {
       KitUtils.soundAlert();
       this.setState({

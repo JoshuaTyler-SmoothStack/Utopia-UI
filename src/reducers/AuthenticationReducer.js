@@ -7,6 +7,23 @@ const AuthenticationReducer = (action) => {
     case authentication.cancel:
       return {isActive_LoginUI: false};
 
+    case authentication.createAccountRequest:
+      return {status: "PENDING"};
+
+    case authentication.createAccountError:
+      return {
+        error: action.payload,
+        status: "ERROR",
+        userId: "UNKNOWN"
+      };
+
+    case authentication.createAccountSuccess:
+      console.log("UserMS - Login payload: ", action.payload);
+      return {
+        status: "ACTIVE",
+        userId: action.payload.id
+      };
+
     case authentication.error:
       return {
         errpr: action.payload || "[ERROR]: 404 - Not Found!",

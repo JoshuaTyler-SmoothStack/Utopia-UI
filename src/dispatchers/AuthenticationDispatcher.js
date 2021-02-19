@@ -16,6 +16,21 @@ class AuthenticationDispatcher {
     // });
   }
 
+  static onCreateAccount(email) {
+    RootReducer.reduce({type: constants.authentication.createAccountRequest});
+
+    Orchestration.createRequest(
+      constants.httpRequest.post,
+      "/users/create",
+      {email: email},
+      onError => {
+        RootReducer.reduce({type: constants.authentication.createAccountError});
+      }, onSuccess => {
+        RootReducer.reduce({type: constants.authentication.createAccountSuccess});
+      }
+    );
+  }
+
   static onLogin(email, password) {
    RootReducer.reduce({type: constants.authentication.loginRequest});
 

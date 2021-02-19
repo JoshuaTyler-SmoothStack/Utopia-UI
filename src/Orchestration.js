@@ -5,10 +5,6 @@ class Orchestration {
   static contentType = "json";
 
   static createRequest(requestType, requestPath, payload, onError, onSuccess) {
-    
-    // Set requestType to Orchestration.contentType if not specified
-    
-    // Process the request
     fetch("http://localhost:8080/" + requestPath, {
       headers: {
         "Accept": "application/" + Orchestration.contentType,
@@ -33,6 +29,11 @@ class Orchestration {
       onError(err);
     });
   }
+
+    // // Overload without HTTP Body Payload
+    // static createRequest(requestType, requestPath, onError, onSuccess) {
+    //   Orchestration.createRequest(requestType, requestPath, null, onError, onSuccess);
+    // }
 
   static validate(onError, onSuccess) {
     Orchestration.createRequest(constants.httpRequest.get, "actuator/health", null, 
