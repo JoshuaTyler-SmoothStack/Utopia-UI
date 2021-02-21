@@ -3,7 +3,7 @@ import React from "react";
 import FlexBox from "../../components/FlexBox";
 
 // Components
-import StatusIndicator from "./StatusIndicator";
+import StatusIndicator from "../../components/StatusIndicator";
 
 const ServiceDisplay = (props) => {
   const {
@@ -41,11 +41,9 @@ const ServiceDisplay = (props) => {
         style={{ height: "40%", width: "100%" }}
       >
         {/* Title */}
-        <FlexBox 
-          className={
-            " btn rounded no-user kit-border-shadow kit-no-pointer ml-2 " + 
-            (_isActive ? "kit-bg-green" : "kit-bg-yellow")
-          }
+        <FlexBox
+          className={"btn kit-no-user kit-border-shadow kit-pointer-none ml-2 " + 
+          (_isActive ? "bg-success" : "bg-warning")}
           style={{width: "10rem"}}
         >
           {_name}

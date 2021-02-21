@@ -5,6 +5,7 @@ class Orchestration {
   static contentType = "json";
 
   static createRequestWithBody(requestType, requestPath, payload, onError, onSuccess) {
+    
     const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
     fetch("http://localhost:8080" + formattedRequestPath, {
       headers: {
@@ -12,7 +13,7 @@ class Orchestration {
         "Content-Type": "application/" + Orchestration.contentType,
       },
       body: requestType !== constants.httpRequest.get 
-      ? { payload }
+      ? JSON.stringify(payload)
       : null,
       method: requestType
     })

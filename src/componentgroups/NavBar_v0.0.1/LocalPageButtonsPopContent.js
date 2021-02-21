@@ -31,6 +31,13 @@ const LocalPageButtonsPopContent = (props) => {
         </button>
       </Link> 
 
+      {/* Debug Page */}
+      <Link to={"/debug"}>
+        <button className={buttonClassName} style={buttonStyle}>
+          {"Debug MS Page"}
+        </button>
+      </Link> 
+
       {/* Forgot Password Page */}
       <Link to={"/forgotpassword"}>
         <button className={buttonClassName} style={buttonStyle}>

@@ -38,10 +38,6 @@
   -o-user-drag: none;
 }
 
-.kit-no-pointer {
-  pointer-events: none;
-}
-
 .kit-no-select,
 .kit-no-user {
   -webkit-user-select: none;
@@ -396,8 +392,31 @@ Opacity
 }
 
 /*====================
-Shake-Animation
+Pointers
 ====================*/
+.kit-pointer-none {
+  pointer-events: none;
+}
+
+.kit-pointer-select {
+  cursor: pointer;
+}
+
+/*====================
+Animation
+====================*/
+.kit-blink {
+  animation: blink 0.66s linear infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.kit-shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
 @keyframes shake {
   10%,
   90% {
@@ -419,9 +438,6 @@ Shake-Animation
   60% {
     transform: translate3d(8px, 0, 0);
   }
-}
-.kit-shake {
-  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
 /*====================

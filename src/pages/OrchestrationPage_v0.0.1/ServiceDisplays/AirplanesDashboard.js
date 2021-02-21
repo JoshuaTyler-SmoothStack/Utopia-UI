@@ -5,7 +5,7 @@ import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import FlexBox from '../../../components/FlexBox';
-import PopContent from '../../../components/PopContent_v0.0.1';
+import PopContent from '../../../components/PopContent';
 
 class AirplanesDashboard extends Component {
   constructor(props) {

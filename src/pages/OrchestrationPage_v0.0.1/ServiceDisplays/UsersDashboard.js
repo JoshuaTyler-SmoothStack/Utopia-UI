@@ -5,7 +5,7 @@ import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import FlexBox from '../../../components/FlexBox';
-import PopContent from '../../../components/PopContent_v0.0.1';
+import PopContent from '../../../components/PopContent';
 import Orchestration from '../../../Orchestration';
 
 class UsersDashboard extends Component {
@@ -86,7 +86,7 @@ class UsersDashboard extends Component {
   }
 
   triggerError = () => {
-    Orchestration.createRequest("POST", "/users", {},
+    Orchestration.createRequest("POST", "/users",
       onError => {
         console.log(onError);
     }, onSuccess => {

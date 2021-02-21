@@ -1,15 +1,14 @@
 // Libraries
 import React, { Component } from 'react';
-import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
+import BookingsDispatcher from '../../../dispatchers/BookingsDispatcher';
 import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent';
-import ErrorMessage from '../../../components/ErrorMessage';
-// import Orchestration from '../../../Orchestration';
+import Orchestration from '../../../Orchestration';
 
-class AirportsDashboard extends Component {
+class BookingsDashboard extends Component {
   constructor(props) {
     super(props)
 
@@ -21,14 +20,14 @@ class AirportsDashboard extends Component {
   }
 
   render() {
-    const { airports } = RootReducer.getState();
+    const { bookings } = RootReducer.getState();
 
-    const searchResults = airports
-    ? airports.searchResults
+    const searchResults = bookings
+    ? bookings.searchResults
     : [];
 
-    const status = airports
-    ? airports.status
+    const status = bookings
+    ? bookings.status
     : "INACTIVE";
 
     return (
@@ -38,11 +37,26 @@ class AirportsDashboard extends Component {
         justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
       >
+        {/* findAllUsers() */}
         <button
-          className={"btn btn-info rounded"}
-          onClick={() => this.findAllAirports()}
+          className={"btn btn-info rounded m-1"}
+          onClick={() => this.findAllUsers()}
         >
-          {"findAllAirports()"}
+          {status === "PENDING" 
+            ? <div className="spinner-border text-light"/>
+            : "findAllBookings()"
+          }
+        </button>
+
+        {/* triggerError() */}
+        <button
+          className={"btn btn-info rounded m-1"}
+          onClick={() => this.triggerError()}
+        >
+          {status === "PENDING" 
+            ? <div className="spinner-border text-light"/>
+            : "triggerError()"
+          }
         </button>
       </FlexBox>
 
@@ -60,60 +74,36 @@ class AirportsDashboard extends Component {
           }}
           onClose={() => this.setState({isActive_PopContent: false})}
         >
-          {status === "PENDING" &&
-            <div className="spinner-border text-light"/>
-          }
-
-          {status === "ERROR" &&
-            <ErrorMessage soundAlert={true}>
-              Error
-            </ErrorMessage>
-          }
-
-          {this.handleRenderAirportList(searchResults)}
+          {this.handleRenderUserList(searchResults)}
         </PopContent>
       }
     </div>);
   }
 
-  findAllAirports = () => {
-    AirportsDispatcher.onFindAll();
-
-    // RootReducer.setState((state) => ({
-    //   ...state,
-    //   airports: {status: "PENDING"}
-    // }));
-
-    // Orchestration.createRequest("/airports", onSuccess => {
-    //   RootReducer.setState((state) => ({
-    //     ...state,
-    //     airports: {
-    //       searchresults: onSuccess,
-    //       status: "REGISTERED"
-    //     }
-    //   }));
-    // }, onError => {
-    //   RootReducer.setState((state) => ({
-    //     ...state,
-    //     airports: {
-    //       searchresults: onSuccess,
-    //       status: "REGISTERED"
-    //     }
-    //   }));
-    // });
-
+  findAllUsers = () => {
+    BookingsDispatcher.onFindAll();
     this.setState({isActive_PopContent: true});
   }
 
-  handleRenderAirportList = (airportsList) => {
-    let airportsTable = [];
-    for(var i in airportsList) {
+  triggerError = () => {
+    Orchestration.createRequest("POST", "/bookings",
+      onError => {
+        console.log(onError);
+    }, onSuccess => {
+      console.log(onSuccess);
+    });
+  }
+
+  handleRenderUserList = (bookingsList) => {
+    let bookingsTable = [];
+    for(var i in bookingsList) {
       const index = Number(i) + 1;
-      airportsTable.push(
+      bookingsTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
-          <td>{airportsList[i].iataId}</td>
-          <td>{airportsList[i].city}</td>
+          <td>{bookingsList[i].id}</td>
+          <td>{bookingsList[i].isActive}</td>
+          <td>{bookingsList[i].confirmationCode}</td>
         </tr>
       );
     }
@@ -128,17 +118,19 @@ class AirportsDashboard extends Component {
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">IATA Code</th>
-              <th scope="col">City</th>
+              <th scope="col">ID</th>
+              <th scope="col">Status</th>
+              <th scope="col">Confirmation Code</th>
             </tr>
           </thead>
           <tbody>
-            {airportsTable}
+            {bookingsTable}
           </tbody>
         </table>
       </FlexBox>
     );
   };
 
+  
 }
-export default AirportsDashboard;
+export default BookingsDashboard;

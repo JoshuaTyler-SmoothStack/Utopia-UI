@@ -4,7 +4,7 @@ import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 
 // Components
-import InputText from "../../components/InputText_0.0.1";
+import InputText from "../../components/InputText";
 import RootReducer from "../../reducers/RootReducer";
 
 // Images
@@ -31,7 +31,7 @@ class LoginModal extends Component {
       <div>
         <FlexBox
           className={
-            "kit-bg-smoke-light " + 
+            "kit-bg-smoke-light kit-no-user " + 
             (this.props.className || "")
           }
           style={{
@@ -39,12 +39,14 @@ class LoginModal extends Component {
             height: "100vh",
             width: "100vw",
             top: "0",
+            left: "0",
+            zIndex: "2",
             ...this.props.style
           }}
           type={"column"}
         >
           <FlexBox
-            className="kit-gradient-smoke rounded kitborder-shadow"
+            className="kit-gradient-smoke rounded kit-border-shadow"
             justify={"start"}
             style={{width: "30rem", overflow: "hidden"}}
             type={"column"}

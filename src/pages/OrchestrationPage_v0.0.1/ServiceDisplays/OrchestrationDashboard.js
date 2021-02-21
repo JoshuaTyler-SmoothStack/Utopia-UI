@@ -6,7 +6,7 @@ import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
-import StatusIndicator from '../StatusIndicator';
+import StatusIndicator from '../../../components/StatusIndicator';
 
 const OrchestrationDashboard = (props) => {
   const { orchestration } = RootReducer.getState();

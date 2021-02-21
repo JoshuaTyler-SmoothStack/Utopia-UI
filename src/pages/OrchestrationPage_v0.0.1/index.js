@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 // Components
-import ErrorMessage from '../../components/ErrorMessage_v0.0.1';
+import ErrorMessage from '../../components/ErrorMessage';
 import FlexBox from '../../components/FlexBox';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 import OrchestratorDashboard from './ServiceDisplays/OrchestrationDashboard';
@@ -11,6 +11,7 @@ import ServiceDisplay from './ServiceDisplay';
 // Components - Dashboards
 import AirplanesDashboard from './ServiceDisplays/AirplanesDashboard';
 import AirportsDashboard from './ServiceDisplays/AirportsDashboard';
+import BookingsDashboard from './ServiceDisplays/BookingsDashboard';
 import UsersDashboard from './ServiceDisplays/UsersDashboard';
 import RootReducer from '../../reducers/RootReducer';
 
@@ -92,6 +93,14 @@ class OrchestrationPage extends Component {
                 name={"Airport MS"}
               >
                 <AirportsDashboard/>
+              </ServiceDisplay>
+
+              <ServiceDisplay 
+                isActive={services.list.includes("booking-service")}
+                location={"http://booking-service"}
+                name={"Booking MS"}
+              >
+                <BookingsDashboard/>
               </ServiceDisplay>
 
               <ServiceDisplay 

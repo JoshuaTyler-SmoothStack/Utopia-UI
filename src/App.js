@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 // Pages
+import APIDebugPage from "./pages/APIDebugPage_v0.0.1";
 import BootPage from "./pages/BootPage_v0.0.1";
 import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1";
 import LandingPage from "./pages/LandingPage_v0.0.1";
@@ -34,19 +35,14 @@ class App extends Component {
         <Router>
           <Switch>
 
+            {/* API Debug Page */}
+            <Route path="/debug">
+              <APIDebugPage/>
+            </Route>
+
             {/* Boot Page */}
             <Route exact path="/">
               <BootPage/>
-            </Route>
-
-            {/* Landing Page */}
-            <Route path="/home">
-              <LandingPage/>
-            </Route>
-
-            {/* Orchestration Page */}
-            <Route path="/orchestration">
-              <OrchestrationPage/>
             </Route>
 
             {/* Create Account Page */}
@@ -57,6 +53,16 @@ class App extends Component {
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
               <ForgotPasswordPage/>
+            </Route>
+
+            {/* Landing Page */}
+            <Route path="/home">
+              <LandingPage/>
+            </Route>
+
+            {/* Orchestration Page */}
+            <Route path="/orchestration">
+              <OrchestrationPage/>
             </Route>
 
           </Switch>

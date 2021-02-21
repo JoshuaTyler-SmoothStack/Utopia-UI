@@ -7,23 +7,21 @@ class AirportsDispatcher {
   static onFindAll() {
    RootReducer.reduce({type: constants.airports.request});
 
-   setTimeout(() => {
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "airports", 
-      onError => {
-       RootReducer.reduce({
-          type: constants.airports.error,
-          payload: onError
-        });
-      }, 
-      httpResponseBody => {
-       RootReducer.reduce({
-          type: constants.airports.response,
-          payload: httpResponseBody
-        });
+   Orchestration.createRequest(
+    constants.httpRequest.get,
+    "airports", 
+    onError => {
+     RootReducer.reduce({
+        type: constants.airports.error,
+        payload: onError
+      });
+    }, 
+    httpResponseBody => {
+     RootReducer.reduce({
+        type: constants.airports.response,
+        payload: httpResponseBody
+      });
     });
-   }, 500);
   }
 
     static onPostAirplane(payload) {

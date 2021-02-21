@@ -8,7 +8,7 @@ class UsersDispatcher {
 
     Orchestration.createRequest(
       constants.httpRequest.get,
-      "users",
+      "/users",
       onError => {
        RootReducer.reduce({
           type: constants.users.error,
@@ -21,6 +21,35 @@ class UsersDispatcher {
           payload: httpResponseBody
         });
     });
+  }
+
+  static createAccount() {
+    const newUser = {
+      firstName: "what",
+      lastName: "how",
+      email: "yoyo@gmail.com",
+      password: "wyeasfhjl",
+      phone: "59987453",
+    };
+
+    RootReducer.reduce({ type: constants.authentication.createAccountRequest });
+    
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post,
+      "/users",
+      newUser,
+      onError => {
+        RootReducer.reduce({
+          type: constants.authentication.createAccountError,
+          payload: onError
+        });
+      },
+      httpResponseBody => {
+        RootReducer.reduce({
+          type: constants.authentication.createAccountSuccess,
+          payload: httpResponseBody
+        });
+      });
   }
 }
 export default UsersDispatcher;

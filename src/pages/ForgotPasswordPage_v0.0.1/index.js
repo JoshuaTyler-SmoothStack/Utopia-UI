@@ -10,7 +10,6 @@ class ForgotPasswordPage extends Component {
     super(props);
     this.state = {};
   }
-
   render() { 
     return ( 
       <div>
@@ -24,6 +23,7 @@ class ForgotPasswordPage extends Component {
           }}
         >
           {/* Content */}
+          <input type="text" placeholder="insert forgot password code" ></input>
           <div className="text-white">forgot password</div>
           <Link to="/home">
             <button className="btn btn-light m-5">

@@ -35,7 +35,7 @@ export const defaultAirportsState = {
   error: "",
   searchResults: [],
   searchResultsPage: 1,
-  searchResultsPerPage: 20,
+  searchResultsPerPage: 100,
   searchResultsTotal: 0,
   status: "INACTIVE"
 };

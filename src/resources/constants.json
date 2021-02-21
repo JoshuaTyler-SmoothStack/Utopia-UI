@@ -32,9 +32,18 @@
 
   "bookings": {
     "root": "BOOKINGS",
+    "cancel": "BOOKINGS_CANCEL",
+    "delete": "BOOKINGS_DELETE",
+    "deletePrompt": "BOOKINGS_DELETE_PROMPT",
+    "edit": "BOOKINGS_EDIT",
+    "editPrompt": "BOOKINGS_EDIT_PROMPT",
     "error": "BOOKINGS_ERROR",
     "request": "BOOKINGS_REQUEST",
-    "response": "BOOKINGS_RESPONSE"
+    "reset": "BOOKINGS_RESET",
+    "response": "BOOKINGS_RESPONSE",
+    "searchError": "BOOKINGS_SEARCH_ERROR",
+    "searchResultsPage": "BOOKINGS_SEARCH_RESULTS_PAGE",
+    "searchResultsPerPage": "BOOKINGS_SEARCH_RESULTS_PER_PAGE"
   },
 
   "flights": {
