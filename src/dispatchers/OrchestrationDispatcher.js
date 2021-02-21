@@ -30,11 +30,11 @@ class OrchestrationDispatcher {
           }
         });
       }, 
-      onSuccess => {
+      httpResponseBody => {
        RootReducer.reduce({
           type: constants.orchestration.services,
           payload: {
-            list: onSuccess,
+            list: httpResponseBody,
             status: "REGISTERED"
           }
         });
@@ -49,10 +49,10 @@ class OrchestrationDispatcher {
         type: constants.orchestration.error, 
         payload: onError
       });
-    }, onSuccess => {
+    }, httpResponseBody => {
      RootReducer.reduce({
         type: constants.orchestration.ready, 
-        payload: onSuccess
+        payload: httpResponseBody
       });
     });
   }

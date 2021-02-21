@@ -11,19 +11,16 @@ class AuthenticationDispatcher {
   static onForgotPassword(email) {
     RootReducer.reduce({type: constants.authentication.forgotPasswordRequest});
 
-    const httpBody = {
-      email: email
-    }
+    const httpRequestBody = {email: email};
 
-    Orchestration.createRequest(
+    Orchestration.createRequestWithBody(
       constants.httpRequest.post,
       "/users/forgotpassword",
-      httpBody,
+      httpRequestBody,
       onError => {
         RootReducer.reduce({type: constants.authentication.forgotPasswordError});
-      }, httpResponse => {
-        console.log(httpResponse);
-        if(httpResponse.error) {
+      }, httpResponseBody => {
+        if(httpResponseBody.error) {
           RootReducer.reduce({type: constants.authentication.forgotPasswordError});
         } else {
           RootReducer.reduce({type: constants.authentication.forgotPasswordSuccess});
@@ -35,13 +32,15 @@ class AuthenticationDispatcher {
   static onCreateAccount(email) {
     RootReducer.reduce({type: constants.authentication.createAccountRequest});
 
-    Orchestration.createRequest(
+    const httpRequestBody = {email: email};
+
+    Orchestration.createRequestWithBody(
       constants.httpRequest.post,
       "/users/create",
-      {email: email},
+      httpRequestBody,
       onError => {
         RootReducer.reduce({type: constants.authentication.createAccountError});
-      }, onSuccess => {
+      }, httpResponseBody => {
         RootReducer.reduce({type: constants.authentication.createAccountSuccess});
       }
     );
@@ -55,9 +54,9 @@ class AuthenticationDispatcher {
       password: password,
     };
 
-    Orchestration.createRequest(
+    Orchestration.createRequestWithBody(
       constants.httpRequest.get, 
-      "users", 
+      "/users", 
       httpRequestBody,
       onError => {
       const errorMsg = onError;
@@ -66,18 +65,10 @@ class AuthenticationDispatcher {
         payload: errorMsg
       })
 
-    }, onSuccess => {
-      const user = onSuccess;
+    }, httpResponseBody => {
+      const user = httpResponseBody;
       console.log(user);
 
-      // check content is not error msg
-      // if(404) {
-      // const errorMsg = onSuccess;
-      //  RootReducer.reduce({
-      //     type: constants.authentication.error,
-      //     payload: errorMsg
-      //   })
-      // }
       if(user.error) {
         // invalid
         RootReducer.reduce({
@@ -96,17 +87,10 @@ class AuthenticationDispatcher {
 
   static onLogout() {
    RootReducer.reduce({type: constants.authentication.logout});
-
-    // Clear Authentication
-    // onError => {
-    // 
-    // }, onSuccess => {
-    // 
-    // });
+   // TODO clear Auth
   }
 
   static onPrompt() {
-    console.log("Called");
    RootReducer.reduce({type: constants.authentication.prompt});
   }
 }

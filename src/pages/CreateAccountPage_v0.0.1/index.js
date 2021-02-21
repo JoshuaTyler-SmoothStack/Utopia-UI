@@ -1,18 +1,17 @@
 // Libraries
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 // Components
 import FlexBox from '../../components/FlexBox';
-import NavBar from '../../componentgroups/NavBar_v0.0.1';
 
-class LandingPage extends Component {
+class CreateAccountPage extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() { 
-
     return ( 
       <div>
         <FlexBox
@@ -25,13 +24,15 @@ class LandingPage extends Component {
           }}
         >
           {/* Content */}
-          <div className="text-white">content</div>
+          <div className="text-white">create account</div>
+          <Link to="/home">
+            <button className="btn btn-light m-5">
+              Home Page
+            </button>
+          </Link>
         </FlexBox>
-
-        {/* Navbar */}
-        <NavBar/>
       </div>
     );
   }
 }
-export default LandingPage;
+export default CreateAccountPage;

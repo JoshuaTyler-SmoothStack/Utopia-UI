@@ -8,18 +8,17 @@ class UsersDispatcher {
 
     Orchestration.createRequest(
       constants.httpRequest.get,
-      "users", 
-      null,
+      "users",
       onError => {
        RootReducer.reduce({
           type: constants.users.error,
           payload: onError
         });
       }, 
-      httpBody => {
+      httpResponseBody => {
        RootReducer.reduce({
           type: constants.users.response,
-          payload: httpBody
+          payload: httpResponseBody
         });
     });
   }
