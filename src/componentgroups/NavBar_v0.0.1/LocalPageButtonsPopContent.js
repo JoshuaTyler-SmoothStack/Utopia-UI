@@ -3,19 +3,18 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 // Components
-import FlexBox from '../../components/FlexBox';
+import FlexColumn from "../../components/FlexColumn";
 
 const LocalPageButtonsPopContent = (props) => {
   const buttonClassName = "btn btn-secondary m-1";
   const buttonStyle = {width: "12rem"};
 
   return (
-    <FlexBox
+    <FlexColumn
       align={"start"}
       className={"h-100"}
       justify={"around"}
       style={{width: "100%"}}
-      type={"column"}
     >
       {/* Boot Page */}
       <Link to={"/"}>
@@ -58,7 +57,7 @@ const LocalPageButtonsPopContent = (props) => {
           {"Orchestration Page"}
         </button>
       </Link>    
-    </FlexBox>
+    </FlexColumn>
   );
 };
 export default LocalPageButtonsPopContent;

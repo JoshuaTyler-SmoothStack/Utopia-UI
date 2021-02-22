@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 // Components
-import FlexBox from '../../components/FlexBox';
+import FlexColumn from '../../components/FlexColumn';
 
 class CreateAccountPage extends Component {
   constructor(props) {
@@ -14,9 +14,8 @@ class CreateAccountPage extends Component {
   render() { 
     return ( 
       <div>
-        <FlexBox
+        <FlexColumn
           className={"kit-bg-blue"}
-          type={"column"}
           style={{ 
             position: "absolute", 
             height: "100vh", 
@@ -30,7 +29,7 @@ class CreateAccountPage extends Component {
               Home Page
             </button>
           </Link>
-        </FlexBox>
+        </FlexColumn>
       </div>
     );
   }

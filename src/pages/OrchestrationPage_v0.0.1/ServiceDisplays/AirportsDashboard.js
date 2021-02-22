@@ -4,9 +4,10 @@ import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
 import RootReducer from '../../../reducers/RootReducer';
 
 // Components
-import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent';
 import ErrorMessage from '../../../components/ErrorMessage';
+import FlexRow from '../../../components/FlexRow';
+import FlexColumn from '../../../components/FlexColumn';
 // import Orchestration from '../../../Orchestration';
 
 class AirportsDashboard extends Component {
@@ -33,7 +34,7 @@ class AirportsDashboard extends Component {
 
     return (
     <div style={{height:" 100%", width: "100%"}}>
-      <FlexBox
+      <FlexRow
         className={"kit-gradient-lightgrey90 rounded kit-border-shadow p-2"}
         justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
@@ -44,7 +45,7 @@ class AirportsDashboard extends Component {
         >
           {"findAllAirports()"}
         </button>
-      </FlexBox>
+      </FlexRow>
 
       {/* Pop Content */}
       {this.state.isActive_PopContent &&
@@ -119,11 +120,7 @@ class AirportsDashboard extends Component {
     }
 
     return (
-      <FlexBox
-        justify={"start"}
-        style={{height: "99%", width: "99%"}}
-        type={"column"}
-      >
+      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
         <table className="table kit-border-shadow">
           <thead className="thead-dark">
             <tr>
@@ -136,7 +133,7 @@ class AirportsDashboard extends Component {
             {airportsTable}
           </tbody>
         </table>
-      </FlexBox>
+      </FlexColumn>
     );
   };
 
