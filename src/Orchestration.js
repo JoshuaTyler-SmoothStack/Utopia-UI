@@ -12,7 +12,7 @@ class Orchestration {
         "Content-Type": "application/" + Orchestration.contentType,
       },
       body: requestType !== constants.httpRequest.get 
-      ? { payload }
+      ? JSON.stringify(payload) 
       : null,
       method: requestType
     })
