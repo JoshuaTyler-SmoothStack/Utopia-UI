@@ -9,29 +9,37 @@ const FlexColumn = (props) => {
   // @PROP: wrap - string
 
   let align = "center";
-  if(props.align === "baseline")  align = "baseline";
-  if(props.align === "end")       align = "end";
-  if(props.align === "start")     align = "start";
-  if(props.align === "stretch")   align = "stretch";
+  if(props.align) {
+    if(props.align === "baseline")  align = "baseline";
+    if(props.align === "end")       align = "end";
+    if(props.align === "start")     align = "start";
+    if(props.align === "stretch")   align = "stretch";
+  }
 
   let justify = "center";
-  if(props.justify === "around")  justify = "around";
-  if(props.justify === "between") justify = "between";
-  if(props.justify === "end")     justify = "end";
-  if(props.justify === "evenly")  justify = "evenly";
-  if(props.justify === "start")   justify = "start";
+  if(props.justify) {
+    if(props.justify === "around")  justify = "around";
+    if(props.justify === "between") justify = "between";
+    if(props.justify === "end")     justify = "end";
+    if(props.justify === "evenly")  justify = "evenly";
+    if(props.justify === "start")   justify = "start";
+  }
 
   let reverse = "";
   if(props.reverse) reverse = "-reverse";
 
   let size = "";
-  if(props.size === "sm") size = "sm-";
-  if(props.size === "md") size = "md-";
-  if(props.size === "lg") size = "lg-";
-  if(props.size === "xl") size = "xl-";
+  if(props.size) {
+    if(props.size === "sm") size = "sm-";
+    if(props.size === "md") size = "md-";
+    if(props.size === "lg") size = "lg-";
+    if(props.size === "xl") size = "xl-";
+  }
 
   let wrap = "wrap"
-  if(props.wrap === "no-wrap") wrap = "no-wrap";
+  if(props.wrap) {
+    if(props.wrap === "no-wrap") wrap = "no-wrap";
+  }
 
   return (
     <div

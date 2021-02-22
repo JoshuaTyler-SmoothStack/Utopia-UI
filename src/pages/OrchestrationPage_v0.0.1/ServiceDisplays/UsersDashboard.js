@@ -4,9 +4,10 @@ import UsersDispatcher from '../../../dispatchers/UsersDispatcher';
 import RootReducer from '../../../reducers/RootReducer';
 
 // Components
-import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent';
 import Orchestration from '../../../Orchestration';
+import FlexRow from '../../../components/FlexRow';
+import FlexColumn from '../../../components/FlexColumn';
 
 class UsersDashboard extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class UsersDashboard extends Component {
 
     return (
     <div style={{height:" 100%", width: "100%"}}>
-      <FlexBox
+      <FlexRow
         className={"kit-gradient-lightgrey90 rounded kit-border-shadow p-2"}
         justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
@@ -58,7 +59,7 @@ class UsersDashboard extends Component {
             : "triggerError()"
           }
         </button>
-      </FlexBox>
+      </FlexRow>
 
       {/* Pop Content */}
       {this.state.isActive_PopContent &&
@@ -114,10 +115,9 @@ class UsersDashboard extends Component {
     }
 
     return (
-      <FlexBox
+      <FlexColumn
         justify={"start"}
         style={{height: "99%", width: "99%"}}
-        type={"column"}
       >
         <table className="table kit-border-shadow">
           <thead className="thead-dark">
@@ -136,7 +136,7 @@ class UsersDashboard extends Component {
             {usersTable}
           </tbody>
         </table>
-      </FlexBox>
+      </FlexColumn>
     );
   };
 

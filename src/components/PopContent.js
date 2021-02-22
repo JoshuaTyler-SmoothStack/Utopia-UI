@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import FlexBox from "./FlexBox";
+import FlexColumn from "./FlexColumn";
+import FlexRow from "./FlexRow";
 
 class PopContent extends Component {
   constructor(props) {
@@ -18,14 +19,13 @@ class PopContent extends Component {
     return (
       <div>
         {!isDisabled && (
-          <FlexBox
+          <FlexRow
             className={className}
             style={style}
             wrap={"no-wrap"}
           >
             {/* Content */}
-            <FlexBox
-              type={"column"}
+            <FlexColumn
               style={{
                 height: "100%",
                 width: "100%",
@@ -34,7 +34,7 @@ class PopContent extends Component {
               }}
             >
               {children}
-            </FlexBox>
+            </FlexColumn>
 
             {/* Close Button */}
             <svg
@@ -46,7 +46,7 @@ class PopContent extends Component {
             >
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
             </svg>
-          </FlexBox>
+          </FlexRow>
         )}
       </div>
     );

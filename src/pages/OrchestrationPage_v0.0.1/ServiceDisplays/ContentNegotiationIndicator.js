@@ -1,6 +1,6 @@
 // Libraries
 import React from 'react';
-import FlexBox from '../../../components/FlexBox';
+import FlexRow from '../../../components/FlexRow';
 
 const ContentNegotiationIndicator = (props) => {
   // @PROP: contentNegotiation - string
@@ -8,17 +8,17 @@ const ContentNegotiationIndicator = (props) => {
   const contentNegotiation = props.contentNegotiation || "JSON";
 
   return ( 
-    <FlexBox 
+    <FlexRow 
       className={"kit-gradient-smoke kit-border-shadow p-1"}
       justify={"start"}
     >
       {/* "Send Request As" Label */}
-      <FlexBox>
+      <FlexRow>
         {"Send requests as: "}
-      </FlexBox >
+      </FlexRow >
 
       {/* JSON / XML Toggle */}
-      <FlexBox 
+      <FlexRow 
         className={"rounded kit-bg-grey kit-border-shadow ml-2"}
         justify={"start"}
       >
@@ -39,8 +39,8 @@ const ContentNegotiationIndicator = (props) => {
         >
           {"XML"}
         </button>
-      </FlexBox >
-    </FlexBox >
+      </FlexRow >
+    </FlexRow >
   );
 }
 export default ContentNegotiationIndicator;

@@ -4,8 +4,8 @@ import AirplanesDispatcher from '../../../dispatchers/AirplanesDispatcher';
 import RootReducer from '../../../reducers/RootReducer';
 
 // Components
-import FlexBox from '../../../components/FlexBox';
 import PopContent from '../../../components/PopContent';
+import FlexRow from '../../../components/FlexRow';
 
 class AirplanesDashboard extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class AirplanesDashboard extends Component {
 
     return (
     <div>
-      <FlexBox
+      <FlexRow
         className={"kit-gradient-lightgrey90 rounded kit-border-shadow"}
         style={{overflow:"hidden"}}
       >
@@ -44,7 +44,7 @@ class AirplanesDashboard extends Component {
             : "findAllAirplanes()"
           }
         </button>
-      </FlexBox>
+      </FlexRow>
 
       {/* Pop Content */}
       {this.state.isActive_PopContent &&

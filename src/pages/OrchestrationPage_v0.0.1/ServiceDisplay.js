@@ -1,6 +1,6 @@
 // Libraries
 import React from "react";
-import FlexBox from "../../components/FlexBox";
+import FlexRow from "../../components/FlexRow";
 
 // Components
 import StatusIndicator from "../../components/StatusIndicator";
@@ -24,7 +24,7 @@ const ServiceDisplay = (props) => {
     : "INACTIVE";
 
   return (
-    <FlexBox 
+    <FlexRow 
       className={(className || "" ) + " kit-gradient-lightgrey90 rounded kit-border-shadow mb-3"} 
       style={{
         ...style,
@@ -36,30 +36,30 @@ const ServiceDisplay = (props) => {
     >
       
       {/* Header */}
-      <FlexBox
+      <FlexRow
         justify={"start"}
         style={{ height: "40%", width: "100%" }}
       >
         {/* Title */}
-        <FlexBox
+        <FlexRow
           className={"btn kit-no-user kit-border-shadow kit-pointer-none ml-2 " + 
           (_isActive ? "bg-success" : "bg-warning")}
           style={{width: "10rem"}}
         >
           {_name}
-        </FlexBox>
+        </FlexRow>
 
         {/* Status Indicator */}
         <StatusIndicator className="ml-auto mr-2" status={_status} />
 
         {/* URI Path Text */}
-        <FlexBox 
+        <FlexRow 
           className={"rounded kit-bg-smoke rounded kit-border-shadow mr-2"}
           style={{height: "2rem", width: "33%"}}
         >
           {_location}
-        </FlexBox>
-      </FlexBox>
+        </FlexRow>
+      </FlexRow>
 
       {/* Divider */}
       {_isActive &&
@@ -76,7 +76,7 @@ const ServiceDisplay = (props) => {
       <div style={{ height: "55%", width: "100%" }}>
          {children}
       </div>}
-    </FlexBox>
+    </FlexRow>
   );
 };
 export default ServiceDisplay;
