@@ -1,24 +1,24 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class FlightsDispatcher {
-  static onFindAll(reduce) {
-    reduce({type: constants.flights.request});
+  static onFindAll() {
+   RootReducer.reduce({type: constants.flights.request});
 
     Orchestration.createRequest(
       constants.httpRequest.get,
-      "flights", 
-      null,
+      "flights",
       onError => {
-        reduce({
+       RootReducer.reduce({
           type: constants.flights.error,
           payload: onError
         });
       }, 
-      onSuccess => {
-        reduce({
+      httpResponseBody => {
+       RootReducer.reduce({
           type: constants.flights.response,
-          payload: onSuccess
+          payload: httpResponseBody
         });
     });
   }

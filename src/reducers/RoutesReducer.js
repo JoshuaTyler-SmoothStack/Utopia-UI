@@ -24,6 +24,9 @@ const RoutesReducer = (action) => {
 
     case routes.stop:
       return defaultRoutesState;
+
+    default:
+      console.error("Invalid action.type!", action);
   }
 };
 export default RoutesReducer;
@@ -32,7 +35,7 @@ export const defaultRoutesState = {
   error: "",
   searchResults: [],
   searchResultsPage: 1,
-  searchResultsPerPage: 20,
+  searchResultsPerPage: 100,
   searchResultsTotal: 0,
   status: "INACTIVE"
 };

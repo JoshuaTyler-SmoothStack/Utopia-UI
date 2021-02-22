@@ -1,22 +1,15 @@
 // Libraries
 import React from 'react';
+import FlexBox from '../../../components/FlexBox';
 import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatcher';
+import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
-import PathIndicator from './PathIndicator';
-import StatusIndicator from './StatusIndicator';
-
-// Styles
-import "../../../styles/KitStyles.css";
+import StatusIndicator from '../../../components/StatusIndicator';
 
 const OrchestrationDashboard = (props) => {
-  const { state, reduce } = props;
-  const { orchestration, sizing } = state;
-
-  const buttonSize = sizing 
-    ? sizing.button
-    : 30;
+  const { orchestration } = RootReducer.getState();
   
   const contentNegotiation = orchestration
     ? orchestration.contentNegotiation
@@ -37,102 +30,71 @@ const OrchestrationDashboard = (props) => {
     : "INACTIVE";
 
   return ( 
-    <div
-      className={"gradient-lightgrey90 border-radius-sm border-shadow flex-column"}
-      style={{height:"100%", width:"100%", overflow:"hidden"}}
+    <FlexBox
+      className={ 
+        "kit-gradient-lightgrey90 rounded kit-border-shadow " +
+        (props.className || "")
+      }
+      style={props.style}
     >
       {/* Header */}
-      <div
-        className={"flex-row-start"}
-        style={{height: "30%", width:"100%"}}
+      <FlexBox
+        justify={"start"}
+        style={{height: isActive ? "10%" : "100%", width:"100%"}}
       >
         {/* Connection Button */}
         {isActive
           ? <button 
-              className={"btn bg-red color-cream no-user"}
-              style={{
-                height: buttonSize + "px",
-                width: (buttonSize * 4.5) + "px",
-                fontSize: buttonSize * 0.33 + "px",
-                marginLeft: buttonSize * 0.5 + "px",
-              }}
-              onClick={() => OrchestrationDispatcher.onStop(reduce)}
+              className={"btn btn-warning ml-2"}
+              onClick={() => OrchestrationDispatcher.onStop()}
             >
               {"Disconnect Orchestrator"}
             </button>
           : <button 
-              className={"btn bg-green no-user"}
-              style={{
-                height: buttonSize + "px",
-                width: (buttonSize * 4.5) + "px",
-                fontSize: buttonSize * 0.33 + "px",
-                marginLeft: buttonSize * 0.5 + "px",
-              }}
-              onClick={() => OrchestrationDispatcher.onStart(reduce)}
+              className={"btn btn-success ml-2"}
+              onClick={() => OrchestrationDispatcher.onStart()}
             >
               {"Connect Orchestrator"}
             </button>
         }
 
         {/* Status Indicator */}
-        <div style={{marginLeft:"auto", marginRight: buttonSize * 0.25 +"px"}}>
-          <StatusIndicator 
-            status={status}
-            size={buttonSize * 0.75}
-          />
-        </div>
+        <StatusIndicator className="ml-auto mr-2" status={status} />
 
         {/* URI Path Text */}
-        <div style={{marginRight: buttonSize * 0.5 +"px"}}>
-          <PathIndicator 
-            location={location}
-            size={buttonSize * 0.8}
-          />
-        </div>
-      </div>
+        <FlexBox 
+          className={"rounded kit-bg-smoke rounded kit-border-shadow mr-2"}
+          style={{height: "2rem", width: "33%"}}
+        >
+          {location}
+        </FlexBox>
+      </FlexBox>
 
       {/* XML / JSON Toggle */}
       {isActive &&
         <div style={{width: "100%"}}>
           <ContentNegotiationIndicator
             contentNegotiation={contentNegotiation}
-            size={buttonSize}
-            onSelectContentNegotiation={(e) => OrchestrationDispatcher.onContentNegotiation(reduce, e)}  
+            onSelectContentNegotiation={(e) => OrchestrationDispatcher.onContentNegotiation(e)}  
           />
         </div>
       }
 
       {/* Function Buttons */}
       {isActive &&
-      <div
-        className={"flex-row-start"}
-        style={{
-          height: "50%", 
-          width:"95%",
-          flexWrap: "wrap"
-        }}
-      >
+      <FlexBox className="p-2" justify={"start"} style={{width:"100%"}}>
         <button
-          className={"btn bg-cream bg-yellow-hover border-radius-sm border-shadow border-shadow-hover flex-column"}
-          style={{
-            height: buttonSize + "px", 
-            width: (buttonSize * 3.5) + "px",
-          }}
-          onClick={() => OrchestrationDispatcher.onServices(reduce)}
+          className={"btn btn-info"}
+          type={"column"}
+          onClick={() => OrchestrationDispatcher.onServices()}
         >
           {services.status === "PENDING" 
-            ? <div
-                className="spinner-border color-cream"
-                style={{
-                  height: buttonSize * 0.5 + "px",
-                  width: buttonSize * 0.5 + "px",
-                }}
-              />
+            ? <div className="spinner-border"/>
             : "findActiveServices()"
           }
         </button>
-      </div>}
-    </div>
+      </FlexBox>}
+    </FlexBox>
   );
 }
 export default OrchestrationDashboard;

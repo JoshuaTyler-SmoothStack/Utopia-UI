@@ -1,17 +1,18 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class OrchestrationDispatcher {
   
-  static onContentNegotiation(reduce, payload) {
-    reduce({
+  static onContentNegotiation(payload) {
+   RootReducer.reduce({
       type: constants.orchestration.contentNegotiation, 
       payload: payload
     });
   }
 
-  static onServices(reduce) {
-    reduce({
+  static onServices() {
+   RootReducer.reduce({
       type: constants.orchestration.services,
       payload: {
         list: [],
@@ -21,7 +22,7 @@ class OrchestrationDispatcher {
 
     Orchestration.findActiveServices(
       onError => {
-        reduce({
+       RootReducer.reduce({
           type: constants.orchestration.services,
           payload: {
             list: [],
@@ -29,35 +30,35 @@ class OrchestrationDispatcher {
           }
         });
       }, 
-      onSuccess => {
-        reduce({
+      httpResponseBody => {
+       RootReducer.reduce({
           type: constants.orchestration.services,
           payload: {
-            list: onSuccess,
+            list: httpResponseBody,
             status: "REGISTERED"
           }
         });
     });
   }
 
-  static onStart(reduce) {
-    reduce({type: constants.orchestration.start});
+  static onStart() {
+   RootReducer.reduce({type: constants.orchestration.start});
     Orchestration.validate(
       onError => {
-      reduce({
+     RootReducer.reduce({
         type: constants.orchestration.error, 
         payload: onError
       });
-    }, onSuccess => {
-      reduce({
+    }, httpResponseBody => {
+     RootReducer.reduce({
         type: constants.orchestration.ready, 
-        payload: onSuccess
+        payload: httpResponseBody
       });
     });
   }
 
-  static onStop(reduce) {
-    reduce({type: constants.orchestration.stop});
+  static onStop() {
+   RootReducer.reduce({type: constants.orchestration.stop});
   }
 }
 export default OrchestrationDispatcher;

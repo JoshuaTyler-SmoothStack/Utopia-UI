@@ -1,14 +1,9 @@
 import React, { Component } from "react";
+import FlexBox from "./FlexBox";
 
 class PopContent extends Component {
   constructor(props) {
     super(props);
-    // @PROP: buttonSize - num
-    // @PROP: content - obj{}(HTML Elements)
-    // @PROP: elementHeight - num
-    // @PROP: elementWidth - num
-    // @PROP: elementOffsetX - num
-    // @PROP: elementOffsetY - num
     // @PROP: onClose - f()
 
     this.state = {
@@ -17,32 +12,20 @@ class PopContent extends Component {
   }
 
   render() {
-    const {
-      buttonSize,
-      content,
-      elementHeight,
-      elementWidth,
-      elementOffsetX,
-      elementOffsetY,
-    } = this.props;
+    const { children, className, style } = this.props;
     const { isDisabled } = this.state;
 
     return (
       <div>
         {!isDisabled && (
-          <div
-            className="bg-smoke border-radius-sm border-shadow overflow-hidden flex-row-start"
-            style={{
-              position: "absolute",
-              height: elementHeight + "px",
-              width: elementWidth + "px",
-              bottom: elementOffsetY + "px",
-              left: elementOffsetX + "px",
-            }}
+          <FlexBox
+            className={className}
+            style={style}
+            wrap={"no-wrap"}
           >
             {/* Content */}
-            <div
-              className="flex-column"
+            <FlexBox
+              type={"column"}
               style={{
                 height: "100%",
                 width: "100%",
@@ -50,21 +33,20 @@ class PopContent extends Component {
                 overflowY: "auto",
               }}
             >
-              {content}
-            </div>
+              {children}
+            </FlexBox>
 
             {/* Close Button */}
             <svg
-              className="icon svg-color-grey"
+              className="kit-icon kit-svg-color-grey"
               style={{marginBottom: "auto"}}
-              width={buttonSize}
-              height={buttonSize}
+              height={"2.5rem"}
               viewBox="0 0 16 16"
               onClick={() => this.handleCloseButton()}
             >
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
             </svg>
-          </div>
+          </FlexBox>
         )}
       </div>
     );

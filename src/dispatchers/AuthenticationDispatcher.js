@@ -1,42 +1,97 @@
 import constants from "../resources/constants.json"
-// import Orchestration from "../Orchestration";
+import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class AuthenticationDispatcher {
 
-  static onCancel(reduce) {
-    reduce({type: constants.authentication.cancel});
+  static onCancel() {
+   RootReducer.reduce({type: constants.authentication.cancel});
   }
 
-  static onLogin(reduce, payload) {
-    reduce({
-      type: constants.authentication.login,
-      payload: {status: "PENDING"},
+  static onForgotPassword(email) {
+    RootReducer.reduce({type: constants.authentication.forgotPasswordRequest});
+
+    const httpRequestBody = {email: email};
+
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post,
+      "/users/forgotpassword",
+      httpRequestBody,
+      onError => {
+        RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+      }, httpResponseBody => {
+        if(httpResponseBody.error) {
+          RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+        } else {
+          RootReducer.reduce({type: constants.authentication.forgotPasswordSuccess});
+        }
+      }
+    )
+  }
+
+  static onCreateAccount(email) {
+    RootReducer.reduce({type: constants.authentication.createAccountRequest});
+
+    const httpRequestBody = {email: email};
+
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post,
+      "/users/create",
+      httpRequestBody,
+      onError => {
+        RootReducer.reduce({type: constants.authentication.createAccountError});
+      }, httpResponseBody => {
+        RootReducer.reduce({type: constants.authentication.createAccountSuccess});
+      }
+    );
+  }
+
+  static onLogin(email, password) {
+   RootReducer.reduce({type: constants.authentication.loginRequest});
+
+    const httpRequestBody = {
+      email: email,
+      password: password,
+    };
+
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.get, 
+      "/users", 
+      httpRequestBody,
+      onError => {
+      const errorMsg = onError;
+      RootReducer.reduce({
+        type: constants.authentication.loginError,
+        payload: errorMsg
+      })
+
+    }, httpResponseBody => {
+      const user = httpResponseBody;
+      console.log(user);
+
+      if(user.error) {
+        // invalid
+        RootReducer.reduce({
+          type: constants.authentication.loginError,
+          payload: user.error
+        });
+      } else {
+        // valid
+        RootReducer.reduce({
+          type: constants.authentication.loginSuccess,
+          payload: user
+        });
+      }
     });
-
-    // Orchestration.createRequest(
-    //   constants.httpsRequest.post, 
-    //   "users/login", 
-    //   payload,
-    // onError => {
-    // 
-    // }, onSuccess => {
-    // 
-    // });
   }
 
-  static onLogout(reduce) {
-    reduce({type: constants.authentication.logout});
-
-    // Clear Authentication
-    // onError => {
-    // 
-    // }, onSuccess => {
-    // 
-    // });
+  static onLogout() {
+   RootReducer.reduce({type: constants.authentication.logout});
+   // TODO clear Auth
   }
 
-  static onPrompt(reduce) {
-    reduce({type: constants.authentication.prompt});
+  static onPrompt() {
+   RootReducer.reduce({type: constants.authentication.prompt});
   }
 }
 export default AuthenticationDispatcher;

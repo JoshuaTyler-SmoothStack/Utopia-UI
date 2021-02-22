@@ -1,41 +1,41 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
+import RootReducer from "../reducers/RootReducer";
 
 class AirportsDispatcher {
 
-  static onFindAll(reduce) {
-    reduce({type: constants.airports.request});
+  static onFindAll() {
+   RootReducer.reduce({type: constants.airports.request});
 
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "airports", 
-      null,
-      onError => {
-        reduce({
-          type: constants.airports.error,
-          payload: onError
-        });
-      }, 
-      onSuccess => {
-        reduce({
-          type: constants.airports.response,
-          payload: onSuccess
-        });
+   Orchestration.createRequest(
+    constants.httpRequest.get,
+    "airports", 
+    onError => {
+     RootReducer.reduce({
+        type: constants.airports.error,
+        payload: onError
+      });
+    }, 
+    httpResponseBody => {
+     RootReducer.reduce({
+        type: constants.airports.response,
+        payload: httpResponseBody
+      });
     });
   }
 
-    static onPostAirplane(reduce, payload) {
-      reduce({
+    static onPostAirplane(payload) {
+     RootReducer.reduce({
         type: constants.orchestration.airports,
         payload: payload
       });
   
-      Orchestration.createRequest(
+      Orchestration.createRequestWithBody(
         constants.httpRequest.post, 
         "airports", 
         payload,
         onError => {
-          reduce({
+         RootReducer.reduce({
             type: constants.orchestration.airports,
             payload: {
               list: [],
@@ -43,11 +43,11 @@ class AirportsDispatcher {
             }
           });
         }, 
-        onSuccess => {
-          reduce({
+        httpResponseBody => {
+         RootReducer.reduce({
             type: constants.orchestration.airports,
             payload: {
-              list: onSuccess,
+              list: httpResponseBody,
               status: "REGISTERED"
             }
           });

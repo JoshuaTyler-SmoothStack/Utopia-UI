@@ -4,9 +4,10 @@ import React from "react";
 class InputText extends React.Component {
   constructor(props) {
     super(props);
-    // @PROP: label - sitring
     // @PROP: error - string
-    // @PROP: fontSize - num
+    // @PROP: fontClass - string
+    // @PROP: label - sitring
+    // @PROP: labelClassName - sitring
     // @PROP: value - string
 
     // @PROP: isActive - bool
@@ -28,30 +29,30 @@ class InputText extends React.Component {
 
   render() {
     const { value, isActive, isHover } = this.state;
-    const { error, fontSize, isHidden, isLocked, label } = this.props;
+    const { className, error, fontClassName, isHidden, isLocked, label, labelClassName, style } = this.props;
 
     // Locked
     let textInput = (
       <div
-        className="flex-row-start"
+        className={
+          "disabledInput d-flex flex-row justify-content-start align-items-center " +
+          fontClassName
+        }
         style={{
           height: "100%",
           width: "100%",
           cursor: "text",
-          fontSize: fontSize + "px",
           pointerEvents: "none",
         }}
       >
         {/* Lock Icon */}
         <svg
-          height={fontSize + "px"}
-          width={fontSize + "px"}
+          height={"100%"}
+          width={"100%"}
           viewBox="0 0 16 16"
           fill="#373F47"
         >
-          <path
-            fillRule="evenodd" d="M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"
-          />
+          <path fillRule="evenodd" d="M11.5 8h-7a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1zm-7-1a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-7zm0-3a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
         </svg>
 
         {/* Label */}
@@ -65,17 +66,16 @@ class InputText extends React.Component {
       if (isActive || value) {
         textInput = (
           <div
-            className="flex-column-start"
+            className="d-flex flex-column justify-content-start align-items-center"
             style={{ height: "100%", width: "100%" }}
           >
             {/* Label */}
             <div
-              className="color-yellow text-shadow-thin flex-row-start"
-              style={{
-                width: "95%",
-                pointerEvents: "none",
-                fontSize: fontSize + "px",
-              }}
+              className={
+                "d-flex flex-row justify-content-start align-items-center " +
+                labelClassName + " " + fontClassName
+              }
+              style={{width: "95%", pointerEvents: "none"}}
             >
               <div className="mr-auto" style={{ height: "100%" }}>
                 {error || label}
@@ -84,7 +84,7 @@ class InputText extends React.Component {
 
             {/* Value */}
             <div
-              className="flex-row-start"
+              className="d-flex flex-column justify-content-start align-items-center"
               style={{width: "100%"}}
             >
               <input
@@ -96,7 +96,6 @@ class InputText extends React.Component {
                   background: "none",
                   border: "none",
                   outline: "none",
-                  fontSize: fontSize * 1.25 + "px"
                 }}
                 type={isHidden ? "password" : "text"}
                 value={value}
@@ -112,13 +111,11 @@ class InputText extends React.Component {
       } else {
         textInput = (
           <div
-            className={"flex-column " + (!isHover && "color-lightgrey")}
-            style={{
-              height: "100%",
-              width: "100%",
-              cursor: "text",
-              fontSize: fontSize + "px",
-            }}
+            className={
+              "d-flex flex-column justify-content-center align-items-center " + 
+              (!isHover ? "text-light " : "")
+            }
+            style={{...style, cursor: "text"}}
           >
             {error || label}
           </div>
@@ -128,12 +125,16 @@ class InputText extends React.Component {
 
     return (
       <div
-        className="flex-row-center"
+        className={
+          "p-1 d-flex flex-row justify-content-center align-items-center " +
+          (error ? "inputInvalid " : "") + 
+          className
+        }
         style={{
-          height: "100%",
-          width: "100%",
+          ...style, 
+          cursor: "text",
           overflow: "hidden",
-          transition: "0.2s ease all",
+          transition: "0.2s ease all"
         }}
         onClick={() => this.handleOnFocus()}
         onMouseEnter={() => this.setState({ isHover: true })}

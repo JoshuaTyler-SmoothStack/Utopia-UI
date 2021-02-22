@@ -16,17 +16,34 @@
   "authentication": {
     "root": "AUTHENTICATION",
     "cancel": "AUTHENTICATION_CANCEL",
+    "createAccountError": "AUTHENTICATION_CREATE_ACCOUNT_ERROR",
+    "createAccountRequest": "AUTHENTICATION_CREATE_ACCOUNT_REQUEST",
+    "createAccountSuccess": "AUTHENTICATION_CREATE_ACCOUNT_SUCCESS",
     "error": "AUTHENTICATION_ERROR",
-    "login": "AUTHENTICATION_LOGIN",
+    "forgotPasswordError": "AUTHENTICATION_FORGOT_PASSWORD_ERROR",
+    "forgotPasswordRequest": "AUTHENTICATION_FORGOT_PASSWORD_REQUEST",
+    "forgotPasswordSuccess": "AUTHENTICATION_FORGOT_PASSWORD_SUCCESS",
+    "loginError": "AUTHENTICATION_LOGIN_ERROR",
+    "loginRequest": "AUTHENTICATION_LOGIN_REQUEST",
+    "loginSuccess": "AUTHENTICATION_LOGIN_SUCCESS",
     "logout": "AUTHENTICATION_LOGOUT",
     "prompt": "AUTHENTICATION_PROMPT"
   },
 
   "bookings": {
     "root": "BOOKINGS",
+    "cancel": "BOOKINGS_CANCEL",
+    "delete": "BOOKINGS_DELETE",
+    "deletePrompt": "BOOKINGS_DELETE_PROMPT",
+    "edit": "BOOKINGS_EDIT",
+    "editPrompt": "BOOKINGS_EDIT_PROMPT",
     "error": "BOOKINGS_ERROR",
     "request": "BOOKINGS_REQUEST",
-    "response": "BOOKINGS_RESPONSE"
+    "reset": "BOOKINGS_RESET",
+    "response": "BOOKINGS_RESPONSE",
+    "searchError": "BOOKINGS_SEARCH_ERROR",
+    "searchResultsPage": "BOOKINGS_SEARCH_RESULTS_PAGE",
+    "searchResultsPerPage": "BOOKINGS_SEARCH_RESULTS_PER_PAGE"
   },
 
   "flights": {
