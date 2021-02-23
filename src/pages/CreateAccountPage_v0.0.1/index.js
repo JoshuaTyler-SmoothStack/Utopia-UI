@@ -42,21 +42,19 @@ const CreateAccountPage = (props) => {
     const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
     const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$")
     // password validation
-    if (!strongRegexPasswordValidation.test(password)) {
-      setValidatePassword(false)
-      return;
+
+    // phone number validation////email match validation// // password validation
+    if (!regexPhoneNumberValidation.test(phone)) {
+      return setValidatePhoneNumber(false)
+    } else if (!strongRegexPasswordValidation.test(password)) {
+      return setValidatePassword(false)
+    } else if (password != confirmPassword) {
+      return setPasswordMatch(false)
     }
 
-    // phone number validation
-    if (!regexPhoneNumberValidation.test(phone)) {
-      setValidatePhoneNumber(false)
-      return;
-    }
-    //email match validation
-    if (password != confirmPassword) {
-      setPasswordMatch(false)
-      return;
-    }
+    setValidatePhoneNumber(true);
+    setValidatePassword(true);
+    setPasswordMatch(true)
 
     const newUser = {
       firstName: firstName,
@@ -71,8 +69,10 @@ const CreateAccountPage = (props) => {
       .then(data => {
         setLoading(false)
         setSuccess(true)
+        console.log('succ')
         setTimeout(() => setRedirect(true), 3400)
       }, error => {
+        console.log('err')
         setLoading(false)
         setErrorMessage(error.response.data)
       })
