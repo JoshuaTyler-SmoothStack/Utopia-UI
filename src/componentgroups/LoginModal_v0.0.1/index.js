@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 class LoginModal extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       email: "",
       password: "",
@@ -31,7 +31,7 @@ class LoginModal extends Component {
       <div>
         <FlexBox
           className={
-            "kit-bg-smoke-light kit-no-user " + 
+            "kit-bg-smoke-light kit-no-user " +
             (this.props.className || "")
           }
           style={{
@@ -48,54 +48,54 @@ class LoginModal extends Component {
           <FlexBox
             className="kit-gradient-smoke rounded kit-border-shadow"
             justify={"start"}
-            style={{width: "30rem", overflow: "hidden"}}
+            style={{ width: "30rem", overflow: "hidden" }}
             type={"column"}
             wrap={"no-wrap"}
           >
             {/* Header */}
             <FlexBox
               className="kit-gradient-red kit-border-shadow mb-2"
-              style={{height: "5rem", width: "100%"}}
+              style={{ height: "5rem", width: "100%" }}
             >
               {/* Icon - Back  */}
-              <svg 
-                className="ml-2 mr-auto kit-icon-light" 
+              <svg
+                className="ml-2 mr-auto kit-icon-light"
                 height={"66%"}
                 fill={"white"}
                 viewBox="0 0 16 16"
                 onClick={() => AuthenticationDispatcher.onCancel()}
               >
-                <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
               </svg>
 
               {/* Utopia WorldBalloonGif */}
               <img src={gifWorldBalloon} alt=""
                 className="mr-2 rounded-circle"
-                style={{ height: "4.5rem"}}
+                style={{ height: "4.5rem" }}
               />
             </FlexBox>
 
             {/* Body */}
-              <FlexBox
-                style={{height: "30rem", width: "100%"}}
-                type={"column"}
-              >
-                {/* Loading Spinner */}
-                {authentication.status === "PENDING" &&
+            <FlexBox
+              style={{ height: "30rem", width: "100%" }}
+              type={"column"}
+            >
+              {/* Loading Spinner */}
+              {authentication.status === "PENDING" &&
                 <FlexBox
                   justify={"around"}
-                  style={{height: "100%", width: "100%"}}
+                  style={{ height: "100%", width: "100%" }}
                   type={"column"}
                   wrap={"no-wrap"}
                 >
-                  <div className="spinner-border"/>
+                  <div className="spinner-border" />
                 </FlexBox>}
 
-                {/* Error */}
-                {authentication.status === "ERROR" &&
+              {/* Error */}
+              {authentication.status === "ERROR" &&
                 <FlexBox
                   justify={"around"}
-                  style={{height: "100%", width: "100%"}}
+                  style={{ height: "100%", width: "100%" }}
                   type={"column"}
                   wrap={"no-wrap"}
                 >
@@ -104,11 +104,11 @@ class LoginModal extends Component {
                   </div>
                 </FlexBox>}
 
-                {/* Login Successful */}
-                {authentication.status === "ACTIVE" &&
+              {/* Login Successful */}
+              {authentication.status === "ACTIVE" &&
                 <FlexBox
                   justify={"around"}
-                  style={{height: "100%", width: "100%"}}
+                  style={{ height: "100%", width: "100%" }}
                   type={"column"}
                   wrap={"no-wrap"}
                 >
@@ -117,11 +117,11 @@ class LoginModal extends Component {
                   </div>
                 </FlexBox>}
 
-                {/* Login UI */}
-                {authentication.status === "INACTIVE" &&
+              {/* Login UI */}
+              {authentication.status === "INACTIVE" &&
                 <FlexBox
                   justify={"around"}
-                  style={{height: "100%", width: "100%"}}
+                  style={{ height: "100%", width: "100%" }}
                   type={"column"}
                   wrap={"no-wrap"}
                 >
@@ -129,9 +129,9 @@ class LoginModal extends Component {
                   <FlexBox
                     className="card text-white bg-dark mt-5 mb-3"
                     type={"column"}
-                    style={{width: "75%"}}
+                    style={{ width: "75%" }}
                   >
-                    <FlexBox style={{minHeight:"3rem"}}>
+                    <FlexBox style={{ minHeight: "3rem" }}>
                       <div className="h5">{"Login or create an account."}</div>
                       {warning !== "" && <div className="text-warning kit-shake">{warning}</div>}
                     </FlexBox>
@@ -141,7 +141,7 @@ class LoginModal extends Component {
                   <FlexBox
                     className="mb-auto"
                     type={"column"}
-                    style={{width: "100%"}}
+                    style={{ width: "100%" }}
                     wrap={"no-wrap"}
                   >
                     {/* Email */}
@@ -176,7 +176,7 @@ class LoginModal extends Component {
                   <FlexBox
                     className="bg-light mb-2"
                     justify={"around"}
-                    style={{height:"5rem", width: "100%"}}
+                    style={{ height: "5rem", width: "100%" }}
                   >
                     {/* Create Account */}
                     <Link to="/createaccount">
@@ -200,14 +200,14 @@ class LoginModal extends Component {
                     <button
                       className="btn btn-success btn-lg"
                       onClick={() => this.handleLogin()}
-                      style={{width: "33%"}}
+                      style={{ width: "33%" }}
                     >
                       {"Login"}
                     </button>
 
                   </FlexBox>
                 </FlexBox>}
-              </FlexBox>
+            </FlexBox>
           </FlexBox>
         </FlexBox>
       </div>
@@ -224,10 +224,10 @@ class LoginModal extends Component {
       KitUtils.soundAlert();
       this.setState({
         warning: email
-        ? "\"" + email + "\" is not a valid email address."
-        : "Email address cannot be empty."
+          ? "\"" + email + "\" is not a valid email address."
+          : "Email address cannot be empty."
       });
-    }    
+    }
   }
 
   validateEmail = (email) => {

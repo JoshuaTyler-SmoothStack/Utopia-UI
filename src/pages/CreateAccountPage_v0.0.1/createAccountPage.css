@@ -1,0 +1,77 @@
+
+.col-md-12-local{
+  margin-top: 200px;
+  background-color: rgb(5,41,57);
+}
+
+.required{
+  color: red;
+}
+
+.card-local{
+  margin-top: 200px;
+  margin: 0 auto;
+  width: 50vw;
+  padding: 10px;
+  height: 640px;
+}
+
+.form-group-btn-css{
+  margin-bottom: 1px !important;
+  height: 10px  !important;
+  height: 100px;
+
+}
+
+.errorContainer{
+  margin-top: 5px;
+  height: 55px;
+}
+
+.form-submit-button{
+  margin-top: 20px;
+}
+.createAccount{
+  margin: 0 auto;
+}
+.header{
+  height: 200px;
+  border: 1px solid black;
+}
+.successRegistration{
+  color: rgb(23,219,147);
+}
+
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+@media screen and (max-width: 700px){
+  .card{
+    width: 90%;
+  }
+}
+
+.successfull-registration{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 35px;
+
+
+}
+
+.successfull-registration-container{
+  height: 200px;
+  color: rgb(23,219,147);
+}
