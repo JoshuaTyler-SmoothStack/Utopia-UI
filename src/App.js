@@ -23,7 +23,7 @@ import Store from "./reducers/Store";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = Store.combineDefaultsReducerStates();
+    this.state = Store.getCombineDefaultReducerStates();
     Store.setState = (e) => this.setState(e);
     Store.getState = () => this.state;
   }
@@ -70,7 +70,7 @@ class App extends Component {
       </main>
     );
   }
-  
+
   componentDidUpdate() {
     console.log(this.state);
   }
