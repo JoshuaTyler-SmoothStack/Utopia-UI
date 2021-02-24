@@ -12,7 +12,7 @@ import paymentsReducer, { defaultPaymentsState } from "./PaymentsReducer";
 import routesReducer, { defaultRoutesState } from "./RoutesReducer";
 import usersReducer, { defaultUsersState } from "./UsersReducer";
 
-class RootReducer {
+class Store {
 
   // Requires App.js to initialize State in constructor() 
   static setState = null;
@@ -21,8 +21,8 @@ class RootReducer {
 
   static reduce(action) {
     // Check setState is valid
-    if(!RootReducer.setState) {
-      console.error("CannotRootReducer.reduce action! Invalid setState method.", action);
+    if(!Store.setState) {
+      console.error("CannotStore.reduce action! Invalid setState method.", action);
       return;
     }
 
@@ -32,7 +32,7 @@ class RootReducer {
       
       // airplanes
       case constants.airplanes.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           airplanes: {
             ...state.airplanes, 
             ...airplanesReducer(action)
@@ -42,7 +42,7 @@ class RootReducer {
 
       // airports
       case constants.airports.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           airports: {
             ...state.airports, 
             ...airportsReducer(action)
@@ -52,7 +52,7 @@ class RootReducer {
 
       // authentication
       case constants.authentication.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           authentication: {
             ...state.authentication, 
             ...authenticationReducer(action)
@@ -62,7 +62,7 @@ class RootReducer {
 
       // bookings
       case constants.bookings.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           bookings: {
             ...state.bookings, 
             ...bookingsReducer(action)
@@ -72,7 +72,7 @@ class RootReducer {
 
       // flights
       case constants.flights.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           flights: {
             ...state.flights, 
             ...flightsReducer(action)
@@ -82,7 +82,7 @@ class RootReducer {
 
       // orchestration
       case constants.orchestration.root:
-        RootReducer.setState((state) => ({ 
+        Store.setState((state) => ({ 
           orchestration: {
             ...state.orchestration,
             ...orchestrationReducer(action)
@@ -92,7 +92,7 @@ class RootReducer {
 
       // payments
       case constants.payments.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           payments: {
             ...state.payments, 
             ...paymentsReducer(action)
@@ -102,7 +102,7 @@ class RootReducer {
 
       // routes
       case constants.routes.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           routes: {
             ...state.routes, 
             ...routesReducer(action)
@@ -112,7 +112,7 @@ class RootReducer {
 
       // users
       case constants.users.root:
-        RootReducer.setState((state) => ({
+        Store.setState((state) => ({
           users: {
             ...state.users, 
             ...usersReducer(action)
@@ -125,9 +125,8 @@ class RootReducer {
     }
   }
 
-  static synchronizeReducers() {
-    RootReducer.setState((state) => ({
-      ...state,
+  static combineDefaultsReducerStates() {
+    return { 
       airplanes: defaultAirplanesState,
       airports: defaultAirportsState,
       authentication: defaultAuthenticationState,
@@ -137,7 +136,7 @@ class RootReducer {
       payments: defaultPaymentsState,
       routes: defaultRoutesState,
       users: defaultUsersState
-    }));
+    };
   }
 }
-export default RootReducer;
+export default Store;

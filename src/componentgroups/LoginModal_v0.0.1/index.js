@@ -5,7 +5,7 @@ import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 
 // Components
 import InputText from "../../components/InputText";
-import RootReducer from "../../reducers/RootReducer";
+import Store from "../../reducers/Store";
 
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
@@ -25,7 +25,7 @@ class LoginModal extends Component {
   }
 
   render() {
-    const { authentication } = RootReducer.getState();
+    const { authentication } = Store.getState();
     const { warning } = this.state;
 
     return (

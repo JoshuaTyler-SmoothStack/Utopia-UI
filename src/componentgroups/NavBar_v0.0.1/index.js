@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
-import RootReducer from '../../reducers/RootReducer';
+import Store from '../../reducers/Store';
 
 // Components
 import PopContent from '../../components/PopContent';
@@ -23,7 +23,7 @@ class NavBar extends Component {
     const { isActivePopContent } = this.state;
     
     // Authentication vars
-    const { authentication } = RootReducer.getState();
+    const { authentication } = Store.getState();
     const isActive_LoginUI = authentication
       ? authentication.isActive_LoginUI
       : false;

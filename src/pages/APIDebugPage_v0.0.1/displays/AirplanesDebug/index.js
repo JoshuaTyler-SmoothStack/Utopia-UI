@@ -2,7 +2,7 @@
 import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
 import AirplanesDebugDispatcher from "../../../../dispatchers/AirplanesDebugDispatcher";
 import React, { Component } from 'react';
-import RootReducer from "../../../../reducers/RootReducer";
+import Store from "../../../../reducers/Store";
 
 // Components
 // import DeleteView from "./DeleteView";
@@ -28,7 +28,7 @@ class AirplanesDebug extends Component {
     };
   }
   render() { 
-    const { airplanes } = RootReducer.getState();
+    const { airplanes } = Store.getState();
     const { searchText } = this.state;
 
     const isDeletePromptActive = airplanes
@@ -151,7 +151,7 @@ class AirplanesDebug extends Component {
   }
 
   componentDidMount() {
-    const { orchestration } = RootReducer.getState();
+    const { orchestration } = Store.getState();
     const isMSActive = orchestration
       ? orchestration.services.list.includes("airplane-service")
       : false;
@@ -164,7 +164,7 @@ class AirplanesDebug extends Component {
   }
 
   handleRenderAirplanesList = (airplanesList) => {
-    const { airplanes } = RootReducer.getState();
+    const { airplanes } = Store.getState();
 
     const resultsDisplayed = airplanes
       ? airplanes.searchResultsPerPage

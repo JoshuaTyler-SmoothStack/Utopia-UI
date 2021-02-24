@@ -1,16 +1,16 @@
 import constants from "../resources/constants.json";
-import RootReducer from "../reducers/RootReducer";
+import Store from "../reducers/Store";
 
 class BookingsDebugDispatcher {
 
   static onDeleteFake() {
-    RootReducer.reduce({ type: constants.bookings.deleteRequest });
+    Store.reduce({ type: constants.bookings.deleteRequest });
     
     // Booking Delete
     setTimeout(() => {
-      const { bookings } = RootReducer.getState();
+      const { bookings } = Store.getState();
       const { deleteResults, deleteResultsStatus } = bookings;
-      RootReducer.reduce({ 
+      Store.reduce({ 
         type: constants.bookings.deleteResponse,
         payload: {
           deleteResults: {
@@ -27,9 +27,9 @@ class BookingsDebugDispatcher {
 
     // Flights Delete
     setTimeout(() => {
-      const { bookings } = RootReducer.getState();
+      const { bookings } = Store.getState();
       const { deleteResults, deleteResultsStatus } = bookings;
-      RootReducer.reduce({ 
+      Store.reduce({ 
         type: constants.bookings.deleteResponse,
         payload: {
           deleteResults: {
@@ -46,9 +46,9 @@ class BookingsDebugDispatcher {
 
     // Guests Delete
     setTimeout(() => {
-      const { bookings } = RootReducer.getState();
+      const { bookings } = Store.getState();
       const { deleteResults, deleteResultsStatus } = bookings;
-      RootReducer.reduce({ 
+      Store.reduce({ 
         type: constants.bookings.deleteResponse,
         payload: {
           deleteResults: {
@@ -65,9 +65,9 @@ class BookingsDebugDispatcher {
 
     // Passengers Delete
     setTimeout(() => {
-      const { bookings } = RootReducer.getState();
+      const { bookings } = Store.getState();
       const { deleteResults, deleteResultsStatus } = bookings;
-      RootReducer.reduce({ 
+      Store.reduce({ 
         type: constants.bookings.deleteResponse,
         payload: {
           deleteResults: {
@@ -84,9 +84,9 @@ class BookingsDebugDispatcher {
 
     // Payments Delete
     setTimeout(() => {
-      const { bookings } = RootReducer.getState();
+      const { bookings } = Store.getState();
       const { deleteResults, deleteResultsStatus } = bookings;
-      RootReducer.reduce({ 
+      Store.reduce({ 
         type: constants.bookings.deleteResponse,
         payload: {
           deleteResults: {
@@ -103,9 +103,9 @@ class BookingsDebugDispatcher {
 
     // Users Delete
     setTimeout(() => {
-      const { bookings } = RootReducer.getState();
+      const { bookings } = Store.getState();
       const { deleteResults, deleteResultsStatus } = bookings;
-      RootReducer.reduce({ 
+      Store.reduce({ 
         type: constants.bookings.deleteResponse,
         payload: {
           deleteResults: {
@@ -122,9 +122,9 @@ class BookingsDebugDispatcher {
   }
 
   static onFakeAPICall() {
-    RootReducer.reduce({ type: constants.bookings.request });
+    Store.reduce({ type: constants.bookings.request });
     setTimeout(() => {
-      RootReducer.reduce({ type: constants.bookings.response });
+      Store.reduce({ type: constants.bookings.response });
     }, 1500);
   }
 }

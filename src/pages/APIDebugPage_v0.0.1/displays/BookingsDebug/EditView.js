@@ -1,6 +1,6 @@
 // Libraries
 import React, { Component } from 'react';
-import RootReducer from '../../../../reducers/RootReducer';
+import Store from '../../../../reducers/Store';
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
 
 // Components
@@ -12,13 +12,13 @@ class EditView extends Component {
   constructor(props) {
     super(props);
 
-    const { bookings } = RootReducer.getState();
+    const { bookings } = Store.getState();
     this.state = {
 
     };
   }
   render() { 
-    const { bookings } = RootReducer.getState();
+    const { bookings } = Store.getState();
     const { editingValues } = this.state;
 
     const error = bookings

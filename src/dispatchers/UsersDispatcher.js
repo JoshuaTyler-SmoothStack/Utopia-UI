@@ -1,22 +1,22 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
-import RootReducer from "../reducers/RootReducer";
+import Store from "../reducers/Store";
 
 class UsersDispatcher {
   static onFindAll() {
-   RootReducer.reduce({type: constants.users.request});
+   Store.reduce({type: constants.users.request});
 
     Orchestration.createRequest(
       constants.httpRequest.get,
       "/users",
       onError => {
-       RootReducer.reduce({
+       Store.reduce({
           type: constants.users.error,
           payload: onError
         });
       }, 
       httpResponseBody => {
-       RootReducer.reduce({
+       Store.reduce({
           type: constants.users.response,
           payload: httpResponseBody
         });
@@ -32,20 +32,20 @@ class UsersDispatcher {
       phone: "59987453",
     };
 
-    RootReducer.reduce({ type: constants.authentication.createAccountRequest });
+    Store.reduce({ type: constants.authentication.createAccountRequest });
     
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
       "/users",
       newUser,
       onError => {
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.authentication.createAccountError,
           payload: onError
         });
       },
       httpResponseBody => {
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.authentication.createAccountSuccess,
           payload: httpResponseBody
         });

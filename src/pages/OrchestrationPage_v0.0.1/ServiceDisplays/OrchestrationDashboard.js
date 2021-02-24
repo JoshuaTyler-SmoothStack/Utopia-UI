@@ -1,7 +1,7 @@
 // Libraries
 import React from 'react';
 import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatcher';
-import RootReducer from '../../../reducers/RootReducer';
+import Store from '../../../reducers/Store';
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
@@ -9,7 +9,7 @@ import StatusIndicator from '../../../components/StatusIndicator';
 import FlexRow from '../../../components/FlexRow';
 
 const OrchestrationDashboard = (props) => {
-  const { orchestration } = RootReducer.getState();
+  const { orchestration } = Store.getState();
   
   const contentNegotiation = orchestration
     ? orchestration.contentNegotiation

@@ -1,5 +1,5 @@
 // Libraries
-import RootReducer from "../../../reducers/RootReducer";
+import Store from "../../../reducers/Store";
 
 // Components
 import FlexRow from "../../../components/FlexRow";
@@ -12,7 +12,7 @@ const OrchestrationHeader = (props) => {
   // @PROP: onTriggerError - f()
   // @PROP: onTriggerFakeAPICall - f()
 
-  const { orchestration } = RootReducer.getState();
+  const { orchestration } = Store.getState();
 
   const name = props.name || "Unkown";
 

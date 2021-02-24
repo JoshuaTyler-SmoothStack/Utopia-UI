@@ -1,23 +1,23 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
-import RootReducer from "../reducers/RootReducer";
+import Store from "../reducers/Store";
 
 class AirplanesDispatcher {
 
   static onFindAll() {
-    RootReducer.reduce({type: constants.airplanes.request});
+    Store.reduce({type: constants.airplanes.request});
 
     Orchestration.createRequest(
       constants.httpRequest.get,
       "airplanes",
       onError => {
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.airplanes.error,
           payload: onError
         });
       }, 
       httpResponseBody => {
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.airplanes.response,
           payload: httpResponseBody
         });
@@ -33,7 +33,7 @@ class AirplanesDispatcher {
     
     const formattedText = searchText.toLowerCase();
     if(!formattedText.includes("id=") && !formattedText.includes("type=")){
-      RootReducer.reduce({
+      Store.reduce({
         type: constants.airplanes.searchError,
         payload: "Invalid search term!",
       });
@@ -45,31 +45,31 @@ class AirplanesDispatcher {
       searchPath = "type/" +
       formattedText.split("type=")[1];
     } else if(isNaN(parseInt(searchPath))) {
-      RootReducer.reduce({
+      Store.reduce({
         type: constants.airplanes.searchError,
         payload: "Invalid search term!",
       });
       return;
     }
     
-    RootReducer.reduce({ type: constants.airplanes.request });
+    Store.reduce({ type: constants.airplanes.request });
     Orchestration.createRequest(
       constants.httpRequest.get,
       "/airplanes/" + searchPath,
       (httpError) => {
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.airplanes.error,
           payload: "Connection failed.",
         });
       },
       (httpResponseBody) => {
         if(httpResponseBody.error) {
-          RootReducer.reduce({
+          Store.reduce({
             type: constants.airplanes.error,
             payload: httpResponseBody.error,
           });
         } else {
-          RootReducer.reduce({
+          Store.reduce({
             type: constants.airplanes.response,
             payload: httpResponseBody,
           });

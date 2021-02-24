@@ -1,7 +1,7 @@
 // Libraries
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
 import BookingsDebugDispatcher from "../../../../dispatchers/BookingsDebugDispatcher";
-import RootReducer from "../../../../reducers/RootReducer";
+import Store from "../../../../reducers/Store";
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
@@ -10,7 +10,7 @@ import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
 const DeleteView = () => {
-  const { bookings } = RootReducer.getState();
+  const { bookings } = Store.getState();
 
   const error = bookings
     ? bookings.error

@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from "react";
 import { Button, Row, Col, Label, Form, FormGroup, Input } from "reactstrap";
-import RootReducer from "../../reducers/RootReducer";
+import Store from "../../reducers/Store";
 import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
@@ -83,7 +83,7 @@ class LandingPage extends Component {
   };
 
   render() {
-    const { flights } = RootReducer.getState();
+    const { flights } = Store.getState();
 
     const searchResults = flights ? flights.searchResults : [];
 

@@ -1,17 +1,17 @@
 import constants from "../resources/constants.json"
 // import Orchestration from "../Orchestration";
-import RootReducer from "../reducers/RootReducer";
+import Store from "../reducers/Store";
 
 class AirplanesDebugDispatcher {
 
   static onDeleteFake() {
-    RootReducer.reduce({ type: constants.airplanes.deleteRequest });
+    Store.reduce({ type: constants.airplanes.deleteRequest });
   }
 
   static onFakeAPICall() {
-    RootReducer.reduce({ type: constants.airplanes.request });
+    Store.reduce({ type: constants.airplanes.request });
     setTimeout(() => {
-      RootReducer.reduce({ type: constants.airplanes.response });
+      Store.reduce({ type: constants.airplanes.response });
     }, 1500);
   }
 }

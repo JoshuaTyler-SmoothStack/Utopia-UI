@@ -2,7 +2,7 @@
 import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
 import AirportsDebugDispatcher from "../../../../dispatchers/AirportsDebugDispatcher";
 import React, { Component } from 'react';
-import RootReducer from "../../../../reducers/RootReducer";
+import Store from "../../../../reducers/Store";
 
 // Components
 // import DeleteView from "./DeleteView";
@@ -28,7 +28,7 @@ class AirportsDebug extends Component {
     };
   }
   render() { 
-    const { airports } = RootReducer.getState();
+    const { airports } = Store.getState();
     const { searchText } = this.state;
 
     const isDeletePromptActive = airports
@@ -151,7 +151,7 @@ class AirportsDebug extends Component {
   }
 
   componentDidMount() {
-    const { orchestration } = RootReducer.getState();
+    const { orchestration } = Store.getState();
     const isMSActive = orchestration
       ? orchestration.services.list.includes("airport-service")
       : false;
@@ -164,7 +164,7 @@ class AirportsDebug extends Component {
   }
 
   handleRenderAirportsList = (airportsList) => {
-    const { airports } = RootReducer.getState();
+    const { airports } = Store.getState();
 
     const resultsDisplayed = airports
       ? airports.searchResultsPerPage

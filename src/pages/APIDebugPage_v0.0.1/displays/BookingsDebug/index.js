@@ -2,7 +2,7 @@
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
 import BookingsDebugDispatcher from "../../../../dispatchers/BookingsDebugDispatcher";
 import React, { Component } from 'react';
-import RootReducer from "../../../../reducers/RootReducer";
+import Store from "../../../../reducers/Store";
 
 // Components
 import DeleteView from "./DeleteView";
@@ -30,7 +30,7 @@ class BookingsDebug extends Component {
     };
   }
   render() { 
-    const { bookings } = RootReducer.getState();
+    const { bookings } = Store.getState();
     const { isReferenceIDsActive, searchText } = this.state;
 
     const isDeletePromptActive = bookings
@@ -163,7 +163,7 @@ class BookingsDebug extends Component {
   }
 
   componentDidMount() {
-    const { orchestration } = RootReducer.getState();
+    const { orchestration } = Store.getState();
     const isMSActive = orchestration
       ? orchestration.services.list.includes("booking-service")
       : false;
@@ -180,7 +180,7 @@ class BookingsDebug extends Component {
   }
 
   handleRenderBookingsList = (bookingsList) => {
-    const { bookings } = RootReducer.getState();
+    const { bookings } = Store.getState();
     const { isReferenceIDsActive } = this.state;
 
     const resultsDisplayed = bookings
