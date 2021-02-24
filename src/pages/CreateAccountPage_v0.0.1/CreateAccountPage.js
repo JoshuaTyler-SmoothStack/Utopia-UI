@@ -72,14 +72,17 @@ const CreateAccountPage = (props) => {
     setLoading(true)
     axios.post('http://localhost:8080/users', newUser)
       .then(data => {
-        setLoading(false)
         setSuccess(true)
-        console.log('succ')
+        setLoading(false)
         setTimeout(() => setRedirect(true), 3400)
       }, error => {
-        console.log('err')
+        if (error.response.status === 409) {
+          setErrorMessage(error.response.data)
+        } else {
+          setErrorMessage('Unexpected error occured')
+        }
         setLoading(false)
-        setErrorMessage(error.response.data)
+
       })
 
 
