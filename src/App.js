@@ -8,10 +8,11 @@ import {
 
 // Pages
 import BootPage from "./pages/BootPage_v0.0.1";
-import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1";
+import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1/CreateAccountPage";
 import LandingPage from "./pages/LandingPage_v0.0.1";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
+import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
 
 
 // Styles
@@ -58,6 +59,10 @@ class App extends Component {
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
               <ForgotPasswordPage />
+            </Route>
+
+            <Route path="/password-recovery/**">
+              <PasswordRecoveryPage />
             </Route>
 
           </Switch>

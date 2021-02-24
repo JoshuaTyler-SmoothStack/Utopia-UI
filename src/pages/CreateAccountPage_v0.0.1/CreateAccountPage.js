@@ -8,7 +8,7 @@ import { Redirect } from 'react-router'
 // Components
 import FlexBox from '../../components/FlexBox';
 
-import LoadingPage from '../../componentgroups/loading/index'
+import LoadingAnime from '../../componentgroups/loading/index'
 
 
 // Custom CSS
@@ -91,8 +91,8 @@ const CreateAccountPage = (props) => {
 
         {!success && !loading &&
 
-          <div className="col-md-12 col-md-12-local">
-            <div className="card card-local">
+          <div className="col-md-12 ca-col-md-12-local">
+            <div className="card ca-card-local">
               <h2 className="createAccount">Create an account</h2>
               <div className="errorContainer">
                 {errorMessage &&
@@ -152,9 +152,12 @@ const CreateAccountPage = (props) => {
 
         {loading &&
 
-          <div className="col-md-12 col-md-12-local">
-            <div className="card card-local">
-              <LoadingPage />
+          <div className="col-md-12 ca-col-md-12-local">
+            <div className="card ca-card-local">
+
+              <p className="margin-for-anime"> </p>
+              <LoadingAnime />
+
 
             </div>
           </div>
@@ -162,8 +165,8 @@ const CreateAccountPage = (props) => {
 
         {!loading && success &&
 
-          <div className="col-md-12 col-md-12-local successfull-registration-container">
-            <div className="card card-local successfull-registration">
+          <div className="col-md-12 ca-col-md-12-local successfull-registration-container">
+            <div className="card ca-card-local successfull-registration">
               <p>Successful registration</p>
               <p>Redirecting... </p>
 

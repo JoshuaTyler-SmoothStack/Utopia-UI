@@ -1,11 +1,9 @@
 // Libraries
 import React, { useState } from 'react';
 import axios from 'axios';
-
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
-
-// Components
 import FlexBox from '../../components/FlexBox';
+import './style.css'
 
 import LoadingPage from '../../componentgroups/loading/index'
 import { Redirect } from 'react-router'
@@ -34,13 +32,14 @@ const ForgotPasswordPage = (props) => {
     }
 
     setLoading(true)
-    axios.post('http://localhost:8080/users//forgot-password', { email: email })
+    axios.post('http://localhost:8080/users/forgot-password', { email: email })
       .then(data => {
         setSuccess(true)
         setLoading(false)
         setTimeout(() => setRedirect(true), 3400)
       }, error => {
         setLoading(false)
+        setSubmitted(false)
         setErrorMessage(error.response.data)
       })
 
@@ -55,8 +54,8 @@ const ForgotPasswordPage = (props) => {
 
         {!success && !loading &&
           <div className="col-md-12 col-md-12-local">
-            <div className="card card-local">
-              <h2 className="createAccount">Forgot Password</h2>
+            <div className="card fp-card-local">
+              <h2 className="fp-forgotPassordHeader">Forgot Password</h2>
               <div className="errorContainer">
                 {errorMessage &&
                   <div id="header" className="alert alert-warning text-white" role="alert">
@@ -85,7 +84,7 @@ const ForgotPasswordPage = (props) => {
         {loading &&
 
           <div className="col-md-12 col-md-12-local">
-            <div className="card card-local">
+            <div className="card fp-card-local" >
               <LoadingPage />
 
             </div>
@@ -95,7 +94,7 @@ const ForgotPasswordPage = (props) => {
         {!loading && success &&
 
           <div className="col-md-12 col-md-12-local successfull-registration-container">
-            <div className="card card-local successfull-registration">
+            <div className="card fp-card-local successfull-registration">
               <p>Email sent</p>
               <p>Redirecting... </p>
 
