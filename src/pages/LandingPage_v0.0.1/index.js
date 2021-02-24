@@ -101,160 +101,160 @@ class LandingPage extends Component {
 
         {/* Content */}
         <div className="row justify-content-center">
-          <div className="col-6 d-flex flex-column justify-content-center" style={{height: "85vh"}}>
-              {/* Content */}
+          <div className="col-6 d-flex flex-column justify-content-center" style={{ height: "85vh" }}>
+            {/* Content */}
 
-              <div className="rounded kit-bg-smoke mt-4 p-3">
-                <Form>
-                  <Row className="mt-4 flex-row-around">
-                    <Col>
-                      <FormGroup check>
-                        <Label check>
-                          <Input
-                            type="radio"
-                            value="One-way"
-                            onChange={(e) => this.handleInputChange(e)}
-                            defaultChecked
-                            name="flightType"
-                          />
+            <div className="rounded kit-bg-smoke mt-4 p-3">
+              <Form>
+                <Row className="mt-4 flex-row-around">
+                  <Col>
+                    <FormGroup check>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          value="One-way"
+                          onChange={(e) => this.handleInputChange(e)}
+                          defaultChecked
+                          name="flightType"
+                        />
                           One-way
                         </Label>
-                      </FormGroup>
-                    </Col>
-                    <Col>
-                      <FormGroup check>
-                        <Label check>
-                          <Input
-                            type="radio"
-                            value="Round-trip"
-                            onChange={(e) => this.handleInputChange(e)}
-                            name="flightType"
-                          />
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup check>
+                      <Label check>
+                        <Input
+                          type="radio"
+                          value="Round-trip"
+                          onChange={(e) => this.handleInputChange(e)}
+                          name="flightType"
+                        />
                           Round-trip
                         </Label>
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                    </FormGroup>
+                  </Col>
+                </Row>
 
-                  <Row className="flex-row-around mt-4">
-                    <Col>
-                      <FormGroup>
-                        <Label for="origin">From: </Label>
-                        <Input
-                          type="text"
-                          onChange={(e) => this.handleInputChange(e)}
-                          name="origin"
-                          id="origin"
-                          placeholder="e.g: JFK, MIA"
-                        />
-                      </FormGroup>
-                    </Col>
-                    <Col>
-                      <FormGroup>
-                        <Label for="destination">To: </Label>
-                        <Input
-                          type="text"
-                          onChange={(e) => this.handleInputChange(e)}
-                          name="destination"
-                          id="destination"
-                          placeholder="e.g: DCA, SFO "
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                <Row className="flex-row-around mt-4">
+                  <Col>
+                    <FormGroup>
+                      <Label for="origin">From: </Label>
+                      <Input
+                        type="text"
+                        onChange={(e) => this.handleInputChange(e)}
+                        name="origin"
+                        id="origin"
+                        placeholder="e.g: JFK, MIA"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label for="destination">To: </Label>
+                      <Input
+                        type="text"
+                        onChange={(e) => this.handleInputChange(e)}
+                        name="destination"
+                        id="destination"
+                        placeholder="e.g: DCA, SFO "
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
 
-                  <Row className="flex-row-around mt-4 traveler-row">
-                    <Col>Travelers: </Col>
-                    <Col>
-                      <FormGroup>
-                        <Label for="adultSelect">Adult: </Label>
-                        <Input
-                          type="select"
-                          onChange={(e) => this.handleInputChange(e)}
-                          name="adultSelect"
-                          id="adultSelect"
-                        >
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </Input>
-                      </FormGroup>
-                    </Col>
-                    <Col>
-                      <FormGroup>
-                        <Label for="childrenSelect">Children: </Label>
-                        <Input
-                          type="select"
-                          onChange={(e) => this.handleInputChange(e)}
-                          name="childrenSelect"
-                          id="childrenSelect"
-                        >
-                          <option>0</option>
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </Input>
-                      </FormGroup>
-                    </Col>
-                    <Col>
-                      <FormGroup>
-                        <Label for="seniorSelect">Senior: </Label>
-                        <Input
-                          type="select"
-                          onChange={(e) => this.handleInputChange(e)}
-                          name="seniorSelect"
-                          id="seniorSelect"
-                        >
-                          <option>0</option>
-                          <option>1</option>
-                          <option>2</option>
-                          <option>3</option>
-                          <option>4</option>
-                          <option>5</option>
-                        </Input>
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                <Row className="flex-row-around mt-4 traveler-row">
+                  <Col>Travelers: </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label for="adultSelect">Adult: </Label>
+                      <Input
+                        type="select"
+                        onChange={(e) => this.handleInputChange(e)}
+                        name="adultSelect"
+                        id="adultSelect"
+                      >
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label for="childrenSelect">Children: </Label>
+                      <Input
+                        type="select"
+                        onChange={(e) => this.handleInputChange(e)}
+                        name="childrenSelect"
+                        id="childrenSelect"
+                      >
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                  <Col>
+                    <FormGroup>
+                      <Label for="seniorSelect">Senior: </Label>
+                      <Input
+                        type="select"
+                        onChange={(e) => this.handleInputChange(e)}
+                        name="seniorSelect"
+                        id="seniorSelect"
+                      >
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </Input>
+                    </FormGroup>
+                  </Col>
+                </Row>
 
-                  <Row className="flex-row-around mt-4">
-                    <Col>
-                      {/*} <DatePicker
+                <Row className="flex-row-around mt-4">
+                  <Col>
+                    {/*} <DatePicker
                               onChange={(e) => this.handleDateChange(e)}
                               value={this.state.value}
                         />*/}
-                      <FormGroup>
-                        Departure Date:
+                    <FormGroup>
+                      Departure Date:
                         <Input
-                          type="date"
-                          name="date"
-                          placeholder="date placeholder"
-                          onChange={(e) => this.handleInputChange(e)}
-                        />
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row className="flex-row mt-4">
-                    <Col>
-                      <Button
-                        onClick={this.clicked}
-                        className="btn-primary"
-                        size="lg"
-                      >
-                        Search for flights
+                        type="date"
+                        name="date"
+                        placeholder="date placeholder"
+                        onChange={(e) => this.handleInputChange(e)}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row className="flex-row mt-4">
+                  <Col>
+                    <Button
+                      onClick={this.clicked}
+                      className="btn-primary"
+                      size="lg"
+                    >
+                      Search for flights
                       </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-
-              <div className="rounded flightPanel kit-bg-smoke mt-4 p-3">
-                {this.handleRenderFlightList(searchResults)}
-              </div>
+                  </Col>
+                </Row>
+              </Form>
             </div>
+
+            <div className="rounded flightPanel kit-bg-smoke mt-4 p-3">
+              {this.handleRenderFlightList(searchResults)}
+            </div>
+          </div>
         </div>
       </div>
     );
