@@ -1,6 +1,6 @@
 // Libraries
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 import { Redirect } from 'react-router'
 
@@ -28,6 +28,7 @@ const CreateAccountPage = (props) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [validatePassword, setValidatePassword] = useState(true)
   const [validatePhoneNumber, setValidatePhoneNumber] = useState(true)
+  const [validateEmail, serValidateEmail] = useState(true)
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false)
   const [redirect, setRedirect] = useState(false);
@@ -41,6 +42,7 @@ const CreateAccountPage = (props) => {
     }
     const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
     const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$")
+    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g)
     // password validation
 
     // phone number validation////email match validation// // password validation
@@ -50,11 +52,14 @@ const CreateAccountPage = (props) => {
       return setValidatePassword(false)
     } else if (password != confirmPassword) {
       return setPasswordMatch(false)
+    } else if (!regexEmailValidation.test(email)) {
+      return serValidateEmail(false)
     }
 
     setValidatePhoneNumber(true);
     setValidatePassword(true);
     setPasswordMatch(true)
+    serValidateEmail(true)
 
     const newUser = {
       firstName: firstName,
@@ -112,24 +117,22 @@ const CreateAccountPage = (props) => {
 
                 <label htmlFor="email">Email address{submitted && !email &&
                   <span className="required"> is required</span>
-                }</label>
-                <input type="email" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
+                } {submitted && email && !validateEmail &&
+                  <span className="required"> invalid email format </span>}
+                </label>
+                <input type="text" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
                 <label htmlFor="phone">Phone number{submitted && !phone &&
-                  <span className="required"> is required</span>
-                }
+                  <span className="required"> is required</span>}
                   {submitted && phone && !validatePhoneNumber &&
-                    <span className="required"> invalid phone number </span>
-                  }
+                    <span className="required"> invalid phone number </span>}
                 </label>
                 <input type="phone" className="form-control" name="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
                 <label htmlFor="password">Password {submitted && !password &&
                   <span className="required"> is required</span>
                 } {submitted && password && !validatePassword &&
-                  <span className="required"> at least 1 lowercase, 1 uppercase, 1 numneric and one special character </span>
-                  }
+                  <span className="required"> at least 1 lowercase, 1 uppercase, 1 numneric and one special character {'>'}= 8 </span>}
                 </label>
                 <input type="password" className="form-control" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
@@ -139,7 +142,6 @@ const CreateAccountPage = (props) => {
                 </label>
                 <input type="password" className="form-control" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
-
                 <div className="form-group">
                   <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit" >Create Account</button>
                 </div>
@@ -147,7 +149,6 @@ const CreateAccountPage = (props) => {
             </div>
           </div>
         }
-
 
         {loading &&
 
@@ -158,7 +159,6 @@ const CreateAccountPage = (props) => {
             </div>
           </div>
         }
-
 
         {!loading && success &&
 
@@ -171,13 +171,11 @@ const CreateAccountPage = (props) => {
           </div>
         }
 
-
         {redirect &&
           <div>
             <Redirect to="/home" />
           </div>
         }
-
 
       </FlexBox>
       <NavBar />
