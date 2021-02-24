@@ -7,13 +7,12 @@ import {
 } from "react-router-dom";
 
 // Pages
+import APIDebugPage from "./pages/APIDebugPage_v0.0.1";
 import BootPage from "./pages/BootPage_v0.0.1";
-import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1/CreateAccountPage";
+import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1";
 import LandingPage from "./pages/LandingPage_v0.0.1";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1/ForgotPasswordPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1";
 import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
-import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
-
 
 // Styles
 import "./styles/UtopiaBootstrap.css";
@@ -36,33 +35,34 @@ class App extends Component {
         <Router>
           <Switch>
 
+            {/* API Debug Page */}
+            <Route path="/debug">
+              <APIDebugPage/>
+            </Route>
+
             {/* Boot Page */}
             <Route exact path="/">
-              <BootPage />
-            </Route>
-
-            {/* Landing Page */}
-            <Route path="/home">
-              <LandingPage />
-            </Route>
-
-            {/* Orchestration Page */}
-            <Route path="/orchestration">
-              <OrchestrationPage />
+              <BootPage/>
             </Route>
 
             {/* Create Account Page */}
             <Route path="/createaccount">
-              <CreateAccountPage />
+              <CreateAccountPage/>
             </Route>
 
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
-              <ForgotPasswordPage />
+              <ForgotPasswordPage/>
             </Route>
 
-            <Route path="/password-recovery/**">
-              <PasswordRecoveryPage />
+            {/* Landing Page */}
+            <Route path="/home">
+              <LandingPage/>
+            </Route>
+
+            {/* Orchestration Page */}
+            <Route path="/orchestration">
+              <OrchestrationPage/>
             </Route>
 
           </Switch>
