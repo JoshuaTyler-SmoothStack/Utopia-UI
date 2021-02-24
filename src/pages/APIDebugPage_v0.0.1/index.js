@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 
 // Components
-import BookingsDebug from "./displays/BookingsDebug";
+import BookingsDebug from "./displays/BookingDebug.js";
 import LocalSidebar from "./LocalSidebar";
 import NavBar from "../../componentgroups/NavBar_v0.0.1";
 import OrchestrationDispathcer from "../../dispatchers/OrchestrationDispatcher";

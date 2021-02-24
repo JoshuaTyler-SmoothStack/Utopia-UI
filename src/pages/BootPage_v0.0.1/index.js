@@ -1,6 +1,7 @@
 // Libraries
 import React, { Component } from "react";
-import FlexBox from "../../components/FlexBox";
+import FlexColumn from "../../components/FlexColumn";
+import FlexRow from "../../components/FlexRow";
 
 // Images
 import gifEarthSpinning from "../../images/EarthWithHotAirBalloon.gif";
@@ -26,14 +27,13 @@ class StartupPage extends Component {
     const { loadingText } = this.state;
 
     return (
-      <FlexBox
+      <FlexColumn
         className="kit-gradient-red kit-no-user"
         style={{
           position: "absolute",
           height: "100vh",
           width: "100vw",
         }}
-        type={"column"}
         onClick={() => this.handleLoadingProgressCheck()}
       >
         {/* Utopia Header */}
@@ -80,15 +80,15 @@ class StartupPage extends Component {
         </div>
 
         {/* Copyright */}
-        <FlexBox>
+        <FlexRow>
           <a 
             href="https://github.com/JoshuaTyler-SmoothStack/Utopia-UI" 
             className="h5 kit-link mb-2"
           >
             {"©2021 Utopia Airlines"}
           </a>
-        </FlexBox>
-      </FlexBox>
+        </FlexRow>
+      </FlexColumn>
     );
   }
 }

@@ -1,12 +1,12 @@
 // Libraries
 import React from 'react';
-import FlexBox from '../../../components/FlexBox';
 import OrchestrationDispatcher from '../../../dispatchers/OrchestrationDispatcher';
 import RootReducer from '../../../reducers/RootReducer';
 
 // Components
 import ContentNegotiationIndicator from './ContentNegotiationIndicator';
 import StatusIndicator from '../../../components/StatusIndicator';
+import FlexRow from '../../../components/FlexRow';
 
 const OrchestrationDashboard = (props) => {
   const { orchestration } = RootReducer.getState();
@@ -30,7 +30,7 @@ const OrchestrationDashboard = (props) => {
     : "INACTIVE";
 
   return ( 
-    <FlexBox
+    <FlexRow
       className={ 
         "kit-gradient-lightgrey90 rounded kit-border-shadow " +
         (props.className || "")
@@ -38,7 +38,7 @@ const OrchestrationDashboard = (props) => {
       style={props.style}
     >
       {/* Header */}
-      <FlexBox
+      <FlexRow
         justify={"start"}
         style={{height: isActive ? "10%" : "100%", width:"100%"}}
       >
@@ -62,13 +62,13 @@ const OrchestrationDashboard = (props) => {
         <StatusIndicator className="ml-auto mr-2" status={status} />
 
         {/* URI Path Text */}
-        <FlexBox 
+        <FlexRow 
           className={"rounded kit-bg-smoke rounded kit-border-shadow mr-2"}
           style={{height: "2rem", width: "33%"}}
         >
           {location}
-        </FlexBox>
-      </FlexBox>
+        </FlexRow>
+      </FlexRow>
 
       {/* XML / JSON Toggle */}
       {isActive &&
@@ -82,7 +82,7 @@ const OrchestrationDashboard = (props) => {
 
       {/* Function Buttons */}
       {isActive &&
-      <FlexBox className="p-2" justify={"start"} style={{width:"100%"}}>
+      <FlexRow className="p-2" justify={"start"} style={{width:"100%"}}>
         <button
           className={"btn btn-info"}
           type={"column"}
@@ -93,8 +93,8 @@ const OrchestrationDashboard = (props) => {
             : "findActiveServices()"
           }
         </button>
-      </FlexBox>}
-    </FlexBox>
+      </FlexRow>}
+    </FlexRow>
   );
 }
 export default OrchestrationDashboard;

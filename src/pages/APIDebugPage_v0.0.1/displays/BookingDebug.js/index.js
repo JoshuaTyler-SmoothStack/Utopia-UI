@@ -1,14 +1,16 @@
 // Libraries
-import BookingsDispatcher from "../../../dispatchers/BookingsDispatcher";
+import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
 import React, { Component } from 'react';
-import RootReducer from "../../../reducers/RootReducer";
+import RootReducer from "../../../../reducers/RootReducer";
 
 // Components
-import ErrorMessage from "../../../components/ErrorMessage";
-import FlexColumn from "../../../components/FlexColumn";
-import FlexRow from "../../../components/FlexRow";
-import StatusAsyncIndicator from "../../../components/StatusAsyncIndicator";
-import StatusIndicator from "../../../components/StatusIndicator";
+import DeleteView from "./DeleteView";
+import EditView from "./EditView";
+import ErrorMessage from "../../../../components/ErrorMessage";
+import FlexColumn from "../../../../components/FlexColumn";
+import FlexRow from "../../../../components/FlexRow";
+import StatusAsyncIndicator from "../../../../components/StatusAsyncIndicator";
+import StatusIndicator from "../../../../components/StatusIndicator";
 
 class BookingsDebug extends Component {
   constructor(props) {
@@ -155,44 +157,8 @@ class BookingsDebug extends Component {
 
         {/* Search Sorting & Filtering */}
         <div className={"row bg-light kit-border-shadow " + ((isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}>
-
-          {/* Pagination */}
-          <div className="col-12 col-md-6 p-2">
-              <FlexRow wrap={"no-wrap"}>
-                {/* # of Results Selection */}
-                <div className="dropdown">
-                  <button 
-                    className="btn btn-secondary dropdown-toggle" 
-                    type="button"
-                    onClick={() => this.setState({isResultsDropdownActive: !isResultsDropdownActive})}
-                  >
-                    {resultsDisplayed + " results"}
-                  </button>
-                  <ul className={"dropdown-menu " + (isResultsDropdownActive ? "show" : "")}>
-                    <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(25)}>25</button></li>
-                    <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(50)}>50</button></li>
-                    <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(100)}>100</button></li>
-                  </ul>
-                </div>
-
-                {/* # of Results Display */}
-                <div className="list-group ml-1">
-                  <div className="list-group-item" style={{fontSize: "0.85rem", padding:"0.5rem"}}>
-                    {resultsTotal === 1 && resultsStart + " of " + resultsTotal + " total"}
-                    {resultsTotal !== 1 && resultsStart + " to " + resultsEnd + " of " + resultsTotal + " total"}
-                  </div>
-                </div>
-
-                {/* Results Pagination */}
-                {bookings &&
-                <div className="ml-2">
-                  {this.handleRenderPagination()}
-                </div>}
-              </FlexRow>
-          </div>
-
           {/* Filters */}
-          <div className="col-12 col-md-6 p-2">
+          <div className="col-12 p-2">
             <FlexRow wrap={"no-wrap"}>
               
               {/* Toggle Reference Data */}
@@ -217,12 +183,48 @@ class BookingsDebug extends Component {
               </div>
             </FlexRow>
           </div>
+
+          {/* Pagination */}
+          <div className="col-12 p-2">
+              <FlexRow wrap={"no-wrap"}>
+                {/* # of Results Selection */}
+                <div className="dropdown">
+                  <button 
+                    className="btn btn-secondary dropdown-toggle" 
+                    type="button"
+                    onClick={() => this.setState({isResultsDropdownActive: !isResultsDropdownActive})}
+                  >
+                    {resultsDisplayed + " results"}
+                  </button>
+                  <ul className={"dropdown-menu " + (isResultsDropdownActive ? "show" : "")}>
+                  <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(3)}>3</button></li>
+                    <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(25)}>25</button></li>
+                    <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(50)}>50</button></li>
+                    <li><button className="dropdown-item" type="button" onClick={() => this.handleSetNumberOfResults(100)}>100</button></li>
+                  </ul>
+                </div>
+
+                {/* # of Results Display */}
+                <div className="list-group ml-1">
+                  <div className="list-group-item" style={{fontSize: "0.85rem", padding:"0.5rem"}}>
+                    {resultsTotal === 1 && resultsStart + " of " + resultsTotal + " total"}
+                    {resultsTotal !== 1 && resultsStart + " to " + resultsEnd + " of " + resultsTotal + " total"}
+                  </div>
+                </div>
+
+                {/* Results Pagination */}
+                {bookings &&
+                <div className="ml-2">
+                  {this.handleRenderPagination()}
+                </div>}
+              </FlexRow>
+          </div>
         </div>
 
 
         {/* Body */}
         <div className="row">
-          <div className="col-12 col-md-12 overflow-auto" style={{height:"85vh"}}>
+          <div className="col-12 col-md-12 overflow-auto" style={{height:"80vh"}}>
             {(bookingsMSStatus === "PENDING" || bookingsMSStatus === "INACTIVE") &&
             <FlexColumn className="h-100">
               <div className="spinner-border"/>
@@ -239,10 +241,10 @@ class BookingsDebug extends Component {
             this.handleRenderBookingsList(searchResults)}
 
             {(bookingsMSStatus === "SUCCESS" && isDeletePromptActive) && 
-            this.handleRenderDeletePrompt()}
+            <DeleteView/>}
 
             {(bookingsMSStatus === "SUCCESS" && isEditPromptActive) && 
-            this.handleRenderEditPrompt()}
+            <EditView/>}
           </div>
         </div>
 
@@ -251,7 +253,16 @@ class BookingsDebug extends Component {
   }
 
   componentDidMount() {
-    BookingsDispatcher.onFindAll()
+    const { orchestration } = RootReducer.getState();
+    const isMSActive = orchestration
+      ? orchestration.services.list.includes("booking-service")
+      : false;
+    
+    if(isMSActive) {
+      BookingsDispatcher.onFindAll()
+    } else {
+      BookingsDispatcher.onError("No Booking MS connection.");
+    }
   }
 
   handleIncludeReferenceData = (isActive) => {
@@ -274,7 +285,10 @@ class BookingsDebug extends Component {
     if(!bookingsList.length) bookingsList = [bookingsList];
     for(var i = resultsStart; i < bookingsList.length; i++) {
       if(i < resultsStart + resultsDisplayed) {
+        
         const bookingId = bookingsList[i].id;
+        if(!bookingId) continue;
+
         const index = Number(i) + 1;
         bookingsTable.push(
           <tr key={index}>
@@ -337,203 +351,6 @@ class BookingsDebug extends Component {
       </FlexColumn>
     );
   };
-
-  handleRenderDeletePrompt() {
-    const { bookings } = RootReducer.getState();
-    const selectedBooking = bookings
-      ? bookings.searchResults.length
-        ? bookings.searchResults[bookings.selected]
-        : bookings.searchResults
-      : null;
-    
-    if(!selectedBooking) {
-      BookingsDispatcher.onError("Unable to delete, could not read Bookings state.");
-      return;
-    }
-
-    return (
-      <FlexColumn>
-
-        {/* Booking */}
-        <FlexColumn>
-          <FlexRow>
-            <div className="mt-3">
-              <label className="form-label">Booking ID</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.id}/>
-            </div>
-            <div className="mt-3 ml-3">
-              <label className="form-label">Status</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.status}/>
-            </div>
-          </FlexRow>
-            <div className="mt-3 w-100">
-              <label className="form-label">Confirmation Code</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.confirmationCode}/>
-            </div>
-            <hr className="w-100"></hr>
-        </FlexColumn>
-
-        
-        {/* Flight / Passenger */}
-        <FlexRow className="mt-3">
-          <div>
-            <label className="form-label">Flight ID</label>
-            <input type="text" readOnly className="form-control" value={selectedBooking.flightId}/>
-          </div>
-          <div className="ml-3">
-            <label className="form-label">Passenger ID</label>
-            <input type="text" readOnly className="form-control" value={selectedBooking.passengerId}/>
-          </div>
-          <hr className="w-100"></hr>
-        </FlexRow>
-        
-
-        {/* User / Guest */}
-        <FlexColumn>
-          <FlexRow align={"start"} className="mt-3">
-            <div className="mr-3">
-              <label className="form-label">User ID</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.userId || "Not a user"}/>
-            </div>
-            <FlexColumn>
-              <div>
-                <label className="form-label">Guest Email</label>
-                <input type="text" readOnly className="form-control" value={selectedBooking.guestEmail || "No guest email available."}/>
-              </div>
-              <div className="mt-3">
-                <label className="form-label">Guest Phone</label>
-                <input type="text" readOnly className="form-control" value={selectedBooking.guestPhone || "No guest phone available."}/>
-              </div>
-            </FlexColumn>
-          </FlexRow>
-          <hr className="w-100"></hr>
-        </FlexColumn>
-        
-
-        {/* Buttons */}
-        <FlexRow>
-          <button className="btn btn-light m-3"
-            onClick={() => BookingsDispatcher.onCancel()}
-          >
-            Cancel
-          </button>
-          <button className="btn btn-primary m-3"
-            onClick={() => BookingsDispatcher.onDelete(selectedBooking.id)}
-          >
-            Confirm Delete (cannot be undone)
-          </button>
-        </FlexRow>
-      </FlexColumn>
-    );
-  }
-
-  handleRenderEditPrompt() {
-    const { bookings } = RootReducer.getState();
-    const { editingValues } = this.state;
-    const selectedBooking = bookings
-      ? bookings.searchResults.length
-        ? bookings.searchResults[bookings.selected]
-        : bookings.searchResults
-      : null;
-    
-    if(!selectedBooking) {
-      BookingsDispatcher.onError("Unable to edit, could not read Bookings state.");
-      return;
-    }
-
-    return (
-      <FlexColumn>
-
-        {/* Booking */}
-        <FlexColumn>
-          <FlexRow>
-            <div className="mt-3" style={{width:"14rem"}}>
-              <label className="form-label">Booking ID</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.id}/>
-            </div>
-            <div className="mt-3 ml-3" style={{width:"14rem"}}>
-              <label className="form-label">Status</label>
-              <input type="number" min="0" max="4" className="form-control" defaultValue={selectedBooking.status}
-                onChange={(e) => this.setState({editingValues: {...editingValues, status: e.target.value}})}
-              />
-            </div>
-          </FlexRow>
-            <div className="mt-3 w-100">
-              <label className="form-label">Confirmation Code</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.confirmationCode}/>
-            </div>
-            <hr className="w-100"></hr>
-        </FlexColumn>
-
-        
-        {/* Flight / Passenger */}
-        <FlexRow className="mt-3">
-          <div style={{width:"14rem"}}>
-            <label className="form-label">Flight ID</label>
-            <input type="number" min="1" className="form-control" defaultValue={selectedBooking.flightId}
-              onChange={(e) => this.setState({editingValues: {...editingValues, flightId: e.target.value}})}
-            />
-          </div>
-          <div className="ml-3" style={{width:"14rem"}}>
-            <label className="form-label">Passenger ID</label>
-            <input type="number" min="1" className="form-control" defaultValue={selectedBooking.passengerId}
-              onChange={(e) => this.setState({editingValues: {...editingValues, passengerId: e.target.value}})}
-            />
-          </div>
-          <hr className="w-100"></hr>
-        </FlexRow>
-        
-
-        {/* User / Guest */}
-        <FlexColumn>
-          <FlexRow align={"start"} className="mt-3">
-            <div className="mr-3" style={{width:"14rem"}}>
-              <label className="form-label">User ID</label>
-              <input type="number" min="1" className="form-control"
-                defaultValue={selectedBooking.userId || ""}
-                placeholder={!selectedBooking.userId && "Not a user"}
-                onChange={(e) => this.setState({editingValues: {...editingValues, userId: e.target.value}})}
-              />
-            </div>
-            <FlexColumn>
-              <div style={{width:"14rem"}}>
-                <label className="form-label">Guest Email</label>
-                <input type="email" className="form-control" 
-                  placeholder={!selectedBooking.guestEmail && "No guest email available."}
-                  defaultValue={selectedBooking.guestEmail || ""}
-                  onChange={(e) => this.setState({editingValues: {...editingValues, guestEmail: e.target.value}})}
-                />
-              </div>
-              <div className="mt-3" style={{width:"14rem"}}>
-                <label className="form-label">Guest Phone</label>
-                <input type="phone" className="form-control" 
-                  defaultValue={selectedBooking.guestPhone || ""}
-                  placeholder={!selectedBooking.guestPhone && "No guest phone available."}
-                  onChange={(e) => this.setState({editingValues: {...editingValues, guestPhone: e.target.value}})}
-                />
-              </div>
-            </FlexColumn>
-          </FlexRow>
-          <hr className="w-100"></hr>
-        </FlexColumn>
-        
-
-        {/* Buttons */}
-        <FlexRow>
-          <button className="btn btn-light m-3"
-            onClick={() => BookingsDispatcher.onCancel()}
-          >
-            Cancel
-          </button>
-          <button className="btn btn-danger m-3"
-            onClick={() => BookingsDispatcher.onEdit(selectedBooking, editingValues)}
-          >
-            Save Changes
-          </button>
-        </FlexRow>
-      </FlexColumn>
-    );
-  }
 
   handleRenderPagination = () => {
     const { bookings } = RootReducer.getState();

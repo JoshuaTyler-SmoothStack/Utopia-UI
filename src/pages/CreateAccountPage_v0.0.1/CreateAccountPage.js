@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 import { Redirect } from 'react-router'
 
+import FlexColumn from '../../components/FlexColumn';
+
 
 // Components
-import FlexBox from '../../components/FlexBox';
 
 import LoadingAnime from '../../componentgroups/loading/index'
 
@@ -90,7 +91,10 @@ const CreateAccountPage = (props) => {
 
   return (
     <div>
-      <FlexBox className={"kit-bg-blue"} type={"column"} style={{ position: "absolute", height: "100vh", width: "100vw", }} >
+
+      <NavBar />
+
+      <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
 
         {!success && !loading &&
 
@@ -183,8 +187,7 @@ const CreateAccountPage = (props) => {
           </div>
         }
 
-      </FlexBox>
-      <NavBar />
+      </FlexColumn>
     </div>
   );
 

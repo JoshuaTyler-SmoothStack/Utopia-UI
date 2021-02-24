@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 
 // Components
 import ErrorMessage from '../../components/ErrorMessage';
-import FlexBox from '../../components/FlexBox';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 import OrchestratorDashboard from './ServiceDisplays/OrchestrationDashboard';
 import ServiceDisplay from './ServiceDisplay';
@@ -14,6 +13,8 @@ import AirportsDashboard from './ServiceDisplays/AirportsDashboard';
 import BookingsDashboard from './ServiceDisplays/BookingsDashboard';
 import UsersDashboard from './ServiceDisplays/UsersDashboard';
 import RootReducer from '../../reducers/RootReducer';
+import FlexColumn from '../../components/FlexColumn';
+import FlexRow from '../../components/FlexRow';
 
 class OrchestrationPage extends Component {
   constructor(props) {
@@ -38,9 +39,8 @@ class OrchestrationPage extends Component {
 
     return ( 
       <div>
-        <FlexBox
+        <FlexColumn
           className={"kit-bg-blue"}
-          type={"column"}
           style={{ 
             position: "absolute", 
             height: "100vh", 
@@ -60,24 +60,24 @@ class OrchestrationPage extends Component {
 
           {/* Services Container */}
           {isActive_OrchestrationDashboard &&
-          <FlexBox type={"column"} style={{height: "auto", width: "100%"}}>
+          <FlexColumn style={{height: "auto", width: "100%"}}>
             
             {/* Loading Spinner */}
             {services.status === "PENDING" && <div className="spinner-border kit-color-cream"/>}
 
             {/* No Active Services Error */}
             {services.status === "REGISTERED" && services.list.length < 1 && 
-              <FlexBox 
+              <FlexRow
                 className="h1 text-warning kit-bg-smoke rounded kit-border-shadow"
                 style={{width: "50%"}}
               >
                 <ErrorMessage message={"No Active Services!"} soundAlert={true}/>
-              </FlexBox>
+              </FlexRow>
             }
 
             {/* ServiceDisplays */}
             {services.status === "REGISTERED" && services.list.length > 0 && 
-            <FlexBox style={{width: "66%"}} type={"column"}>
+            <FlexColumn style={{width: "66%"}}>
 
               <ServiceDisplay 
                 isActive={services.list.includes("airplane-service")}
@@ -111,9 +111,9 @@ class OrchestrationPage extends Component {
                 <UsersDashboard/>
               </ServiceDisplay>
 
-            </FlexBox>}
-          </FlexBox>}
-        </FlexBox>
+            </FlexColumn>}
+          </FlexColumn>}
+        </FlexColumn>
 
         {/* Navbar */}
         <NavBar/>

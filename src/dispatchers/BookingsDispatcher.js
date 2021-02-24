@@ -37,14 +37,12 @@ class BookingsDispatcher {
   }
 
   static onEdit(selectedBooking, editParams) {
-    console.log({...selectedBooking, ...editParams});
     RootReducer.reduce({ type: constants.bookings.request });
     Orchestration.createRequestWithBody(
       constants.httpRequest.put,
       "/bookings",
       {...selectedBooking, ...editParams},
       (httpError) => {
-        console.log(httpError);
         RootReducer.reduce({
           type: constants.bookings.error,
           payload: JSON.stringify(httpError),
@@ -191,65 +189,51 @@ class BookingsDispatcher {
   }
 
   static onPromptDelete(bookingId){
-    RootReducer.reduce({ type: constants.bookings.request });
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "/bookings/" + bookingId,
-      (httpError) => {
-        RootReducer.reduce({
-          type: constants.bookings.error,
-          payload: "Connection failed.",
-        });
-      },
-      (httpResponseBody) => {
-        if(httpResponseBody.error) {
-          RootReducer.reduce({
-            type: constants.bookings.error,
-            payload: httpResponseBody.error,
-          });
-        } else {
-          RootReducer.reduce({
-            type: constants.bookings.response,
-            payload: httpResponseBody,
-          });
-          RootReducer.reduce({
-            type: constants.bookings.deletePrompt,
-            payload: bookingId
-          });
+    const { bookings } = RootReducer.getState();
+    if(bookings) {
+      const selectedBooking = bookings.searchResults
+      .filter((i) => i.id === bookingId);
+
+      if(selectedBooking) {
+        if(selectedBooking.length === 1) {
+          if(selectedBooking[0].id) {
+            RootReducer.reduce({
+              type: constants.bookings.deletePrompt,
+              payload: selectedBooking[0]
+            });
+            return;
+          }
         }
       }
-    );
+    } 
+    RootReducer.reduce({
+      type: constants.bookings.error,
+      payload: "Unable to select Booking ID: " + bookingId
+    });
   }
 
   static onPromptEdit(bookingId){
-    RootReducer.reduce({ type: constants.bookings.request });
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "/bookings/" + bookingId,
-      (httpError) => {
-        RootReducer.reduce({
-          type: constants.bookings.error,
-          payload: "Connection failed.",
-        });
-      },
-      (httpResponseBody) => {
-        if(httpResponseBody.error) {
-          RootReducer.reduce({
-            type: constants.bookings.error,
-            payload: httpResponseBody.error,
-          });
-        } else {
-          RootReducer.reduce({
-            type: constants.bookings.response,
-            payload: httpResponseBody,
-          });
-          RootReducer.reduce({
-            type: constants.bookings.editPrompt,
-            payload: bookingId
-          });
+    const { bookings } = RootReducer.getState();
+    if(bookings) {
+      const selectedBooking = bookings.searchResults
+      .filter((i) => i.id === bookingId);
+
+      if(selectedBooking) {
+        if(selectedBooking.length === 1) {
+          if(selectedBooking[0].id) {
+            RootReducer.reduce({
+              type: constants.bookings.editPrompt,
+              payload: selectedBooking[0]
+            });
+            return;
+          }
         }
       }
-    );
+    } 
+    RootReducer.reduce({
+      type: constants.bookings.error,
+      payload: "Unable to select Booking ID: " + bookingId
+    });
   }
 
   static onResultsPage(resultsPage) {

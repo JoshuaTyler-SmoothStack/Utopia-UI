@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
-import FlexBox from '../../components/FlexBox';
 import './style.css'
 
 import LoadingPage from '../../componentgroups/loading/index'
 import { Redirect } from 'react-router'
+
+import FlexColumn from '../../components/FlexColumn';
 
 const ForgotPasswordPage = (props) => {
 
@@ -25,7 +26,7 @@ const ForgotPasswordPage = (props) => {
     if (!email) {
       return;
     }
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g)
+    const regexEmailValidation = new RegExp(/[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g)
 
     if (!regexEmailValidation.test(email)) {
       return setValidateEmail(false)
@@ -45,13 +46,12 @@ const ForgotPasswordPage = (props) => {
 
   }
 
-
-
   return (
     <div>
-      <FlexBox className={"kit-bg-blue"} type={"column"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
 
+      <NavBar />
 
+      <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
         {!success && !loading &&
           <div className="col-md-12 col-md-12-local">
             <div className="card fp-card-local">
@@ -93,10 +93,9 @@ const ForgotPasswordPage = (props) => {
 
         {!loading && success &&
 
-          <div className="col-md-12 col-md-12-local successfull-registration-container">
-            <div className="card fp-card-local successfull-registration">
-              <p>Email sent</p>
-              <p>Redirecting... </p>
+          <div className="col-md-12 col-md-12-local">
+            <div className="card fp-card-local" >
+              <p className='sent-success-msg'>Email sent</p>
 
             </div>
           </div>
@@ -108,12 +107,8 @@ const ForgotPasswordPage = (props) => {
           </div>
         }
 
-
-
-
-      </FlexBox>
-      <NavBar />
-    </div>
+      </FlexColumn>
+    </div >
   );
 }
 export default ForgotPasswordPage;

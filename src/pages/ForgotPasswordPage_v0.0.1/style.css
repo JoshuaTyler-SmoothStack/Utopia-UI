@@ -68,23 +68,10 @@ input[type=number] {
   }
 }
 
-.successfull-registration{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 35px;
-
-
-}
-
-.successfull-registration-container{
-  height: 200px;
+.sent-success-msg{
   color: rgb(23,219,147);
-  margin: 0 auto;
+  text-align: center;
+  margin-top: 60px;
+  font-size: 40px;
 }
-.successfull-registration-text{
-  display: flex;
-  justify-content: center;
-}
-
 

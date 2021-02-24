@@ -8,9 +8,10 @@ import InputText from "../../components/InputText";
 import RootReducer from "../../reducers/RootReducer";
 
 // Images
-import FlexBox from "../../components/FlexBox";
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
 import { Link } from "react-router-dom";
+import FlexColumn from "../../components/FlexColumn";
+import FlexRow from "../../components/FlexRow";
 
 class LoginModal extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class LoginModal extends Component {
 
     return (
       <div>
-        <FlexBox
+        <FlexColumn
           className={
             "kit-bg-smoke-light kit-no-user " +
             (this.props.className || "")
@@ -43,17 +44,15 @@ class LoginModal extends Component {
             zIndex: "2",
             ...this.props.style
           }}
-          type={"column"}
         >
-          <FlexBox
+          <FlexColumn
             className="kit-gradient-smoke rounded kit-border-shadow"
             justify={"start"}
             style={{ width: "30rem", overflow: "hidden" }}
-            type={"column"}
             wrap={"no-wrap"}
           >
             {/* Header */}
-            <FlexBox
+            <FlexRow
               className="kit-gradient-red kit-border-shadow mb-2"
               style={{ height: "5rem", width: "100%" }}
             >
@@ -73,74 +72,65 @@ class LoginModal extends Component {
                 className="mr-2 rounded-circle"
                 style={{ height: "4.5rem" }}
               />
-            </FlexBox>
+            </FlexRow>
 
             {/* Body */}
-            <FlexBox
-              style={{ height: "30rem", width: "100%" }}
-              type={"column"}
-            >
+            <FlexColumn style={{ height: "30rem", width: "100%" }}>
               {/* Loading Spinner */}
               {authentication.status === "PENDING" &&
-                <FlexBox
+                <FlexColumn
                   justify={"around"}
                   style={{ height: "100%", width: "100%" }}
-                  type={"column"}
                   wrap={"no-wrap"}
                 >
                   <div className="spinner-border" />
-                </FlexBox>}
+                </FlexColumn>}
 
               {/* Error */}
               {authentication.status === "ERROR" &&
-                <FlexBox
+                <FlexColumn
                   justify={"around"}
                   style={{ height: "100%", width: "100%" }}
-                  type={"column"}
                   wrap={"no-wrap"}
                 >
                   <div className="text-danger">
                     {authentication.error}
                   </div>
-                </FlexBox>}
+                </FlexColumn>}
 
               {/* Login Successful */}
               {authentication.status === "ACTIVE" &&
-                <FlexBox
+                <FlexColumn
                   justify={"around"}
                   style={{ height: "100%", width: "100%" }}
-                  type={"column"}
                   wrap={"no-wrap"}
                 >
                   <div className="text-success">
                     {"login success!"}
                   </div>
-                </FlexBox>}
+                </FlexColumn>}
 
               {/* Login UI */}
               {authentication.status === "INACTIVE" &&
-                <FlexBox
+                <FlexColumn
                   justify={"around"}
                   style={{ height: "100%", width: "100%" }}
-                  type={"column"}
                   wrap={"no-wrap"}
                 >
                   {/* Label */}
-                  <FlexBox
+                  <FlexColumn
                     className="card text-white bg-dark mt-5 mb-3"
-                    type={"column"}
                     style={{ width: "75%" }}
                   >
-                    <FlexBox style={{ minHeight: "3rem" }}>
+                    <FlexRow style={{ minHeight: "3rem" }}>
                       <div className="h5">{"Login or create an account."}</div>
                       {warning !== "" && <div className="text-warning kit-shake">{warning}</div>}
-                    </FlexBox>
-                  </FlexBox>
+                    </FlexRow>
+                  </FlexColumn>
 
                   {/* Inputs */}
-                  <FlexBox
+                  <FlexColumn
                     className="mb-auto"
-                    type={"column"}
                     style={{ width: "100%" }}
                     wrap={"no-wrap"}
                   >
@@ -170,10 +160,10 @@ class LoginModal extends Component {
                       }}
                       onChange={(e) => this.setState({ email: e })}
                     />
-                  </FlexBox>
+                  </FlexColumn>
 
                   {/* Actions */}
-                  <FlexBox
+                  <FlexRow
                     className="bg-light mb-2"
                     justify={"around"}
                     style={{ height: "5rem", width: "100%" }}
@@ -205,11 +195,11 @@ class LoginModal extends Component {
                       {"Login"}
                     </button>
 
-                  </FlexBox>
-                </FlexBox>}
-            </FlexBox>
-          </FlexBox>
-        </FlexBox>
+                  </FlexRow>
+                </FlexColumn>}
+            </FlexColumn>
+          </FlexColumn>
+        </FlexColumn>
       </div>
     );
   }

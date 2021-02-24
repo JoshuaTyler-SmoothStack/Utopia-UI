@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import NavBar from '../../componentgroups/NavBar_v0.0.1';
 import { Redirect } from 'react-router'
 
-
 // Components
-import FlexBox from '../../components/FlexBox';
+
 import axios from 'axios';
 
 import LoadingAnime from '../../componentgroups/loading/index'
+import FlexColumn from '../../components/FlexColumn';
 
 import './style.css';
 
@@ -18,7 +18,6 @@ const PasswordRecoveryPage = (props) => {
 
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [redirect, setRedirect] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -92,16 +91,9 @@ const PasswordRecoveryPage = (props) => {
 
 
     <div>
+      <NavBar />
 
-      <FlexBox
-        className={"kit-bg-blue"}
-        type={"column"}
-        style={{
-          position: "absolute",
-          height: "100vh",
-          width: "100vw",
-        }}>
-
+      <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
 
         {!loading && verifyToken && !passwordChanged &&
           <div className="col-md-12 col-md-12-local">
@@ -175,8 +167,7 @@ const PasswordRecoveryPage = (props) => {
 
         }
 
-      </FlexBox>
-      <NavBar />
+      </FlexColumn>
     </div>
 
   )
