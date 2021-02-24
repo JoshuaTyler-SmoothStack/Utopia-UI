@@ -13,7 +13,21 @@ const BookingsReducer = (action) => {
     case bookings.deletePrompt:
       return {
         deletePrompt: true,
+        deleteStatus: "INACTIVE",
         selected: action.payload,
+      };
+
+    case bookings.deleteRequest:
+      return {
+        deleteResults: defaultBookingsState.deleteResults,
+        deleteResultsStatus: defaultBookingsState.deleteResultsStatus,
+        deleteStatus: "PENDING",
+      };
+
+    case bookings.deleteResponse:
+      return {
+        deleteResults: action.payload.deleteResults,
+        deleteResultsStatus: action.payload.deleteResultsStatus,
       };
 
     case bookings.editPrompt:
@@ -67,6 +81,23 @@ export default BookingsReducer;
 
 export const defaultBookingsState = {
   deletePrompt: false,
+  deleteResults: {
+    booking: null,
+    flights: null,
+    guests: null,
+    passengers: null,
+    payments: null,
+    users: null
+  },
+  deleteResultsStatus: {
+    booking: "PENDING",
+    flights: "PENDING",
+    guests: "PENDING",
+    passengers: "PENDING",
+    payments: "PENDING",
+    users: "PENDING"
+  },
+  deleteStatus: "INACTIVE",
   editPrompt: false,
   error: "",
   selected: null,

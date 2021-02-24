@@ -9,11 +9,11 @@ class AirportsDispatcher {
 
    Orchestration.createRequest(
     constants.httpRequest.get,
-    "airports", 
-    onError => {
+    "/airports", 
+    httpError => {
      RootReducer.reduce({
         type: constants.airports.error,
-        payload: onError
+        payload: httpError
       });
     }, 
     httpResponseBody => {
@@ -24,34 +24,34 @@ class AirportsDispatcher {
     });
   }
 
-    static onPostAirplane(payload) {
-     RootReducer.reduce({
-        type: constants.orchestration.airports,
-        payload: payload
-      });
-  
-      Orchestration.createRequestWithBody(
-        constants.httpRequest.post, 
-        "airports", 
-        payload,
-        onError => {
-         RootReducer.reduce({
-            type: constants.orchestration.airports,
-            payload: {
-              list: [],
-              status: "ERROR"
-            }
-          });
-        }, 
-        httpResponseBody => {
-         RootReducer.reduce({
-            type: constants.orchestration.airports,
-            payload: {
-              list: httpResponseBody,
-              status: "REGISTERED"
-            }
-          });
-      });
+  static onPostAirplane(payload) {
+    RootReducer.reduce({
+      type: constants.orchestration.airports,
+      payload: payload
+    });
+
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post, 
+      "/airports", 
+      payload,
+      httpError => {
+        RootReducer.reduce({
+          type: constants.orchestration.airports,
+          payload: {
+            list: [],
+            status: "ERROR"
+          }
+        });
+      }, 
+      httpResponseBody => {
+        RootReducer.reduce({
+          type: constants.orchestration.airports,
+          payload: {
+            list: httpResponseBody,
+            status: "REGISTERED"
+          }
+        });
+    });
   }
 }
 export default AirportsDispatcher;

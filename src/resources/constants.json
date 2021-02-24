@@ -35,6 +35,8 @@
     "cancel": "BOOKINGS_CANCEL",
     "delete": "BOOKINGS_DELETE",
     "deletePrompt": "BOOKINGS_DELETE_PROMPT",
+    "deleteRequest": "BOOKINGS_DELETE_REQUEST",
+    "deleteResponse": "BOOKINGS_DELETE_RESPONSE",
     "edit": "BOOKINGS_EDIT",
     "editPrompt": "BOOKINGS_EDIT_PROMPT",
     "error": "BOOKINGS_ERROR",

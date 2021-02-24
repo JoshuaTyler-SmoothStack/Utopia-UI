@@ -23,5 +23,59 @@ class AirplanesDispatcher {
         });
     });
   }
+
+  static onFindBy(searchText) {
+    
+    if(!searchText || searchText.trim() === "") {
+      AirplanesDispatcher.onFindAll();
+      return;
+    }
+    
+    const formattedText = searchText.toLowerCase();
+    if(!formattedText.includes("id=") && !formattedText.includes("type=")){
+      RootReducer.reduce({
+        type: constants.airplanes.searchError,
+        payload: "Invalid search term!",
+      });
+      return;
+    }
+
+    let searchPath = formattedText.split("id=")[1];
+    if(formattedText.includes("type=")) {
+      searchPath = "type/" +
+      formattedText.split("type=")[1];
+    } else if(isNaN(parseInt(searchPath))) {
+      RootReducer.reduce({
+        type: constants.airplanes.searchError,
+        payload: "Invalid search term!",
+      });
+      return;
+    }
+    
+    RootReducer.reduce({ type: constants.airplanes.request });
+    Orchestration.createRequest(
+      constants.httpRequest.get,
+      "/airplanes/" + searchPath,
+      (httpError) => {
+        RootReducer.reduce({
+          type: constants.airplanes.error,
+          payload: "Connection failed.",
+        });
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          RootReducer.reduce({
+            type: constants.airplanes.error,
+            payload: httpResponseBody.error,
+          });
+        } else {
+          RootReducer.reduce({
+            type: constants.airplanes.response,
+            payload: httpResponseBody,
+          });
+        }
+      }
+    );
+  }
 }
 export default AirplanesDispatcher;

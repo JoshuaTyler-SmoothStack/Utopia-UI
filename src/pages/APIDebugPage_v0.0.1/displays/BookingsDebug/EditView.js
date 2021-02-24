@@ -89,7 +89,7 @@ class EditView extends Component {
               <label className="form-label">User ID</label>
               <input type="number" min="1" className="form-control"
                 defaultValue={selectedBooking.userId || ""}
-                placeholder={!selectedBooking.userId && "Not a user"}
+                placeholder={selectedBooking.userId ? undefined : "Not a user"}
                 onChange={(e) => this.setState({editingValues: {...editingValues, userId: e.target.value}})}
               />
             </div>
@@ -97,8 +97,8 @@ class EditView extends Component {
               <div style={{width:"14rem"}}>
                 <label className="form-label">Guest Email</label>
                 <input type="email" className="form-control" 
-                  placeholder={!selectedBooking.guestEmail && "No guest email available."}
                   defaultValue={selectedBooking.guestEmail || ""}
+                  placeholder={!selectedBooking.guestEmail ? undefined : "No guest email available."}
                   onChange={(e) => this.setState({editingValues: {...editingValues, guestEmail: e.target.value}})}
                 />
               </div>
@@ -106,7 +106,7 @@ class EditView extends Component {
                 <label className="form-label">Guest Phone</label>
                 <input type="phone" className="form-control" 
                   defaultValue={selectedBooking.guestPhone || ""}
-                  placeholder={!selectedBooking.guestPhone && "No guest phone available."}
+                  placeholder={!selectedBooking.guestPhone ? undefined : "No guest phone available."}
                   onChange={(e) => this.setState({editingValues: {...editingValues, guestPhone: e.target.value}})}
                 />
               </div>

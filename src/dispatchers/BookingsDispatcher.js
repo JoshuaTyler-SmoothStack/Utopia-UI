@@ -9,31 +9,32 @@ class BookingsDispatcher {
 
   static onDelete(bookingId) {
     RootReducer.reduce({ type: constants.bookings.request });
-    Orchestration.createRequest(
-      constants.httpRequest.delete,
-      "/bookings/" + bookingId,
-      (httpError) => {
-        console.log(httpError);
-        RootReducer.reduce({
-          type: constants.bookings.error,
-          payload: JSON.stringify(httpError),
-        });
-        BookingsDispatcher.onCancel();
-      },
-      (httpResponseBody) => {
-        console.log(httpResponseBody);
-        if(httpResponseBody.error) {
-          RootReducer.reduce({
-            type: constants.bookings.error,
-            payload: httpResponseBody.error,
-          });
-          BookingsDispatcher.onCancel();
-        } else {
-          RootReducer.reduce({type: constants.bookings.reset});
-          BookingsDispatcher.onFindAll();
-        }
-      }
-    );
+    RootReducer.reduce({ type: constants.bookings.deleteRequest });
+    // Orchestration.createRequest(
+    //   constants.httpRequest.delete,
+    //   "/bookings/" + bookingId,
+    //   (httpError) => {
+    //     console.log(httpError);
+    //     RootReducer.reduce({
+    //       type: constants.bookings.error,
+    //       payload: JSON.stringify(httpError),
+    //     });
+    //     BookingsDispatcher.onCancel();
+    //   },
+    //   (httpResponseBody) => {
+    //     console.log(httpResponseBody);
+    //     if(httpResponseBody.error) {
+    //       RootReducer.reduce({
+    //         type: constants.bookings.error,
+    //         payload: httpResponseBody.error,
+    //       });
+    //       BookingsDispatcher.onCancel();
+    //     } else {
+    //       RootReducer.reduce({type: constants.bookings.reset});
+    //       BookingsDispatcher.onFindAll();
+    //     }
+    //   }
+    // );
   }
 
   static onEdit(selectedBooking, editParams) {
@@ -179,13 +180,6 @@ class BookingsDispatcher {
         }
       }
     );
-  }
-
-  static onFakeAPICall() {
-    RootReducer.reduce({ type: constants.bookings.request });
-    setTimeout(() => {
-      RootReducer.reduce({ type: constants.bookings.response });
-    }, 1500);
   }
 
   static onPromptDelete(bookingId){
