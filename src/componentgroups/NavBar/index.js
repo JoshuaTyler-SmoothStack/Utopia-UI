@@ -24,10 +24,6 @@ class NavBar extends Component {
 
     // Authentication vars
     const { authentication } = Store.getState();
-    const isActive_LoginUI = authentication
-      ? authentication.isActive_LoginUI
-      : false;
-
     const isUserLoggedIn = authentication
       ? authentication.userId !== "UNKNOWN"
       : false;
@@ -93,9 +89,6 @@ class NavBar extends Component {
             <LocalPageButtonsPopContent />
           </PopContent>
         }
-
-        {/* User Pop Context - zIndex 2 */}
-        {isActive_LoginUI && <LoginModal />}
       </nav>
     );
   }
