@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 // Components
 import ErrorMessage from '../../components/ErrorMessage';
-import NavBar from '../../componentgroups/NavBar_v0.0.1';
+import NavBar from '../../componentgroups/NavBar';
 import OrchestratorDashboard from './ServiceDisplays/OrchestrationDashboard';
 import ServiceDisplay from './ServiceDisplay';
 

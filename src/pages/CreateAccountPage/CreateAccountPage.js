@@ -1,7 +1,7 @@
 // Libraries
 import axios from 'axios';
 import React, { useState } from 'react';
-import NavBar from '../../componentgroups/NavBar_v0.0.1';
+import NavBar from '../../componentgroups/NavBar';
 import { Redirect } from 'react-router'
 
 import FlexColumn from '../../components/FlexColumn';
@@ -9,11 +9,12 @@ import FlexColumn from '../../components/FlexColumn';
 
 // Components
 
-import LoadingAnime from '../../componentgroups/loading/index'
+import LogoGif from '../../components/LogoGif';
 
 
 // Custom CSS
 import './createAccountPage.css'
+import FlexRow from '../../components/FlexRow';
 
 
 const CreateAccountPage = (props) => {
@@ -107,7 +108,6 @@ const CreateAccountPage = (props) => {
                     <strong>Error! </strong> {errorMessage}
                   </div>
                 }
-
               </div>
 
               <form name="form" onSubmit={(e) => handleSubmit(e)}>
@@ -158,33 +158,26 @@ const CreateAccountPage = (props) => {
         }
 
         {loading &&
-
           <div className="col-md-12 ca-col-md-12-local">
-            <div className="card ca-card-local">
-
-              <p className="margin-for-anime"> </p>
-              <LoadingAnime />
-
-
+            <div className="ca-card-local">
+              <FlexRow className="fp-card-local p-0">
+                <LogoGif className="m-auto" style={{width:"75%"}}/>
+              </FlexRow>
             </div>
           </div>
         }
 
         {!loading && success &&
-
           <div className="col-md-12 ca-col-md-12-local successfull-registration-container">
             <div className="card ca-card-local successfull-registration">
               <p>Successful registration</p>
               <p>Redirecting... </p>
-
             </div>
           </div>
         }
 
         {redirect &&
-          <div>
-            <Redirect to="/home" />
-          </div>
+          <Redirect to="/home" />
         }
 
       </FlexColumn>

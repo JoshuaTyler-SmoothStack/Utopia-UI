@@ -6,7 +6,7 @@ import AirplanesDebug from "./displays/AirplanesDebug";
 import AirportsDebug from "./displays/AirportsDebug";
 import BookingsDebug from "./displays/BookingsDebug";
 import LocalSidebar from "./LocalSidebar";
-import NavBar from "../../componentgroups/NavBar_v0.0.1";
+import NavBar from "../../componentgroups/NavBar";
 import OrchestrationDispathcer from "../../dispatchers/OrchestrationDispatcher";
 
 class APIDebugPage extends Component {
