@@ -1,45 +1,19 @@
 // Libraries
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
-import BookingsDebugDispatcher from "../../../../dispatchers/BookingsDebugDispatcher";
 import Store from "../../../../reducers/Store";
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
-import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
 const DeleteView = () => {
   const { bookings } = Store.getState();
 
-  const error = bookings
-    ? bookings.error
-    : "Failed to read Booking state.";
-
-  const selectedBooking = bookings
-    ? bookings.selected
-    : null;
-
-  const results = bookings
-    ? bookings.deleteResults
-    : null;
-
-  const resultsStatus = bookings
-    ? bookings.deleteResultsStatus
-    : null;
-
-  const status = bookings
-    ? bookings.deleteStatus
-    : "ERROR";
-
-  const wut = {
-    booking: "PENDING",
-    flights: "PENDING",
-    guests: "PENDING",
-    passengers: "PENDING",
-    payments: "PENDING",
-    users: "PENDING"
-  };
+  const results = bookings.delete.results
+  const resultsStatus = bookings.delete.resultsStatus;
+  const selectedBooking = bookings.selected;
+  const status = bookings.delete.status;
 
   return(
     <FlexColumn>
@@ -56,9 +30,6 @@ const DeleteView = () => {
           
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
           name="Passengers" status={resultsStatus.passengers} result={results.passengers}/>
-          
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Payments" status={resultsStatus.payments} result={results.payments}/>
 
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
           name="Users" status={resultsStatus.users} result={results.users}/>
@@ -68,16 +39,11 @@ const DeleteView = () => {
             >
               Close
             </button>
-            <button className="btn btn-danger m-3"
-              onClick={() => {}}
-            >
-              Revert Changes (N.Y.I.)
-            </button>
           </FlexRow>
         </FlexColumn>
       }
 
-      {status !== "PENDING" && 
+      {status !== "PENDING" &&
         <FlexColumn>
           {/* Booking */}
           <FlexColumn>
@@ -122,11 +88,11 @@ const DeleteView = () => {
               <FlexColumn>
                 <div>
                   <label className="form-label">Guest Email</label>
-                  <input type="text" readOnly className="form-control" value={selectedBooking.guestEmail || "No guest email available."}/>
+                  <input type="text" readOnly className="form-control" value={selectedBooking.guestEmail || "No guests email available."}/>
                 </div>
                 <div className="mt-3">
                   <label className="form-label">Guest Phone</label>
-                  <input type="text" readOnly className="form-control" value={selectedBooking.guestPhone || "No guest phone available."}/>
+                  <input type="text" readOnly className="form-control" value={selectedBooking.guestPhone || "No guests phone available."}/>
                 </div>
               </FlexColumn>
             </FlexRow>
@@ -140,11 +106,6 @@ const DeleteView = () => {
               onClick={() => BookingsDispatcher.onCancel()}
             >
               Cancel
-            </button>
-            <button className="btn btn-info m-3"
-              onClick={() => BookingsDebugDispatcher.onDeleteFake()}
-            >
-              Fake Delete
             </button>
             <button className="btn btn-primary m-3"
               onClick={() => BookingsDispatcher.onDelete(selectedBooking.id)}

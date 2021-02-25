@@ -17,11 +17,11 @@ class Pagination extends Component {
     const { isDropdownActive } = this.state;
   
     const resultsPage = results
-      ? results.searchResultsPage
+      ? results.search.resultsPage
       : 1;
   
     const resultsPerPage = results
-      ? results.searchResultsPerPage
+      ? results.search.resultsPerPage
       : 0;
   
     const resultsStart = results
@@ -29,7 +29,7 @@ class Pagination extends Component {
       : 0;
 
     const resultsTotal = results
-      ? results.searchResults.length || 1
+      ? results.search.results.length || 1
       : 0;
 
     const resultsEnd = results
@@ -46,15 +46,16 @@ class Pagination extends Component {
               className="btn btn-secondary dropdown-toggle" 
               type="button"
               onClick={() => this.setState({isDropdownActive: !isDropdownActive})}
+              onBlur={() => setTimeout(() => this.setState({isDropdownActive: false}), 100)}
             >
               {resultsPerPage + " results"}
             </button>
             <ul className={"dropdown-menu" + (isDropdownActive ? " show" : "")}>
-              <li><button className="dropdown-item" type="button" onClick={() => this.props.onSetNumberOfResults(3)}>3</button></li>
-              <li><button className="dropdown-item" type="button" onClick={() => this.props.onSetNumberOfResults(25)}>25</button></li>
-              <li><button className="dropdown-item" type="button" onClick={() => this.props.onSetNumberOfResults(50)}>50</button></li>
-              <li><button className="dropdown-item" type="button" onClick={() => this.props.onSetNumberOfResults(100)}>100</button></li>
-            </ul>
+                <li><button className="dropdown-item" type="button" onClick={() => {this.props.onSetNumberOfResults(3); this.setState({isDropdownActive: false});}}>3</button></li>
+                <li><button className="dropdown-item" type="button" onClick={() => {this.props.onSetNumberOfResults(25); this.setState({isDropdownActive: false});}}>25</button></li>
+                <li><button className="dropdown-item" type="button" onClick={() => {this.props.onSetNumberOfResults(50); this.setState({isDropdownActive: false});}}>50</button></li>
+                <li><button className="dropdown-item" type="button" onClick={() => {this.props.onSetNumberOfResults(100); this.setState({isDropdownActive: false});}}>100</button></li>
+              </ul>
           </div>
 
           {/* # of Results Display */}

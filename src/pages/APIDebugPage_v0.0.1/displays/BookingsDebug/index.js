@@ -1,10 +1,10 @@
 // Libraries
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
-import BookingsDebugDispatcher from "../../../../dispatchers/BookingsDebugDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
 // Components
+import CreateView from "./CreateView";
 import DeleteView from "./DeleteView";
 import EditView from "./EditView";
 import ErrorMessage from "../../../../components/ErrorMessage";
@@ -12,6 +12,7 @@ import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../Pagination";
+import Orchestration from "../../../../Orchestration";
 
 class BookingsDebug extends Component {
   constructor(props) {
@@ -32,30 +33,13 @@ class BookingsDebug extends Component {
   render() { 
     const { bookings } = Store.getState();
     const { isReferenceIDsActive, searchText } = this.state;
-
-    const isDeletePromptActive = bookings
-      ? bookings.deletePrompt
-      : false;
-
-    const isEditPromptActive = bookings
-      ? bookings.editPrompt
-      : false;
-  
-    const bookingsMSStatus = bookings
-      ? bookings.status
-      : "INACTIVE";
-
-    const searchError = bookings
-      ? bookings.searchError
-      : null;
-
-    const searchFilters = bookings
-      ? bookings.searchFilters
-      : [];
-
-    const searchResults = bookings
-      ? bookings.searchResults
-      : [];
+    const isCreatePromptActive = bookings.create.isActive;
+    const isDeletePromptActive = bookings.delete.isActive;
+    const isEditPromptActive = bookings.edit.isActive;
+    const bookingsMSStatus = bookings.status;
+    const searchError = bookings.search.error;
+    const searchFilters = bookings.search.filters;
+    const searchResults = bookings.search.results;
 
     return ( 
       <div className="col-8 col-md-10">
@@ -68,7 +52,7 @@ class BookingsDebug extends Component {
             name="Booking MS"
             status={bookingsMSStatus}
             onTriggerError={() => BookingsDispatcher.onError()}
-            onTriggerFakeAPICall={() => BookingsDebugDispatcher.onFakeAPICall()}
+            onTriggerFakeAPICall={() => BookingsDispatcher.onFakeAPICall()}
           />
 
           {/* Search Bar */}
@@ -96,7 +80,7 @@ class BookingsDebug extends Component {
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light kit-border-shadow " + ((isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}>
+        <div className={"row bg-light kit-border-shadow " + ((isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}>
           {/* Filters */}
           <div className="col-12 p-2">
             <FlexRow wrap={"no-wrap"}>
@@ -145,10 +129,18 @@ class BookingsDebug extends Component {
               <ErrorMessage className="h1" soundAlert={true}>
                 {bookings.error}
               </ErrorMessage>
+              <button className="btn btn-light m-3"
+                onClick={() => BookingsDispatcher.onCancel()}
+              >
+                Back
+              </button>
             </FlexColumn>}
 
-            {(bookingsMSStatus === "SUCCESS" && !isDeletePromptActive && !isEditPromptActive) && 
+            {(bookingsMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
             this.handleRenderBookingsList(searchResults)}
+
+            {(bookingsMSStatus === "SUCCESS" && isCreatePromptActive) && 
+            <CreateView/>}
 
             {(bookingsMSStatus === "SUCCESS" && isDeletePromptActive) && 
             <DeleteView/>}
@@ -163,16 +155,18 @@ class BookingsDebug extends Component {
   }
 
   componentDidMount() {
-    const { orchestration } = Store.getState();
-    const isMSActive = orchestration
-      ? orchestration.services.list.includes("booking-service")
-      : false;
-    
-    if(isMSActive) {
-      BookingsDispatcher.onFindAll()
-    } else {
-      BookingsDispatcher.onError("No Booking MS connection.");
-    }
+    BookingsDispatcher.onFakeAPICall(true);
+    Orchestration.findActiveServices(
+    onError => {
+      BookingsDispatcher.onError("No Orchestration connection.");
+    }, onSuccess => {
+      const isMSActive = onSuccess.includes("booking-service");
+      if(isMSActive) {
+        BookingsDispatcher.onFindAll()
+      } else {
+        BookingsDispatcher.onError("No Booking MS connection.");
+      }
+    });
   }
 
   handleIncludeReferenceIDs = (isActive) => {
@@ -182,14 +176,8 @@ class BookingsDebug extends Component {
   handleRenderBookingsList = (bookingsList) => {
     const { bookings } = Store.getState();
     const { isReferenceIDsActive } = this.state;
-
-    const resultsDisplayed = bookings
-      ? bookings.searchResultsPerPage
-      : 0;
-
-    const resultsStart = bookings
-      ? bookings.searchResultsPerPage * (bookings.searchResultsPage - 1)
-      : 0;
+    const resultsDisplayed = bookings.search.resultsPerPage;
+    const resultsStart = bookings.search.resultsPerPage * (bookings.search.resultsPage - 1);
 
     let bookingsTable = [];
     if(!bookingsList.length) bookingsList = [bookingsList];
@@ -219,7 +207,7 @@ class BookingsDebug extends Component {
             {/* Delete */}
             <td><button className="btn btn-primary"
               onClick={() => BookingsDispatcher.onPromptDelete(bookingId)}>
-                Delete
+               Delete
             </button></td>
           </tr>
         );
@@ -240,8 +228,14 @@ class BookingsDebug extends Component {
               {isReferenceIDsActive && <th scope="col">Flight ID</th>}
               {isReferenceIDsActive && <th scope="col">Passenger ID</th>}
               {isReferenceIDsActive && <th scope="col">User ID</th>}
-              <th scope="col"></th>
-              <th scope="col"></th>
+              <th scope="col" colSpan="2">
+                <FlexRow>
+                  <button className="btn btn-success text-white" style={{whiteSpace: "nowrap"}}
+                    onClick={() => BookingsDispatcher.onPromptCreate()}>
+                    + Create New
+                  </button>
+                </FlexRow>
+              </th>
             </tr>
           </thead>
           <tbody>

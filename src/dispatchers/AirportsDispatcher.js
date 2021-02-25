@@ -4,6 +4,13 @@ import Store from "../reducers/Store";
 
 class AirportsDispatcher {
 
+  static onFakeAPICall() {
+    Store.reduce({ type: constants.airports.request });
+    setTimeout(() => {
+      Store.reduce({ type: constants.airports.response });
+    }, 1500);
+  }
+
   static onFindAll() {
    Store.reduce({type: constants.airports.request});
 

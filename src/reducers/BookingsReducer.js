@@ -1,76 +1,186 @@
 import constants from "../resources/constants.json"
+import Store from "./Store";
 
 const BookingsReducer = (action) => {
-  const bookings = constants.bookings;
-  switch(action.type) {
-    
-    case bookings.cancel:
+  const bookingsRoot = constants.bookings;
+  const { bookings } = Store.getState();
+
+  switch(action.type) {  
+    case bookingsRoot.cancel:
       return {
-        deletePrompt: false,
-        editPrompt: false,
+        create: {
+          ...bookings.create,
+          isActive: false
+        },
+        delete: {
+          ...bookings.delete,
+          isActive: false
+        },
+        edit: {
+          ...bookings.edit,
+          isActive: false
+        },
+        search: {
+          ...bookings.search,
+          resultsPage: 1
+        }
       };
 
-    case bookings.deletePrompt:
+    case bookingsRoot.createError:
       return {
-        deletePrompt: true,
-        deleteStatus: "INACTIVE",
-        selected: action.payload,
+        create: {
+          error: action.payload.result,
+          isActive: true,
+          results: {
+            ...defaultBookingsState.create.results,
+            booking: action.payload.result,
+          },
+          resultsStatus: {
+            booking: action.payload.resultStatus,
+            flights: "DISABLED",
+            guests: "DISABLED",
+            passengers: "DISABLED",
+            users: "DISABLED"
+          },
+          status: "ERROR"
+        }
       };
 
-    case bookings.deleteRequest:
+    case bookingsRoot.createPrompt:
       return {
-        deleteResults: defaultBookingsState.deleteResults,
-        deleteResultsStatus: defaultBookingsState.deleteResultsStatus,
-        deleteStatus: "PENDING",
+        create: {
+          ...defaultBookingsState.create,
+          isActive: true
+        },
+        delete: defaultBookingsState.delete,
+        edit: defaultBookingsState.edit
       };
 
-    case bookings.deleteResponse:
+    case bookingsRoot.createRequest:
       return {
-        deleteResults: action.payload.deleteResults,
-        deleteResultsStatus: action.payload.deleteResultsStatus,
+        create: {
+          ...defaultBookingsState.create,
+          isActive: true,
+          status: "PENDING"
+        },
       };
 
-    case bookings.editPrompt:
+    case bookingsRoot.createResponse:
       return {
-        editPrompt: true,
-        selected: action.payload,
+        create: {
+          ...bookings.create,
+          results: action.payload.results,
+          resultsStatus: action.payload.resultsStatus
+        }
       };
 
-    case bookings.error:
+    case bookingsRoot.deletePrompt:
+      return {
+        create: defaultBookingsState.create,
+        delete: {
+          ...defaultBookingsState.delete,
+          isActive: true
+        },
+        edit: defaultBookingsState.edit,
+      };
+
+    case bookingsRoot.deleteRequest:
+      return {
+        delete: {
+          ...defaultBookingsState.delete,
+          isActive: true,
+          status: "PENDING"
+        },
+      };
+
+    case bookingsRoot.deleteResponse:
+      return {
+        delete: {
+          ...bookings.delete,
+          results: action.payload.results,
+          resultsStatus: action.payload.resultsStatus,
+          status: "PENDING"
+        }
+      };
+
+    case bookingsRoot.editPrompt:
+      return {
+        create: defaultBookingsState.create,
+        delete: defaultBookingsState.delete,
+        edit: {
+          ...defaultBookingsState.edit,
+          isActive: true
+        },
+      };
+
+    case bookingsRoot.editRequest:
+      return {
+        edit: {
+          ...defaultBookingsState.edit,
+          isActive: true,
+          status: "PENDING"
+        },
+      };
+
+    case bookingsRoot.editResponse:
+      return {
+        edit: {
+          ...bookings.edit,
+          results: action.payload.results,
+          resultsStatus: action.payload.resultsStatus,
+          status: "PENDING"
+        }
+      };
+
+    case bookingsRoot.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case bookings.request:
+    case bookingsRoot.request:
       return {
         error: "",
         status: "PENDING"
       };
 
-    case bookings.response:
-      if(action.payload) {
-        return {
-          error: "",
-          searchResults: action.payload,
-          status: "SUCCESS"
-        }
+    case bookingsRoot.response:
+      return {
+        error: "",
+        search: {
+          ...bookings.search,
+          results: action.payload
+        },
+        status: "SUCCESS"
       }
-      return {error: "No Payload", status: "SUCCESS"}
 
-    case bookings.searchError:
+    case bookingsRoot.searchError:
       return {
         searchError: action.payload,
         searchText: action.payload
       };
 
-    case bookings.searchResultsPage:
-      return {searchResultsPage: action.payload};
+    case bookingsRoot.searchResultsPage:
+      return {
+        search: {
+          ...bookings.search,
+          resultsPage: action.payload
+        }
+      };
 
-    case bookings.searchResultsPerPage:
-      return {searchResultsPerPage: action.payload};
+    case bookingsRoot.searchResultsPerPage:
+      return {
+        search: {
+          ...bookings.search,
+          resultsPage: 1,
+          resultsPerPage: action.payload
+        }
+      };
 
-    case bookings.reset:
+    case bookingsRoot.select:
+      return {selected: action.payload};
+
+    case bookingsRoot.reset:
       return defaultBookingsState;
 
     default:
@@ -80,49 +190,89 @@ const BookingsReducer = (action) => {
 export default BookingsReducer;
 
 export const defaultBookingsState = {
-  deletePrompt: false,
-  deleteResults: {
-    booking: null,
-    flights: null,
-    guests: null,
-    passengers: null,
-    payments: null,
-    users: null
+  create: {
+    error: "",
+    isActive: false,
+    results: {
+      booking: "N/A",
+      flights: "N/A",
+      guests: "N/A",
+      passengers: "N/A",
+      users: "N/A"
+    },
+    resultsStatus: {
+      booking: "PENDING",
+      flights: "PENDING",
+      guests: "PENDING",
+      passengers: "PENDING",
+      users: "PENDING"
+    },
+    status: "INACTIVE"
   },
-  deleteResultsStatus: {
-    booking: "PENDING",
-    flights: "PENDING",
-    guests: "PENDING",
-    passengers: "PENDING",
-    payments: "PENDING",
-    users: "PENDING"
+  delete: {
+    error: "",
+    isActive: false,
+    results: {
+      booking: "N/A",
+      flights: "N/A",
+      guests: "N/A",
+      passengers: "N/A",
+      users: "N/A"
+    },
+    resultsStatus: {
+      booking: "PENDING",
+      flights: "PENDING",
+      guests: "PENDING",
+      passengers: "PENDING",
+      users: "PENDING"
+    },
+    status: "INACTIVE"
   },
-  deleteStatus: "INACTIVE",
-  editPrompt: false,
+  edit: {
+    error: "",
+    isActive: false,
+    results: {
+      booking: "N/A",
+      flights: "N/A",
+      guests: "N/A",
+      passengers: "N/A",
+      users: "N/A"
+    },
+    resultsStatus: {
+      booking: "PENDING",
+      flights: "PENDING",
+      guests: "PENDING",
+      passengers: "PENDING",
+      users: "PENDING"
+    },
+    status: "INACTIVE"
+  },
   error: "",
   selected: null,
-  searchError: "",
-  searchFilters: {
-    activeCount: 0,
-    byAirplaneId: null,
-    byAirplaneType: null,
-    byBookingStatus: null,
-    byFlightId: null,
-    byFlightOrigin: null,
-    byFlightDestination: null,
-    byPassengerAgeGreaterThan: null,
-    byPassenegerAgeLessThan: null,
-    byPassengerId: null,
-    byPassengerNameFirst: null,
-    byPassengerNameLast: null,
-    byPassengerSex: null,
-    byPaymentId: null,
-    byUserId: null,
-    byUserRole: null,
-  },
-  searchResults: [],
-  searchResultsPage: 1,
-  searchResultsPerPage: 100,
-  searchResultsTotal: 0,
-  status: "INACTIVE"
+  search: {
+    error: "",
+    filters: {
+      activeCount: 0,
+      byAirplaneId: null,
+      byAirplaneType: null,
+      byBookingStatus: null,
+      byFlightId: null,
+      byFlightOrigin: null,
+      byFlightDestination: null,
+      byPassengerAgeGreaterThan: null,
+      byPassenegerAgeLessThan: null,
+      byPassengerId: null,
+      byPassengerNameFirst: null,
+      byPassengerNameLast: null,
+      byPassengerSex: null,
+      byPaymentId: null,
+      byUserId: null,
+      byUserRole: null,
+    },
+    results: [],
+    resultsPage: 1,
+    resultsPerPage: 100,
+    resultsTotal: 0,
+    status: "INACTIVE"
+  }
 };

@@ -4,6 +4,13 @@ import Store from "../reducers/Store";
 
 class AirplanesDispatcher {
 
+  static onFakeAPICall() {
+    Store.reduce({ type: constants.airplanes.request });
+    setTimeout(() => {
+      Store.reduce({ type: constants.airplanes.response });
+    }, 1500);
+  }
+
   static onFindAll() {
     Store.reduce({type: constants.airplanes.request});
 

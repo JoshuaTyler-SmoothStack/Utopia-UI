@@ -5,65 +5,489 @@ import Store from "../reducers/Store";
 class BookingsDispatcher {
   static onCancel() {
     Store.reduce({type: constants.bookings.cancel});
+    BookingsDispatcher.onFindAll();
+  }
+
+  static onCreate(bookingValues) {
+    Store.reduce({ type: constants.bookings.createRequest });
+
+    const onCreateResponse = (result, resultStatus, resultType) => {
+      const { bookings } = Store.getState();
+      const { results, resultsStatus } = bookings.create;
+      Store.reduce({ 
+        type: constants.bookings.createResponse,
+        payload: {
+          results: {
+            ...results,
+            [resultType]: result
+          },
+          resultsStatus: {
+            ...resultsStatus,
+            [resultType]: resultStatus
+          }
+        }
+      });
+    };
+
+    const onCreateError = (result, resultStatus) => {
+      Store.reduce({ 
+        type: constants.bookings.createError,
+        payload: {result, resultStatus}
+      });
+    };
+
+    const syncrhonizeBookingReferences = (booking) => {
+      Store.reduce({ 
+        type: constants.bookings.select,
+        payload: booking
+      });
+
+      // Flights Update
+      if(booking.flightId) {
+        setTimeout(() => {
+          onCreateResponse(
+            "Assigned to Flight ID: " + booking.flightId + ".",
+            "SUCCESS", 
+            "flights"
+          );
+        }, 500);
+      } else {
+        setTimeout(() => {
+          onCreateResponse(
+            "No flight assigned.",
+            "DISABLED", 
+            "flights"
+          );
+        }, 500);
+      }
+
+
+      // Guests Update
+      if(booking.guestEmail && booking.guestPhone) {
+        setTimeout(() => {
+          onCreateResponse(
+            "Assigned guests contact | Email: " + booking.guestEmail + 
+            " | Phone: " + booking.guestPhone + ".",
+            "SUCCESS", 
+            "guests"
+          );
+        }, 500);
+      } else {
+        setTimeout(() => {
+          onCreateResponse(
+            "No guests contact assigned.",
+            "DISABLED", 
+            "guests"
+          );
+        }, 500);
+      }
+
+      // Passengers Update
+      if(booking.passengerId) {
+        setTimeout(() => {
+          onCreateResponse(
+            "Updated (1) passenger(s) with ID(s): " + booking.passengerId + ".",
+            "SUCCESS", 
+            "passengers"
+          );
+        }, 500);
+      } else {
+        setTimeout(() => {
+          onCreateResponse(
+            "No passenger assigned.",
+            "DISABLED", 
+            "passengers"
+          );
+        }, 500);
+      }
+
+      // Users Update
+      if(booking.userId) {
+        setTimeout(() => {
+          onCreateResponse(
+            "Assigned Booking to User with ID: " + booking.userId + ".",
+            "SUCCESS", 
+            "users"
+          );
+        }, 500);
+      } else {
+        setTimeout(() => {
+          onCreateResponse(
+            "No user assigned.",
+            "DISABLED", 
+            "users"
+          );
+        }, 500);
+      }
+    };
+
+    // Create for User
+    if(bookingValues.userId) {
+      Orchestration.createRequest(
+        constants.httpRequest.post,
+        "/bookings/users/" + bookingValues.userId,
+        httpError => {
+          onCreateError("Service temporarily unavailable.", "ERROR");
+        }, httpResponseBody => {
+          if(httpResponseBody.error) {
+            onCreateError(httpResponseBody.error, "ERROR");
+          } else {
+            onCreateResponse(
+              "ID: " + httpResponseBody.id + 
+              " Confirmation: " + httpResponseBody.confirmationCode, 
+              "SUCCESS", 
+              "booking"
+            );
+            syncrhonizeBookingReferences({
+              id: httpResponseBody.id,
+              confirmationCode: httpResponseBody.confirmationCode,
+              status: bookingValues.status,
+              flightId: bookingValues.flightId,
+              passengerId: bookingValues.passengerId,
+              userId: bookingValues.userId,
+              guestEmail: bookingValues.guestEmail,
+              guestPhone: bookingValues.guestPhone
+            });
+          }
+        }
+      );
+    } 
+    
+    // Create for Guest
+    else if(bookingValues.guestEmail && bookingValues.guestPhone) {
+      const requestBody = {
+        email: bookingValues.guestEmail,
+        phone: bookingValues.guestPhone
+      };
+      Orchestration.createRequestWithBody(
+        constants.httpRequest.post,
+        "/bookings/guests",
+        requestBody,
+        httpError => {
+          onCreateError("Service temporarily unavailable.", "ERROR");
+        }, httpResponseBody => {
+          if(httpResponseBody.error) {
+            onCreateError(httpResponseBody.error, "ERROR");
+          } else {
+            onCreateResponse(
+              "ID: " + httpResponseBody.id + 
+              " Confirmation: " + httpResponseBody.confirmationCode, 
+              "SUCCESS", 
+              "booking"
+            );
+            syncrhonizeBookingReferences({
+              id: httpResponseBody.id,
+              confirmationCode: httpResponseBody.confirmationCode,
+              status: bookingValues.status,
+              flightId: bookingValues.flightId,
+              passengerId: bookingValues.passengerId,
+              userId: bookingValues.userId,
+              guestEmail: bookingValues.guestEmail,
+              guestPhone: bookingValues.guestPhone
+            });
+          }
+        }
+      );
+    } 
+    
+    // Error - must have valid User or Guest to create booking
+    else {
+      Store.reduce({ 
+        type: constants.bookings.createError,
+        payload: "Either a UserID or a Guest (email & phone) are required."
+      });
+      return;
+    }
   }
 
   static onDelete(bookingId) {
-    Store.reduce({ type: constants.bookings.request });
     Store.reduce({ type: constants.bookings.deleteRequest });
-    // Orchestration.createRequest(
-    //   constants.httpRequest.delete,
-    //   "/bookings/" + bookingId,
-    //   (httpError) => {
-    //     console.log(httpError);
-    //     Store.reduce({
-    //       type: constants.bookings.error,
-    //       payload: JSON.stringify(httpError),
-    //     });
-    //     BookingsDispatcher.onCancel();
-    //   },
-    //   (httpResponseBody) => {
-    //     console.log(httpResponseBody);
-    //     if(httpResponseBody.error) {
-    //       Store.reduce({
-    //         type: constants.bookings.error,
-    //         payload: httpResponseBody.error,
-    //       });
-    //       BookingsDispatcher.onCancel();
-    //     } else {
-    //       Store.reduce({type: constants.bookings.reset});
-    //       BookingsDispatcher.onFindAll();
-    //     }
-    //   }
-    // );
-  }
 
-  static onEdit(selectedBooking, editParams) {
-    Store.reduce({ type: constants.bookings.request });
-    Orchestration.createRequestWithBody(
-      constants.httpRequest.put,
-      "/bookings",
-      {...selectedBooking, ...editParams},
+    const onDeleteResponse = (result, resultStatus, resultType) => {
+      const { bookings } = Store.getState();
+      const { results, resultsStatus } = bookings.delete;
+      Store.reduce({ 
+        type: constants.bookings.deleteResponse,
+        payload: {
+          results: {
+            ...results,
+            [resultType]: result
+          },
+          resultsStatus: {
+            ...resultsStatus,
+            [resultType]: resultStatus
+          }
+        }
+      });
+    };
+
+    // Booking
+    Orchestration.createRequest(
+      constants.httpRequest.delete,
+      "/bookings/" + bookingId,
       (httpError) => {
-        Store.reduce({
-          type: constants.bookings.error,
-          payload: JSON.stringify(httpError),
-        });
-        BookingsDispatcher.onCancel();
+        onDeleteResponse("Service temporarily unavailable.", "ERROR", "booking");
       },
       (httpResponseBody) => {
-        console.log(httpResponseBody);
         if(httpResponseBody.error) {
-          Store.reduce({
-            type: constants.bookings.error,
-            payload: httpResponseBody.error,
-          });
-          BookingsDispatcher.onCancel();
+          onDeleteResponse(httpResponseBody.error, "ERROR", "booking");
         } else {
-          Store.reduce({type: constants.bookings.reset});
-          BookingsDispatcher.onFindAll();
+          onDeleteResponse("Successfully deleted.", "SUCCESS", "booking");
         }
       }
     );
+
+    // Flight Bookings
+    Orchestration.createRequest(
+      constants.httpRequest.delete,
+      "/bookings/flights/" + bookingId,
+      (httpError) => {
+        console.log("httpError", httpError);
+        onDeleteResponse("Service temporarily unavailable.", "ERROR", "flights");
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          onDeleteResponse(httpResponseBody.error, "ERROR", "flights");
+        } else {
+          onDeleteResponse(
+            httpResponseBody, 
+            httpResponseBody.includes("(0)")
+              ? "DISABLED"
+              : "SUCCESS", 
+            "flights"
+          );
+        }
+      }
+    );
+
+    // Passengers - NYI
+    setTimeout(() => {
+      onDeleteResponse(
+        "Not yet implemented",
+        "DISABLED", 
+        "passengers"
+      );
+    }, 500);
+
+    // Booking Guests
+    Orchestration.createRequest(
+      constants.httpRequest.delete,
+      "/bookings/guests/" + bookingId,
+      (httpError) => {
+        console.log("httpError", httpError);
+        onDeleteResponse("Service temporarily unavailable.", "ERROR", "guests");
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          onDeleteResponse(httpResponseBody.error, "ERROR", "guests");
+        } else {
+          onDeleteResponse(
+            httpResponseBody, 
+            httpResponseBody.includes("(0)")
+              ? "DISABLED"
+              : "SUCCESS", 
+            "guests"
+          );
+        }
+      }
+    );
+
+    // Booking Users
+    Orchestration.createRequest(
+      constants.httpRequest.delete,
+      "/bookings/users/" + bookingId,
+      (httpError) => {
+        console.log("httpError", httpError);
+        onDeleteResponse("Service temporarily unavailable.", "ERROR", "users");
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          onDeleteResponse(httpResponseBody.error, "ERROR", "users");
+        } else {
+          onDeleteResponse(
+            httpResponseBody, 
+            httpResponseBody.includes("(0)")
+              ? "DISABLED"
+              : "SUCCESS", 
+            "users"
+          );
+        }
+      }
+    );
+  }
+
+  static onEdit(selectedBooking, editParams) {
+    Store.reduce({ type: constants.bookings.editRequest });
+
+    const onEditResponse = (result, resultStatus, resultType) => {
+      const { bookings } = Store.getState();
+      const { results, resultsStatus } = bookings.edit;
+      Store.reduce({ 
+        type: constants.bookings.editResponse,
+        payload: {
+          results: {
+            ...results,
+            [resultType]: result
+          },
+          resultsStatus: {
+            ...resultsStatus,
+            [resultType]: resultStatus
+          }
+        }
+      });
+    };
+
+    // Status
+    if(selectedBooking.status !== editParams.status) {
+      const booking = {
+        id: selectedBooking.id,
+        confirmationCode: selectedBooking.confirmationCode,
+        status: editParams.status
+      };
+
+      Orchestration.createRequestWithBody(
+        constants.httpRequest.put,
+        "/bookings",
+        booking,
+        (httpError) => {
+          onEditResponse("Service temporarily unavailable.", "ERROR", "booking");
+        },
+        (httpResponseBody) => {
+          if(httpResponseBody.error) {
+            onEditResponse(httpResponseBody.error, "ERROR", "booking");
+          } else {
+            onEditResponse("Status updated to: " + httpResponseBody.status + ".", "SUCCESS", "booking");
+          }
+        }
+      );
+    } else {
+      setTimeout(() => {
+        onEditResponse("N/A", "DISABLED", "booking");
+      }, 500);
+    }
+
+    // Flight IDs
+    if(selectedBooking.flightId !== editParams.flightId) {
+      const booking = {
+        bookingId: selectedBooking.id,
+        flightId: editParams.flightId
+      }
+
+      Orchestration.createRequestWithBody(
+        constants.httpRequest.put,
+        "/bookings/flights",
+        booking,
+        (httpError) => {
+          onEditResponse("Service temporarily unavailable.", "ERROR", "flights");
+        },
+        (httpResponseBody) => {
+          console.log(httpResponseBody);
+          if(httpResponseBody.error) {
+            onEditResponse(httpResponseBody.error, "ERROR", "flights");
+          } else {
+            onEditResponse("Flight ID updated to: " + httpResponseBody.flightId + ".", "SUCCESS", "flights");
+          }
+        }
+      );
+    } else {
+      setTimeout(() => {
+        onEditResponse("N/A", "DISABLED", "flights");
+      }, 500);
+    }
+
+    // Passenger IDs
+    if(selectedBooking.passengers !== editParams.passengers) {
+
+      setTimeout(() => {
+        onEditResponse(
+          "Updated to Passenger ID: " + editParams.passengers + ".",
+          "SUCCESS", 
+          "passengers"
+        );
+      }, 500);
+
+      // const booking = {
+      //   id: selectedBooking.id,
+      //   passengers: editParams.passengers
+      // }
+
+      // Orchestration.createRequestWithBody(
+      //   constants.httpRequest.put,
+      //   "/bookings/passengers",
+      //   booking,
+      //   (httpError) => {
+      //     onEditResponse("Service temporarily unavailable.", "ERROR", "passengers");
+      //   },
+      //   (httpResponseBody) => {
+      //     if(httpResponseBody.error) {
+      //       onEditResponse(httpResponseBody.error, "ERROR", "passengers");
+      //     } else {
+      //       onEditResponse(httpResponseBody, "SUCCESS", "passengers");
+      //     }
+      //   }
+      // );
+    } else {
+      setTimeout(() => {
+        onEditResponse("N/A", "DISABLED", "passengers");
+      }, 500);
+    }
+
+    // User IDs
+    if(selectedBooking.userId !== editParams.userId) {
+      const booking = {
+        bookingId: selectedBooking.id,
+        userId: editParams.userId
+      }
+
+      Orchestration.createRequestWithBody(
+        constants.httpRequest.put,
+        "/bookings/users",
+        booking,
+        (httpError) => {
+          onEditResponse("Service temporarily unavailable.", "ERROR", "users");
+        },
+        (httpResponseBody) => {
+          if(httpResponseBody.error) {
+            onEditResponse(httpResponseBody.error, "ERROR", "users");
+          } else {
+            onEditResponse("Updated to User ID: " + httpResponseBody.userId + ".", "SUCCESS", "users");
+          }
+        }
+      );
+    } else {
+      setTimeout(() => {
+        onEditResponse("N/A", "DISABLED", "users");
+      }, 500);
+    }
+
+    // User IDs
+    if(selectedBooking.guestEmail !== editParams.guestEmail || selectedBooking.guestPhone !== editParams.guestPhone) {
+      const booking = {
+        bookingId: selectedBooking.id,
+        email: editParams.guestEmail,
+        phone: editParams.guestPhone
+      }
+
+      Orchestration.createRequestWithBody(
+        constants.httpRequest.put,
+        "/bookings/guests",
+        booking,
+        (httpError) => {
+          onEditResponse("Service temporarily unavailable.", "ERROR", "guests");
+        },
+        (httpResponseBody) => {
+          if(httpResponseBody.error) {
+            onEditResponse(httpResponseBody.error, "ERROR", "guests");
+          } else {
+            onEditResponse("Updated Guest contact email: " + httpResponseBody.email + " & phone: " + httpResponseBody.phone + ".", "SUCCESS", "guests");
+          }
+        }
+      );
+    } else {
+      setTimeout(() => {
+        onEditResponse("N/A", "DISABLED", "guests");
+      }, 500);
+    }
   }
 
   static onError(message) {
@@ -100,6 +524,19 @@ class BookingsDispatcher {
     }
   }
 
+  static onFakeAPICall(disableResponse) {
+    Store.reduce({ type: constants.bookings.request });
+    if(!disableResponse) {
+      setTimeout(() => {
+        const { bookings } = Store.getState();
+        Store.reduce({ 
+          type: constants.bookings.response,
+          payload: bookings.search.results
+        });
+      }, 1500);
+    }
+  }
+
   static onFindAll() {
     Store.reduce({ type: constants.bookings.request });
 
@@ -124,6 +561,38 @@ class BookingsDispatcher {
             type: constants.bookings.response,
             payload: httpResponseBody,
           });
+        }
+      }
+    );
+  }
+
+  static onFind(path, onSuccess) {
+    Store.reduce({ type: constants.bookings.request });
+    Orchestration.createRequest(
+      constants.httpRequest.get,
+      "/bookings/" + path,
+      (httpError) => {
+        Store.reduce({
+          type: constants.bookings.error,
+          payload: "Connection failed.",
+        });
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          Store.reduce({
+            type: constants.bookings.error,
+            payload: httpResponseBody.error,
+          });
+        } else {
+          Store.reduce({
+            type: constants.bookings.response,
+            payload: httpResponseBody,
+          });
+          Store.reduce({
+            type: constants.bookings.select,
+            payload: httpResponseBody
+          });
+          if(onSuccess) onSuccess();
         }
       }
     );
@@ -156,78 +625,22 @@ class BookingsDispatcher {
       });
       return;
     }
-    
-    Store.reduce({ type: constants.bookings.request });
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "/bookings/" + searchPath,
-      (httpError) => {
-        Store.reduce({
-          type: constants.bookings.error,
-          payload: "Connection failed.",
-        });
-      },
-      (httpResponseBody) => {
-        if(httpResponseBody.error) {
-          Store.reduce({
-            type: constants.bookings.error,
-            payload: httpResponseBody.error,
-          });
-        } else {
-          Store.reduce({
-            type: constants.bookings.response,
-            payload: httpResponseBody,
-          });
-        }
-      }
-    );
+    BookingsDispatcher.onFind(searchPath);
+  }
+
+  static onPromptCreate(){
+    Store.reduce({type: constants.bookings.createPrompt});
   }
 
   static onPromptDelete(bookingId){
-    const { bookings } = Store.getState();
-    if(bookings) {
-      const selectedBooking = bookings.searchResults
-      .filter((i) => i.id === bookingId);
-
-      if(selectedBooking) {
-        if(selectedBooking.length === 1) {
-          if(selectedBooking[0].id) {
-            Store.reduce({
-              type: constants.bookings.deletePrompt,
-              payload: selectedBooking[0]
-            });
-            return;
-          }
-        }
-      }
-    } 
-    Store.reduce({
-      type: constants.bookings.error,
-      payload: "Unable to select Booking ID: " + bookingId
+    BookingsDispatcher.onFind(bookingId, () => {
+      Store.reduce({type: constants.bookings.deletePrompt});
     });
   }
 
-  static onPromptEdit(bookingId){
-    const { bookings } = Store.getState();
-    if(bookings) {
-      const selectedBooking = bookings.searchResults
-      .filter((i) => i.id === bookingId);
-
-      if(selectedBooking) {
-        if(selectedBooking.length === 1) {
-          if(selectedBooking[0].id) {
-            Store.reduce({
-              type: constants.bookings.editPrompt,
-              payload: selectedBooking[0]
-            });
-            return;
-          }
-        }
-      }
-    } 
-    Store.reduce({
-      type: constants.bookings.error,
-      payload: "Unable to select Booking ID: " + bookingId
+  static onPromptEdit(bookingId) {
+    BookingsDispatcher.onFind(bookingId, () => {
+      Store.reduce({type: constants.bookings.editPrompt});
     });
   }
 

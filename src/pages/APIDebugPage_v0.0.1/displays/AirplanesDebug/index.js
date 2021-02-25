@@ -1,6 +1,5 @@
 // Libraries
 import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
-import AirplanesDebugDispatcher from "../../../../dispatchers/AirplanesDebugDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
@@ -70,7 +69,7 @@ class AirplanesDebug extends Component {
             name="Airplane MS"
             status={airplanesMSStatus}
             onTriggerError={() => AirplanesDispatcher.onError()}
-            onTriggerFakeAPICall={() => AirplanesDebugDispatcher.onFakeAPICall()}
+            onTriggerFakeAPICall={() => AirplanesDispatcher.onFakeAPICall()}
           />
 
           {/* Search Bar */}

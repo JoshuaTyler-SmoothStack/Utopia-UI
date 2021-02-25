@@ -12,8 +12,7 @@ const ErrorMessage = (props) => {
 
   return (
     <div className={"text-danger " + (props.className || "")}>
-      {children}
-      {message}
+      {children || message}
     </div>
   );
 };

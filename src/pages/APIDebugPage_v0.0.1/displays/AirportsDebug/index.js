@@ -1,6 +1,5 @@
 // Libraries
 import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
-import AirportsDebugDispatcher from "../../../../dispatchers/AirportsDebugDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
@@ -70,7 +69,7 @@ class AirportsDebug extends Component {
             name="Airport MS"
             status={airportsMSStatus}
             onTriggerError={() => AirportsDispatcher.onError()}
-            onTriggerFakeAPICall={() => AirportsDebugDispatcher.onFakeAPICall()}
+            onTriggerFakeAPICall={() => AirportsDispatcher.onFakeAPICall()}
           />
 
           {/* Search Bar */}
