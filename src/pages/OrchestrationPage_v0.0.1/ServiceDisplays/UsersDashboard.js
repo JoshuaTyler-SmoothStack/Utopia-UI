@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import UsersDispatcher from '../../../dispatchers/UsersDispatcher';
-import RootReducer from '../../../reducers/RootReducer';
+import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
@@ -21,7 +21,7 @@ class UsersDashboard extends Component {
   }
 
   render() {
-    const { users } = RootReducer.getState();
+    const { users } = Store.getState();
 
     const searchResults = users
     ? users.searchResults

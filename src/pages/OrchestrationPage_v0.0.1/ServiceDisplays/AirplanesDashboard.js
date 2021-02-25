@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import AirplanesDispatcher from '../../../dispatchers/AirplanesDispatcher';
-import RootReducer from '../../../reducers/RootReducer';
+import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
@@ -19,7 +19,7 @@ class AirplanesDashboard extends Component {
   }
 
   render() {
-    const { airplanes } = RootReducer.getState();
+    const { airplanes } = Store.getState();
 
     const searchResults = airplanes
     ? airplanes.searchResults

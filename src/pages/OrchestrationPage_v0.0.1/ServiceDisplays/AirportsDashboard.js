@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import AirportsDispatcher from '../../../dispatchers/AirportsDispatcher';
-import RootReducer from '../../../reducers/RootReducer';
+import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
@@ -22,7 +22,7 @@ class AirportsDashboard extends Component {
   }
 
   render() {
-    const { airports } = RootReducer.getState();
+    const { airports } = Store.getState();
 
     const searchResults = airports
     ? airports.searchResults
@@ -80,13 +80,13 @@ class AirportsDashboard extends Component {
   findAllAirports = () => {
     AirportsDispatcher.onFindAll();
 
-    // RootReducer.setState((state) => ({
+    // Store.setState((state) => ({
     //   ...state,
     //   airports: {status: "PENDING"}
     // }));
 
     // Orchestration.createRequest("/airports", onSuccess => {
-    //   RootReducer.setState((state) => ({
+    //   Store.setState((state) => ({
     //     ...state,
     //     airports: {
     //       searchresults: onSuccess,
@@ -94,7 +94,7 @@ class AirportsDashboard extends Component {
     //     }
     //   }));
     // }, onError => {
-    //   RootReducer.setState((state) => ({
+    //   Store.setState((state) => ({
     //     ...state,
     //     airports: {
     //       searchresults: onSuccess,

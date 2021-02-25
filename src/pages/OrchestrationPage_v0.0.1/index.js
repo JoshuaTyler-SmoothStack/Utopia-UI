@@ -12,7 +12,7 @@ import AirplanesDashboard from './ServiceDisplays/AirplanesDashboard';
 import AirportsDashboard from './ServiceDisplays/AirportsDashboard';
 import BookingsDashboard from './ServiceDisplays/BookingsDashboard';
 import UsersDashboard from './ServiceDisplays/UsersDashboard';
-import RootReducer from '../../reducers/RootReducer';
+import Store from '../../reducers/Store';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
 
@@ -27,7 +27,7 @@ class OrchestrationPage extends Component {
   }
 
   render() { 
-    const { orchestration } = RootReducer.getState();
+    const { orchestration } = Store.getState();
 
     const isActive_OrchestrationDashboard = orchestration
       ? orchestration.status === "ACTIVE"

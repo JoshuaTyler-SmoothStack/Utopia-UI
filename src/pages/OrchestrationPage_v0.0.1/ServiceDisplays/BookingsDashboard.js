@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import BookingsDispatcher from '../../../dispatchers/BookingsDispatcher';
-import RootReducer from '../../../reducers/RootReducer';
+import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
@@ -21,7 +21,7 @@ class BookingsDashboard extends Component {
   }
 
   render() {
-    const { bookings } = RootReducer.getState();
+    const { bookings } = Store.getState();
 
     const searchResults = bookings
     ? bookings.searchResults

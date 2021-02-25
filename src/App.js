@@ -17,15 +17,15 @@ import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
-import RootReducer from "./reducers/RootReducer";
+import Store from "./reducers/Store";
 
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
-    RootReducer.setState = (e) => this.setState(e);
-    RootReducer.getState = () => this.state;
+    this.state = Store.getCombineDefaultReducerStates();
+    Store.setState = (e) => this.setState(e);
+    Store.getState = () => this.state;
   }
 
   render() {
@@ -69,10 +69,6 @@ class App extends Component {
         </Router>
       </main>
     );
-  }
-
-  componentDidMount() {
-    RootReducer.synchronizeReducers();
   }
 
   componentDidUpdate() {

@@ -1,10 +1,11 @@
 // Libraries
 import React, { Component } from 'react';
-import RootReducer from '../../../../reducers/RootReducer';
+import Store from '../../../../reducers/Store';
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
+import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
 
 // Components
-import ErrorMessage from "../../../../components/ErrorMessage";
+import ChangeOperationReadout from '../ChangeOperationReadout';
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
@@ -12,36 +13,93 @@ class EditView extends Component {
   constructor(props) {
     super(props);
 
-    const { bookings } = RootReducer.getState();
+    const { bookings } = Store.getState();
+    const selectedBooking = bookings.selected;
     this.state = {
-
+      editingValues: {
+        status: selectedBooking.status,
+        flightId: selectedBooking.flightId,
+        passengerId: selectedBooking.passengerId,
+        userId: selectedBooking.userId,
+        guestEmail: selectedBooking.guestEmail,
+        guestPhone: selectedBooking.guestPhone
+      },
+      reverted: false
     };
   }
   render() { 
-    const { bookings } = RootReducer.getState();
-    const { editingValues } = this.state;
+    const { bookings } = Store.getState();
+    const { editingValues, reverted } = this.state;
 
-    const error = bookings
-      ? bookings.error
-      : "Failed to read Booking state.";
-  
-    const selectedBooking = bookings
-      ? bookings.selected
-      : null;
-  
-    const status = bookings
-      ? bookings.status
-      : "ERROR";
-
-    return (status === "ERROR"
+    const selectedBooking = bookings.selected;
+    const results = bookings.edit.results
+    const resultsStatus = bookings.edit.resultsStatus;
+    const status = bookings.edit.status;
     
-    // Error
-    ? <FlexColumn>
-        <ErrorMessage>{error}</ErrorMessage>
-      </FlexColumn>
+    const resultsPending = JSON.stringify(resultsStatus).includes("PENDING");
+    const noChangesMade = 
+      results.booking === "N/A" &&
+      results.flights === "N/A" &&
+      results.guests === "N/A" &&
+      results.passengers === "N/A" &&
+      results.users === "N/A";
 
-    // Edit Preview
-    : <FlexColumn>
+    return (
+      <FlexColumn>
+
+        {(status === "PENDING" || status === "ERROR") && 
+        <FlexColumn className="mt-5">
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+          name="Booking" status={resultsStatus.booking} result={results.booking}/>
+          
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+          name="Flights" status={resultsStatus.flights} result={results.flights}/>
+          
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+          name="Guests" status={resultsStatus.guests} result={results.guests}/>
+          
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+          name="Passengers" status={resultsStatus.passengers} result={results.passengers}/>
+
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+          name="Users" status={resultsStatus.users} result={results.users}/>
+          <FlexRow>
+              <button className="btn btn-light m-3"
+                onClick={() => BookingsDispatcher.onCancel()}
+              >
+                Close
+              </button>
+              
+              {(status !== "ERROR" && noChangesMade && !reverted) &&
+                <button className={"btn btn-danger m-3 disabled"}
+                  onClick={() => KitUtils.soundAlert()}
+                >
+                  {"Revert Changes (no changes made)"}
+                </button>}
+
+              {(status !== "ERROR" && !noChangesMade && !reverted) &&
+                <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
+                  onClick={resultsPending 
+                    ? () => KitUtils.soundSuccess() 
+                    : () => {BookingsDispatcher.onEdit(
+                      {
+                        ...editingValues, 
+                        id: selectedBooking.id, 
+                        confirmationCode: selectedBooking.confirmationCode
+                      },
+                      selectedBooking
+                    ); this.setState({reverted: true});}
+                  }
+                >
+                  {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
+                </button>
+              }
+          </FlexRow>
+        </FlexColumn>
+      }
+
+      {(status !== "ERROR" && status !== "PENDING") &&
+      <FlexColumn>
         {/* Booking */}
         <FlexColumn>
           <FlexRow>
@@ -89,7 +147,7 @@ class EditView extends Component {
               <label className="form-label">User ID</label>
               <input type="number" min="1" className="form-control"
                 defaultValue={selectedBooking.userId || ""}
-                placeholder={!selectedBooking.userId && "Not a user"}
+                placeholder={selectedBooking.userId ? undefined : "Not a user"}
                 onChange={(e) => this.setState({editingValues: {...editingValues, userId: e.target.value}})}
               />
             </div>
@@ -97,8 +155,8 @@ class EditView extends Component {
               <div style={{width:"14rem"}}>
                 <label className="form-label">Guest Email</label>
                 <input type="email" className="form-control" 
-                  placeholder={!selectedBooking.guestEmail && "No guest email available."}
                   defaultValue={selectedBooking.guestEmail || ""}
+                  placeholder={!selectedBooking.guestEmail ? undefined : "No guests email available."}
                   onChange={(e) => this.setState({editingValues: {...editingValues, guestEmail: e.target.value}})}
                 />
               </div>
@@ -106,7 +164,7 @@ class EditView extends Component {
                 <label className="form-label">Guest Phone</label>
                 <input type="phone" className="form-control" 
                   defaultValue={selectedBooking.guestPhone || ""}
-                  placeholder={!selectedBooking.guestPhone && "No guest phone available."}
+                  placeholder={!selectedBooking.guestPhone ? undefined : "No guests phone available."}
                   onChange={(e) => this.setState({editingValues: {...editingValues, guestPhone: e.target.value}})}
                 />
               </div>
@@ -129,7 +187,8 @@ class EditView extends Component {
             Save Changes
           </button>
         </FlexRow>
-      </FlexColumn>
+      </FlexColumn>}
+    </FlexColumn>
     );
   }
 }
