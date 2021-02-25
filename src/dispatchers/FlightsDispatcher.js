@@ -26,42 +26,123 @@ class FlightsDispatcher {
   }, 500);
   }
 
-  static onSearchFlights(payload) {
+  static onSearchOneWayFlights(payload) {
+    let paramOrig = "?orig=" + payload.origin;
+    let paramDest = "&dest=" + payload.destination;
+    let paramDate = "&date=" + payload.date;
+    let paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
+    let {flights} = RootReducer.getState();
     RootReducer.reduce({
        type: constants.flights.request,
-       payload: payload
+       payload : {
+        ...flights.departureFlights,
+        status : "ACTIVE"
+      }
      });
- 
-     Orchestration.createRequestWithBody(
-       constants.httpRequest.put, 
-       "flights/search", 
-       payload,
-       onError => {
-        RootReducer.reduce({
-           type: constants.flights.error,
-         });
-       }, 
-       httpResponseBody => {
-        if(httpResponseBody.error)
-        {
-          RootReducer.reduce({
-            type: constants.flights.error,
-            });
-        }
-        else{
-
-        RootReducer.reduce({
-           type: constants.flights.response,
-           payload: {
-             list: httpResponseBody,
-             status: "SUCCESS"
-           }
-         });
-        }
-     });
+  
+     Orchestration.createRequest(
+      constants.httpRequest.get,
+      "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
+      onError => {
+       RootReducer.reduce({
+          type: constants.flights.error,
+          payload: onError
+        });
+      }, 
+      httpResponseBody => {
+      let {flights} = RootReducer.getState();
+       RootReducer.reduce({
+          type: constants.flights.response,
+          payload : {
+            ...flights.departureFlights,
+            status : "ACTIVE",
+            searchResults: httpResponseBody
+          }
+        });
+    });
+   
   }
 
+  static onSearchRoundTripFlights(payload) {
+    
+    let paramOrig = "?orig=" + payload.origin;
+    let paramDest = "&dest=" + payload.destination;
+    let paramDate = "&date=" + payload.date;
+    let paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
+    let {flights} = RootReducer.getState();
+    RootReducer.reduce({
+       type: constants.flights.request,
+       payload : {
+        ...flights.departureFlights,
+        status : "ACTIVE"
+      }
+     });
+  
+     Orchestration.createRequest(
+      constants.httpRequest.get,
+      "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
+      onError => {
+       RootReducer.reduce({
+          type: constants.flights.error,
+          payload: onError
+        });
+      }, 
+      httpResponseBody => {
+      let {flights} = RootReducer.getState();
+       RootReducer.reduce({
+          type: constants.flights.response,
+          payload : {
+            ...flights.departureFlights,
+            status : "ACTIVE",
+            searchResults: httpResponseBody
+          }
+        });
+    });
 
+
+   //Return Flights
+    var dayAfter = new Date(payload.date)
+    dayAfter.setDate(dayAfter.getDate() + 1);
+    paramOrig = "?orig=" + payload.destination;
+    paramDest = "&dest=" + payload.origin;
+    if(payload.dateReturn === "")
+      paramDate = "&date=" + dayAfter.toISOString().split('T')[0];
+    else{
+      paramDate = "&date=" + payload.dateReturn;
+    }
+
+    paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
+    flights = RootReducer.getState();
+    RootReducer.reduce({
+       type: constants.flights.requestReturn,
+       payload : {
+        ...flights.returnFlights,
+        status : "ACTIVE"
+      }
+     });
+
+     Orchestration.createRequest(
+      constants.httpRequest.get,
+      "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
+      onError => {
+       RootReducer.reduce({
+          type: constants.flights.error,
+          payload: onError
+        });
+      }, 
+      httpResponseBody => {
+      let {flights} = RootReducer.getState();
+       RootReducer.reduce({
+          type: constants.flights.returnFlightResponse,
+          payload : {
+            ...flights.returnFlights,
+            status : "ACTIVE",
+            searchResults: httpResponseBody
+          }
+        });
+    });
+  
+  }
 
 }
 export default FlightsDispatcher;

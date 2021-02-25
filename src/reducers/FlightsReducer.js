@@ -1,28 +1,44 @@
 import constants from "../resources/constants.json"
+import RootReducer from "./RootReducer";
 
 const FlightsReducer = (action) => {
-  const flights = constants.flights;
+  const flightsConst = constants.flights;
   switch(action.type) {
-    case flights.error:
+    case flightsConst.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case flights.request:
+    case flightsConst.request:
       return {
         error: "",
-        status: "PENDING"
+        status: "PENDING",
+        departureFlights : action.payload
       };
 
-    case flights.response:
+    case flightsConst.requestReturn:
+        return {
+          error: "",
+          status: "PENDING",
+          returnFlights : action.payload
+    };
+
+    case flightsConst.response:
       return {
         error: "",
-        searchResults: action.payload,
-        status: "REGISTERED"
+        status: "SUCCESS",
+        departureFlights : action.payload
       };
 
-    case flights.stop:
+    case flightsConst.returnFlightResponse:
+      return {
+        error: "",
+        status: "SUCCESS",
+        returnFlights: action.payload,
+    };
+
+    case flightsConst.stop:
       return defaultFlightsState;
 
     default:
@@ -33,9 +49,19 @@ export default FlightsReducer;
 
 export const defaultFlightsState = {
   error: "",
-  searchResults: [],
-  searchResultsPage: 1,
-  searchResultsPerPage: 20,
-  searchResultsTotal: 0,
-  status: "INACTIVE"
+  status: "INACTIVE",
+  departureFlights : {
+    searchResults: [],
+    searchResultsPage: 1,
+    searchResultsPerPage: 20,
+    searchResultsTotal: 0,
+    status: "INACTIVE"
+  },
+  returnFlights : {
+    searchResults: [],
+    searchResultsPage: 1,
+    searchResultsPerPage: 20,
+    searchResultsTotal: 0,
+    status: "INACTIVE"
+  }
 };

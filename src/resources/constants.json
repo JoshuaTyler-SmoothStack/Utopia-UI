@@ -41,6 +41,8 @@
     "root": "FLIGHTS",
     "error": "FLIGHTS_ERROR",
     "request": "FLIGHTS_REQUEST",
+    "requestReturn": "FLIGHTS_REQUEST_RETURN",
+    "returnFlightResponse": "FLIGHTS_RETURN_RESPONSE",
     "response": "FLIGHTS_RESPONSE"
   },
 
