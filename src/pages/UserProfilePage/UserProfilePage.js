@@ -6,7 +6,6 @@ import './userProgileStyle.css'
 
 const UserProfilePage = (props) => {
 
-
   return (
 
     <div>
