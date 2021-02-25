@@ -2,10 +2,10 @@
 import React, { Component } from "react";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
+import Store from "../../reducers/Store";
 
 // Components
 import InputText from "../../components/InputText";
-import Store from "../../reducers/Store";
 
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";

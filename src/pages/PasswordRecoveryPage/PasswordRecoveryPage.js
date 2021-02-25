@@ -1,16 +1,17 @@
 // Libraries
-import React, { useEffect, useState } from 'react';
-import NavBar from '../../componentgroups/NavBar_v0.0.1';
+import React, { useState } from 'react';
+import NavBar from '../../componentgroups/NavBar';
 import { Redirect } from 'react-router'
 
 // Components
 
 import axios from 'axios';
 
-import LoadingAnime from '../../componentgroups/loading/index'
+import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 
 import './style.css';
+import FlexRow from '../../components/FlexRow';
 
 
 
@@ -24,7 +25,10 @@ const PasswordRecoveryPage = (props) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [validatePassword, setValidatePassword] = useState(true);
   const [passwordChanged, setPasswordChanged] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
+
+  const loading = true;
+  const setLoading = ()=>{};
 
   const [verifyToken, setVerifyToken] = useState(false);
 
@@ -33,19 +37,19 @@ const PasswordRecoveryPage = (props) => {
   let params = new URLSearchParams(search);
   let recoveryCode = params.get('reset');
 
-  useEffect((e) => {
-    axios.post("http://localhost:8080/users/forgot-password/verify-token", {
-      recoveryCode: recoveryCode,
-    })
-      .then((res) => {
-        setLoading(false)
-        setVerifyToken(true)
-      })
-      .catch((err) => {
-        setLoading(false)
-        setTimeout(() => setRedirect(true), 3400)
-      })
-  })
+  // useEffect((e) => {
+  //   axios.post("http://localhost:8080/users/forgot-password/verify-token", {
+  //     recoveryCode: recoveryCode,
+  //   })
+  //     .then((res) => {
+  //       setLoading(false)
+  //       setVerifyToken(true)
+  //     })
+  //     .catch((err) => {
+  //       setLoading(false)
+  //       setTimeout(() => setRedirect(true), 3400)
+  //     })
+  // })
 
 
 
@@ -132,39 +136,26 @@ const PasswordRecoveryPage = (props) => {
         }
 
         {passwordChanged && !loading &&
-
           <div className="col-md-12 col-md-12-local successfull-registration-container">
             <div className="card fp-card-local successfull-registration">
-              <p >Password successfully changed! </p> <p>Redirecting...</p>
+              <p>Password successfully changed! </p> <p>Redirecting...</p>
             </div>
           </div>
-
-
         }
 
-        {redirect &&
-          <div>
-            <Redirect to="/home" />
-          </div>
-        }
+        {redirect && <Redirect to="/home"/>}
 
         {loading &&
-
           <div className="col-md-12 col-md-12-local">
-            <div className="card fp-card-local">
-              <LoadingAnime />
-
-            </div>
+            <FlexRow className="fp-card-local p-0">
+                <LogoGif className="m-auto" style={{width:"75%"}}/>
+              </FlexRow>
           </div>
         }
 
 
         {!verifyToken && !loading &&
-
-          <div>
-            <h4 className="error-expired-link">Expired or unavailable link. Please request a new one. Redirecting...</h4>
-          </div>
-
+          <h4 className="error-expired-link">Expired or unavailable link. Please request a new one. Redirecting...</h4>
         }
 
       </FlexColumn>

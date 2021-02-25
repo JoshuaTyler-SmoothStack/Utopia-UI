@@ -1,6 +1,6 @@
 import React from 'react';
 import FlexColumn from '../../components/FlexColumn';
-import NavBar from '../../componentgroups/NavBar_v0.0.1';
+import NavBar from '../../componentgroups/NavBar';
 import './userProgileStyle.css'
 
 

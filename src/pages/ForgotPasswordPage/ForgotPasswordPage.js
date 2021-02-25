@@ -1,13 +1,14 @@
 // Libraries
 import React, { useState } from 'react';
 import axios from 'axios';
-import NavBar from '../../componentgroups/NavBar_v0.0.1';
-import './style.css'
+import NavBar from '../../componentgroups/NavBar';
+import './style.css';
 
-import LoadingPage from '../../componentgroups/loading/index'
-import { Redirect } from 'react-router'
+import LogoGif from '../../components/LogoGif';
+import { Redirect } from 'react-router';
 
 import FlexColumn from '../../components/FlexColumn';
+import FlexRow from '../../components/FlexRow';
 
 const ForgotPasswordPage = (props) => {
 
@@ -18,7 +19,6 @@ const ForgotPasswordPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false)
   const [redirect, setRedirect] = useState(false);
-
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -41,7 +41,7 @@ const ForgotPasswordPage = (props) => {
       }, error => {
         setLoading(false)
         setSubmitted(false)
-        setErrorMessage(error.response.data)
+        setErrorMessage(error.response ? error.response.data : "no data")
       })
 
   }
@@ -81,30 +81,25 @@ const ForgotPasswordPage = (props) => {
             </div>
           </div>
         }
+
         {loading &&
-
           <div className="col-md-12 col-md-12-local">
-            <div className="card fp-card-local" >
-              <LoadingPage />
-
-            </div>
+            <FlexRow className="fp-card-local p-0">
+              <LogoGif className="m-auto" style={{width:"75%"}}/>
+            </FlexRow>
           </div>
         }
 
         {!loading && success &&
-
           <div className="col-md-12 col-md-12-local">
             <div className="card fp-card-local" >
               <p className='sent-success-msg'>Email sent</p>
-
             </div>
           </div>
         }
 
         {redirect &&
-          <div>
-            <Redirect to="/home" />
-          </div>
+          <Redirect to="/home" />
         }
 
       </FlexColumn>

@@ -7,11 +7,11 @@ import {
 } from "react-router-dom";
 
 // Pages
-import BootPage from "./pages/BootPage_v0.0.1";
-import CreateAccountPage from "./pages/CreateAccountPage_v0.0.1/CreateAccountPage";
-import LandingPage from "./pages/LandingPage_v0.0.1";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1/ForgotPasswordPage";
-import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
+import BootPage from "./pages/BootPage";
+import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
+import LandingPage from "./pages/LandingPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
+import OrchestrationPage from "./pages/OrchestrationPage";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
 import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 
