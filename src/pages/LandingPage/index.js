@@ -5,7 +5,7 @@ import Store from "../../reducers/Store";
 import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
-import NavBar from "../../componentgroups/NavBar_v0.0.1";
+import NavBar from "../../componentgroups/NavBar";
 
 class LandingPage extends Component {
   constructor(props) {
