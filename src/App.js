@@ -13,6 +13,7 @@ import LandingPage from "./pages/LandingPage_v0.0.1";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage_v0.0.1/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage_v0.0.1";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
+import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 
 
 // Styles
@@ -63,6 +64,10 @@ class App extends Component {
 
             <Route path="/password-recovery/**">
               <PasswordRecoveryPage />
+            </Route>
+
+            <Route path="/profile">
+              <UserProfilePage />
             </Route>
 
           </Switch>
