@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from '../../componentgroups/NavBar';
 import { Redirect } from 'react-router'
 
@@ -37,19 +37,19 @@ const PasswordRecoveryPage = (props) => {
   let params = new URLSearchParams(search);
   let recoveryCode = params.get('reset');
 
-  // useEffect((e) => {
-  //   axios.post("http://localhost:8080/users/forgot-password/verify-token", {
-  //     recoveryCode: recoveryCode,
-  //   })
-  //     .then((res) => {
-  //       setLoading(false)
-  //       setVerifyToken(true)
-  //     })
-  //     .catch((err) => {
-  //       setLoading(false)
-  //       setTimeout(() => setRedirect(true), 3400)
-  //     })
-  // })
+  useEffect((e) => {
+    axios.post("http://localhost:8080/users/forgot-password/verify-token", {
+      recoveryCode: recoveryCode,
+    })
+      .then((res) => {
+        setLoading(false)
+        setVerifyToken(true)
+      })
+      .catch((err) => {
+        setLoading(false)
+        setTimeout(() => setRedirect(true), 3400)
+      })
+  })
 
 
 
@@ -60,12 +60,12 @@ const PasswordRecoveryPage = (props) => {
     if (!password || !confirmPassword) {
       return
     }
-    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
     if (!strongRegexPasswordValidation.test(password)) {
       return setValidatePassword(false)
     }
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       setPasswordMatch(false)
       return
     }
