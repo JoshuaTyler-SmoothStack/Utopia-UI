@@ -42,9 +42,9 @@ const CreateAccountPage = (props) => {
     if (!firstName || !lastName || !email || !password || !confirmPassword || !phone) {
       return;
     }
-    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$")
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g)
+    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
+    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$")
+    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g)
     // password validation
 
     // phone number validation////email match validation// // password validation
@@ -52,7 +52,7 @@ const CreateAccountPage = (props) => {
       return setValidatePhoneNumber(false)
     } else if (!strongRegexPasswordValidation.test(password)) {
       return setValidatePassword(false)
-    } else if (password != confirmPassword) {
+    } else if (password !== confirmPassword) {
       return setPasswordMatch(false)
     } else if (!regexEmailValidation.test(email)) {
       return serValidateEmail(false)

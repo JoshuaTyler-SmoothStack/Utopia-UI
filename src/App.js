@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 // Pages
+import APIDebugPage from "./pages/APIDebugPage";
 import BootPage from "./pages/BootPage";
 import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
@@ -36,6 +37,11 @@ class App extends Component {
         {/* Pages */}
         <Router>
           <Switch>
+
+            {/* API Debug Page */}
+            <Route path="/debug">
+              <APIDebugPage />
+            </Route>
 
             {/* Boot Page */}
             <Route exact path="/">
