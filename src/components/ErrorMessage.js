@@ -4,10 +4,15 @@ import KitUtils from "../kitutils/KitUtils_v1.0.0";
 const ErrorMessage = (props) => {
   useEffect(() => props.soundAlert && KitUtils.soundAlert(), [props.soundAlert]);
 
-  const message = props.message || props.children;
+  const children = typeof(props.children) !== "object"
+    ? props.children
+    : null;
+
+  const message = props.message || "Error";
+
   return (
     <div className={"text-danger " + (props.className || "")}>
-      {message || "Error"}
+      {children || message}
     </div>
   );
 };

@@ -1,57 +1,64 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
-import RootReducer from "../reducers/RootReducer";
+import Store from "../reducers/Store";
 
 class AirportsDispatcher {
 
+  static onFakeAPICall() {
+    Store.reduce({ type: constants.airports.request });
+    setTimeout(() => {
+      Store.reduce({ type: constants.airports.response });
+    }, 1500);
+  }
+
   static onFindAll() {
-   RootReducer.reduce({type: constants.airports.request});
+   Store.reduce({type: constants.airports.request});
 
    Orchestration.createRequest(
     constants.httpRequest.get,
-    "airports", 
-    onError => {
-     RootReducer.reduce({
+    "/airports", 
+    httpError => {
+     Store.reduce({
         type: constants.airports.error,
-        payload: onError
+        payload: httpError
       });
     }, 
     httpResponseBody => {
-     RootReducer.reduce({
+     Store.reduce({
         type: constants.airports.response,
         payload: httpResponseBody
       });
     });
   }
 
-    static onPostAirplane(payload) {
-     RootReducer.reduce({
-        type: constants.orchestration.airports,
-        payload: payload
-      });
-  
-      Orchestration.createRequestWithBody(
-        constants.httpRequest.post, 
-        "airports", 
-        payload,
-        onError => {
-         RootReducer.reduce({
-            type: constants.orchestration.airports,
-            payload: {
-              list: [],
-              status: "ERROR"
-            }
-          });
-        }, 
-        httpResponseBody => {
-         RootReducer.reduce({
-            type: constants.orchestration.airports,
-            payload: {
-              list: httpResponseBody,
-              status: "REGISTERED"
-            }
-          });
-      });
+  static onPostAirplane(payload) {
+    Store.reduce({
+      type: constants.orchestration.airports,
+      payload: payload
+    });
+
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post, 
+      "/airports", 
+      payload,
+      httpError => {
+        Store.reduce({
+          type: constants.orchestration.airports,
+          payload: {
+            list: [],
+            status: "ERROR"
+          }
+        });
+      }, 
+      httpResponseBody => {
+        Store.reduce({
+          type: constants.orchestration.airports,
+          payload: {
+            list: httpResponseBody,
+            status: "REGISTERED"
+          }
+        });
+    });
   }
 }
 export default AirportsDispatcher;

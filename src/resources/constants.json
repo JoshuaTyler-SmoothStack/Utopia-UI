@@ -33,17 +33,29 @@
   "bookings": {
     "root": "BOOKINGS",
     "cancel": "BOOKINGS_CANCEL",
+    "create": "BOOKINGS_CREATE",
+    "createError": "BOOKINGS_CREATE_ERROR",
+    "createPrompt": "BOOKINGS_CREATE_PROMPT",
+    "createRequest": "BOOKINGS_CREATE_REQUEST",
+    "createResponse": "BOOKINGS_CREATE_RESPONSE",
     "delete": "BOOKINGS_DELETE",
+    "deleteError": "BOOKINGS_DELETE_ERROR",
     "deletePrompt": "BOOKINGS_DELETE_PROMPT",
+    "deleteRequest": "BOOKINGS_DELETE_REQUEST",
+    "deleteResponse": "BOOKINGS_DELETE_RESPONSE",
     "edit": "BOOKINGS_EDIT",
+    "editError": "BOOKINGS_EDIT_ERROR",
     "editPrompt": "BOOKINGS_EDIT_PROMPT",
+    "editRequest": "BOOKINGS_EDIT_REQUEST",
+    "editResponse": "BOOKINGS_EDIT_RESPONSE",
     "error": "BOOKINGS_ERROR",
     "request": "BOOKINGS_REQUEST",
     "reset": "BOOKINGS_RESET",
     "response": "BOOKINGS_RESPONSE",
     "searchError": "BOOKINGS_SEARCH_ERROR",
     "searchResultsPage": "BOOKINGS_SEARCH_RESULTS_PAGE",
-    "searchResultsPerPage": "BOOKINGS_SEARCH_RESULTS_PER_PAGE"
+    "searchResultsPerPage": "BOOKINGS_SEARCH_RESULTS_PER_PAGE",
+    "select": "BOOKINGS_SELECT"
   },
 
   "flights": {

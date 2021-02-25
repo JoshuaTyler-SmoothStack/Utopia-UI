@@ -1,15 +1,15 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
-import RootReducer from "../reducers/RootReducer";
+import Store from "../reducers/Store";
 
 class AuthenticationDispatcher {
 
   static onCancel() {
-   RootReducer.reduce({type: constants.authentication.cancel});
+   Store.reduce({type: constants.authentication.cancel});
   }
 
   static onForgotPassword(email) {
-    RootReducer.reduce({type: constants.authentication.forgotPasswordRequest});
+    Store.reduce({type: constants.authentication.forgotPasswordRequest});
 
     const httpRequestBody = {email: email};
 
@@ -18,19 +18,19 @@ class AuthenticationDispatcher {
       "/users/forgotpassword",
       httpRequestBody,
       onError => {
-        RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+        Store.reduce({type: constants.authentication.forgotPasswordError});
       }, httpResponseBody => {
         if(httpResponseBody.error) {
-          RootReducer.reduce({type: constants.authentication.forgotPasswordError});
+          Store.reduce({type: constants.authentication.forgotPasswordError});
         } else {
-          RootReducer.reduce({type: constants.authentication.forgotPasswordSuccess});
+          Store.reduce({type: constants.authentication.forgotPasswordSuccess});
         }
       }
     )
   }
 
   static onCreateAccount(email) {
-    RootReducer.reduce({type: constants.authentication.createAccountRequest});
+    Store.reduce({type: constants.authentication.createAccountRequest});
 
     const httpRequestBody = {email: email};
 
@@ -39,15 +39,15 @@ class AuthenticationDispatcher {
       "/users/create",
       httpRequestBody,
       onError => {
-        RootReducer.reduce({type: constants.authentication.createAccountError});
+        Store.reduce({type: constants.authentication.createAccountError});
       }, httpResponseBody => {
-        RootReducer.reduce({type: constants.authentication.createAccountSuccess});
+        Store.reduce({type: constants.authentication.createAccountSuccess});
       }
     );
   }
 
   static onLogin(email, password) {
-   RootReducer.reduce({type: constants.authentication.loginRequest});
+   Store.reduce({type: constants.authentication.loginRequest});
 
     const httpRequestBody = {
       email: email,
@@ -60,7 +60,7 @@ class AuthenticationDispatcher {
       httpRequestBody,
       onError => {
       const errorMsg = onError;
-      RootReducer.reduce({
+      Store.reduce({
         type: constants.authentication.loginError,
         payload: errorMsg
       })
@@ -71,13 +71,13 @@ class AuthenticationDispatcher {
 
       if(user.error) {
         // invalid
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.authentication.loginError,
           payload: user.error
         });
       } else {
         // valid
-        RootReducer.reduce({
+        Store.reduce({
           type: constants.authentication.loginSuccess,
           payload: user
         });
@@ -86,12 +86,12 @@ class AuthenticationDispatcher {
   }
 
   static onLogout() {
-   RootReducer.reduce({type: constants.authentication.logout});
+   Store.reduce({type: constants.authentication.logout});
    // TODO clear Auth
   }
 
   static onPrompt() {
-   RootReducer.reduce({type: constants.authentication.prompt});
+   Store.reduce({type: constants.authentication.prompt});
   }
 }
 export default AuthenticationDispatcher;
