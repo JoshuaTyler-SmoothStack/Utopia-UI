@@ -3,6 +3,8 @@ import Store from "./Store";
 
 const FlightsReducer = (action) => {
   const flightsConst = constants.flights;
+  const { flights } = Store.getState();
+
   switch(action.type) {
     case flightsConst.error:
       return {
@@ -14,28 +16,51 @@ const FlightsReducer = (action) => {
       return {
         error: "",
         status: "PENDING",
-        departureFlights : action.payload
+        departureFlights : {
+          ...flights.departureFlights,
+          status: "PENDING"
+        }
       };
+
+    // case flightsConst.requestDepature:
+    //   return {
+    //     error: "",
+    //     status: "PENDING",
+    //     departureFlights: {
+    //       ...flights.departureFlights,
+    //       status: "PENDING"
+    //     }
+    //   };
 
     case flightsConst.requestReturn:
         return {
           error: "",
           status: "PENDING",
-          returnFlights : action.payload
-    };
+          returnFlights: {
+            ...flights.returnFlights,
+            status: "PENDING"
+          } 
+        };
 
     case flightsConst.response:
       return {
         error: "",
         status: "SUCCESS",
-        departureFlights : action.payload
+        departureFlights: {
+          ...flights.departureFlights,
+          searchResults: action.payload,
+          status : "ACTIVE"
+        } 
       };
 
     case flightsConst.returnFlightResponse:
       return {
-        error: "",
         status: "SUCCESS",
-        returnFlights: action.payload,
+        returnFlights: {
+          ...flights.returnFlights,
+          status: "SUCCESS",
+          searchResults: action.payload
+        }
     };
 
     case flightsConst.stop:

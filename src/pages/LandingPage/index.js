@@ -77,15 +77,19 @@ class LandingPage extends Component {
 
   handleRenderFlightList = (flightsList) => {
     let flightsTable = [];
-    
-    if(this.state.sortedItem === "seatPrice")
-    flightsList.sort((a, b) => {
-      return this.state.currentSort === 'up' ? a.seatPrice-b.seatPrice : b.seatPrice-a.seatPrice;
-    });
-    else if(this.state.sortedItem === "date")
-    flightsList.sort((a, b) => {
-      return this.state.currentSort === 'up' ? new Date(a.date)-new Date(b.date) : new Date(b.date)-new Date(a.date);
-    });
+
+    if(this.state.sortedItem === "seatPrice") {
+      flightsList.sort((a, b) => {
+        return this.state.currentSort === 'up' ? a.seatPrice-b.seatPrice : b.seatPrice-a.seatPrice;
+      });
+    }
+
+    else if(this.state.sortedItem === "date") {
+      flightsList.sort((a, b) => {
+        return this.state.currentSort === 'up' ? new Date(a.date)-new Date(b.date) : new Date(b.date)-new Date(a.date);
+      });
+    }
+
     
     for (var i in flightsList) {
       const index = Number(i) + 1;
@@ -129,7 +133,19 @@ class LandingPage extends Component {
 
   handleRenderReturnFlightList = (flightsList) => {
     let flightsTable = [];
-    console.log(flightsList);
+
+
+    if(this.state.sortedItem === "seatPrice") {
+      flightsList.sort((a, b) => {
+        return this.state.currentSort === 'up' ? a.seatPrice-b.seatPrice : b.seatPrice-a.seatPrice;
+      });
+    }
+
+    else if(this.state.sortedItem === "date") {
+      flightsList.sort((a, b) => {
+        return this.state.currentSort === 'up' ? new Date(a.date)-new Date(b.date) : new Date(b.date)-new Date(a.date);
+      });
+    }
 
     for (var i in flightsList) {
       const index = Number(i) + 1;

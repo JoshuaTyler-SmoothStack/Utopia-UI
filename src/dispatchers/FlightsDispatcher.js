@@ -11,10 +11,10 @@ class FlightsDispatcher {
     Orchestration.createRequest(
       constants.httpRequest.get,
       "flights",
-      onError => {
+      httpError => {
        Store.reduce({
           type: constants.flights.error,
-          payload: onError
+          payload: httpError
         });
       }, 
       httpResponseBody => {
@@ -31,33 +31,21 @@ class FlightsDispatcher {
     let paramDest = "&dest=" + payload.destination;
     let paramDate = "&date=" + payload.date;
     let paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
-    let {flights} = Store.getState();
-    Store.reduce({
-       type: constants.flights.request,
-       payload : {
-        ...flights.departureFlights,
-        status : "ACTIVE"
-      }
-     });
+    Store.reduce({type: constants.flights.request});
   
      Orchestration.createRequest(
       constants.httpRequest.get,
       "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
-      onError => {
+      httpError => {
        Store.reduce({
           type: constants.flights.error,
-          payload: onError
+          payload: httpError
         });
       }, 
       httpResponseBody => {
-      let {flights} = Store.getState();
        Store.reduce({
           type: constants.flights.response,
-          payload : {
-            ...flights.departureFlights,
-            status : "ACTIVE",
-            searchResults: httpResponseBody
-          }
+          payload : httpResponseBody
         });
     });
    
@@ -69,33 +57,22 @@ class FlightsDispatcher {
     let paramDest = "&dest=" + payload.destination;
     let paramDate = "&date=" + payload.date;
     let paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
-    let {flights} = Store.getState();
-    Store.reduce({
-       type: constants.flights.request,
-       payload : {
-        ...flights.departureFlights,
-        status : "ACTIVE"
-      }
-     });
+    Store.reduce({type: constants.flights.request});
   
      Orchestration.createRequest(
       constants.httpRequest.get,
       "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
-      onError => {
+      httpError => {
        Store.reduce({
           type: constants.flights.error,
-          payload: onError
+          payload: httpError
         });
       }, 
       httpResponseBody => {
-      let {flights} = Store.getState();
+      console.log("UPPER HERE -> ", httpResponseBody);
        Store.reduce({
           type: constants.flights.response,
-          payload : {
-            ...flights.departureFlights,
-            status : "ACTIVE",
-            searchResults: httpResponseBody
-          }
+          payload : httpResponseBody
         });
     });
 
@@ -112,33 +89,22 @@ class FlightsDispatcher {
     }
 
     paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
-    flights = Store.getState();
-    Store.reduce({
-       type: constants.flights.requestReturn,
-       payload : {
-        ...flights.returnFlights,
-        status : "ACTIVE"
-      }
-     });
+    Store.reduce({type: constants.flights.requestReturn});
 
      Orchestration.createRequest(
       constants.httpRequest.get,
       "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
-      onError => {
+      httpError => {
        Store.reduce({
           type: constants.flights.error,
-          payload: onError
+          payload: httpError
         });
       }, 
       httpResponseBody => {
-      let {flights} = Store.getState();
-       Store.reduce({
+        console.log("HERE -> ", httpResponseBody);
+        Store.reduce({
           type: constants.flights.returnFlightResponse,
-          payload : {
-            ...flights.returnFlights,
-            status : "ACTIVE",
-            searchResults: httpResponseBody
-          }
+          payload : httpResponseBody
         });
     });
   

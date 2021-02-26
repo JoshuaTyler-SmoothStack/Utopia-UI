@@ -11,7 +11,7 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import OrchestrationHeader from "../OrchestrationHeader";
-import Pagination from "../Pagination";
+import Pagination from "../../../../components/Pagination";
 import Orchestration from "../../../../Orchestration";
 
 class BookingsDebug extends Component {
@@ -109,7 +109,11 @@ class BookingsDebug extends Component {
           </div>
 
           {/* Pagination */}
-          <Pagination className="col-12 p-2" results={bookings}
+          <Pagination className="col-12 p-2" 
+            isActive={bookings.search.results} 
+            resultsPage={bookings.search.resultsPage} 
+            resultsPerPage={bookings.search.resultsPerPage} 
+            resultsTotal={bookings.search.results.length}
             onSetNumberOfResults={(e) => BookingsDispatcher.onResultsPerPage(e)}
             onSetPageOfResults={(e) => BookingsDispatcher.onResultsPage(e)}
           />
