@@ -31,7 +31,11 @@ class App extends Component {
     super(props);
 
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
-    this.state = Store.getCombineDefaultReducerStates();
+    this.state = { 
+      ...Store.getCombineDefaultReducerStates(),
+      breakPoint: "xx_small",
+      isAppStateMounted: false,
+    };
     Store.setState = (e) => this.setState(e);
     Store.getState = () => this.state;
   }
@@ -93,12 +97,13 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.setState({isAppStateMounted: true});
     this.handleResize();
     window.addEventListener("resize", () => this.handleResize());
   }
 
   componentDidUpdate() {
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   handleResize = () => {
