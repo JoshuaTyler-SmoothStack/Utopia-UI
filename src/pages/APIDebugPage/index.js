@@ -13,7 +13,7 @@ class APIDebugPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeDisplay: "BOOKINGS",
+      activeDisplay: "AIRPLANES",
     };
   }
 

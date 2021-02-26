@@ -17,6 +17,7 @@ const stateManagementTests = () => {
   while(!Store.getState().isAppStateMounted){/* do nothing */};
   
   // Begin Testings
+  // new AirplanesStateTests().runAllTests();
   new BookingsStateTests().runAllTests();
 };
 stateManagementTests();
