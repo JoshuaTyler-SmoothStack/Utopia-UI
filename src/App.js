@@ -6,7 +6,11 @@ import {
   Switch,
 } from "react-router-dom";
 
+// Components
+import LoginModal from "./componentgroups/LoginModal";
+
 // Pages
+import APIDebugPage from "./pages/APIDebugPage";
 import BootPage from "./pages/BootPage";
 import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
@@ -14,7 +18,6 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
 import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
-
 
 // Styles
 import "./styles/UtopiaBootstrap.css";
@@ -31,11 +34,18 @@ class App extends Component {
   }
 
   render() {
+    const isActive_LoginModal = this.state.authentication.isActive_LoginUI
+    
     return (
       <main>
         {/* Pages */}
         <Router>
           <Switch>
+
+            {/* API Debug Page */}
+            <Route path="/debug">
+              <APIDebugPage />
+            </Route>
 
             {/* Boot Page */}
             <Route exact path="/">
@@ -71,6 +81,9 @@ class App extends Component {
             </Route>
 
           </Switch>
+
+          {/* Login Modal - zIndex 2 */}
+          {isActive_LoginModal && <LoginModal/>}
         </Router>
       </main>
     );
