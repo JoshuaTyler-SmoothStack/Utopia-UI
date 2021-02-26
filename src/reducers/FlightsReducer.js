@@ -1,50 +1,44 @@
 import constants from "../resources/constants.json"
+import Store from "./Store";
 
 const FlightsReducer = (action) => {
-  const flights = constants.flights;
+  const flightsConst = constants.flights;
   switch(action.type) {
-    
-    case flights.cancel:
-      return {
-        deletePrompt: false,
-        editPrompt: false,
-      };
-
-    case flights.error:
+    case flightsConst.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case flights.request:
+    case flightsConst.request:
       return {
         error: "",
-        status: "PENDING"
+        status: "PENDING",
+        departureFlights : action.payload
       };
 
-    case flights.response:
-      if(action.payload) {
+    case flightsConst.requestReturn:
         return {
           error: "",
-          searchResults: action.payload,
-          status: "SUCCESS"
-        }
-      }
-      return {error: "No Payload", status: "SUCCESS"}
+          status: "PENDING",
+          returnFlights : action.payload
+    };
 
-    case flights.searchError:
+    case flightsConst.response:
       return {
-        searchError: action.payload,
-        searchText: action.payload
+        error: "",
+        status: "SUCCESS",
+        departureFlights : action.payload
       };
 
-    case flights.searchResultsPage:
-      return {searchResultsPage: action.payload};
+    case flightsConst.returnFlightResponse:
+      return {
+        error: "",
+        status: "SUCCESS",
+        returnFlights: action.payload,
+    };
 
-    case flights.searchResultsPerPage:
-      return {searchResultsPerPage: action.payload};
-
-    case flights.reset:
+    case flightsConst.stop:
       return defaultFlightsState;
 
     default:
@@ -55,13 +49,19 @@ export default FlightsReducer;
 
 export const defaultFlightsState = {
   error: "",
-  searchError: "",
-  searchFilters: {
-    activeCount: 0
+  status: "INACTIVE",
+  departureFlights : {
+    searchResults: [],
+    searchResultsPage: 1,
+    searchResultsPerPage: 20,
+    searchResultsTotal: 0,
+    status: "INACTIVE"
   },
-  searchResults: [],
-  searchResultsPage: 1,
-  searchResultsPerPage: 100,
-  searchResultsTotal: 0,
-  status: "INACTIVE"
+  returnFlights : {
+    searchResults: [],
+    searchResultsPage: 1,
+    searchResultsPerPage: 20,
+    searchResultsTotal: 0,
+    status: "INACTIVE"
+  }
 };
