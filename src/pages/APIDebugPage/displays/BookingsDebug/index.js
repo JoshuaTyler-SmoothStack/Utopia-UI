@@ -63,7 +63,7 @@ class BookingsDebug extends Component {
               <input 
                 aria-label="Search" 
                 className={"form-control " + (searchError && " is-invalid kit-shake")}
-                label={searchText}
+                label={searchError}
                 placeholder="ID=X or Confirmation=Y"
                 type="search" 
                 style={{maxWidth:"15rem"}}

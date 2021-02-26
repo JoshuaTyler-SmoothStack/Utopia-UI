@@ -149,6 +149,7 @@ const BookingsReducer = (action) => {
         error: "",
         search: {
           ...bookings.search,
+          error: "",
           results: action.payload
         },
         status: "SUCCESS"
@@ -156,8 +157,10 @@ const BookingsReducer = (action) => {
 
     case bookingsRoot.searchError:
       return {
-        searchError: action.payload,
-        searchText: action.payload
+        search: {
+          ...bookings.search,
+          error: action.payload
+        }
       };
 
     case bookingsRoot.searchResultsPage:

@@ -17,13 +17,9 @@ class PopContent extends Component {
     const { isDisabled } = this.state;
 
     return (
-      <div>
+      <div className={className || ""} style={style}>
         {!isDisabled && (
-          <FlexRow
-            className={className}
-            style={style}
-            wrap={"no-wrap"}
-          >
+          <FlexRow wrap={"no-wrap"}>
             {/* Content */}
             <FlexColumn
               style={{
