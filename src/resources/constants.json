@@ -3,7 +3,9 @@
     "root": "AIRPLANES",
     "error": "AIRPLANES_ERROR",
     "request": "AIRPLANES_REQUEST",
-    "response": "AIRPLANES_RESPONSE"
+    "response": "AIRPLANES_RESPONSE",
+    "searchResultsPage": "AIRPLANES_SEARCH_RESULTS_PAGE",
+    "searchResultsPerPage": "AIRPLANES_SEARCH_RESULTS_PER_PAGE"
   },
 
   "airports": {
@@ -62,6 +64,8 @@
     "root": "FLIGHTS",
     "error": "FLIGHTS_ERROR",
     "request": "FLIGHTS_REQUEST",
+    "requestReturn": "FLIGHTS_REQUEST_RETURN",
+    "returnFlightResponse": "FLIGHTS_RETURN_RESPONSE",
     "response": "FLIGHTS_RESPONSE"
   },
 

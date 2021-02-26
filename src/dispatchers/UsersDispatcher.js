@@ -9,22 +9,22 @@ const API_URL = 'http://localhost:8080/users/';
 class UsersDispatcher {
 
 
-  createAccount(newUser) {
+  static createAccount(newUser) {
     return axios.post(API_URL, JSON.stringify(newUser),
       { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
   };
 
-  forgotPassword(email) {
+  static forgotPassword(email) {
     return axios.post(API_URL + 'forgot-password', JSON.stringify(email),
       { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
   };
 
-  verifyPasswordRecoveryToken(token) {
+  static verifyPasswordRecoveryToken(token) {
     return axios.post(API_URL + 'forgot-password/verify-token', JSON.stringify(token),
       { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
   };
 
-  changePassword(data) {
+  static changePassword(data) {
     return axios.post(API_URL + 'forgot-password/recover', JSON.stringify(data),
       { headers: { 'Content-Type': 'application/json; charset=UTF-8' } });
   }
@@ -80,4 +80,4 @@ class UsersDispatcher {
 //     });
 // }
 
-export default new UsersDispatcher();
+export default UsersDispatcher;

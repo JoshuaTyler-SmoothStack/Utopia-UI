@@ -5,7 +5,6 @@ import Store from "../reducers/Store";
 class BookingsDispatcher {
   static onCancel() {
     Store.reduce({type: constants.bookings.cancel});
-    BookingsDispatcher.onFindAll();
   }
 
   static onCreate(bookingValues) {

@@ -74,6 +74,7 @@ const CreateAccountPage = (props) => {
     setLoading(true)
     UsersDispatcher.createAccount(newUser)
       .then(data => {
+        console.log(data.status)
         setSuccess(true)
         setLoading(false)
         setTimeout(() => setRedirect(true), 3400)

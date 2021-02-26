@@ -36,6 +36,7 @@ const ForgotPasswordPage = (props) => {
     setLoading(true)
     UsersDispatcher.forgotPassword({ email: email })
       .then(data => {
+        console.log(data)
         setSuccess(true)
         setLoading(false)
         setTimeout(() => setRedirect(true), 3400)
