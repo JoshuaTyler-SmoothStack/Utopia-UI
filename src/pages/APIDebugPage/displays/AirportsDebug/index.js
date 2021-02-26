@@ -10,7 +10,7 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import OrchestrationHeader from "../OrchestrationHeader";
-import Pagination from "../Pagination";
+import Pagination from "../../../../components/Pagination";
 
 class AirportsDebug extends Component {
   constructor(props) {

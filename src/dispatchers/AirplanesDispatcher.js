@@ -84,5 +84,19 @@ class AirplanesDispatcher {
       }
     );
   }
+
+  static onResultsPage(resultsPage) {
+    Store.reduce({
+      type: constants.airplanes.searchResultsPage,
+      payload: resultsPage,
+    });
+  }
+
+  static onResultsPerPage(resultsPerPage) {
+    Store.reduce({
+      type: constants.airplanes.searchResultsPerPage,
+      payload: resultsPerPage,
+    });
+  }
 }
 export default AirplanesDispatcher;
