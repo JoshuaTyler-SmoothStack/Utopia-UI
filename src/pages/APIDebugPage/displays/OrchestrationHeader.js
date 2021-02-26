@@ -25,46 +25,53 @@ const OrchestrationHeader = (props) => {
   const status = props.status || "INACTIVE";
 
   return(
-    <FlexRow className={props.className || ""} justify={"start"} style={props.style}>
+    <FlexRow className={props.className || ""} style={props.style}>
+      
+      {/* MS Indicator */}
       <FlexRow 
-        className="bg-dark rounded kit-border-shadow" 
-        justify={"start"} 
+        className="col-6 bg-dark rounded kit-border-shadow p-2"
         style={{maxWidth: "15rem"}}
+        wrap="no-wrap"
+        style={{overflowX: "clip"}}
       >
         {/* Nameplate */}
         <div 
-          className={"btn kit-border-shadow kit-pointer-none m-2 " + 
-          (isMSActive? "bg-success" : "bg-warning")}
+          className={"btn btn-sm kit-border-shadow kit-pointer-none " + 
+          (isMSActive? "btn-success" : "btn-warning")}
+          style={{whiteSpace: "nowrap"}}
         >
           {name}
         </div>
 
         {/* IO Indicator */}
         <StatusAsyncIndicator 
-          className="ml-auto mr-2"
+          className="ml-auto ml-1"
           status={status}
         />
 
         {/* Status Indicator */}
         <StatusIndicator 
-          className="mr-2"
+          className="ml-1"
           status={isMSActive ? "ACTIVE" : "INACTIVE"}
         />
       </FlexRow>
 
-      {/* Error Trigger */}
-      <button className="btn btn-primary ml-2"
-        onClick={() => props.onTriggerError()}
-      >
-        !Error!
-      </button>
+      {/* Buttons */}
+      <FlexRow className="col-6 p-1" wrap={"no-wrap"}>
+        {/* Error Trigger */}
+        <button className="btn btn-primary ml-2"
+          onClick={() => props.onTriggerError()}
+        >
+          !Error!
+        </button>
 
-      {/* Fake API Call */}
-      <button className="btn btn-info ml-2"
-        onClick={() => props.onTriggerFakeAPICall()}
-      >
-        Fake API Call
-      </button>
+        {/* Fake API Call */}
+        <button className="btn btn-info ml-2"
+          onClick={() => props.onTriggerFakeAPICall()}
+        >
+          Fake API
+        </button>
+      </FlexRow>
     </FlexRow>
   );
 }

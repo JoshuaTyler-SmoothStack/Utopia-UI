@@ -1,4 +1,5 @@
 // Libraries
+import _ from "lodash";
 import React, { Component } from "react";
 import {
   BrowserRouter as Router,
@@ -28,6 +29,8 @@ import Store from "./reducers/Store";
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.handleResize = _.throttle(this.handleResize.bind(this), 100);
     this.state = Store.getCombineDefaultReducerStates();
     Store.setState = (e) => this.setState(e);
     Store.getState = () => this.state;
@@ -89,8 +92,30 @@ class App extends Component {
     );
   }
 
+  componentDidMount() {
+    this.handleResize();
+    window.addEventListener("resize", () => this.handleResize());
+  }
+
   componentDidUpdate() {
     console.log(this.state);
+  }
+
+  handleResize = () => {
+    const { breakPoint } = this.state;
+
+    let newSize = "xx_small";
+    if(window.innerWidth > 375) newSize = "x_small";
+    if(window.innerWidth >= 576) newSize = "small";
+    if(window.innerWidth >= 768) newSize = "medium";
+    if(window.innerWidth >= 992) newSize = "large";
+    if(window.innerWidth >= 1200) newSize = "x_large";
+    if(window.innerWidth >= 1400) newSize = "xx_large";
+
+    if(breakPoint !== newSize) {
+      console.log(newSize);
+      this.setState({breakPoint: newSize});
+    }
   }
 }
 export default App;
