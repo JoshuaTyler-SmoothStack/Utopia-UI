@@ -115,7 +115,7 @@ class AirplanesDebug extends Component {
 
             <ItemsIndexReadout
               className={"ml-2"}
-              page={airplanes.search.resultsPage}
+              currentPage={airplanes.search.resultsPage}
               itemsPerPage={airplanes.search.resultsPerPage}
               itemsTotal={airplanes.search.results.length}
             />
