@@ -99,25 +99,6 @@ class BookingsDispatcher {
           );
         }, 500);
       }
-
-      // Users Update
-      if(booking.userId) {
-        setTimeout(() => {
-          onCreateResponse(
-            "Assigned Booking to User with ID: " + booking.userId + ".",
-            "SUCCESS", 
-            "users"
-          );
-        }, 500);
-      } else {
-        setTimeout(() => {
-          onCreateResponse(
-            "No user assigned.",
-            "DISABLED", 
-            "users"
-          );
-        }, 500);
-      }
     };
 
     // Create for User
@@ -490,37 +471,10 @@ class BookingsDispatcher {
   }
 
   static onError(message) {
-    if(message) {
-      Store.reduce({
-        type: constants.bookings.error,
-        payload: message,
-      });
-    } else {
-      Store.reduce({ type: constants.bookings.request });
-      Orchestration.createRequest(
-        constants.httpRequest.post,
-        "/bookings",
-        (httpError) => {
-          Store.reduce({
-            type: constants.bookings.error,
-            payload: httpError,
-          });
-        },
-        (httpResponseBody) => {
-          if(httpResponseBody.error) {
-            Store.reduce({
-              type: constants.bookings.error,
-              payload: httpResponseBody.error,
-            });
-          } else {
-            Store.reduce({
-              type: constants.bookings.response,
-              payload: httpResponseBody,
-            });
-          }
-        }
-      );
-    }
+    Store.reduce({
+      type: constants.bookings.error,
+      payload: message,
+    });
   }
 
   static onFakeAPICall(disableResponse) {

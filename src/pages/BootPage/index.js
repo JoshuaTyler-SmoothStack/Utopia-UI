@@ -34,6 +34,7 @@ class StartupPage extends Component {
           height: "100vh",
           width: "100vw",
         }}
+        wrap="no-wrap"
         onClick={() => this.handleLoadingProgressCheck()}
       >
         {/* Utopia Header */}

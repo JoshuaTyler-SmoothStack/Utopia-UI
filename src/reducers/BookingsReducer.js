@@ -33,10 +33,10 @@ const BookingsReducer = (action) => {
           isActive: true,
           results: {
             ...defaultBookingsState.create.results,
-            booking: action.payload.result,
+            booking: action.payload,
           },
           resultsStatus: {
-            booking: action.payload.resultStatus,
+            booking: "ERROR",
             flights: "DISABLED",
             guests: "DISABLED",
             passengers: "DISABLED",

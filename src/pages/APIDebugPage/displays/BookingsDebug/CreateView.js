@@ -93,7 +93,7 @@ class CreateView extends Component {
             {/* Flight / Passenger */}
             <FlexRow className="mt-3">
               <div style={{width:"14rem"}}>
-                <label className="form-label">Flight ID</label>
+                <label className="form-label form-label-success">Flight ID</label>
                 <input type="number" min="1" className="form-control" defaultValue={editingValues.flightId}
                   onChange={(e) => this.setState({editingValues: {...editingValues, flightId: e.target.value}})}
                 />

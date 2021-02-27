@@ -64,6 +64,13 @@ class AirplanesDispatcher {
     );
   }
 
+  static onError(message) {
+    Store.reduce({
+      type: constants.airplanes.error,
+      payload: message,
+    });
+  }
+
   static onFakeAPICall() {
     Store.reduce({ type: constants.airplanes.request });
     setTimeout(() => {
