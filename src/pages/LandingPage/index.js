@@ -432,7 +432,7 @@ class LandingPage extends Component {
             >
               {/* Background */}
               <div className="h-100 w-100 kit-bg-smoke kit-opacity-50"
-              style={{position: "absolute", height:"100vh", width:"100vw", top:"0"}}/>
+              style={{position: "absolute", height:"100%", width:"100vw", top:"0"}}/>
 
               {/* Content */}
               <PopContent 

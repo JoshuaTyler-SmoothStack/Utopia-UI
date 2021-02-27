@@ -12,7 +12,6 @@ import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
 class CreateView extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       typeId: 1,
     };
@@ -70,7 +69,9 @@ class CreateView extends Component {
                 </div>
                 <div className="mt-3 ml-3" style={{width:"14rem"}}>
                   <label className="form-label">Type ID</label>
-                  <input type="number" className="form-control" defaultValue={typeId}/>
+                  <input type="number" className="form-control" defaultValue={typeId}
+                  onChange={(e) => this.setState({typeId: e.target.value})}
+                  />
                 </div>
               </FlexRow>
               <hr className="w-100"></hr>
