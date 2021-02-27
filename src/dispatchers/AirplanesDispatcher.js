@@ -91,7 +91,7 @@ class AirplanesDispatcher {
       (httpError) => {
         Store.reduce({
           type: constants.airplanes.error,
-          payload: httpError,
+          payload: "Service temporarily unavailable.",
         });
       },
       (httpResponseBody) => {

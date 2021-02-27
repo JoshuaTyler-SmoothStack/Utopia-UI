@@ -274,8 +274,9 @@ export const defaultBookingsState = {
     },
     results: [],
     resultsPage: 1,
-    resultsPerPage: 100,
+    resultsPerPage: 10,
     resultsTotal: 0,
     status: "INACTIVE"
-  }
+  },
+  status: "INACTIVE"
 };
