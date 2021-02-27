@@ -5,7 +5,6 @@ import Store from '../../reducers/Store';
 
 // Components
 import PopContent from '../../components/PopContent';
-import LoginModal from '../LoginModal';
 import LocalPageButtonsPopContent from './LocalPageButtonsPopContent';
 
 class NavBar extends Component {

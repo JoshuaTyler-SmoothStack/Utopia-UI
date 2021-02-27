@@ -22,7 +22,7 @@ class Store {
   static reduce(action) {
     // Check setState is valid
     if(!Store.setState) {
-      console.error("CannotStore.reduce action! Invalid setState method.", action);
+      console.error("Cannot reduce action! Invalid setState() method.", action);
       return;
     }
 

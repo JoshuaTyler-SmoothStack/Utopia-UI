@@ -27,15 +27,9 @@ class OrchestrationPage extends Component {
   }
 
   render() { 
-    const { orchestration } = Store.getState();
-
-    const isActive_OrchestrationDashboard = orchestration
-      ? orchestration.status === "ACTIVE"
-      : false;
-
-    const services = orchestration
-      ? orchestration.services
-      : {list: [], status: "UNKNOWN"};
+    const { orchestration, airplanes, airports, bookings, users } = Store.getState();
+    const isActive_OrchestrationDashboard = orchestration.status;
+    const services = orchestration.services;
 
     return ( 
       <div>
@@ -83,6 +77,7 @@ class OrchestrationPage extends Component {
                 isActive={services.list.includes("airplane-service")}
                 location={"http://airplane-service"}
                 name={"Airplane MS"}
+                status={airplanes.status}
               >
                 <AirplanesDashboard/>
               </ServiceDisplay>
@@ -91,6 +86,7 @@ class OrchestrationPage extends Component {
                 isActive={services.list.includes("airport-service")}
                 location={"http://airport-service"}
                 name={"Airport MS"}
+                status={airports.status}
               >
                 <AirportsDashboard/>
               </ServiceDisplay>
@@ -99,6 +95,7 @@ class OrchestrationPage extends Component {
                 isActive={services.list.includes("booking-service")}
                 location={"http://booking-service"}
                 name={"Booking MS"}
+                status={bookings.status}
               >
                 <BookingsDashboard/>
               </ServiceDisplay>
@@ -107,6 +104,7 @@ class OrchestrationPage extends Component {
                 isActive={services.list.includes("user-service")}
                 location={"http://user-service"}
                 name={"User MS"}
+                status={users.status}
               >
                 <UsersDashboard/>
               </ServiceDisplay>

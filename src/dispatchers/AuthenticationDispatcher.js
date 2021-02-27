@@ -67,7 +67,6 @@ class AuthenticationDispatcher {
 
     }, httpResponseBody => {
       const user = httpResponseBody;
-      console.log(user);
 
       if(user.error) {
         // invalid
