@@ -12,12 +12,7 @@ const AirplanesReducer = (action) => {
         create: defaultAirplanesState.create,
         delete: defaultAirplanesState.delete,
         edit: defaultAirplanesState.edit,
-        error: "",
-        search: {
-          ...airplanes.search,
-          resultsPage: 1
-        },
-        status: "SUCCESS"
+        error: ""
       };
 
     case airplanesRoot.createPrompt:
@@ -60,55 +55,25 @@ const AirplanesReducer = (action) => {
         selected: action.payload
       };
 
-    case airplanesConst.deleteRequest:
-      return {
-        delete: {
-          ...airplanes.delete,
-          resultsStatus: "PENDING",
-          status: "PENDING"
-        },
-      };
+      case airplanesRoot.deleteRequest:
+        return {
+          delete: {
+            ...airplanes.delete,
+            resultsStatus: "PENDING",
+            status: "PENDING"
+          },
+        };
+  
+      case airplanesRoot.deleteResponse:
+        return {
+          delete: {
+            ...airplanes.delete,
+            results: action.payload,
+            resultsStatus: "SUCCESS",
+            status: "PENDING"
+          },
+        };
 
-    case airplanesConst.deleteResponse:
-      return {
-        delete: {
-          ...airplanes.delete,
-          results: action.payload,
-          resultsStatus: "SUCCESS",
-          status: "PENDING"
-        },
-      };
-    
-    case airplanesConst.editPrompt:
-      return {
-        create: defaultAirplanesState.create,
-        delete: defaultAirplanesState.delete,
-        edit: {
-          ...defaultAirplanesState.edit,
-          isActive: true
-        },
-        selected: action.payload
-      };
-
-    case airplanesConst.editRequest:
-      return {
-        edit: {
-          ...airplanes.edit,
-          resultsStatus: "PENDING",
-          status: "PENDING"
-        },
-      };
-
-    case airplanesConst.editResponse:
-      return {
-        edit: {
-          ...airplanes.edit,
-          results: action.payload.results,
-          resultsStatus: action.payload.resultsStatus,
-          status: "PENDING"
-        },
-      };
-      
     case airplanesRoot.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
