@@ -132,7 +132,7 @@ class BookingsDebug extends Component {
 
             <ItemsIndexReadout
               className={"ml-2"}
-              page={bookings.search.resultsPage}
+              currentPage={bookings.search.resultsPage}
               itemsPerPage={bookings.search.resultsPerPage}
               itemsTotal={bookings.search.results.length}
             />

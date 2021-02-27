@@ -1,5 +1,4 @@
 import React from 'react';
-import FlexRow from "./FlexRow";
 
 const Pagination = (props) => {
   // @PROP: currentPage - num
@@ -42,28 +41,28 @@ const Pagination = (props) => {
     >
       <span aria-hidden="true">«</span>
     </button>
-  </li>
+  </li>;
 
   const pos1 = 
   <li className={"page-item" + (paginationItems.selected === paginationItems.pos1 ? " active" : "")}>
     <button className={"page-link"} onClick={paginationItems.selected === paginationItems.pos1 ? () => {} : () => props.onSelectPage(paginationItems.pos1)}>
       {paginationItems.pos1}
     </button>
-  </li>
+  </li>;
 
   const pos2 = 
   <li className={"page-item" + (paginationItems.selected === paginationItems.pos2 ? " active" : "")}>
     <button className="page-link" onClick={paginationItems.selected === paginationItems.pos2 ? () => {} : () => props.onSelectPage(paginationItems.pos2)}>
       {paginationItems.pos2}
     </button>
-  </li>
+  </li>;
 
   const pos3 = 
   <li className={"page-item" + (paginationItems.selected === paginationItems.pos3 ? " active" : "")}>
     <button className="page-link" onClick={paginationItems.selected === paginationItems.pos3 ? () => {} : () => props.onSelectPage(paginationItems.pos3)}>
       {paginationItems.pos3}
     </button>
-  </li>
+  </li>;
 
   const next = 
   <li className={"page-item" + (paginationItems.next ? "" : " disabled")}>
@@ -72,7 +71,7 @@ const Pagination = (props) => {
     >
       <span aria-hidden="true">»</span>
     </button>
-  </li>
+  </li>;
 
   return (
     <ul className={"pagination " + (props.className || "")} style={props.style}>
