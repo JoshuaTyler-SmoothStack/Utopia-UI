@@ -20,7 +20,7 @@ const ChangeOperationReadout = (props) => {
       {props.status === "ERROR" &&
       <FlexRow>
         <span className="h3">{props.name}</span>
-        <span className="h1 text-danger ml-3">X</span>
+        <span className="h1 text-danger ml-3" style={{fontFamily: "monospace"}}>X</span>
         <span className="h5 text-danger kit-border-shadow-sm rounded ml-3 p-2">{props.result}</span>
       </FlexRow>}
 
@@ -35,7 +35,7 @@ const ChangeOperationReadout = (props) => {
       {props.status === "SUCCESS" &&
       <FlexRow>
         <span className="h3">{props.name}</span>
-        <span className="h1 text-success ml-3">✔</span>
+        <span className="h1 text-success ml-3" style={{fontFamily: "monospace"}}>✔</span>
         <span className="h5 kit-border-shadow-sm rounded ml-3 p-2">{props.result}</span>
       </FlexRow>}
     </FlexRow>

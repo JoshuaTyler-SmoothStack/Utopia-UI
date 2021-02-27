@@ -24,7 +24,7 @@ const ContentNegotiationIndicator = (props) => {
       >
         {/* JSON */}
         <button
-          className={"btn" + (contentNegotiation === "JSON" ? " btn-success" : "")}
+          className={"btn text-white " + (contentNegotiation === "JSON" && "btn-success")}
           style={{width: "4rem"}}
           onClick={() => props.onSelectContentNegotiation("JSON")}
         >
@@ -33,7 +33,7 @@ const ContentNegotiationIndicator = (props) => {
 
         {/* XML */}
         <button
-          className={"btn" + (contentNegotiation === "XML" ? " btn-success" : "")}
+          className={"btn text-white " + (contentNegotiation === "XML" && "btn-success")}
           style={{width: "4rem"}}
           onClick={() => props.onSelectContentNegotiation("XML")}
         >

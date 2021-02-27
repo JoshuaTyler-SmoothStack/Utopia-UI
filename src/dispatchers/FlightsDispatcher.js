@@ -69,7 +69,6 @@ class FlightsDispatcher {
         });
       }, 
       httpResponseBody => {
-      console.log("UPPER HERE -> ", httpResponseBody);
        Store.reduce({
           type: constants.flights.response,
           payload : httpResponseBody
@@ -101,7 +100,6 @@ class FlightsDispatcher {
         });
       }, 
       httpResponseBody => {
-        console.log("HERE -> ", httpResponseBody);
         Store.reduce({
           type: constants.flights.returnFlightResponse,
           payload : httpResponseBody

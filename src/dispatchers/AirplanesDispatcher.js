@@ -6,7 +6,6 @@ class AirplanesDispatcher {
 
   static onCancel() {
     Store.reduce({ type: constants.airplanes.cancel });
-    AirplanesDispatcher.onFindAll();
   }
 
   static onCreate(typeId) {
@@ -14,7 +13,7 @@ class AirplanesDispatcher {
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
       "/airplanes",
-      typeId,
+      Number(typeId),
       (httpError) => {
         Store.reduce({
           type: constants.airplanes.error,
@@ -41,7 +40,7 @@ class AirplanesDispatcher {
     Store.reduce({ type: constants.airplanes.deleteRequest });
     Orchestration.createRequest(
       constants.httpRequest.delete,
-      "/airplanes/" + airplaneId,
+      "/airplanes/" + Number(airplaneId),
       (httpError) => {
         Store.reduce({
           type: constants.airplanes.error,
@@ -62,6 +61,53 @@ class AirplanesDispatcher {
         }
       }
     );
+  }
+
+  static onEdit(airplane, typeId, isRevert) {
+    const newAirplane = {
+      typeId : Number(typeId),
+      id : Number(airplane.id)
+    }
+
+    console.log(newAirplane);
+
+    Store.reduce({ type: constants.airplanes.editRequest });
+    if(airplane.typeId !== typeId || isRevert) {
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.put,
+      "/airplanes",
+      newAirplane,
+      (httpError) => {
+        Store.reduce({
+          type: constants.airplanes.error,
+          payload: httpError,
+        });
+      },
+      (httpResponseBody) => {
+        if (httpResponseBody.error) {
+          Store.reduce({
+            type: constants.airplanes.error,
+            payload: httpResponseBody.error,
+          });
+        } else {
+          Store.reduce({
+            type: constants.airplanes.editResponse,
+            payload: {
+              results : httpResponseBody,
+              resultsStatus : "SUCCESS"
+            },
+          });
+        }
+      }
+    );} else {
+      Store.reduce({
+        type: constants.airplanes.editResponse,
+        payload: {
+          results : airplane,
+          resultsStatus : "DISABLED"
+        },
+      });
+    }
   }
 
   static onError(message) {
@@ -91,7 +137,7 @@ class AirplanesDispatcher {
       (httpError) => {
         Store.reduce({
           type: constants.airplanes.error,
-          payload: httpError,
+          payload: "Service temporarily unavailable.",
         });
       },
       (httpResponseBody) => {
@@ -111,7 +157,6 @@ class AirplanesDispatcher {
   }
 
   static onFindBy(searchText) {
-    console.log(searchText);
     
     if (!searchText || searchText.trim() === "") {
       AirplanesDispatcher.onFindAll();
@@ -140,7 +185,6 @@ class AirplanesDispatcher {
         return;
       }
     } else if (isNaN(parseInt(searchPath))) {
-      console.log("isNaN");
       Store.reduce({
         type: constants.airplanes.error,
         payload: "Invalid search term!",
@@ -181,6 +225,13 @@ class AirplanesDispatcher {
   static onPromptDelete(airplane) {
     Store.reduce({
       type: constants.airplanes.deletePrompt,
+      payload: airplane
+    });
+  }
+
+  static onPromptEdit(airplane) {
+    Store.reduce({
+      type: constants.airplanes.editPrompt,
       payload: airplane
     });
   }

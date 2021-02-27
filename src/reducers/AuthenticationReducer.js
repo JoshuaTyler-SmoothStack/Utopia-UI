@@ -18,7 +18,6 @@ const AuthenticationReducer = (action) => {
       };
 
     case authentication.createAccountSuccess:
-      console.log("UserMS - Login payload: ", action.payload);
       return {
         status: "ACTIVE",
         userId: action.payload.id
@@ -60,7 +59,6 @@ const AuthenticationReducer = (action) => {
       };
 
     case authentication.loginSuccess:
-      console.log("UserMS - Login payload: ", action.payload);
       return {
         status: "ACTIVE",
         userId: action.payload 

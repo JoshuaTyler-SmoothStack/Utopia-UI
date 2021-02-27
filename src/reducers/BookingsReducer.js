@@ -8,22 +8,15 @@ const BookingsReducer = (action) => {
   switch(action.type) {  
     case bookingsRoot.cancel:
       return {
-        create: {
-          ...bookings.create,
-          isActive: false
-        },
-        delete: {
-          ...bookings.delete,
-          isActive: false
-        },
-        edit: {
-          ...bookings.edit,
-          isActive: false
-        },
+        create: defaultBookingsState.create,
+        delete: defaultBookingsState.delete,
+        edit: defaultBookingsState.edit,
+        error: "",
         search: {
           ...bookings.search,
           resultsPage: 1
-        }
+        },
+        status: "SUCCESS"
       };
 
     case bookingsRoot.createError:
@@ -274,8 +267,9 @@ export const defaultBookingsState = {
     },
     results: [],
     resultsPage: 1,
-    resultsPerPage: 100,
+    resultsPerPage: 10,
     resultsTotal: 0,
     status: "INACTIVE"
-  }
+  },
+  status: "INACTIVE"
 };
