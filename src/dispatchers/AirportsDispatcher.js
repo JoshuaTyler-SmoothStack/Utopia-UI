@@ -63,12 +63,9 @@ class AirportsDispatcher {
     );
   }
 
-  static onEdit(airport, newCityName) {
+  static onEdit(airport, newCityName, isRevert) {
     Store.reduce({ type: constants.airports.editRequest });
-
-    console.log(airport, newCityName);
-
-    if(airport.city !== newCityName) {
+    if(airport.city !== newCityName || isRevert) {
       Orchestration.createRequestWithBody(
         constants.httpRequest.put,
         "/airports/" + airport.iataId,

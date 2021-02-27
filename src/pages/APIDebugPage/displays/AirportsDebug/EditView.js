@@ -68,7 +68,7 @@ class EditView extends Component {
                   onClick={resultsPending 
                     ? () => KitUtils.soundSuccess() 
                     : () => {
-                      this.handleValidate(selectedAirport, selectedAirport.city);
+                      this.handleValidate(selectedAirport, selectedAirport.city, true);
                       this.setState({reverted: true});
                     }
                   }
@@ -91,7 +91,7 @@ class EditView extends Component {
             </div>
             <div className="mt-3 ml-3" style={{width:"14rem"}}>
               <label className="form-label">City</label>
-              <input type="text" min="0" max="4" className="form-control" defaultValue={city}
+              <input type="text" className="form-control" defaultValue={city}
                 onChange={(e) => this.setState({city: e.target.value})}
               />
             </div>
@@ -107,7 +107,7 @@ class EditView extends Component {
             Cancel
           </button>
           <button className="btn btn-danger m-3"
-            onClick={() => this.handleValidate(selectedAirport, city)}
+            onClick={() => this.handleValidate(selectedAirport, city, false)}
           >
             Save Changes
           </button>
@@ -117,11 +117,11 @@ class EditView extends Component {
     );
   }
 
-  handleValidate = (airport, newCityName) => {
+  handleValidate = (airport, newCityName, isRevert) => {
     // TODO validate pre-API call 
     // (though API does validate, this will provide 
     // a better UX with more responsive feedback);
-    AirportsDispatcher.onEdit(airport, newCityName);
+    AirportsDispatcher.onEdit(airport, newCityName, isRevert);
   }
 }
 export default EditView;
