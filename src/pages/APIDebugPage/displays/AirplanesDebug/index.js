@@ -9,7 +9,7 @@ import ChangeOperationReadout from "../ChangeOperationReadout";
 import CreateView from "./CreateView";
 import DeleteView from "./DeleteView";
 import DropDown from "../../../../components/DropDown";
-// import EditView from "./EditView";
+import EditView from "./EditView";
 import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
@@ -20,17 +20,9 @@ import Pagination from "../../../../components/Pagination";
 class AirplanesDebug extends Component {
   constructor(props) {
     super(props);
+    const { airplanes } = Store.getState();
     this.state = {
-      isReferenceIDsActive: false,
-      isResultsDropdownActive: false,
-      editingValues: {
-        status: 0,
-        flightId: 0,
-        passengerId: 0,
-        userId: 0,
-        guestEmail: "",
-        guestPhone: ""
-      }
+      
     };
   }
   render() { 
@@ -170,8 +162,8 @@ class AirplanesDebug extends Component {
             {(airplanesMSStatus === "SUCCESS" && isDeletePromptActive) && 
             <DeleteView/>}
 
-            {/* {(airplanesMSStatus === "SUCCESS" && isEditPromptActive) && 
-            <EditView/>} */}
+            {(airplanesMSStatus === "SUCCESS" && isEditPromptActive) && 
+            <EditView/>}
           </div>
         </div>
 
