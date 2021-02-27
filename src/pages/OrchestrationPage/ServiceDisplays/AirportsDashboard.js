@@ -23,14 +23,8 @@ class AirportsDashboard extends Component {
 
   render() {
     const { airports } = Store.getState();
-
-    const searchResults = airports
-    ? airports.searchResults
-    : [];
-
-    const status = airports
-    ? airports.status
-    : "INACTIVE";
+    const searchResults = airports.search.results;
+    const status = airports.status;
 
     return (
     <div style={{height:" 100%", width: "100%"}}>
@@ -39,6 +33,15 @@ class AirportsDashboard extends Component {
         justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
       >
+        {/* Fake API Call */}
+        <button
+          className={"btn btn-info rounded m-1"}
+          onClick={() => AirportsDispatcher.onFakeAPICall()}
+        >
+          {"fakeAPICall()"}
+        </button>
+
+        {/* Find All */}
         <button
           className={"btn btn-info rounded"}
           onClick={() => this.findAllAirports()}
@@ -57,7 +60,8 @@ class AirportsDashboard extends Component {
             width: window.innerWidth * 0.9,
             top: (window.innerHeight - (window.innerHeight * 0.75)) * 0.5,
             left: (window.innerWidth - (window.innerWidth * 0.9)) * 0.5,
-            overflow: "hidden"
+            overflow: "auto",
+            zIndex: "1"
           }}
           onClose={() => this.setState({isActive_PopContent: false})}
         >
@@ -71,7 +75,9 @@ class AirportsDashboard extends Component {
             </ErrorMessage>
           }
 
-          {this.handleRenderAirportList(searchResults)}
+          {status === "SUCCESS" && 
+            this.handleRenderAirportsList(searchResults)
+          }
         </PopContent>
       }
     </div>);
@@ -79,63 +85,53 @@ class AirportsDashboard extends Component {
 
   findAllAirports = () => {
     AirportsDispatcher.onFindAll();
-
-    // Store.setState((state) => ({
-    //   ...state,
-    //   airports: {status: "PENDING"}
-    // }));
-
-    // Orchestration.createRequest("/airports", onSuccess => {
-    //   Store.setState((state) => ({
-    //     ...state,
-    //     airports: {
-    //       searchresults: onSuccess,
-    //       status: "REGISTERED"
-    //     }
-    //   }));
-    // }, onError => {
-    //   Store.setState((state) => ({
-    //     ...state,
-    //     airports: {
-    //       searchresults: onSuccess,
-    //       status: "REGISTERED"
-    //     }
-    //   }));
-    // });
-
     this.setState({isActive_PopContent: true});
   }
 
-  handleRenderAirportList = (airportsList) => {
+  handleRenderAirportsList = (airportsList) => {
+    const { airports } = Store.getState();
+    const resultsDisplayed = airports.search.resultsPerPage;
+    const resultsStart = airports.search.resultsPerPage * (airports.search.resultsPage - 1);
+
     let airportsTable = [];
-    for(var i in airportsList) {
-      const index = Number(i) + 1;
-      airportsTable.push(
-        <tr key={index}>
-          <th scrop="row">{index}</th>
-          <td>{airportsList[i].iataId}</td>
-          <td>{airportsList[i].city}</td>
-        </tr>
-      );
+    if(!airportsList.length) airportsList = [airportsList];
+    for(var i = resultsStart; i < airportsList.length; i++) {
+      if(i < resultsStart + resultsDisplayed) {
+        
+        const airport = airportsList[i];
+        const airportIataId = airport.iataId;
+        if(!airportIataId) continue;
+
+        const index = Number(i) + 1;
+        airportsTable.push(
+          <tr key={index}>
+            <th scrop="row">{index}</th>
+            <td>{airportIataId}</td>
+            <td>{airportsList[i].city}</td>
+          </tr>
+        );
+      } else {
+        break;
+      }
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
-        <table className="table kit-border-shadow">
+      <FlexColumn justify={"start"} style={{height: "95%", width: "95%"}}>
+        <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">IATA Code</th>
+              <th scope="col">IATA ID</th>
               <th scope="col">City</th>
             </tr>
           </thead>
           <tbody>
             {airportsTable}
+            <tr><td colSpan="3"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>
     );
   };
-
 }
 export default AirportsDashboard;

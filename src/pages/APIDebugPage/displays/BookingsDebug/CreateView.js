@@ -4,7 +4,6 @@ import Store from '../../../../reducers/Store';
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
 
 // Components
-import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ChangeOperationReadout from '../ChangeOperationReadout';

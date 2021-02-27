@@ -68,11 +68,11 @@ class AirplanesDebug extends Component {
 
               {/* Button */}
               <button 
-                className="btn btn-success text-white ml-2" 
+                className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                 type="submit"
                 onClick={() => AirplanesDispatcher.onFindBy(searchText)}
               >
-                Search
+                search
               </button>
             </FlexRow>
           </div>
@@ -172,6 +172,7 @@ class AirplanesDebug extends Component {
   }
 
   componentDidMount() {
+    AirplanesDispatcher.onCancel();
     Orchestration.findActiveServices(
     onError => {
       AirplanesDispatcher.onError("No Orchestration connection.");
@@ -188,41 +189,36 @@ class AirplanesDebug extends Component {
 
   handleRenderAirplanesList = (airplanesList) => {
     const { airplanes } = Store.getState();
-    const resultsDisplayed = airplanes.search.resultsPerPage;
+    const resultsDisplayed = Number(airplanes.search.resultsPerPage);
     const resultsStart = airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1);
 
     let airplanesTable = [];
     if(!airplanesList.length) airplanesList = [airplanesList];
-    for(var i = resultsStart; i < airplanesList.length; i++) {
-      if(i < resultsStart + resultsDisplayed) {
-        
-        const airplane = airplanesList[i];
-        const airplaneId = airplane.id;
-        if(!airplaneId) continue;
+    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airplanesList.length); i++) {
+      const airplane = airplanesList[i];
+      const airplaneId = airplane.id;
+      if(!airplaneId) continue;
 
-        const index = Number(i) + 1;
-        airplanesTable.push(
-          <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{airplaneId}</td>
-            <td>{airplanesList[i].typeId}</td>
-            
-            {/* Edit */}
-            <td><button className="btn btn-info"
-              onClick={() => AirplanesDispatcher.onPromptEdit(airplane)}>
-                Edit
-            </button></td>
+      const index = Number(i) + 1;
+      airplanesTable.push(
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{airplaneId}</td>
+          <td>{airplanesList[i].typeId}</td>
+          
+          {/* Edit */}
+          <td><button className="btn btn-info"
+            onClick={() => AirplanesDispatcher.onPromptEdit(airplane)}>
+              Edit
+          </button></td>
 
-            {/* Delete */}
-            <td><button className="btn btn-primary"
-              onClick={() => AirplanesDispatcher.onPromptDelete(airplane)}>
-               Delete
-            </button></td>
-          </tr>
-        );
-      } else {
-        break;
-      }
+          {/* Delete */}
+          <td><button className="btn btn-primary"
+            onClick={() => AirplanesDispatcher.onPromptDelete(airplane)}>
+             Delete
+          </button></td>
+        </tr>
+      );
     }
 
     return (
@@ -235,7 +231,7 @@ class AirplanesDebug extends Component {
               <th scope="col">TypeID</th>
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button className="btn btn-success text-white" style={{whiteSpace: "nowrap"}}
+                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
                     onClick={() => AirplanesDispatcher.onPromptCreate()}>
                     + Create New
                   </button>

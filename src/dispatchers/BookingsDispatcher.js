@@ -222,7 +222,6 @@ class BookingsDispatcher {
       constants.httpRequest.delete,
       "/bookings/flights/" + bookingId,
       (httpError) => {
-        console.log("httpError", httpError);
         onDeleteResponse("Service temporarily unavailable.", "ERROR", "flights");
       },
       (httpResponseBody) => {
@@ -254,7 +253,6 @@ class BookingsDispatcher {
       constants.httpRequest.delete,
       "/bookings/guests/" + bookingId,
       (httpError) => {
-        console.log("httpError", httpError);
         onDeleteResponse("Service temporarily unavailable.", "ERROR", "guests");
       },
       (httpResponseBody) => {
@@ -276,8 +274,7 @@ class BookingsDispatcher {
     Orchestration.createRequest(
       constants.httpRequest.delete,
       "/bookings/users/" + bookingId,
-      (httpError) => {
-        console.log("httpError", httpError);
+      (httpError) => {;
         onDeleteResponse("Service temporarily unavailable.", "ERROR", "users");
       },
       (httpResponseBody) => {
@@ -361,7 +358,6 @@ class BookingsDispatcher {
           onEditResponse("Service temporarily unavailable.", "ERROR", "flights");
         },
         (httpResponseBody) => {
-          console.log(httpResponseBody);
           if(httpResponseBody.error) {
             onEditResponse(httpResponseBody.error, "ERROR", "flights");
           } else {
@@ -497,7 +493,6 @@ class BookingsDispatcher {
       constants.httpRequest.get,
       "/bookings/referencedata",
       (httpError) => {
-        console.log(httpError);
         Store.reduce({
           type: constants.bookings.error,
           payload: httpError,

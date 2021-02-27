@@ -30,9 +30,8 @@ const OrchestrationHeader = (props) => {
       {/* MS Indicator */}
       <FlexRow 
         className="col-6 bg-dark rounded kit-border-shadow p-2"
-        style={{maxWidth: "15rem"}}
+        style={{maxWidth: "15rem", overflowX: "clip"}}
         wrap="no-wrap"
-        style={{overflowX: "clip"}}
       >
         {/* Nameplate */}
         <div 

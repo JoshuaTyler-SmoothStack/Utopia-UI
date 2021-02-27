@@ -6,7 +6,6 @@ class AirplanesDispatcher {
 
   static onCancel() {
     Store.reduce({ type: constants.airplanes.cancel });
-    AirplanesDispatcher.onFindAll();
   }
 
   static onCreate(typeId) {
@@ -158,7 +157,6 @@ class AirplanesDispatcher {
   }
 
   static onFindBy(searchText) {
-    console.log(searchText);
     
     if (!searchText || searchText.trim() === "") {
       AirplanesDispatcher.onFindAll();
@@ -187,7 +185,6 @@ class AirplanesDispatcher {
         return;
       }
     } else if (isNaN(parseInt(searchPath))) {
-      console.log("isNaN");
       Store.reduce({
         type: constants.airplanes.error,
         payload: "Invalid search term!",
