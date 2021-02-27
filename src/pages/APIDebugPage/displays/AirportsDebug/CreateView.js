@@ -1,7 +1,7 @@
 // Libraries
 import React, { Component } from 'react';
 import Store from '../../../../reducers/Store';
-import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
+import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
 
 // Components
 import FlexColumn from "../../../../components/FlexColumn";
@@ -14,17 +14,19 @@ class CreateView extends Component {
     super(props);
 
     this.state = {
-      typeId: 1,
+      iataId: "",
+      city: "",
     };
   }
-  render() { 
-    const { airplanes } = Store.getState();
-    const { typeId } = this.state;
 
-    const results = airplanes.create.results
-    const resultsStatus = airplanes.create.resultsStatus;
+  render() { 
+    const { airports } = Store.getState();
+    const { iataId, city } = this.state;
+
+    const results = airports.create.results
+    const resultsStatus = airports.create.resultsStatus;
     const resultsPending = resultsStatus === "PENDING";
-    const status = airplanes.create.status;
+    const status = airports.create.status;
 
     return (
       <FlexColumn>
@@ -34,9 +36,9 @@ class CreateView extends Component {
             <ChangeOperationReadout 
               className="m-1" 
               style={{minHeight: "4rem"}} 
-              name="Airplane" status={resultsStatus} 
-              result={"Created Airplane with ID: " + results.id + 
-              " and TypeID: " + results.typeId + "."}
+              name="Airport" status={resultsStatus} 
+              result={"Created Airport with IATA ID: " + results.iataId + 
+              " in City: " + results.city + "."}
             />
             
             {/* Divider */}
@@ -45,13 +47,13 @@ class CreateView extends Component {
             {/* Buttons */}
             <FlexRow>
               <button className="btn btn-light m-3"
-                onClick={() => AirplanesDispatcher.onCancel()}
+                onClick={() => AirportsDispatcher.onCancel()}
               >
                 Close
               </button>
               {status !== "ERROR" &&
               <button className={"btn btn-info m-3" + (!resultsPending || " disabled")}
-                onClick={!resultsPending ? () => AirplanesDispatcher.onPromptEdit(airplanes.selected.id) : () => {KitUtils.soundAlert()}}
+                onClick={!resultsPending ? () => AirportsDispatcher.onPromptEdit(airports.selected.iataId) : () => {KitUtils.soundAlert()}}
               >
                 {resultsPending ? "Edit (please wait)" : "Edit"}
               </button>}
@@ -61,16 +63,20 @@ class CreateView extends Component {
 
         {(status !== "ERROR" && status !== "PENDING") &&
           <FlexColumn>
-            {/* Airplane */}
+            {/* Airport */}
             <FlexColumn>
               <FlexRow>
                 <div className="mt-3" style={{width:"14rem"}}>
-                  <label className="form-label">Airplane ID</label>
-                  <input type="text" readOnly className="form-control" value={"Auto-generated"}/>
+                  <label className="form-label">Airport IATA ID</label>
+                  <input type="text" className="form-control" defaultValue={iataId} placeholder={"ORD"}
+                    onChange={(e) => this.setState({iataId: e.target.value})}
+                  />
                 </div>
                 <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                  <label className="form-label">Type ID</label>
-                  <input type="number" className="form-control" defaultValue={typeId}/>
+                  <label className="form-label">City</label>
+                  <input type="text" className="form-control" defaultValue={city} placeholder={"Chicago"}
+                    onChange={(e) => this.setState({city: e.target.value})}
+                  />
                 </div>
               </FlexRow>
               <hr className="w-100"></hr>
@@ -80,20 +86,27 @@ class CreateView extends Component {
             {/* Buttons */}
             <FlexRow>
               <button className="btn btn-light m-3"
-                onClick={() => AirplanesDispatcher.onCancel()}
+                onClick={() => AirportsDispatcher.onCancel()}
               >
                 Cancel
               </button>
-              <button className="btn btn-success text-white m-3"
-                onClick={() => AirplanesDispatcher.onCreate(typeId)}
+              <button className="btn btn-success text-white kit-text-shadow-thin m-3"
+                onClick={() => this.handleValidate(iataId, city)}
               >
-                + Create New Airplane
+                + Create New Airport
               </button>
             </FlexRow>
           </FlexColumn>
         }
       </FlexColumn>
     );
+  }
+
+  handleValidate = (iataId, city) => {
+    // TODO validate pre-API call 
+    // (though API does validate, this will provide 
+    // a better UX with more responsive feedback);
+    AirportsDispatcher.onCreate(iataId, city);
   }
 }
 export default CreateView;

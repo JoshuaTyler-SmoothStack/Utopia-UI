@@ -25,9 +25,26 @@
 
   "airports": {
     "root": "AIRPORTS",
+    "cancel": "AIRPORTS_CANCEL",
+    "createError": "AIRPORTS_CREATE_ERROR",
+    "createPrompt": "AIRPORTS_CREATE_PROMPT",
+    "createRequest": "AIRPORTS_CREATE_REQUEST",
+    "createResponse": "AIRPORTS_CREATE_RESPONSE",
+    "delete": "AIRPORTS_DELETE",
+    "deleteError": "AIRPORTS_DELETE_ERROR",
+    "deletePrompt": "AIRPORTS_DELETE_PROMPT",
+    "deleteRequest": "AIRPORTS_DELETE_REQUEST",
+    "deleteResponse": "AIRPORTS_DELETE_RESPONSE",
+    "edit": "AIRPORTS_EDIT",
+    "editError": "AIRPORTS_EDIT_ERROR",
+    "editPrompt": "AIRPORTS_EDIT_PROMPT",
+    "editRequest": "AIRPORTS_EDIT_REQUEST",
+    "editResponse": "AIRPORTS_EDIT_RESPONSE",
     "error": "AIRPORTS_ERROR",
     "request": "AIRPORTS_REQUEST",
-    "response": "AIRPORTS_RESPONSE"
+    "response": "AIRPORTS_RESPONSE",
+    "searchResultsPage": "AIRPORTS_SEARCH_RESULTS_PAGE",
+    "searchResultsPerPage": "AIRPORTS_SEARCH_RESULTS_PER_PAGE"
   },
   
   "authentication": {

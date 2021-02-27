@@ -44,11 +44,6 @@ class BookingsDebug extends Component {
     const searchFilters = bookings.search.filters;
     const searchResults = bookings.search.results;
 
-    // const resultsStart = Math.max((currentPage - 1) * resultsPerPage, 0) || 1;
-    // const resultsEnd = Math.min(currentPage * resultsPerPage, resultsTotal) || 0;
-  
-    // const totalPages = ;
-
     return ( 
       <div className={this.props.className || ""} style={this.props.style}>
         
@@ -78,7 +73,7 @@ class BookingsDebug extends Component {
                 onChange={(e) => this.setState({searchText: e.target.value})}
               />
               <button 
-                className="btn btn-success ml-2" 
+                className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                 type="submit"
                 onClick={() => BookingsDispatcher.onFindBy(searchText)}
               >
@@ -89,10 +84,10 @@ class BookingsDebug extends Component {
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light " + ""}
-          // ((bookingsMSStatus === "INACTIVE" || bookingsMSStatus === "ERROR" ||
-          //  isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
-          // "kit-opacity-50 kit-no-user kit-pointer-none")}
+        <div className={"row bg-light " +
+          ((bookingsMSStatus === "INACTIVE" || bookingsMSStatus === "ERROR" ||
+           isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
+          "kit-opacity-50 kit-no-user kit-pointer-none")}
         >
           
           {/* Filters */}
@@ -197,6 +192,7 @@ class BookingsDebug extends Component {
   }
 
   componentDidMount() {
+    BookingsDispatcher.onCancel();
     Orchestration.findActiveServices(
     onError => {
       BookingsDispatcher.onError("No Orchestration connection.");
@@ -214,44 +210,39 @@ class BookingsDebug extends Component {
   handleRenderBookingsList = (bookingsList) => {
     const { bookings } = Store.getState();
     const { isReferenceIDsActive } = this.state;
-    const resultsDisplayed = bookings.search.resultsPerPage;
+    const resultsDisplayed = Number(bookings.search.resultsPerPage);
     const resultsStart = bookings.search.resultsPerPage * (bookings.search.resultsPage - 1);
 
     let bookingsTable = [];
     if(!bookingsList.length) bookingsList = [bookingsList];
-    for(var i = resultsStart; i < bookingsList.length; i++) {
-      if(i < resultsStart + resultsDisplayed) {
-        
-        const bookingId = bookingsList[i].id;
-        if(!bookingId) continue;
+    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < bookingsList.length); i++) {
+      const bookingId = bookingsList[i].id;
+      if(!bookingId) continue;
 
-        const index = Number(i) + 1;
-        bookingsTable.push(
-          <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{bookingId}</td>
-            <td>{bookingsList[i].status}</td>
-            <td>{bookingsList[i].confirmationCode}</td>
-            {isReferenceIDsActive && <td>{bookingsList[i].flightId || "Error"}</td>}
-            {isReferenceIDsActive && <td>{bookingsList[i].passengerId || "NR"}</td>}
-            {isReferenceIDsActive && <td>{bookingsList[i].userId || "Guest"}</td>}
-            
-            {/* Edit */}
-            <td><button className="btn btn-info"
-              onClick={() => BookingsDispatcher.onPromptEdit(bookingId)}>
-                Edit
-            </button></td>
+      const index = Number(i) + 1;
+      bookingsTable.push(
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{bookingId}</td>
+          <td>{bookingsList[i].status}</td>
+          <td>{bookingsList[i].confirmationCode}</td>
+          {isReferenceIDsActive && <td>{bookingsList[i].flightId || "Error"}</td>}
+          {isReferenceIDsActive && <td>{bookingsList[i].passengerId || "NR"}</td>}
+          {isReferenceIDsActive && <td>{bookingsList[i].userId || "Guest"}</td>}
+          
+          {/* Edit */}
+          <td><button className="btn btn-info"
+            onClick={() => BookingsDispatcher.onPromptEdit(bookingId)}>
+              Edit
+          </button></td>
 
-            {/* Delete */}
-            <td><button className="btn btn-primary"
-              onClick={() => BookingsDispatcher.onPromptDelete(bookingId)}>
-               Delete
-            </button></td>
-          </tr>
-        );
-      } else {
-        break;
-      }
+          {/* Delete */}
+          <td><button className="btn btn-primary"
+            onClick={() => BookingsDispatcher.onPromptDelete(bookingId)}>
+             Delete
+          </button></td>
+        </tr>
+      );
     }
 
     return (
@@ -268,7 +259,7 @@ class BookingsDebug extends Component {
               {isReferenceIDsActive && <th scope="col">User ID</th>}
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button className="btn btn-success text-white" style={{whiteSpace: "nowrap"}}
+                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
                     onClick={() => BookingsDispatcher.onPromptCreate()}>
                     + Create New
                   </button>
@@ -283,6 +274,6 @@ class BookingsDebug extends Component {
         </table>
       </FlexColumn>
     );
-  };
+  }
 }
 export default BookingsDebug;

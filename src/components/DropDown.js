@@ -11,12 +11,12 @@ const DropDown = (props) => {
   const { options, selection } = props;
 
   let optionsRender = [];
-  if(isDropDownActive && options) {
+  if(options) {
     if(options.length) {
       for(var i in options) {
         const option = options[i];
         let optionRender = 
-        <li><button 
+        <li key={"option-" + i}><button 
           className={"dropdown-item " + (selection === option && "active")}
           type="button" 
           onClick={() => {
