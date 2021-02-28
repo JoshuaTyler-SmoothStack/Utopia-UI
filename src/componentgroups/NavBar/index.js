@@ -24,10 +24,6 @@ class NavBar extends Component {
 
     // Authentication vars
     const { authentication } = Store.getState();
-    const isActive_LoginUI = authentication
-      ? authentication.isActive_LoginUI
-      : false;
-
     const isUserLoggedIn = authentication
       ? authentication.userId !== "UNKNOWN"
       : false;
@@ -75,7 +71,7 @@ class NavBar extends Component {
           <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
         </svg>
 
-        {/* Menu Pop Context - zIndex 1 */}
+        {/* Menu Pop Context - zIndex 5 */}
         {isActivePopContent &&
           <PopContent
             className="kit-bg-smoke kit-border-shadow rounded"
@@ -85,7 +81,7 @@ class NavBar extends Component {
               width: "15rem",
               top: "1rem",
               left: "4rem",
-              zIndex: "1",
+              zIndex: "5",
               overflow: "hidden"
             }}
             onClose={() => this.handlePopContentToggle()}
@@ -93,9 +89,6 @@ class NavBar extends Component {
             <LocalPageButtonsPopContent />
           </PopContent>
         }
-
-        {/* User Pop Context - zIndex 2 */}
-        {isActive_LoginUI && <LoginModal />}
       </nav>
     );
   }

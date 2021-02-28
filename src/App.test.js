@@ -1,8 +1,22 @@
+// Libraries
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { render, screen } from '@testing-library/react';
-import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+// Components
+import App from './App'
+
+// Tests
+import BookingsStateTests from "./tests/BookingsStateTests";
+import Store from './reducers/Store';
+
+// State Management Dispatcher & Reducer Tests
+const stateManagementTests = () => {  
+  // Create App State
+  render(<App/>);
+  while(!Store.getState().isAppStateMounted){/* do nothing */};
+  
+  // Begin Testings
+  new BookingsStateTests().runAllTests();
+};
+stateManagementTests();

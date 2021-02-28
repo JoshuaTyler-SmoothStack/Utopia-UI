@@ -1,7 +1,8 @@
 // Libraries
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBar from '../../componentgroups/NavBar';
 import { Redirect } from 'react-router'
+import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
 // Components
 
@@ -25,11 +26,7 @@ const PasswordRecoveryPage = (props) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [validatePassword, setValidatePassword] = useState(true);
   const [passwordChanged, setPasswordChanged] = useState(false);
-  // const [loading, setLoading] = useState(true);
-
-  const loading = true;
-  const setLoading = ()=>{};
-
+  const [loading, setLoading] = useState(true);
   const [verifyToken, setVerifyToken] = useState(false);
 
 
@@ -37,19 +34,18 @@ const PasswordRecoveryPage = (props) => {
   let params = new URLSearchParams(search);
   let recoveryCode = params.get('reset');
 
-  // useEffect((e) => {
-  //   axios.post("http://localhost:8080/users/forgot-password/verify-token", {
-  //     recoveryCode: recoveryCode,
-  //   })
-  //     .then((res) => {
-  //       setLoading(false)
-  //       setVerifyToken(true)
-  //     })
-  //     .catch((err) => {
-  //       setLoading(false)
-  //       setTimeout(() => setRedirect(true), 3400)
-  //     })
-  // })
+  useEffect((e) => {
+
+    UsersDispatcher.verifyPasswordRecoveryToken({ recoveryCode: recoveryCode })
+      .then((res) => {
+        setLoading(false)
+        setVerifyToken(true)
+      })
+      .catch((err) => {
+        setLoading(false)
+        setTimeout(() => setRedirect(true), 3400)
+      })
+  })
 
 
 
@@ -60,12 +56,12 @@ const PasswordRecoveryPage = (props) => {
     if (!password || !confirmPassword) {
       return
     }
-    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
     if (!strongRegexPasswordValidation.test(password)) {
       return setValidatePassword(false)
     }
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       setPasswordMatch(false)
       return
     }
@@ -74,11 +70,11 @@ const PasswordRecoveryPage = (props) => {
     setValidatePassword(true);
     setPasswordMatch(true);
     setLoading(true)
-    axios.post('http://localhost:8080/users/forgot-password/recover',
-      {
-        recoveryCode: recoveryCode,
-        password: password
-      })
+
+    UsersDispatcher.changePassword({
+      recoveryCode: recoveryCode,
+      password: password
+    })
       .then(data => {
         console.log(data)
         setLoading(false)
@@ -86,7 +82,7 @@ const PasswordRecoveryPage = (props) => {
         setTimeout(() => setRedirect(true), 3700)
       }, error => {
         setLoading(false)
-        setErrorMessage(error.response.data)
+        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
       }
       )
   }
@@ -130,6 +126,9 @@ const PasswordRecoveryPage = (props) => {
                 <div className="form-group">
                   <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit" >Chnage my Password</button>
                 </div>
+                <div className="form-group">
+                  <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
+                </div>
               </form>
             </div>
           </div>
@@ -143,13 +142,13 @@ const PasswordRecoveryPage = (props) => {
           </div>
         }
 
-        {redirect && <Redirect to="/home"/>}
+        {redirect && <Redirect to="/home" />}
 
         {loading &&
           <div className="col-md-12 col-md-12-local">
             <FlexRow className="fp-card-local p-0">
-                <LogoGif className="m-auto" style={{width:"75%"}}/>
-              </FlexRow>
+              <LogoGif className="m-auto" style={{ width: "75%" }} />
+            </FlexRow>
           </div>
         }
 

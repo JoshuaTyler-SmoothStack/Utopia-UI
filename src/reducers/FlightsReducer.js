@@ -1,50 +1,69 @@
 import constants from "../resources/constants.json"
+import Store from "./Store";
 
 const FlightsReducer = (action) => {
-  const flights = constants.flights;
-  switch(action.type) {
-    
-    case flights.cancel:
-      return {
-        deletePrompt: false,
-        editPrompt: false,
-      };
+  const flightsConst = constants.flights;
+  const { flights } = Store.getState();
 
-    case flights.error:
+  switch(action.type) {
+    case flightsConst.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case flights.request:
+    case flightsConst.request:
       return {
         error: "",
-        status: "PENDING"
+        status: "PENDING",
+        departureFlights : {
+          ...flights.departureFlights,
+          status: "PENDING"
+        }
       };
 
-    case flights.response:
-      if(action.payload) {
+    // case flightsConst.requestDepature:
+    //   return {
+    //     error: "",
+    //     status: "PENDING",
+    //     departureFlights: {
+    //       ...flights.departureFlights,
+    //       status: "PENDING"
+    //     }
+    //   };
+
+    case flightsConst.requestReturn:
         return {
           error: "",
-          searchResults: action.payload,
-          status: "SUCCESS"
-        }
-      }
-      return {error: "No Payload", status: "SUCCESS"}
+          status: "PENDING",
+          returnFlights: {
+            ...flights.returnFlights,
+            status: "PENDING"
+          } 
+        };
 
-    case flights.searchError:
+    case flightsConst.response:
       return {
-        searchError: action.payload,
-        searchText: action.payload
+        error: "",
+        status: "SUCCESS",
+        departureFlights: {
+          ...flights.departureFlights,
+          searchResults: action.payload,
+          status : "ACTIVE"
+        } 
       };
 
-    case flights.searchResultsPage:
-      return {searchResultsPage: action.payload};
+    case flightsConst.returnFlightResponse:
+      return {
+        status: "SUCCESS",
+        returnFlights: {
+          ...flights.returnFlights,
+          status: "SUCCESS",
+          searchResults: action.payload
+        }
+    };
 
-    case flights.searchResultsPerPage:
-      return {searchResultsPerPage: action.payload};
-
-    case flights.reset:
+    case flightsConst.stop:
       return defaultFlightsState;
 
     default:
@@ -55,13 +74,19 @@ export default FlightsReducer;
 
 export const defaultFlightsState = {
   error: "",
-  searchError: "",
-  searchFilters: {
-    activeCount: 0
+  status: "INACTIVE",
+  departureFlights : {
+    searchResults: [],
+    searchResultsPage: 1,
+    searchResultsPerPage: 20,
+    searchResultsTotal: 0,
+    status: "INACTIVE"
   },
-  searchResults: [],
-  searchResultsPage: 1,
-  searchResultsPerPage: 100,
-  searchResultsTotal: 0,
-  status: "INACTIVE"
+  returnFlights : {
+    searchResults: [],
+    searchResultsPage: 1,
+    searchResultsPerPage: 20,
+    searchResultsTotal: 0,
+    status: "INACTIVE"
+  }
 };

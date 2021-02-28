@@ -11,7 +11,7 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import OrchestrationHeader from "../OrchestrationHeader";
-import Pagination from "../Pagination";
+import Pagination from "../../../../components/Pagination";
 import Orchestration from "../../../../Orchestration";
 
 class BookingsDebug extends Component {
@@ -42,7 +42,7 @@ class BookingsDebug extends Component {
     const searchResults = bookings.search.results;
 
     return ( 
-      <div className="col-8 col-md-10">
+      <div className={this.props.className || ""} style={this.props.style}>
         
         {/* Header */}
         <div className="row bg-light p-2 kit-border-shadow">
@@ -51,6 +51,7 @@ class BookingsDebug extends Component {
           <OrchestrationHeader className="col-12 col-md-7"
             name="Booking MS"
             status={bookingsMSStatus}
+            style={{maxWidth:"30rem"}}
             onTriggerError={() => BookingsDispatcher.onError()}
             onTriggerFakeAPICall={() => BookingsDispatcher.onFakeAPICall()}
           />
@@ -80,7 +81,8 @@ class BookingsDebug extends Component {
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light kit-border-shadow " + ((isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}>
+        <div className={"row bg-light " + ((isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}>
+          
           {/* Filters */}
           <div className="col-12 p-2">
             <FlexRow wrap={"no-wrap"}>
@@ -109,7 +111,11 @@ class BookingsDebug extends Component {
           </div>
 
           {/* Pagination */}
-          <Pagination className="col-12 p-2" results={bookings}
+          <Pagination className="col-12 p-2" 
+            isActive={bookings.search.results} 
+            resultsPage={bookings.search.resultsPage} 
+            resultsPerPage={bookings.search.resultsPerPage} 
+            resultsTotal={bookings.search.results.length}
             onSetNumberOfResults={(e) => BookingsDispatcher.onResultsPerPage(e)}
             onSetPageOfResults={(e) => BookingsDispatcher.onResultsPage(e)}
           />
@@ -118,7 +124,7 @@ class BookingsDebug extends Component {
 
         {/* Body */}
         <div className="row">
-          <div className="col-12 col-md-12 overflow-auto" style={{height:"80vh"}}>
+          <div className="col-12" style={{height:"80vh", overflowY: "auto"}}>
             {(bookingsMSStatus === "PENDING" || bookingsMSStatus === "INACTIVE") &&
             <FlexColumn className="h-100">
               <div className="spinner-border"/>

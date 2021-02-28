@@ -10,7 +10,7 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import OrchestrationHeader from "../OrchestrationHeader";
-import Pagination from "../Pagination";
+import Pagination from "../../../../components/Pagination";
 
 class AirplanesDebug extends Component {
   constructor(props) {
@@ -29,33 +29,25 @@ class AirplanesDebug extends Component {
   render() { 
     const { airplanes } = Store.getState();
     const { searchText } = this.state;
-
-    const isDeletePromptActive = airplanes
-      ? airplanes.deletePrompt
-      : false;
-
-    const isEditPromptActive = airplanes
-      ? airplanes.editPrompt
-      : false;
   
     const airplanesMSStatus = airplanes
       ? airplanes.status
       : "INACTIVE";
 
     const searchError = airplanes
-      ? airplanes.searchError
+      ? airplanes.search.error
       : null;
 
     const searchFilters = airplanes
-      ? airplanes.searchFilters
+      ? airplanes.search.filters
       : [];
 
     const searchFiltersCount = airplanes
-      ? airplanes.searchFilters.activeCount
+      ? airplanes.search.filters.activeCount
       : 0;
 
     const searchResults = airplanes
-      ? airplanes.searchResults
+      ? airplanes.search.results
       : [];
 
     return ( 
@@ -97,7 +89,7 @@ class AirplanesDebug extends Component {
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light kit-border-shadow " + ((isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}>
+        <div className={"row bg-light kit-border-shadow "}>{/* // + ((isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}> */}
           {/* Filters */}
           <div className="col-12 p-2">
             <FlexRow wrap={"no-wrap"}>
@@ -112,7 +104,11 @@ class AirplanesDebug extends Component {
           </div>
 
           {/* Pagination */}
-          <Pagination className="col-12 p-2" results={airplanes}
+          <Pagination className="col-12 p-2"
+            isActive={airplanes.search.results} 
+            resultsPage={airplanes.search.resultsPage} 
+            resultsPerPage={airplanes.search.resultsPerPage} 
+            resultsTotal={airplanes.search.results.length}
             onSetNumberOfResults={(e) => AirplanesDispatcher.onResultsPerPage(e)}
             onSetPageOfResults={(e) => AirplanesDispatcher.onResultsPage(e)}
           />
@@ -134,7 +130,7 @@ class AirplanesDebug extends Component {
               </ErrorMessage>
             </FlexColumn>}
 
-            {(airplanesMSStatus === "SUCCESS" && !isDeletePromptActive && !isEditPromptActive) && 
+            {airplanesMSStatus === "SUCCESS" && //!isDeletePromptActive && !isEditPromptActive) && 
             this.handleRenderAirplanesList(searchResults)}
 
             {/* {(airplanesMSStatus === "SUCCESS" && isDeletePromptActive) && 
@@ -166,11 +162,11 @@ class AirplanesDebug extends Component {
     const { airplanes } = Store.getState();
 
     const resultsDisplayed = airplanes
-      ? airplanes.searchResultsPerPage
+      ? airplanes.search.resultsPerPage
       : 0;
 
     const resultsStart = airplanes
-      ? airplanes.searchResultsPerPage * (airplanes.searchResultsPage - 1)
+      ? airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1)
       : 0;
 
     let airplanesTable = [];

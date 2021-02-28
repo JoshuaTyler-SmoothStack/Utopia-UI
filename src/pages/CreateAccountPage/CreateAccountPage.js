@@ -1,8 +1,8 @@
 // Libraries
-import axios from 'axios';
 import React, { useState } from 'react';
 import NavBar from '../../componentgroups/NavBar';
 import { Redirect } from 'react-router'
+import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
 import FlexColumn from '../../components/FlexColumn';
 
@@ -42,9 +42,9 @@ const CreateAccountPage = (props) => {
     if (!firstName || !lastName || !email || !password || !confirmPassword || !phone) {
       return;
     }
-    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$")
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g)
+    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
+    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$")
+    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g)
     // password validation
 
     // phone number validation////email match validation// // password validation
@@ -52,7 +52,7 @@ const CreateAccountPage = (props) => {
       return setValidatePhoneNumber(false)
     } else if (!strongRegexPasswordValidation.test(password)) {
       return setValidatePassword(false)
-    } else if (password != confirmPassword) {
+    } else if (password !== confirmPassword) {
       return setPasswordMatch(false)
     } else if (!regexEmailValidation.test(email)) {
       return serValidateEmail(false)
@@ -72,22 +72,17 @@ const CreateAccountPage = (props) => {
     }
 
     setLoading(true)
-    axios.post('http://localhost:8080/users', newUser)
+    UsersDispatcher.createAccount(newUser)
       .then(data => {
+        console.log(data.status)
         setSuccess(true)
         setLoading(false)
         setTimeout(() => setRedirect(true), 3400)
       }, error => {
-        if (error.response.status === 409) {
-          setErrorMessage(error.response.data)
-        } else {
-          setErrorMessage('Unexpected error occured')
-        }
+        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
         setLoading(false)
 
       })
-
-
   }
 
   return (
@@ -152,6 +147,9 @@ const CreateAccountPage = (props) => {
                 <div className="form-group">
                   <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit" >Create Account</button>
                 </div>
+                <div className="form-group">
+                  <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
+                </div>
               </form>
             </div>
           </div>
@@ -161,7 +159,7 @@ const CreateAccountPage = (props) => {
           <div className="col-md-12 ca-col-md-12-local">
             <div className="ca-card-local">
               <FlexRow className="fp-card-local p-0">
-                <LogoGif className="m-auto" style={{width:"75%"}}/>
+                <LogoGif className="m-auto" style={{ width: "75%" }} />
               </FlexRow>
             </div>
           </div>
