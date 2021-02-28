@@ -1,63 +1,50 @@
 import constants from "../resources/constants.json"
-import Store from "./Store";
 
 const AirplanesReducer = (action) => {
-  const airplanesConst = constants.airplanes;
-  const { airplanes } = Store.getState();
-
+  const airplanes = constants.airplanes;
   switch(action.type) {
     
-    case airplanesConst.cancel:
+    case airplanes.cancel:
       return {
         deletePrompt: false,
         editPrompt: false,
       };
 
-    case airplanesConst.error:
+    case airplanes.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case airplanesConst.request:
+    case airplanes.request:
       return {
         error: "",
         status: "PENDING"
       };
 
-    case airplanesConst.response:
-      return {
-        error: "",
-        search:{
-          ...airplanes.search,
-          results: action.payload
-        },
-        status: "SUCCESS"
+    case airplanes.response:
+      if(action.payload) {
+        return {
+          error: "",
+          searchResults: action.payload,
+          status: "SUCCESS"
+        }
       }
+      return {error: "No Payload", status: "SUCCESS"}
 
-    case airplanesConst.searchError:
+    case airplanes.searchError:
       return {
         searchError: action.payload,
         searchText: action.payload
       };
 
-    case airplanesConst.searchResultsPage:
-      return {
-        search:{
-          ...airplanes.search,
-          resultsPage: action.payload
-        }
-      };
+    case airplanes.searchResultsPage:
+      return {searchResultsPage: action.payload};
 
-    case airplanesConst.searchResultsPerPage:
-      return {
-        search:{
-          ...airplanes.search,
-          resultsPerPage: action.payload
-        }
-      };
+    case airplanes.searchResultsPerPage:
+      return {searchResultsPerPage: action.payload};
 
-    case airplanesConst.reset:
+    case airplanes.reset:
       return defaultAirplanesState;
 
     default:
@@ -68,14 +55,13 @@ export default AirplanesReducer;
 
 export const defaultAirplanesState = {
   error: "",
-  search: {
-    error: "",
-    filters: {
-      activeCount: 0
-    },
-    results: [],
-    resultsPage: 1,
-    resultsPerPage: 100,
-    resultsTotal: 0
-  }
+  searchError: "",
+  searchFilters: {
+    activeCount: 0
+  },
+  searchResults: [],
+  searchResultsPage: 1,
+  searchResultsPerPage: 100,
+  searchResultsTotal: 0,
+  status: "INACTIVE"
 };

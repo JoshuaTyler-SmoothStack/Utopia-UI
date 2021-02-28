@@ -8,8 +8,6 @@ const UserProfilePage = (props) => {
 
   return (
 
-    // just testing branching strategy
-
     <div>
       <NavBar />
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FlexRow from "./FlexRow";
+import FlexRow from "../../../components/FlexRow";
 
 class Pagination extends Component {
     constructor(props) {
@@ -13,15 +13,28 @@ class Pagination extends Component {
   }
 
   render() { 
-    let { isActive, resultsPage, resultsPerPage, resultsTotal  } = this.props;
+    const { results } = this.props;
     const { isDropdownActive } = this.state;
   
-    resultsPage = resultsPage || 1;
-    resultsPerPage = resultsPerPage || 10;
-    resultsTotal = resultsTotal || 0;
-    const resultsStart = Math.max((resultsPage - 1) * resultsPerPage, 0) || 1;
+    const resultsPage = results
+      ? results.search.resultsPage
+      : 1;
+  
+    const resultsPerPage = results
+      ? results.search.resultsPerPage
+      : 0;
+  
+    const resultsStart = results
+      ? ((resultsPage - 1) * resultsPerPage) + 1
+      : 0;
 
-    const resultsEnd = Math.min(resultsPage * resultsPerPage, resultsTotal) || 0;
+    const resultsTotal = results
+      ? results.search.results.length || 1
+      : 0;
+
+    const resultsEnd = results
+      ? Math.min(resultsPage * resultsPerPage, resultsTotal)
+      : 0;
 
     return ( 
       <div className={"col-12 p-2 " + this.props.className || ""} style={this.props.style}>
@@ -54,7 +67,7 @@ class Pagination extends Component {
           </div>
 
           {/* Results Pagination */}
-          {isActive &&
+          {results &&
           <div className="ml-2">
             {this.handleRenderPagination(resultsPerPage, resultsPage, resultsTotal)}
           </div>}

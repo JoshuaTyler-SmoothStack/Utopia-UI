@@ -20,7 +20,7 @@ class APIDebugPage extends Component {
   render() {
     const { activeDisplay } = this.state;
     return (
-      <div className="container-fluid overflow-hidden p-0" style={{height:"100vh", width:"100vw"}}>
+      <div className="container-fluid overflow-hidden" style={{height:"100vh", width:"100vw"}}>
         
         {/* Navbar */}
         <div className="row">
@@ -28,18 +28,17 @@ class APIDebugPage extends Component {
         </div>
 
         {/* Content */}
-        <div className="row m-0">
+        <div className="row">
           {/* Siderbar */}
-          <LocalSidebar
-            style={{height:"100vh"}}
+          <LocalSidebar 
             activeDisplay={activeDisplay} 
             onSelectDisplay={(e) => this.setState({activeDisplay: e})}
           />
           
           {/* Debug Displays */}
-          {activeDisplay === "AIRPLANES" && <AirplanesDebug className="col-12 col-md-10 m-0 ml-auto p-0"/>}
-          {activeDisplay === "AIRPORTS" && <AirportsDebug className="col-12 col-md-10 m-0 ml-auto p-0"/>}
-          {activeDisplay === "BOOKINGS" && <BookingsDebug className="col-12 col-md-10 m-0 ml-auto p-0"/>}
+          {activeDisplay === "AIRPLANES" && <AirplanesDebug/>}
+          {activeDisplay === "AIRPORTS" && <AirportsDebug/>}
+          {activeDisplay === "BOOKINGS" && <BookingsDebug/>}
         </div>
       </div>
     );

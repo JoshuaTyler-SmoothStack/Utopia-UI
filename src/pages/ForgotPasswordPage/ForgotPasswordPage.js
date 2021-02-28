@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import NavBar from '../../componentgroups/NavBar';
 import './style.css';
-import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
 import LogoGif from '../../components/LogoGif';
 import { Redirect } from 'react-router';
@@ -34,16 +33,15 @@ const ForgotPasswordPage = (props) => {
     }
 
     setLoading(true)
-    UsersDispatcher.forgotPassword({ email: email })
+    axios.post('http://localhost:8080/users/forgot-password', { email: email })
       .then(data => {
-        console.log(data)
         setSuccess(true)
         setLoading(false)
         setTimeout(() => setRedirect(true), 3400)
       }, error => {
         setLoading(false)
         setSubmitted(false)
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
+        setErrorMessage(error.response ? error.response.data : "no data")
       })
 
   }
@@ -79,9 +77,6 @@ const ForgotPasswordPage = (props) => {
                 <div className="form-group">
                   <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit"> Reset Password </button>
                 </div>
-                <div className="form-group">
-                  <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
-                </div>
               </form>
             </div>
           </div>
@@ -90,7 +85,7 @@ const ForgotPasswordPage = (props) => {
         {loading &&
           <div className="col-md-12 col-md-12-local">
             <FlexRow className="fp-card-local p-0">
-              <LogoGif className="m-auto" style={{ width: "75%" }} />
+              <LogoGif className="m-auto" style={{width:"75%"}}/>
             </FlexRow>
           </div>
         }
