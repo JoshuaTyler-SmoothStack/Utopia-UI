@@ -79,6 +79,9 @@ const ForgotPasswordPage = (props) => {
                 <div className="form-group">
                   <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit"> Reset Password </button>
                 </div>
+                <div className="form-group">
+                  <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
+                </div>
               </form>
             </div>
           </div>
