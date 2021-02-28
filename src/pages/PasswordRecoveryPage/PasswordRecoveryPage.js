@@ -76,7 +76,6 @@ const PasswordRecoveryPage = (props) => {
       password: password
     })
       .then(data => {
-        console.log(data)
         setLoading(false)
         setPasswordChanged(true);
         setTimeout(() => setRedirect(true), 3700)

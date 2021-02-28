@@ -5,6 +5,8 @@ import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
 import NavBar from "../../componentgroups/NavBar";
+import PopContent from "../../components/PopContent";
+import FlexColumn from "../../components/FlexColumn";
 
 class LandingPage extends Component {
   constructor(props) {
@@ -237,16 +239,14 @@ class LandingPage extends Component {
         className="kit-bg-blue"
         style={{ height: "100%", width: "100%", minHeight: "100vh" }}
       >
-        {/* Navbar */}
         <div className="row">
-          <NavBar className="col" hideSearchBar={true} />
-        </div>
+        {/* Navbar */}
+        <NavBar className="col-12" hideSearchBar={true} />
 
         {/* Content */}
-        <div className="row justify-content-center mt-5 ">
-          <div className="col-lg-5 col-md-10 col-sm-10 col-xs-10 d-flex flex-column justify-content-center" style={{height: "auto"}}>
-              {/* Content */}
-
+          <FlexColumn className="col-12" style={{height: "auto"}}>
+              
+              {/* Flights Search & Tables */}
               <div className="rounded kit-bg-smoke mt-4 p-3">
                 <form>
                   <div className="row mt-4 flex-row-around">
@@ -402,8 +402,45 @@ class LandingPage extends Component {
                 </form>
               </div>
 
-              {this.state.viewAirplaneId !== "" &&
-              <div className="text-center position-fixed rounded overflow-hidden kit-bg-smoke p-1" style={{width: "28%", right: "5px"}}>
+             {departureStatus !== "INACTIVE" && 
+             <div>
+               <div className="text-center rounded overflow-hidden kit-bg-smoke mt-2 p-1">
+                  <h1>Flights</h1>
+                </div> 
+                <div className="rounded overflow-hidden kit-bg-smoke mt-2 mb-1 p-3">
+                  {this.handleRenderFlightList(departureFlights.searchResults)}
+                </div> 
+              </div>} 
+
+              
+              {returnStatus !== "INACTIVE" && this.state.flightType !== "One-way"  &&
+              <div>
+                <div className="text-center rounded overflow-hidden kit-bg-smoke mt-2 p-1">
+                  <h1>Return Flights</h1>
+                </div> 
+                <div className="rounded overflow-hidden kit-bg-smoke mt-2 mb-3 p-3">
+                  {this.handleRenderReturnFlightList(returnFlights.searchResults)}
+                </div>
+              </div>}
+            </FlexColumn>
+            </div>
+
+            {/* Flights Info Modal */}
+            {this.state.viewAirplaneId !== "" &&
+            <FlexColumn 
+              style={{position: "absolute", zIndex:"1", height:"100vh", width:"100vw", top:"0"}}
+            >
+              {/* Background */}
+              <div className="h-100 w-100 kit-bg-smoke kit-opacity-50"
+              style={{position: "absolute", height:"100%", width:"100vw", top:"0"}}/>
+
+              {/* Content */}
+              <PopContent 
+                className="bg-light rounded mt-auto mb-auto" 
+                style={{zIndex: "2"}}
+                onClose={() => this.setState({viewAirplaneId: ""})}
+              >
+                <div className="text-center overflow-hidden p-1">
                   <div className="row flex-row">
                     <div className="col">
                       <div className="row flex-row">
@@ -443,35 +480,13 @@ class LandingPage extends Component {
                         Time: {this.state.viewDepartureTime} 
                         </div>
                       </div>   
-                     
+                    
                     </div>
                   </div>
-              </div> 
-              }
-
-             {departureStatus !== "INACTIVE" && 
-             <div>
-               <div className="text-center rounded overflow-hidden kit-bg-smoke mt-2 p-1">
-                  <h1>Flights</h1>
                 </div> 
-                <div className="rounded overflow-hidden kit-bg-smoke mt-2 mb-1 p-3">
-                  {this.handleRenderFlightList(departureFlights.searchResults)}
-                </div> 
-              </div>} 
-
-              
-              {returnStatus !== "INACTIVE" && this.state.flightType !== "One-way"  &&
-              <div>
-                <div className="text-center rounded overflow-hidden kit-bg-smoke mt-2 p-1">
-                  <h1>Return Flights</h1>
-                </div> 
-                <div className="rounded overflow-hidden kit-bg-smoke mt-2 mb-3 p-3">
-                  {this.handleRenderReturnFlightList(returnFlights.searchResults)}
-                </div>
-              </div>}
-                          
-            </div>
-        </div>
+              </PopContent>
+            </FlexColumn>
+            }
       </div>
     );
   }

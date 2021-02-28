@@ -1,57 +1,43 @@
 // Libraries
 import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
+import Orchestration from "../../../../Orchestration";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
 // Components
-// import DeleteView from "./DeleteView";
-// import EditView from "./EditView";
+import ChangeOperationReadout from "../ChangeOperationReadout";
+import CreateView from "./CreateView";
+import DeleteView from "./DeleteView";
+import DropDown from "../../../../components/DropDown";
+import EditView from "./EditView";
 import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
+import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
 import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class AirplanesDebug extends Component {
   constructor(props) {
     super(props);
+    const { airplanes } = Store.getState();
     this.state = {
-      editingValues: {
-        status: 0,
-        flightId: 0,
-        passengerId: 0,
-        userId: 0,
-        guestEmail: "",
-        guestPhone: ""
-      }
+      
     };
   }
   render() { 
     const { airplanes } = Store.getState();
     const { searchText } = this.state;
-  
-    const airplanesMSStatus = airplanes
-      ? airplanes.status
-      : "INACTIVE";
-
-    const searchError = airplanes
-      ? airplanes.search.error
-      : null;
-
-    const searchFilters = airplanes
-      ? airplanes.search.filters
-      : [];
-
-    const searchFiltersCount = airplanes
-      ? airplanes.search.filters.activeCount
-      : 0;
-
-    const searchResults = airplanes
-      ? airplanes.search.results
-      : [];
+    const isCreatePromptActive = airplanes.create.isActive;
+    const isDeletePromptActive = airplanes.delete.isActive;
+    const isEditPromptActive = airplanes.edit.isActive;
+    const airplanesMSStatus = airplanes.status;
+    const searchError = airplanes.search.error;
+    const searchFilters = airplanes.search.filters;
+    const searchResults = airplanes.search.results;
 
     return ( 
-      <div className="col-8 col-md-10">
+      <div className={this.props.className || ""} style={this.props.style}>
         
         {/* Header */}
         <div className="row bg-light p-2 kit-border-shadow">
@@ -59,26 +45,30 @@ class AirplanesDebug extends Component {
           {/* MS Orchestration Indicators */}
           <OrchestrationHeader className="col-12 col-md-7"
             name="Airplane MS"
-            status={airplanesMSStatus}
+            status={airplanesMSStatus === "INACTIVE" ? "PENDING" : airplanesMSStatus}
+            style={{maxWidth:"30rem"}}
             onTriggerError={() => AirplanesDispatcher.onError()}
             onTriggerFakeAPICall={() => AirplanesDispatcher.onFakeAPICall()}
           />
 
           {/* Search Bar */}
           <div className="col-12 col-md-5">
-            {/* Search */}
+
+            {/* Text Input */}
             <FlexRow className="mt-2" wrap="no-wrap">
               <input 
                 aria-label="Search" 
                 className={"form-control " + (searchError && " is-invalid kit-shake")}
-                label={searchText}
-                placeholder="ID=X or Type=Y"
+                label={searchError}
+                placeholder="ID=X or TypeID=Y"
                 type="search" 
                 style={{maxWidth:"15rem"}}
                 onChange={(e) => this.setState({searchText: e.target.value})}
               />
+
+              {/* Button */}
               <button 
-                className="btn btn-success ml-2" 
+                className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                 type="submit"
                 onClick={() => AirplanesDispatcher.onFindBy(searchText)}
               >
@@ -89,7 +79,11 @@ class AirplanesDebug extends Component {
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light kit-border-shadow "}>{/* // + ((isDeletePromptActive || isEditPromptActive) && "kit-opacity-50 kit-no-user kit-pointer-none")}> */}
+        <div className={"row bg-light " + 
+          ((airplanesMSStatus === "INACTIVE" || airplanesMSStatus === "ERROR" ||
+           isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
+          "kit-opacity-50 kit-no-user kit-pointer-none")}
+        >
           {/* Filters */}
           <div className="col-12 p-2">
             <FlexRow wrap={"no-wrap"}>
@@ -97,47 +91,79 @@ class AirplanesDebug extends Component {
               {/* # of Filters Active */}
               <div className="list-group ml-1">
                 <div className="list-group-item" style={{fontSize: "0.85rem", padding:"0.5rem"}}>
-                  {searchFiltersCount + " filters active"}
+                  {searchFilters.activeCount + " filters active"}
                 </div>
               </div>
             </FlexRow>
           </div>
 
-          {/* Pagination */}
-          <Pagination className="col-12 p-2"
-            isActive={airplanes.search.results} 
-            resultsPage={airplanes.search.resultsPage} 
-            resultsPerPage={airplanes.search.resultsPerPage} 
-            resultsTotal={airplanes.search.results.length}
-            onSetNumberOfResults={(e) => AirplanesDispatcher.onResultsPerPage(e)}
-            onSetPageOfResults={(e) => AirplanesDispatcher.onResultsPage(e)}
-          />
+          {/* Resuts Count & Page Selection */}
+          <FlexRow className="col-12 p-2">
+            <DropDown 
+              selection={airplanes.search.resultsPerPage}
+              options={["3", "10", "25", "50"]}
+              onSelect={(e) => AirplanesDispatcher.onResultsPerPage(e)}
+            />
+
+            <ItemsIndexReadout
+              className={"ml-2"}
+              currentPage={airplanes.search.resultsPage}
+              itemsPerPage={airplanes.search.resultsPerPage}
+              itemsTotal={airplanes.search.results.length}
+            />
+
+            <Pagination
+              className={"m-0 ml-2"}
+              currentPage={airplanes.search.resultsPage}
+              totalPages={Math.ceil(airplanes.search.results.length / Math.max(airplanes.search.resultsPerPage, 1))}
+              onSelectPage={(e) => AirplanesDispatcher.onResultsPage(e)}
+            />
+          </FlexRow>
         </div>
 
 
         {/* Body */}
         <div className="row">
-          <div className="col-12 col-md-12 overflow-auto" style={{height:"80vh"}}>
-            {(airplanesMSStatus === "PENDING" || airplanesMSStatus === "INACTIVE") &&
-            <FlexColumn className="h-100">
-              <div className="spinner-border"/>
-            </FlexColumn>}
-
+          <div className="col-12" style={{height:"80vh", overflowY: "auto"}}>
+            
+            {/* Error State */}
             {airplanesMSStatus === "ERROR" &&
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
                 {airplanes.error}
               </ErrorMessage>
+              <button className="btn btn-light m-3"
+                onClick={() => AirplanesDispatcher.onCancel()}
+              >
+                Back
+              </button>
             </FlexColumn>}
 
-            {airplanesMSStatus === "SUCCESS" && //!isDeletePromptActive && !isEditPromptActive) && 
-            this.handleRenderAirplanesList(searchResults)}
+            {/* Inactive State */}
+            {airplanesMSStatus === "INACTIVE" &&
+            <FlexColumn className="h-100">
+            <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+              name="Establishing Connection . . ." status={"PENDING"}/>
+            </FlexColumn>}
 
-            {/* {(airplanesMSStatus === "SUCCESS" && isDeletePromptActive) && 
+            {/* Pending State */}
+            {(airplanesMSStatus === "PENDING" || airplanesMSStatus === "INACTIVE") &&
+            <FlexColumn className="h-100">
+              <div className="spinner-border"/>
+            </FlexColumn>}
+
+            {/* Success State */}
+            {(airplanesMSStatus === "SUCCESS" &&   !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) &&
+            this.handleRenderAirplanesList(searchResults)}           
+
+            {(airplanesMSStatus === "SUCCESS" && isCreatePromptActive) && 
+            <CreateView/>}
+
+            {(airplanesMSStatus === "SUCCESS" && isDeletePromptActive) && 
             <DeleteView/>}
 
             {(airplanesMSStatus === "SUCCESS" && isEditPromptActive) && 
-            <EditView/>} */}
+            <EditView/>}
           </div>
         </div>
 
@@ -146,60 +172,53 @@ class AirplanesDebug extends Component {
   }
 
   componentDidMount() {
-    const { orchestration } = Store.getState();
-    const isMSActive = orchestration
-      ? orchestration.services.list.includes("airplane-service")
-      : false;
-    
-    if(isMSActive) {
-      AirplanesDispatcher.onFindAll()
-    } else {
-      AirplanesDispatcher.onError("No Airplane MS connection.");
-    }
+    AirplanesDispatcher.onCancel();
+    Orchestration.findActiveServices(
+    onError => {
+      AirplanesDispatcher.onError("No Orchestration connection.");
+    }, onSuccess => {
+      const isMSActive = onSuccess.includes("airplane-service");
+      if(isMSActive) AirplanesDispatcher.onFindAll();
+      else AirplanesDispatcher.onError("No Airplane MS connection.");
+    });
+  }
+
+  handleIncludeReferenceIDs = (isActive) => {
+    this.setState({isReferenceIDsActive: isActive});
   }
 
   handleRenderAirplanesList = (airplanesList) => {
     const { airplanes } = Store.getState();
-
-    const resultsDisplayed = airplanes
-      ? airplanes.search.resultsPerPage
-      : 0;
-
-    const resultsStart = airplanes
-      ? airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1)
-      : 0;
+    const resultsDisplayed = Number(airplanes.search.resultsPerPage);
+    const resultsStart = airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1);
 
     let airplanesTable = [];
     if(!airplanesList.length) airplanesList = [airplanesList];
-    for(var i = resultsStart; i < airplanesList.length; i++) {
-      if(i < resultsStart + resultsDisplayed) {
-        
-        const airplaneId = airplanesList[i].id;
-        if(!airplaneId) continue;
+    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airplanesList.length); i++) {
+      const airplane = airplanesList[i];
+      const airplaneId = airplane.id;
+      if(!airplaneId) continue;
 
-        const index = Number(i) + 1;
-        airplanesTable.push(
-          <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{airplaneId}</td>
-            <td>{airplanesList[i].typeId}</td>
-            
-            {/* Edit */}
-            <td><button className="btn btn-info" 
-              onClick={() => AirplanesDispatcher.onPromptEdit(airplaneId)}>
-                Edit
-            </button></td>
+      const index = Number(i) + 1;
+      airplanesTable.push(
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{airplaneId}</td>
+          <td>{airplanesList[i].typeId}</td>
+          
+          {/* Edit */}
+          <td><button className="btn btn-info"
+            onClick={() => AirplanesDispatcher.onPromptEdit(airplane)}>
+              Edit
+          </button></td>
 
-            {/* Delete */}
-            <td><button className="btn btn-primary"
-                onClick={() => AirplanesDispatcher.onPromptDelete(airplaneId)}>
-                Delete
-            </button></td>
-          </tr>
-        );
-      } else {
-        break;
-      }
+          {/* Delete */}
+          <td><button className="btn btn-primary"
+            onClick={() => AirplanesDispatcher.onPromptDelete(airplane)}>
+             Delete
+          </button></td>
+        </tr>
+      );
     }
 
     return (
@@ -209,14 +228,20 @@ class AirplanesDebug extends Component {
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
-              <th scope="col">Type ID</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
+              <th scope="col">TypeID</th>
+              <th scope="col" colSpan="2">
+                <FlexRow>
+                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
+                    onClick={() => AirplanesDispatcher.onPromptCreate()}>
+                    + Create New
+                  </button>
+                </FlexRow>
+              </th>
             </tr>
           </thead>
           <tbody>
             {airplanesTable}
-            <tr><td colSpan="5"></td>{/* Space at end of table for aesthetic */}</tr>
+            <tr><td colSpan="7"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>

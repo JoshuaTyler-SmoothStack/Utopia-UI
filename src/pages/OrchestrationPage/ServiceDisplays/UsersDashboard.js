@@ -5,9 +5,10 @@ import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
-import Orchestration from '../../../Orchestration';
+import ErrorMessage from '../../../components/ErrorMessage';
 import FlexRow from '../../../components/FlexRow';
 import FlexColumn from '../../../components/FlexColumn';
+// import Orchestration from '../../../Orchestration';
 
 class UsersDashboard extends Component {
   constructor(props) {
@@ -22,14 +23,8 @@ class UsersDashboard extends Component {
 
   render() {
     const { users } = Store.getState();
-
-    const searchResults = users
-    ? users.searchResults
-    : [];
-
-    const status = users
-    ? users.status
-    : "INACTIVE";
+    const searchResults = users.search.results;
+    const status = users.status;
 
     return (
     <div style={{height:" 100%", width: "100%"}}>
@@ -38,26 +33,20 @@ class UsersDashboard extends Component {
         justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
       >
-        {/* findAllUsers() */}
+        {/* Fake API Call */}
         <button
           className={"btn btn-info rounded m-1"}
-          onClick={() => this.findAllUsers()}
+          onClick={() => UsersDispatcher.onFakeAPICall()}
         >
-          {status === "PENDING" 
-            ? <div className="spinner-border text-light"/>
-            : "findAllUsers()"
-          }
+          {"fakeAPICall()"}
         </button>
 
-        {/* triggerError() */}
+        {/* Find All */}
         <button
-          className={"btn btn-info rounded m-1"}
-          onClick={() => this.triggerError()}
+          className={"btn btn-info rounded"}
+          onClick={() => this.findAllUsers()}
         >
-          {status === "PENDING" 
-            ? <div className="spinner-border text-light"/>
-            : "triggerError()"
-          }
+          {"findAllUsers()"}
         </button>
       </FlexRow>
 
@@ -71,11 +60,24 @@ class UsersDashboard extends Component {
             width: window.innerWidth * 0.9,
             top: (window.innerHeight - (window.innerHeight * 0.75)) * 0.5,
             left: (window.innerWidth - (window.innerWidth * 0.9)) * 0.5,
-            overflow: "hidden"
+            overflow: "auto",
+            zIndex: "1"
           }}
           onClose={() => this.setState({isActive_PopContent: false})}
         >
-          {this.handleRenderUserList(searchResults)}
+          {status === "PENDING" &&
+            <div className="spinner-border text-light"/>
+          }
+
+          {status === "ERROR" &&
+            <ErrorMessage soundAlert={true}>
+              Error
+            </ErrorMessage>
+          }
+
+          {status === "SUCCESS" && 
+            this.handleRenderUsersList(searchResults)
+          }
         </PopContent>
       }
     </div>);
@@ -86,17 +88,7 @@ class UsersDashboard extends Component {
     this.setState({isActive_PopContent: true});
   }
 
-  triggerError = () => {
-    Orchestration.createRequest("POST", "/users",
-      onError => {
-        console.log(onError);
-    }, onSuccess => {
-      console.log(onSuccess);
-    });
-  }
-
-  handleRenderUserList = (usersList) => {
-    console.log(usersList);
+  handleRenderUsersList = (usersList) => {
     let usersTable = [];
     for(var i in usersList) {
       const index = Number(i) + 1;
@@ -113,7 +105,7 @@ class UsersDashboard extends Component {
         </tr>
       );
     }
-
+  
     return (
       <FlexColumn
         justify={"start"}
@@ -138,7 +130,6 @@ class UsersDashboard extends Component {
         </table>
       </FlexColumn>
     );
-  };
-
+  }
 }
 export default UsersDashboard;

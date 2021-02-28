@@ -8,22 +8,15 @@ const BookingsReducer = (action) => {
   switch(action.type) {  
     case bookingsRoot.cancel:
       return {
-        create: {
-          ...bookings.create,
-          isActive: false
-        },
-        delete: {
-          ...bookings.delete,
-          isActive: false
-        },
-        edit: {
-          ...bookings.edit,
-          isActive: false
-        },
+        create: defaultBookingsState.create,
+        delete: defaultBookingsState.delete,
+        edit: defaultBookingsState.edit,
+        error: "",
         search: {
           ...bookings.search,
           resultsPage: 1
-        }
+        },
+        status: "SUCCESS"
       };
 
     case bookingsRoot.createError:
@@ -33,10 +26,10 @@ const BookingsReducer = (action) => {
           isActive: true,
           results: {
             ...defaultBookingsState.create.results,
-            booking: action.payload.result,
+            booking: action.payload,
           },
           resultsStatus: {
-            booking: action.payload.resultStatus,
+            booking: "ERROR",
             flights: "DISABLED",
             guests: "DISABLED",
             passengers: "DISABLED",
@@ -149,6 +142,7 @@ const BookingsReducer = (action) => {
         error: "",
         search: {
           ...bookings.search,
+          error: "",
           results: action.payload
         },
         status: "SUCCESS"
@@ -156,8 +150,10 @@ const BookingsReducer = (action) => {
 
     case bookingsRoot.searchError:
       return {
-        searchError: action.payload,
-        searchText: action.payload
+        search: {
+          ...bookings.search,
+          error: action.payload
+        }
       };
 
     case bookingsRoot.searchResultsPage:
@@ -271,8 +267,9 @@ export const defaultBookingsState = {
     },
     results: [],
     resultsPage: 1,
-    resultsPerPage: 100,
+    resultsPerPage: 10,
     resultsTotal: 0,
     status: "INACTIVE"
-  }
+  },
+  status: "INACTIVE"
 };

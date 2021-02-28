@@ -99,25 +99,6 @@ class BookingsDispatcher {
           );
         }, 500);
       }
-
-      // Users Update
-      if(booking.userId) {
-        setTimeout(() => {
-          onCreateResponse(
-            "Assigned Booking to User with ID: " + booking.userId + ".",
-            "SUCCESS", 
-            "users"
-          );
-        }, 500);
-      } else {
-        setTimeout(() => {
-          onCreateResponse(
-            "No user assigned.",
-            "DISABLED", 
-            "users"
-          );
-        }, 500);
-      }
     };
 
     // Create for User
@@ -241,7 +222,6 @@ class BookingsDispatcher {
       constants.httpRequest.delete,
       "/bookings/flights/" + bookingId,
       (httpError) => {
-        console.log("httpError", httpError);
         onDeleteResponse("Service temporarily unavailable.", "ERROR", "flights");
       },
       (httpResponseBody) => {
@@ -273,7 +253,6 @@ class BookingsDispatcher {
       constants.httpRequest.delete,
       "/bookings/guests/" + bookingId,
       (httpError) => {
-        console.log("httpError", httpError);
         onDeleteResponse("Service temporarily unavailable.", "ERROR", "guests");
       },
       (httpResponseBody) => {
@@ -295,8 +274,7 @@ class BookingsDispatcher {
     Orchestration.createRequest(
       constants.httpRequest.delete,
       "/bookings/users/" + bookingId,
-      (httpError) => {
-        console.log("httpError", httpError);
+      (httpError) => {;
         onDeleteResponse("Service temporarily unavailable.", "ERROR", "users");
       },
       (httpResponseBody) => {
@@ -380,7 +358,6 @@ class BookingsDispatcher {
           onEditResponse("Service temporarily unavailable.", "ERROR", "flights");
         },
         (httpResponseBody) => {
-          console.log(httpResponseBody);
           if(httpResponseBody.error) {
             onEditResponse(httpResponseBody.error, "ERROR", "flights");
           } else {
@@ -490,37 +467,10 @@ class BookingsDispatcher {
   }
 
   static onError(message) {
-    if(message) {
-      Store.reduce({
-        type: constants.bookings.error,
-        payload: message,
-      });
-    } else {
-      Store.reduce({ type: constants.bookings.request });
-      Orchestration.createRequest(
-        constants.httpRequest.post,
-        "/bookings",
-        (httpError) => {
-          Store.reduce({
-            type: constants.bookings.error,
-            payload: httpError,
-          });
-        },
-        (httpResponseBody) => {
-          if(httpResponseBody.error) {
-            Store.reduce({
-              type: constants.bookings.error,
-              payload: httpResponseBody.error,
-            });
-          } else {
-            Store.reduce({
-              type: constants.bookings.response,
-              payload: httpResponseBody,
-            });
-          }
-        }
-      );
-    }
+    Store.reduce({
+      type: constants.bookings.error,
+      payload: message,
+    });
   }
 
   static onFakeAPICall(disableResponse) {
@@ -543,7 +493,6 @@ class BookingsDispatcher {
       constants.httpRequest.get,
       "/bookings/referencedata",
       (httpError) => {
-        console.log(httpError);
         Store.reduce({
           type: constants.bookings.error,
           payload: httpError,

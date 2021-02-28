@@ -2,46 +2,140 @@ import constants from "../resources/constants.json"
 import Store from "./Store";
 
 const AirplanesReducer = (action) => {
-  const airplanesConst = constants.airplanes;
+  const airplanesRoot = constants.airplanes;
   const { airplanes } = Store.getState();
 
   switch(action.type) {
     
-    case airplanesConst.cancel:
+    case airplanesRoot.cancel:
       return {
-        deletePrompt: false,
-        editPrompt: false,
+        create: defaultAirplanesState.create,
+        delete: defaultAirplanesState.delete,
+        edit: defaultAirplanesState.edit,
+        error: ""
       };
 
-    case airplanesConst.error:
+    case airplanesRoot.createPrompt:
+      return {
+        create: {
+          ...defaultAirplanesState.create,
+          isActive: true
+        },
+        delete: defaultAirplanesState.delete,
+        edit: defaultAirplanesState.edit
+      };
+
+    case airplanesRoot.createRequest:
+      return {
+        create: {
+          ...airplanes.create,
+          resultsStatus: "PENDING",
+          status: "PENDING"
+        },
+      };
+
+    case airplanesRoot.createResponse:
+      return {
+        create: {
+          ...airplanes.create,
+          results: action.payload,
+          resultsStatus: "SUCCESS",
+          status: "PENDING"
+        },
+      };
+
+    case airplanesRoot.deletePrompt:
+      return {
+        create: defaultAirplanesState.create,
+        delete: {
+          ...defaultAirplanesState.delete,
+          isActive: true
+        },
+        edit: defaultAirplanesState.edit,
+        selected: action.payload
+      };
+
+    case airplanesRoot.deleteRequest:
+      return {
+        delete: {
+          ...airplanes.delete,
+          resultsStatus: "PENDING",
+          status: "PENDING"
+        },
+      };
+
+    case airplanesRoot.deleteResponse:
+      return {
+        delete: {
+          ...airplanes.delete,
+          results: action.payload,
+          resultsStatus: "SUCCESS",
+          status: "PENDING"
+        },
+      };
+
+    case airplanesRoot.editPrompt:
+      return {
+        create: defaultAirplanesState.create,
+        delete: defaultAirplanesState.delete,
+        edit: {
+          ...defaultAirplanesState.edit,
+          isActive: true
+        },
+        selected: action.payload
+      };
+
+    case airplanesRoot.editRequest:
+      return {
+        edit: {
+          ...airplanes.edit,
+          resultsStatus: "PENDING",
+          status: "PENDING"
+        },
+      };
+
+    case airplanesRoot.editResponse:
+      return {
+        edit: {
+          ...airplanes.edit,
+          results: action.payload.results,
+          resultsStatus: action.payload.resultsStatus,
+          status: "PENDING"
+        },
+      };
+
+    case airplanesRoot.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case airplanesConst.request:
+    case airplanesRoot.request:
       return {
         error: "",
         status: "PENDING"
       };
 
-    case airplanesConst.response:
+    case airplanesRoot.response:
       return {
         error: "",
-        search:{
+        search: {
           ...airplanes.search,
+          error: "",
           results: action.payload
         },
         status: "SUCCESS"
       }
 
-    case airplanesConst.searchError:
+    case airplanesRoot.searchError:
       return {
-        searchError: action.payload,
-        searchText: action.payload
+        search: {
+          ...airplanes.search,
+          error: action.payload
+        }
       };
 
-    case airplanesConst.searchResultsPage:
+    case airplanesRoot.searchResultsPage:
       return {
         search:{
           ...airplanes.search,
@@ -49,7 +143,7 @@ const AirplanesReducer = (action) => {
         }
       };
 
-    case airplanesConst.searchResultsPerPage:
+    case airplanesRoot.searchResultsPerPage:
       return {
         search:{
           ...airplanes.search,
@@ -57,7 +151,7 @@ const AirplanesReducer = (action) => {
         }
       };
 
-    case airplanesConst.reset:
+    case airplanesRoot.reset:
       return defaultAirplanesState;
 
     default:
@@ -67,6 +161,27 @@ const AirplanesReducer = (action) => {
 export default AirplanesReducer;
 
 export const defaultAirplanesState = {
+  create: {
+    error: "",
+    isActive: false,
+    results: "",
+    resultsStatus: "INACTIVE",
+    status: "INACTIVE"
+  },
+  delete: {
+    error: "",
+    isActive: false,
+    results: "",
+    resultsStatus: "INACTIVE",
+    status: "INACTIVE"
+  },
+  edit: {
+    error: "",
+    isActive: false,
+    results: "",
+    resultsStatus: "INACTIVE",
+    status: "INACTIVE"
+  },
   error: "",
   search: {
     error: "",
@@ -76,6 +191,9 @@ export const defaultAirplanesState = {
     results: [],
     resultsPage: 1,
     resultsPerPage: 100,
-    resultsTotal: 0
-  }
+    resultsTotal: 0,
+    status: "INACTIVE"
+  },
+  selected: null,
+  status: "INACTIVE"
 };

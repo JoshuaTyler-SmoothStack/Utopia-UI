@@ -103,7 +103,7 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    // console.log(this.state);
+    console.log(this.state);
   }
 
   handleResize = () => {
@@ -118,7 +118,7 @@ class App extends Component {
     if(window.innerWidth >= 1400) newSize = "xx_large";
 
     if(breakPoint !== newSize) {
-      console.log(newSize);
+      // console.log(newSize);
       this.setState({breakPoint: newSize});
     }
   }
