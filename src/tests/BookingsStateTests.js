@@ -13,14 +13,17 @@ class BookingsStateTests {
     BookingsDispatcher.onCancel();
     const { bookings } = Store.getState();
 
-    test("onCancel sets CRUD isActive bools to false and searchResultsPage to 1", 
-    () => { 
-      expect(bookings.create.isActive).toBe(false);
-      expect(bookings.delete.isActive).toBe(false);
-      expect(bookings.edit.isActive).toBe(false);
-      expect(bookings.search.resultsPage).toBe(1);
-    });
+    test("onCancel sets CRUD isActive bools to false and searchResultsPage to 1",
+      () => {
+        expect(bookings.create.isActive).toBe(false);
+        expect(bookings.delete.isActive).toBe(false);
+        expect(bookings.edit.isActive).toBe(false);
+        expect(bookings.search.resultsPage).toBe(1);
+      });
+
+
   }
+
 
   onError_expectErrorMessageAndErrorStatus() {
     const errorMessage = "[ERROR]: 404 - Not Found!";
@@ -33,5 +36,6 @@ class BookingsStateTests {
       expect(bookings.status).toBe("ERROR");
     });
   }
+
 }
 export default BookingsStateTests;
