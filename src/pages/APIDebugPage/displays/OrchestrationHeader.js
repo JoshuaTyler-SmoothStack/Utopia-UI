@@ -21,11 +21,11 @@ const OrchestrationHeader = (props) => {
     : false;
 
   return(
-    <FlexRow className={"row" + (props.className || "")} style={props.style}>
+    <FlexRow className={(props.className || "")} style={props.style} wrap="no-wrap">
       
       {/* MS Indicator */}
       <FlexRow 
-        className="col-6 bg-dark rounded kit-border-shadow p-2"
+        className="bg-dark rounded kit-border-shadow p-2"
         style={{maxWidth: "15rem", overflowX: "clip"}}
         wrap="no-wrap"
       >
@@ -52,7 +52,7 @@ const OrchestrationHeader = (props) => {
       </FlexRow>
 
       {/* Buttons */}
-      <FlexRow className="col-5 ml-2" wrap="no-wrap">
+      <FlexRow className="ml-2" wrap="no-wrap">
         {/* Error Trigger */}
         <button className={"btn-primary " + (isMobileSize ? "btn-sm" : "btn")}
           onClick={() => props.onTriggerError()}
