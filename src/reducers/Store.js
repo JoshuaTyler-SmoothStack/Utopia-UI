@@ -125,7 +125,7 @@ class Store {
     }
   }
 
-  static getCombineDefaultReducerStates() {
+  static getCombinedDefaultReducerStates() {
     return { 
       airplanes: defaultAirplanesState,
       airports: defaultAirportsState,

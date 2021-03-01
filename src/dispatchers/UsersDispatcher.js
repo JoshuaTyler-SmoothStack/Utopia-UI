@@ -67,42 +67,21 @@ class UsersDispatcher {
     Store.reduce({ type: constants.users.request });
 
     Orchestration.createRequest(
-      constants.httpRequest.get,
-      "/users",
+    constants.httpRequest.get,
+    "/users",
 
-      onError => {
-        Store.reduce({
-          type: constants.users.error,
-          payload: onError
-        });
-      },
-      httpResponseBody => {
-        Store.reduce({
-          type: constants.users.response,
-          payload: httpResponseBody
-        });
+    onError => {
+      Store.reduce({
+        type: constants.users.error,
+        payload: onError
       });
-
-      (httpError) => {
-        Store.reduce({
-          type: constants.users.error,
-          payload: "Service temporarily unavailable.",
-        });
-      },
-      (httpResponseBody) => {
-        if (httpResponseBody.error) {
-          Store.reduce({
-            type: constants.users.error,
-            payload: httpResponseBody.error,
-          });
-        } else {
-          Store.reduce({
-            type: constants.users.response,
-            payload: httpResponseBody,
-          });
-        }
-      }
-    );
+    },
+    httpResponseBody => {
+      Store.reduce({
+        type: constants.users.response,
+        payload: httpResponseBody
+      });
+    });
   }
 
   static onFindBy(searchText) {

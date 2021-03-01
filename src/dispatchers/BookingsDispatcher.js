@@ -41,22 +41,31 @@ class BookingsDispatcher {
         payload: booking
       });
 
-      // Flights Update
+      // Flight IDs
       if(booking.flightId) {
-        setTimeout(() => {
-          onCreateResponse(
-            "Assigned to Flight ID: " + booking.flightId + ".",
-            "SUCCESS", 
-            "flights"
-          );
-        }, 500);
+        const flightBooking = {
+          bookingId: booking.id,
+          flightId: booking.flightId
+        };
+  
+        Orchestration.createRequestWithBody(
+          constants.httpRequest.put,
+          "/bookings/flights",
+          flightBooking,
+          (httpError) => {
+            onCreateResponse("Service temporarily unavailable.", "ERROR", "flights");
+          },
+          (httpResponseBody) => {
+            if(httpResponseBody.error) {
+              onCreateResponse(httpResponseBody.error, "ERROR", "flights");
+            } else {
+              onCreateResponse("Flight ID updated to: " + httpResponseBody.flightId + ".", "SUCCESS", "flights");
+            }
+          }
+        );
       } else {
         setTimeout(() => {
-          onCreateResponse(
-            "No flight assigned.",
-            "DISABLED", 
-            "flights"
-          );
+          onCreateResponse("N/A", "DISABLED", "flights");
         }, 500);
       }
 
@@ -96,6 +105,25 @@ class BookingsDispatcher {
             "No passenger assigned.",
             "DISABLED", 
             "passengers"
+          );
+        }, 500);
+      }
+
+      // Users Update
+      if(booking.userId) {
+        setTimeout(() => {
+          onCreateResponse(
+            "Updated (1) users(s) with ID(s): " + booking.userId + ".",
+            "SUCCESS", 
+            "users"
+          );
+        }, 500);
+      } else {
+        setTimeout(() => {
+          onCreateResponse(
+            "No user assigned.",
+            "DISABLED", 
+            "users"
           );
         }, 500);
       }
