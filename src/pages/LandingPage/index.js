@@ -231,8 +231,8 @@ class LandingPage extends Component {
     const departureFlights = flights.departureFlights;
     const returnFlights = flights.returnFlights;
 
-    const departureStatus = flights ? departureFlights.status : "INACTIVE";
-    const returnStatus = flights ? returnFlights.status : "INACTIVE";
+    const departureStatus = departureFlights.status || "INACTIVE";
+    const returnStatus = returnFlights.status || "INACTIVE";
 
     return (
       <div
