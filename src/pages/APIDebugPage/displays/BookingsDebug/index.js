@@ -49,9 +49,9 @@ class BookingsDebug extends Component {
         
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
-          <div className="row p-2">
+          <div className="row mt-1">
             {/* MS Orchestration Indicators */}
-            <OrchestrationHeader className="col-12 col-md-7"
+            <OrchestrationHeader className="col-12 col-md-6"
               name="Booking MS"
               status={bookingsMSStatus === "INACTIVE" ? "PENDING" : bookingsMSStatus}
               style={{maxWidth:"30rem"}}
@@ -62,7 +62,7 @@ class BookingsDebug extends Component {
             {/* Search Bar */}
             <div className="col-12 col-md-5">
               {/* Search */}
-              <FlexRow className="mt-2" wrap="no-wrap">
+              <FlexRow className="mt-1" justify="end" wrap="no-wrap">
                 <input 
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}

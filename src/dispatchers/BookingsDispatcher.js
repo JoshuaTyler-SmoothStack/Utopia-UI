@@ -542,34 +542,15 @@ class BookingsDispatcher {
     );
   }
 
-  static onFind(path, onSuccess) {
+  static onSelect(path, onError, onSuccess) {
     Store.reduce({ type: constants.bookings.request });
     Orchestration.createRequest(
       constants.httpRequest.get,
       "/bookings/" + path,
-      (httpError) => {
-        Store.reduce({
-          type: constants.bookings.error,
-          payload: "Connection failed.",
-        });
-      },
+      (httpError) => onError("Service temporarily unavailable."),
       (httpResponseBody) => {
-        if(httpResponseBody.error) {
-          Store.reduce({
-            type: constants.bookings.error,
-            payload: httpResponseBody.error,
-          });
-        } else {
-          Store.reduce({
-            type: constants.bookings.response,
-            payload: httpResponseBody,
-          });
-          Store.reduce({
-            type: constants.bookings.select,
-            payload: httpResponseBody
-          });
-          if(onSuccess) onSuccess();
-        }
+        if(httpResponseBody.error) onError(httpResponseBody.error);
+        else onSuccess(httpResponseBody);
       }
     );
   }
@@ -601,7 +582,7 @@ class BookingsDispatcher {
       });
       return;
     }
-    BookingsDispatcher.onFind(searchPath);
+    BookingsDispatcher.onSelect(searchPath);
   }
 
   static onPromptCreate(){
@@ -609,16 +590,16 @@ class BookingsDispatcher {
   }
 
   static onPromptDelete(bookingId){
-    BookingsDispatcher.onFind(bookingId, () => {
-      Store.reduce({type: constants.bookings.deletePrompt});
-    });
+    BookingsDispatcher.onSelect(bookingId, 
+    onError => Store.reduce({type: constants.bookings.deleteError, payload: onError}),
+    onSuccess => Store.reduce({type: constants.bookings.deletePrompt}));
   }
 
   static onPromptEdit(bookingId) {
-    BookingsDispatcher.onFind(bookingId, () => {
-      Store.reduce({type: constants.bookings.editPrompt});
-    });
-  }
+    BookingsDispatcher.onSelect(bookingId, 
+      onError => Store.reduce({type: constants.bookings.editError, payload: onError}),
+      onSuccess => Store.reduce({type: constants.bookings.editPrompt}));
+    }
 
   static onResultsPage(resultsPage) {
     Store.reduce({
