@@ -32,7 +32,7 @@ class App extends Component {
 
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
     this.state = { 
-      ...Store.getCombineDefaultReducerStates(),
+      ...Store.getCombinedDefaultReducerStates(),
       breakPoint: "xx_small",
       isAppStateMounted: false,
     };
@@ -103,7 +103,7 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   handleResize = () => {

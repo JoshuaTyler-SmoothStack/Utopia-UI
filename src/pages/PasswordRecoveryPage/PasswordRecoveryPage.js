@@ -5,14 +5,12 @@ import { Redirect } from 'react-router'
 import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
 // Components
-
-import axios from 'axios';
-
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
-
-import './style.css';
 import FlexRow from '../../components/FlexRow';
+
+// Styles
+import './style.css';
 
 
 

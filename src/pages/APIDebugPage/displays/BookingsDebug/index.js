@@ -45,57 +45,57 @@ class BookingsDebug extends Component {
     const searchResults = bookings.search.results;
 
     return ( 
-      <div className={this.props.className || ""} style={this.props.style}>
+      <div className={"row" + (this.props.className || "")} style={this.props.style}>
         
         {/* Header */}
-        <div className="row bg-light p-2 kit-border-shadow">
-          
-          {/* MS Orchestration Indicators */}
-          <OrchestrationHeader className="col-12 col-md-7"
-            name="Booking MS"
-            status={bookingsMSStatus === "INACTIVE" ? "PENDING" : bookingsMSStatus}
-            style={{maxWidth:"30rem"}}
-            onTriggerError={() => BookingsDispatcher.onError()}
-            onTriggerFakeAPICall={() => BookingsDispatcher.onFakeAPICall()}
-          />
+        <div className="col-12 bg-light kit-border-shadow">
+          <div className="row p-2">
+            {/* MS Orchestration Indicators */}
+            <OrchestrationHeader className="col-12 col-md-7"
+              name="Booking MS"
+              status={bookingsMSStatus === "INACTIVE" ? "PENDING" : bookingsMSStatus}
+              style={{maxWidth:"30rem"}}
+              onTriggerError={() => BookingsDispatcher.onError()}
+              onTriggerFakeAPICall={() => BookingsDispatcher.onFakeAPICall()}
+            />
 
-          {/* Search Bar */}
-          <div className="col-12 col-md-5">
-            {/* Search */}
-            <FlexRow className="mt-2" wrap="no-wrap">
-              <input 
-                aria-label="Search" 
-                className={"form-control " + (searchError && " is-invalid kit-shake")}
-                label={searchError}
-                placeholder="ID=X or Confirmation=Y"
-                type="search" 
-                style={{maxWidth:"15rem"}}
-                onChange={(e) => this.setState({searchText: e.target.value})}
-              />
-              <button 
-                className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
-                type="submit"
-                onClick={() => BookingsDispatcher.onFindBy(searchText)}
-              >
-                search
-              </button>
-            </FlexRow>
+            {/* Search Bar */}
+            <div className="col-12 col-md-5">
+              {/* Search */}
+              <FlexRow className="mt-2" wrap="no-wrap">
+                <input 
+                  aria-label="Search" 
+                  className={"form-control " + (searchError && " is-invalid kit-shake")}
+                  label={searchError}
+                  placeholder="ID=X or Confirmation=Y"
+                  type="search" 
+                  style={{maxWidth:"15rem"}}
+                  onChange={(e) => this.setState({searchText: e.target.value})}
+                />
+                <button 
+                  className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
+                  type="submit"
+                  onClick={() => BookingsDispatcher.onFindBy(searchText)}
+                >
+                  search
+                </button>
+              </FlexRow>
+            </div>
           </div>
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light " +
+        <div className={"col-12 bg-light " +
           ((bookingsMSStatus === "INACTIVE" || bookingsMSStatus === "ERROR" ||
            isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
           "kit-opacity-50 kit-no-user kit-pointer-none")}
         >
           
           {/* Filters */}
-          <div className="col-12 p-2">
-            <FlexRow wrap={"no-wrap"}>
+          <div className="row p-2 justify-content-center p-2">
               
               {/* Toggle Reference Data */}
-              <FlexRow className="bg-dark rounded kit-border-shadow ml-1" wrap={"no-wrap"}>
+              <FlexRow className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1" wrap={"no-wrap"}>
                 <button className={"btn text-white " + (isReferenceIDsActive && "btn-success")}
                   onClick={() => this.handleIncludeReferenceIDs(true)}
                 >
@@ -109,84 +109,84 @@ class BookingsDebug extends Component {
               </FlexRow>
 
               {/* # of Filters Active */}
-              <div className="list-group ml-1">
+              <div className="col-auto list-group ml-2">
                 <div className="list-group-item" style={{fontSize: "0.85rem", padding:"0.5rem"}}>
                   {searchFilters.activeCount + " filters active"}
                 </div>
               </div>
-            </FlexRow>
           </div>
 
           {/* Resuts Count & Page Selection */}
-          <FlexRow className="col-12 p-2">
-            <DropDown
-              selection={bookings.search.resultsPerPage}
-              options={["3", "10", "25", "50"]}
-              onSelect={(e) => BookingsDispatcher.onResultsPerPage(e)}
-            />
+          <div className="row justify-content-center p-2">
+            <FlexColumn className="col-4 col-md-3 text-center">
+              <DropDown
+                selection={bookings.search.resultsPerPage}
+                options={["3", "10", "25", "50"]}
+                onSelect={(e) => BookingsDispatcher.onResultsPerPage(e)}
+              />
+            </FlexColumn>
 
-            <ItemsIndexReadout
-              className={"ml-2"}
-              currentPage={bookings.search.resultsPage}
-              itemsPerPage={bookings.search.resultsPerPage}
-              itemsTotal={bookings.search.results.length}
-            />
+            <FlexColumn className="col-6 col-md-3 text-center">
+              <ItemsIndexReadout
+                currentPage={bookings.search.resultsPage}
+                itemsPerPage={bookings.search.resultsPerPage}
+                itemsTotal={bookings.search.results.length}
+              />
+            </FlexColumn>
 
-            <Pagination
-              className={"m-0 ml-2"}
-              currentPage={bookings.search.resultsPage}
-              totalPages={Math.ceil(bookings.search.results.length / Math.max(bookings.search.resultsPerPage, 1))}
-              onSelectPage={(e) => BookingsDispatcher.onResultsPage(e)}
-            />
-          </FlexRow>
+            <FlexColumn className="col-8 mt-2 col-md-3 text-center">
+              <Pagination
+                currentPage={bookings.search.resultsPage}
+                totalPages={Math.ceil(bookings.search.results.length / Math.max(bookings.search.resultsPerPage, 1))}
+                onSelectPage={(e) => BookingsDispatcher.onResultsPage(e)}
+              />
+            </FlexColumn>
+          </div>
         </div>
 
 
         {/* Body */}
-        <div className="row">
-          <div className="col-12" style={{height:"80vh", overflowY: "auto"}}>
+        <div className="col-12" style={{overflowY: "auto"}}>
 
-            {/* Error State */}
-            {bookingsMSStatus === "ERROR" &&
-            <FlexColumn className="h-100">
-              <ErrorMessage className="h1" soundAlert={true}>
-                {bookings.error}
-              </ErrorMessage>
-              <button className="btn btn-light m-3"
-                onClick={() => BookingsDispatcher.onCancel()}
-              >
-                Back
-              </button>
-            </FlexColumn>}
+        {/* Error State */}
+        {bookingsMSStatus === "ERROR" &&
+          <FlexColumn className="h-100">
+            <ErrorMessage className="h1" soundAlert={true}>
+              {bookings.error}
+            </ErrorMessage>
+            <button className="btn btn-light m-3"
+              onClick={() => BookingsDispatcher.onCancel()}
+            >
+              Back
+            </button>
+          </FlexColumn>}
 
-            {/* Inactive State */}
-            {bookingsMSStatus === "INACTIVE" &&
-            <FlexColumn className="h-100">
-            <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-              name="Establishing Connection . . ." status={"PENDING"}/>
-            </FlexColumn>}
+          {/* Inactive State */}
+          {bookingsMSStatus === "INACTIVE" &&
+          <FlexColumn className="h-100">
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+            name="Establishing Connection . . ." status={"PENDING"}/>
+          </FlexColumn>}
 
-            {/* Pending State */}
-            {(bookingsMSStatus === "PENDING" || bookingsMSStatus === "INACTIVE") &&
-            <FlexColumn className="h-100">
-              <div className="spinner-border"/>
-            </FlexColumn>}
+          {/* Pending State */}
+          {(bookingsMSStatus === "PENDING" || bookingsMSStatus === "INACTIVE") &&
+          <FlexColumn className="h-100">
+            <div className="spinner-border"/>
+          </FlexColumn>}
 
-            {/* Success State */}
-            {(bookingsMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
-            this.handleRenderBookingsList(searchResults)}
+          {/* Success State */}
+          {(bookingsMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
+          this.handleRenderBookingsList(searchResults)}
 
-            {(bookingsMSStatus === "SUCCESS" && isCreatePromptActive) && 
-            <CreateView/>}
+          {(bookingsMSStatus === "SUCCESS" && isCreatePromptActive) && 
+          <CreateView/>}
 
-            {(bookingsMSStatus === "SUCCESS" && isDeletePromptActive) && 
-            <DeleteView/>}
+          {(bookingsMSStatus === "SUCCESS" && isDeletePromptActive) && 
+          <DeleteView/>}
 
-            {(bookingsMSStatus === "SUCCESS" && isEditPromptActive) && 
-            <EditView/>}
-          </div>
+          {(bookingsMSStatus === "SUCCESS" && isEditPromptActive) && 
+          <EditView/>}
         </div>
-
       </div>
     );
   }

@@ -74,7 +74,7 @@ const Pagination = (props) => {
   </li>;
 
   return (
-    <ul className={"pagination " + (props.className || "")} style={props.style}>
+    <ul className={"pagination m-0 " + (props.className || "")} style={props.style}>
       {previous}
       {pos1}
       {!paginationItems.isPos2Disabled && pos2}

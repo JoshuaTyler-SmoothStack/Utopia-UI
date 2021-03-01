@@ -1,17 +1,17 @@
 // Libraries
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 import Store from "../../reducers/Store";
 
 // Components
 import InputText from "../../components/InputText";
+import FlexColumn from "../../components/FlexColumn";
+import FlexRow from "../../components/FlexRow";
 
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
-import { Link } from "react-router-dom";
-import FlexColumn from "../../components/FlexColumn";
-import FlexRow from "../../components/FlexRow";
 
 class LoginModal extends Component {
   constructor(props) {
@@ -188,7 +188,7 @@ class LoginModal extends Component {
 
                   {/* Login */}
                   <button
-                    className="btn btn-success btn-lg"
+                    className="btn btn-success btn-lg text-white kit-text-shadow-thin"
                     onClick={() => this.handleLogin()}
                     style={{ width: "33%" }}
                   >

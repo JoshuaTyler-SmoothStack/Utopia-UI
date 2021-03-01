@@ -13,19 +13,15 @@ const OrchestrationHeader = (props) => {
   // @PROP: onTriggerFakeAPICall - f()
 
   const { orchestration } = Store.getState();
-
   const name = props.name || "Unkown";
-
+  const status = props.status || "INACTIVE";
+  const isMobileSize = Store.getState().breakPoint.includes("small");
   const isMSActive = name !== "Unkown"
-    ? orchestration
-      ? orchestration.services.list.includes(name.toLowerCase().split(" ")[0] + "-service")
-      : false
+    ? orchestration.services.list.includes(name.toLowerCase().split(" ")[0] + "-service")
     : false;
 
-  const status = props.status || "INACTIVE";
-
   return(
-    <FlexRow className={props.className || ""} style={props.style}>
+    <FlexRow className={"row" + (props.className || "")} style={props.style}>
       
       {/* MS Indicator */}
       <FlexRow 
@@ -35,7 +31,7 @@ const OrchestrationHeader = (props) => {
       >
         {/* Nameplate */}
         <div 
-          className={"btn btn-sm kit-border-shadow kit-pointer-none " + 
+          className={"btn btn-sm mr-auto kit-border-shadow kit-pointer-none " + 
           (isMSActive? "btn-success" : "btn-warning")}
           style={{whiteSpace: "nowrap"}}
         >
@@ -44,7 +40,7 @@ const OrchestrationHeader = (props) => {
 
         {/* IO Indicator */}
         <StatusAsyncIndicator 
-          className="ml-auto ml-1"
+          className="ml-1"
           status={status}
         />
 
@@ -56,19 +52,19 @@ const OrchestrationHeader = (props) => {
       </FlexRow>
 
       {/* Buttons */}
-      <FlexRow className="col-6 p-1" wrap={"no-wrap"}>
+      <FlexRow className="col-5 ml-2" wrap="no-wrap">
         {/* Error Trigger */}
-        <button className="btn btn-primary ml-2"
+        <button className={"btn-primary " + (isMobileSize ? "btn-sm" : "btn")}
           onClick={() => props.onTriggerError()}
         >
           !Error!
         </button>
 
         {/* Fake API Call */}
-        <button className="btn btn-info ml-2"
+        <button className={"btn-info ml-2 " + (isMobileSize ? "btn-sm" : "btn")}
           onClick={() => props.onTriggerFakeAPICall()}
         >
-          Fake API
+          FakeAPI
         </button>
       </FlexRow>
     </FlexRow>

@@ -1,15 +1,16 @@
 // Libraries
 import React, { useState } from 'react';
-import axios from 'axios';
-import NavBar from '../../componentgroups/NavBar';
-import './style.css';
+import { Redirect } from 'react-router';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
+// Components
+import NavBar from '../../componentgroups/NavBar';
 import LogoGif from '../../components/LogoGif';
-import { Redirect } from 'react-router';
-
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
+
+// Styles
+import './style.css';
 
 const ForgotPasswordPage = (props) => {
 

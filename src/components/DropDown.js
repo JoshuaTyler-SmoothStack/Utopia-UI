@@ -55,7 +55,7 @@ const DropDown = (props) => {
       >
         {selection ? selection + " items" : "No items available."}
       </button>
-      <ul className={"dropdown-menu" + (isDropDownActive ? " show" : "")}>
+      <ul className={"dropdown-menu " + (isDropDownActive ? "show" : "")}>
         {optionsRender}
       </ul>
     </div>
