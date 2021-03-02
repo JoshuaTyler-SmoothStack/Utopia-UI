@@ -12,7 +12,8 @@ const AirplanesReducer = (action) => {
         create: defaultAirplanesState.create,
         delete: defaultAirplanesState.delete,
         edit: defaultAirplanesState.edit,
-        error: ""
+        error: "",
+        status: "SUCCESS"
       };
 
     case airplanesRoot.createPrompt:
