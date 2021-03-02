@@ -89,7 +89,7 @@ class AuthenticationDispatcher {
    // TODO clear Auth
   }
 
-  static onPrompt() {
+  static onPromptLogin() {
    Store.reduce({type: constants.authentication.prompt});
   }
 }

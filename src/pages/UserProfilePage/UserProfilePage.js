@@ -7,13 +7,11 @@ import './userProgileStyle.css'
 const UserProfilePage = (props) => {
 
   return (
+    <div className="container-fluid">
+      {/* Navbar */}
+      <NavBar className="col-12" hideSearchBar={true}/>
 
-    // just testing branching strategy
-
-    <div>
-      <NavBar />
-
-      <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
+      <FlexColumn className={"kit-bg-blue"}>
 
         <div class="container emp-profile">
           <div class="row">
