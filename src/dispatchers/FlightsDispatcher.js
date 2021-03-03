@@ -3,27 +3,54 @@ import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
 
 class FlightsDispatcher {
+  static onCancel() {
+    Store.reduce({ type: constants.flights.cancel });
+  }
+
   static onFindAll() {
-   Store.reduce({type: constants.flights.request});
+   Store.reduce({type: constants.flights.searchRequest});
 
-   setTimeout(() => {
-
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "flights",
-      httpError => {
-       Store.reduce({
+   Orchestration.createRequest(
+    constants.httpRequest.get,
+    "flights",
+    (httpError) => {
+      Store.reduce({
+        type: constants.flights.error,
+        payload: "Service temporarily unavailable.",
+      });
+    },
+    (httpResponseBody) => {
+      if (httpResponseBody.error) {
+        Store.reduce({
           type: constants.flights.error,
-          payload: httpError
+          payload: httpResponseBody.error,
         });
-      }, 
-      httpResponseBody => {
-       Store.reduce({
-          type: constants.flights.response,
-          payload: httpResponseBody
+      } else {
+        Store.reduce({
+          type: constants.flights.searchResponse,
+          payload: httpResponseBody,
         });
+      }
+    }
+  );
+  }
+
+  static onError(message) {
+    Store.reduce({
+      type: constants.flights.error,
+      payload: message,
     });
-  }, 500);
+  }
+
+  static onFakeAPICall() {
+    Store.reduce({ type: constants.flights.request });
+    setTimeout(() => {
+      const { flights } = Store.getState();
+      Store.reduce({
+        type: constants.flights.response,
+        payload: flights.search.results,
+      });
+    }, 1500);
   }
 
   static onSearchOneWayFlights(payload) {

@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import AirplanesDebug from "./displays/AirplanesDebug";
 import AirportsDebug from "./displays/AirportsDebug";
 import BookingsDebug from "./displays/BookingsDebug";
+import FlightsDebug from "./displays/FlightsDebug";
 import LocalSidebar from "./LocalSidebar";
 import NavBar from "../../componentgroups/NavBar";
 import OrchestrationDispathcer from "../../dispatchers/OrchestrationDispatcher";
@@ -42,6 +43,7 @@ class APIDebugPage extends Component {
             {activeDisplay === "AIRPLANES" && <AirplanesDebug/>}
             {activeDisplay === "AIRPORTS" && <AirportsDebug/>}
             {activeDisplay === "BOOKINGS" && <BookingsDebug/>}
+            {activeDisplay === "FLIGHTS" && <FlightsDebug/>}
           </div>
         </div>
       </div>

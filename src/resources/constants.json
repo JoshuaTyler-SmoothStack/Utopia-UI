@@ -94,11 +94,28 @@
 
   "flights": {
     "root": "FLIGHTS",
+    "cancel": "FLIGHTS_CANCEL",
+    "createError": "FLIGHTS_CREATE_ERROR",
+    "createPrompt": "FLIGHTS_CREATE_PROMPT",
+    "createRequest": "FLIGHTS_CREATE_REQUEST",
+    "createResponse": "FLIGHTS_CREATE_RESPONSE",
+    "delete": "FLIGHTS_DELETE",
+    "deleteError": "FLIGHTS_DELETE_ERROR",
+    "deletePrompt": "FLIGHTS_DELETE_PROMPT",
+    "deleteRequest": "FLIGHTS_DELETE_REQUEST",
+    "deleteResponse": "FLIGHTS_DELETE_RESPONSE",
+    "edit": "FLIGHTS_EDIT",
+    "editError": "FLIGHTS_EDIT_ERROR",
+    "editPrompt": "FLIGHTS_EDIT_PROMPT",
+    "editRequest": "FLIGHTS_EDIT_REQUEST",
+    "editResponse": "FLIGHTS_EDIT_RESPONSE",
     "error": "FLIGHTS_ERROR",
     "request": "FLIGHTS_REQUEST",
     "requestReturn": "FLIGHTS_REQUEST_RETURN",
     "returnFlightResponse": "FLIGHTS_RETURN_RESPONSE",
-    "response": "FLIGHTS_RESPONSE"
+    "response": "FLIGHTS_RESPONSE",
+    "searchRequest": "FLIGHTS_SEARCH_REQUEST",
+    "searchResponse": "FLIGHTS_SEARCH_RESPONSE"
   },
 
   "httpRequest": {

@@ -6,6 +6,15 @@ const FlightsReducer = (action) => {
   const { flights } = Store.getState();
 
   switch(action.type) {
+    case flightsConst.cancel:
+      return {
+        create: defaultFlightsState.create,
+        delete: defaultFlightsState.delete,
+        edit: defaultFlightsState.edit,
+        error: "",
+        status: "SUCCESS"
+      };
+
     case flightsConst.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
@@ -63,6 +72,23 @@ const FlightsReducer = (action) => {
         }
     };
 
+    case flightsConst.searchRequest:
+      return {
+        error: "",
+        status: "PENDING"
+      };
+
+    case flightsConst.searchResponse:
+      return {
+        error: "",
+        search: {
+          ...flights.search,
+          error: "",
+          results: action.payload
+        },
+        status: "SUCCESS"
+      };
+
     case flightsConst.stop:
       return defaultFlightsState;
 
@@ -88,5 +114,38 @@ export const defaultFlightsState = {
     searchResultsPerPage: 20,
     searchResultsTotal: 0,
     status: "INACTIVE"
-  }
+  },
+  create: {
+    error: "",
+    isActive: false,
+    results: "",
+    resultsStatus: "INACTIVE",
+    status: "INACTIVE"
+  },
+  delete: {
+    error: "",
+    isActive: false,
+    results: "",
+    resultsStatus: "INACTIVE",
+    status: "INACTIVE"
+  },
+  edit: {
+    error: "",
+    isActive: false,
+    results: "",
+    resultsStatus: "INACTIVE",
+    status: "INACTIVE"
+  },
+  search: {
+    error: "",
+    filters: {
+      activeCount: 0
+    },
+    results: [],
+    resultsPage: 1,
+    resultsPerPage: 100,
+    resultsTotal: 0,
+    status: "INACTIVE"
+  },
+  selected: null
 };

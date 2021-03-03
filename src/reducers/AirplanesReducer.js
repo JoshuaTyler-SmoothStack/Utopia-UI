@@ -126,7 +126,7 @@ const AirplanesReducer = (action) => {
           results: action.payload
         },
         status: "SUCCESS"
-      }
+      };
 
     case airplanesRoot.searchError:
       return {
