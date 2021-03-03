@@ -209,57 +209,76 @@ class PassengersDebug extends Component {
 
   handleRenderPassengersList = (passengersList) => {
     const { passengers } = Store.getState();
-    const { isReferenceIDsActive } = this.state;
+    const { isPassengerInfoActive
+    } = this.state;
     const resultsDisplayed = Number(passengers.search.resultsPerPage);
     const resultsStart = passengers.search.resultsPerPage * (passengers.search.resultsPage - 1);
 
     let passengersTable = [];
-    if(!passengersList.length) passengersList = [passengersList];
-    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
+    if (!passengersList.length) passengersList = [passengersList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
       const passengerId = passengersList[i].id;
-      if(!passengerId) continue;
+      if (!passengerId) continue;
 
       const index = Number(i) + 1;
       passengersTable.push(
         <tr key={index}>
-          <th scrop="row">{index}</th>
-          <td>{passengerId}</td>
-          <td>{passengersList[i].status}</td>
-          <td>{passengersList[i].confirmationCode}</td>
-          {isReferenceIDsActive && <td>{passengersList[i].flightId || "Error"}</td>}
-          {isReferenceIDsActive && <td>{passengersList[i].passengerId || "NR"}</td>}
-          {isReferenceIDsActive && <td>{passengersList[i].userId || "Guest"}</td>}
-          
+          <th scope="col">{index}</th>
+          <td scope="col">{passengersList[i].id}</td>
+          <td scope="col">{passengersList[i].bookingId}</td>
+          <td scope="col">{passengersList[i].passportId}</td>
+          {isPassengerInfoActive
+            && <td scope="col">{passengersList[i].firstName}</td>}
+          {isPassengerInfoActive
+            && <td scope="col">{passengersList[i].lastName}</td>}
+          {isPassengerInfoActive
+            && <td scope="col">{passengersList[i].dateOfBirth}</td>}
+          {isPassengerInfoActive
+            && <td scope="col">{passengersList[i].sex}</td>}
+          {isPassengerInfoActive
+            && <td scope="col">{passengersList[i].address}</td>}
+          {isPassengerInfoActive
+            && <td scope="col">{passengersList[i].isVeteran}</td>}
+
           {/* Edit */}
           <td><button className="btn btn-info"
             onClick={() => PassengersDispatcher.onPromptEdit(passengerId)}>
-              Edit
+            Edit
           </button></td>
 
           {/* Delete */}
           <td><button className="btn btn-primary"
             onClick={() => PassengersDispatcher.onPromptDelete(passengerId)}>
-             Delete
+            Delete
           </button></td>
         </tr>
       );
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
         <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
-              <th scope="col">Status</th>
-              <th scope="col">Confirmation Code</th>
-              {isReferenceIDsActive && <th scope="col">Flight ID</th>}
-              {isReferenceIDsActive && <th scope="col">Passenger ID</th>}
-              {isReferenceIDsActive && <th scope="col">User ID</th>}
+              <th scope="col">Booking ID</th>
+              <th scope="col">Passport ID</th>
+              {isPassengerInfoActive
+                && <th scope="col">First Name</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Last Name</th>}
+              {isPassengerInfoActive
+                && <th scope="col">DOB</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Sex</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Address</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Veteran</th>}
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
+                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}
                     onClick={() => PassengersDispatcher.onPromptCreate()}>
                     + Create New
                   </button>
@@ -269,7 +288,7 @@ class PassengersDebug extends Component {
           </thead>
           <tbody>
             {passengersTable}
-            <tr><td colSpan="7"></td>{/* Space at end of table for aesthetic */}</tr>
+            <tr><td colSpan="12"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>
