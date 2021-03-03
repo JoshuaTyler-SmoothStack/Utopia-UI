@@ -115,7 +115,10 @@
     "returnFlightResponse": "FLIGHTS_RETURN_RESPONSE",
     "response": "FLIGHTS_RESPONSE",
     "searchRequest": "FLIGHTS_SEARCH_REQUEST",
-    "searchResponse": "FLIGHTS_SEARCH_RESPONSE"
+    "searchResponse": "FLIGHTS_SEARCH_RESPONSE",
+    "searchResultsPage": "FLIGHTS_SEARCH_RESULTS_PAGE",
+    "searchResultsPerPage": "FLIGHTS_SEARCH_RESULTS_PER_PAGE",
+    "select": "FLIGHTS_SELECT"
   },
 
   "httpRequest": {

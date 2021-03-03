@@ -2,11 +2,11 @@ import constants from "../resources/constants.json"
 import Store from "./Store";
 
 const FlightsReducer = (action) => {
-  const flightsConst = constants.flights;
+  const flightsRoot = constants.flights;
   const { flights } = Store.getState();
 
   switch(action.type) {
-    case flightsConst.cancel:
+    case flightsRoot.cancel:
       return {
         create: defaultFlightsState.create,
         delete: defaultFlightsState.delete,
@@ -15,13 +15,13 @@ const FlightsReducer = (action) => {
         status: "SUCCESS"
       };
 
-    case flightsConst.error:
+    case flightsRoot.error:
       return {
         error: action.payload || "[ERROR]: 404 - Not Found!",
         status: "ERROR"
       };
 
-    case flightsConst.request:
+    case flightsRoot.request:
       return {
         error: "",
         status: "PENDING",
@@ -31,7 +31,7 @@ const FlightsReducer = (action) => {
         }
       };
 
-    // case flightsConst.requestDepature:
+    // case flightsRoot.requestDepature:
     //   return {
     //     error: "",
     //     status: "PENDING",
@@ -41,28 +41,30 @@ const FlightsReducer = (action) => {
     //     }
     //   };
 
-    case flightsConst.requestReturn:
-        return {
-          error: "",
-          status: "PENDING",
-          returnFlights: {
-            ...flights.returnFlights,
-            status: "PENDING"
-          } 
-        };
-
-    case flightsConst.response:
+    case flightsRoot.requestReturn:
       return {
         error: "",
-        status: "SUCCESS",
-        departureFlights: {
-          ...flights.departureFlights,
-          searchResults: action.payload,
-          status : "ACTIVE"
+        status: "PENDING",
+        returnFlights: {
+          ...flights.returnFlights,
+          status: "PENDING"
         } 
       };
 
-    case flightsConst.returnFlightResponse:
+    case flightsRoot.response:
+      return {
+        error: "",
+        status: "SUCCESS",
+        search: {
+          ...flights.search,
+          all: {
+            results: action.payload,
+            status: "SUCCESS"
+          }
+        }
+      };
+
+    case flightsRoot.returnFlightResponse:
       return {
         status: "SUCCESS",
         returnFlights: {
@@ -72,24 +74,27 @@ const FlightsReducer = (action) => {
         }
     };
 
-    case flightsConst.searchRequest:
+    case flightsRoot.searchResultsPage:
       return {
-        error: "",
-        status: "PENDING"
-      };
-
-    case flightsConst.searchResponse:
-      return {
-        error: "",
         search: {
           ...flights.search,
-          error: "",
-          results: action.payload
-        },
-        status: "SUCCESS"
+          resultsPage: action.payload
+        }
       };
 
-    case flightsConst.stop:
+    case flightsRoot.searchResultsPerPage:
+      return {
+        search: {
+          ...flights.search,
+          resultsPage: 1,
+          resultsPerPage: action.payload
+        }
+      };
+
+    case flightsRoot.select:
+      return {selected: action.payload};
+
+    case flightsRoot.reset:
       return defaultFlightsState;
 
     default:
@@ -101,20 +106,6 @@ export default FlightsReducer;
 export const defaultFlightsState = {
   error: "",
   status: "INACTIVE",
-  departureFlights : {
-    searchResults: [],
-    searchResultsPage: 1,
-    searchResultsPerPage: 20,
-    searchResultsTotal: 0,
-    status: "INACTIVE"
-  },
-  returnFlights : {
-    searchResults: [],
-    searchResultsPage: 1,
-    searchResultsPerPage: 20,
-    searchResultsTotal: 0,
-    status: "INACTIVE"
-  },
   create: {
     error: "",
     isActive: false,
@@ -139,11 +130,23 @@ export const defaultFlightsState = {
   search: {
     error: "",
     filters: {
-      activeCount: 0
+      activeCount: 0,
+
     },
-    results: [],
+    all: {
+      results: [],
+      status: []
+    },
+    departure: {
+      results: [],
+      status: "INACTIVE"
+    },
+    return: {
+      results: [],
+      status: "INACTIVE"
+    },
     resultsPage: 1,
-    resultsPerPage: 100,
+    resultsPerPage: 10,
     resultsTotal: 0,
     status: "INACTIVE"
   },

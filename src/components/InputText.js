@@ -98,7 +98,7 @@ class InputText extends React.Component {
                   outline: "none",
                 }}
                 type={isHidden ? "password" : "text"}
-                value={value}
+                value={this.props.value || value}
                 onChange={(e) => this.handleValueChange(e)}
                 onFocus={() => this.handleOnFocus()}
                 onBlur={() => this.handleOnBlur()}

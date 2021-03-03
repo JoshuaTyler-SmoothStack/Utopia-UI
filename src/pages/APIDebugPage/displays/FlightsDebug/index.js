@@ -20,10 +20,7 @@ import Pagination from "../../../../components/Pagination";
 class FlightsDebug extends Component {
   constructor(props) {
     super(props);
-    const { flights } = Store.getState();
-    this.state = {
-      
-    };
+    this.state = {};
   }
   render() { 
     const { flights } = Store.getState();
@@ -34,7 +31,7 @@ class FlightsDebug extends Component {
     const flightsMSStatus = flights.status;
     const searchError = flights.search.error;
     const searchFilters = flights.search.filters;
-    const searchResults = flights.search.results;
+    const searchResults = flights.search.all.results;
 
     return ( 
       <div className={this.props.className || ""} style={this.props.style}>
@@ -109,13 +106,13 @@ class FlightsDebug extends Component {
               className={"ml-2"}
               currentPage={flights.search.resultsPage}
               itemsPerPage={flights.search.resultsPerPage}
-              itemsTotal={flights.search.results.length}
+              itemsTotal={flights.search.all.results.length}
             />
 
             <Pagination
               className={"m-0 ml-2"}
               currentPage={flights.search.resultsPage}
-              totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
+              totalPages={Math.ceil(flights.search.all.results.length / Math.max(flights.search.resultsPerPage, 1))}
               onSelectPage={(e) => FlightsDispatcher.onResultsPage(e)}
             />
           </FlexRow>
