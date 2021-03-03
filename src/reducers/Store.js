@@ -8,6 +8,7 @@ import authenticationReducer, {defaultAuthenticationState} from "./Authenticatio
 import bookingsReducer, { defaultBookingsState } from "./BookingsReducer";
 import flightsReducer, { defaultFlightsState } from "./FlightsReducer";
 import orchestrationReducer, {defaultOrchestrationState} from "./OrchestrationReducer";
+import passengersReducer, { defaultPassengersState } from "./PassengersReducer";
 import paymentsReducer, { defaultPaymentsState } from "./PaymentsReducer";
 import routesReducer, { defaultRoutesState } from "./RoutesReducer";
 import usersReducer, { defaultUsersState } from "./UsersReducer";
@@ -90,6 +91,16 @@ class Store {
         }));
       break;
 
+      // passenger
+      case constants.passengers.root:
+        Store.setState((state) => ({
+          passengers: {
+            ...state.passengers, 
+            ...passengersReducer(action)
+          }
+        }));
+      break;
+
       // payments
       case constants.payments.root:
         Store.setState((state) => ({
@@ -133,6 +144,7 @@ class Store {
       bookings: defaultBookingsState,
       flights: defaultFlightsState,
       orchestration: defaultOrchestrationState,
+      passengers: defaultPassengersState,
       payments: defaultPaymentsState,
       routes: defaultRoutesState,
       users: defaultUsersState
