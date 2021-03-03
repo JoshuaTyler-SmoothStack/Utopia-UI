@@ -118,6 +118,34 @@
     "stop": "ORCHESTRATION_STOP"
   },
 
+  "passengers": {
+    "root": "PASSENGERS",
+    "cancel": "PASSENGERS_CANCEL",
+    "create": "PASSENGERS_CREATE",
+    "createError": "PASSENGERS_CREATE_ERROR",
+    "createPrompt": "PASSENGERS_CREATE_PROMPT",
+    "createRequest": "PASSENGERS_CREATE_REQUEST",
+    "createResponse": "PASSENGERS_CREATE_RESPONSE",
+    "delete": "PASSENGERS_DELETE",
+    "deleteError": "PASSENGERS_DELETE_ERROR",
+    "deletePrompt": "PASSENGERS_DELETE_PROMPT",
+    "deleteRequest": "PASSENGERS_DELETE_REQUEST",
+    "deleteResponse": "PASSENGERS_DELETE_RESPONSE",
+    "edit": "PASSENGERS_EDIT",
+    "editError": "PASSENGERS_EDIT_ERROR",
+    "editPrompt": "PASSENGERS_EDIT_PROMPT",
+    "editRequest": "PASSENGERS_EDIT_REQUEST",
+    "editResponse": "PASSENGERS_EDIT_RESPONSE",
+    "error": "PASSENGERS_ERROR",
+    "request": "PASSENGERS_REQUEST",
+    "reset": "PASSENGERS_RESET",
+    "response": "PASSENGERS_RESPONSE",
+    "searchError": "PASSENGERS_SEARCH_ERROR",
+    "searchResultsPage": "PASSENGERS_SEARCH_RESULTS_PAGE",
+    "searchResultsPerPage": "PASSENGERS_SEARCH_RESULTS_PER_PAGE",
+    "select": "PASSENGERS_SELECT"
+  },
+
   "payments": {
     "root": "PAYMENTS",
     "error": "PAYMENTS_ERROR",
