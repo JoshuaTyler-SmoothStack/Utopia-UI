@@ -224,21 +224,21 @@ class PassengersDebug extends Component {
       passengersTable.push(
         <tr key={index}>
           <th scope="col">{index}</th>
-          <td scope="col">{passengersList[i].id}</td>
-          <td scope="col">{passengersList[i].bookingId}</td>
-          <td scope="col">{passengersList[i].passportId}</td>
+          <td>{passengersList[i].id}</td>
+          <td>{passengersList[i].bookingId}</td>
+          <td>{passengersList[i].passportId}</td>
           {isPassengerInfoActive
-            && <td scope="col">{passengersList[i].firstName}</td>}
+            && <td>{passengersList[i].firstName}</td>}
           {isPassengerInfoActive
-            && <td scope="col">{passengersList[i].lastName}</td>}
+            && <td>{passengersList[i].lastName}</td>}
           {isPassengerInfoActive
-            && <td scope="col">{passengersList[i].dateOfBirth}</td>}
+            && <td>{passengersList[i].dateOfBirth}</td>}
           {isPassengerInfoActive
-            && <td scope="col">{passengersList[i].sex}</td>}
+            && <td>{passengersList[i].sex}</td>}
           {isPassengerInfoActive
-            && <td scope="col">{passengersList[i].address}</td>}
+            && <td>{passengersList[i].address}</td>}
           {isPassengerInfoActive
-            && <td scope="col">{passengersList[i].isVeteran}</td>}
+            && <td>{passengersList[i].isVeteran}</td>}
 
           {/* Edit */}
           <td><button className="btn btn-info"
