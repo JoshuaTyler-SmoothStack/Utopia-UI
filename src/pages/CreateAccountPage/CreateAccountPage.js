@@ -34,7 +34,7 @@ const CreateAccountPage = (props) => {
     handleValidate();
     setSubmitted(true)
 
-    if(!firstName || !lastName || !validateEmail || 
+    if (!firstName || !lastName || !validateEmail ||
       !validatePhone || !validatePassword || !passwordMatch) {
       return;
     }
@@ -54,6 +54,7 @@ const CreateAccountPage = (props) => {
         setStatus("SUCCESS")
         setTimeout(() => setRedirect(true), 3400)
       }, error => {
+        console.log(error)
         setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
         setStatus("ERROR")
       });
@@ -71,15 +72,15 @@ const CreateAccountPage = (props) => {
   }
 
   return (
-    <div className="container-fluid kit-bg-blue" style={{height:"100vh", width:"100vw"}}>
-      {redirect && <Redirect to="/home"/>}
-      
+    <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
+      {redirect && <Redirect to="/home" />}
+
       <div className="row">
         {/* Navbar */}
-        <NavBar className="col-12" hideSearchBar={true}/>
+        <NavBar className="col-12" hideSearchBar={true} />
 
         {/* Content */}
-        <div className={"col-12 col-sm-10 col-md-8 col-lg-6 m-auto"}>          
+        <div className={"col-12 col-sm-10 col-md-8 col-lg-6 m-auto"}>
 
           {/* Card */}
           <div className="card p-2 mt-3 ml-auto mr-auto">
@@ -87,7 +88,7 @@ const CreateAccountPage = (props) => {
             {/* Header */}
             <h2 className="card-title">Create Account</h2>
             <hr className="w-100 mt-0"></hr>
-            
+
             {/* Body */}
             <div className="card-body">
 
@@ -95,154 +96,154 @@ const CreateAccountPage = (props) => {
               {status === "ERROR" && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
               {/* Pending */}
-              {status === "PENDING" && <LogoGif style={{ width: "100%" }}/>}
+              {status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
 
               {/* Success */}
-              {status === "SUCCESS" && 
+              {status === "SUCCESS" &&
                 <FlexColumn>
                   <h3 className="text-success kit-text-shadow-thin">
                     Account Created!
                   </h3>
                   <FlexRow>
                     <h5>Redirecting . . .</h5>
-                    <div className="spinner-border ml-2"/>
+                    <div className="spinner-border ml-2" />
                   </FlexRow>
                 </FlexColumn>
               }
 
               {/* Default */}
               {status === "DEFAULT" &&
-              <form name="form" onSubmit={(e) => handleSubmit(e)}>
+                <form name="form" onSubmit={(e) => handleSubmit(e)}>
 
-                {/* Firstname */}
-                {(submitted && !firstName)
-                  ? <label className="text-danger kit-shake">First Name *</label>
-                  : <label>First Name</label>
-                }
-                <input type="text" 
-                  className={"form-control mb-2 " + 
-                    (submitted ? !firstName ? "is-invalid" : "is-valid" : "")
-                  } 
-                  name="firstName" 
-                  value={firstName} 
-                  onChange={(e) => setFirstName(e.target.value)} 
-                />
+                  {/* Firstname */}
+                  {(submitted && !firstName)
+                    ? <label className="text-danger kit-shake">First Name *</label>
+                    : <label>First Name</label>
+                  }
+                  <input type="text"
+                    className={"form-control mb-2 " +
+                      (submitted ? !firstName ? "is-invalid" : "is-valid" : "")
+                    }
+                    name="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
 
-                {/* Lastname */}
-                {(submitted && !lastName)
-                  ? <label className="text-danger kit-shake">Last Name *</label>
-                  : <label>Last Name</label>
-                }
-                <input type="text" 
-                  className={"form-control mb-2 " + 
-                    (submitted ? !lastName ? "is-invalid" : "is-valid" : "")
-                  } 
-                  name="lastName" 
-                  value={lastName} 
-                  onChange={(e) => setLastName(e.target.value)}
-                />
+                  {/* Lastname */}
+                  {(submitted && !lastName)
+                    ? <label className="text-danger kit-shake">Last Name *</label>
+                    : <label>Last Name</label>
+                  }
+                  <input type="text"
+                    className={"form-control mb-2 " +
+                      (submitted ? !lastName ? "is-invalid" : "is-valid" : "")
+                    }
+                    name="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
 
-                {/* Email */}
-                {submitted 
-                  ? !email
-                    ? <label className="text-danger kit-shake">Email *</label>
-                    : !validateEmail 
-                      ? <label className="text-danger kit-shake">Invalid Email *</label>
-                      : <label>Email</label>
-                  : <label>Email</label>
-                }
-                <input type="text" 
-                  className={"form-control mb-2 " + 
-                  (email 
-                    ? !validateEmail ? "is-invalid" : "is-valid" 
-                    : submitted ? "is-invalid" : ""
-                  )}
-                  name="email" 
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value); 
-                    handleValidate();
-                  }} 
-                />
+                  {/* Email */}
+                  {submitted
+                    ? !email
+                      ? <label className="text-danger kit-shake">Email *</label>
+                      : !validateEmail
+                        ? <label className="text-danger kit-shake">Invalid Email *</label>
+                        : <label>Email</label>
+                    : <label>Email</label>
+                  }
+                  <input type="text"
+                    className={"form-control mb-2 " +
+                      (email
+                        ? !validateEmail ? "is-invalid" : "is-valid"
+                        : submitted ? "is-invalid" : ""
+                      )}
+                    name="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      handleValidate();
+                    }}
+                  />
 
-                {/* Phone */}
-                {submitted 
-                  ? !phone
-                    ? <label className="text-danger kit-shake">Phone *</label>
-                    : !validatePhone 
-                      ? <label className="text-danger kit-shake">Invalid Phone *</label>
-                      : <label>Phone</label>
-                  : <label>Phone</label>
-                }
-                <input type="phone" 
-                  className={"form-control mb-2 " + 
-                    (phone
-                      ? !validatePhone ? "is-invalid" : "is-valid" 
-                      : submitted ? "is-invalid" : ""
-                    )}
-                  name="phone" value={phone} 
-                  onChange={(e) => {
-                    setPhone(e.target.value); 
-                    handleValidate();
-                  }}
-                />
+                  {/* Phone */}
+                  {submitted
+                    ? !phone
+                      ? <label className="text-danger kit-shake">Phone *</label>
+                      : !validatePhone
+                        ? <label className="text-danger kit-shake">Invalid Phone *</label>
+                        : <label>Phone</label>
+                    : <label>Phone</label>
+                  }
+                  <input type="phone"
+                    className={"form-control mb-2 " +
+                      (phone
+                        ? !validatePhone ? "is-invalid" : "is-valid"
+                        : submitted ? "is-invalid" : ""
+                      )}
+                    name="phone" value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                      handleValidate();
+                    }}
+                  />
 
-                {/* Password */}
-                {submitted 
-                  ? !password
-                    ? <label className="text-danger kit-shake">Password *</label>
-                    : !validatePassword 
-                      ? <label className="text-danger kit-shake">{"Minimun: 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special e.g. (!@#$%^&*)"}</label>
-                      : <label>Password</label>
-                  : <label>Password</label>
-                }
-                <input type="password" 
-                  className={"form-control mb-2 " + 
-                    (password 
-                      ? !validatePassword ? "is-invalid" : "is-valid" 
-                      : submitted ? "is-invalid" : ""
-                    )}
-                  name="password" 
-                  value={password} 
-                  onChange={(e) => {
-                    setPassword(e.target.value); 
-                    handleValidate();
-                  }}
-                />
+                  {/* Password */}
+                  {submitted
+                    ? !password
+                      ? <label className="text-danger kit-shake">Password *</label>
+                      : !validatePassword
+                        ? <label className="text-danger kit-shake">{"Minimun: 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special e.g. (!@#$%^&*)"}</label>
+                        : <label>Password</label>
+                    : <label>Password</label>
+                  }
+                  <input type="password"
+                    className={"form-control mb-2 " +
+                      (password
+                        ? !validatePassword ? "is-invalid" : "is-valid"
+                        : submitted ? "is-invalid" : ""
+                      )}
+                    name="password"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      handleValidate();
+                    }}
+                  />
 
-                {/* Password - Confirm */}
-                {submitted 
-                  ? !confirmPassword
-                    ? <label className="text-danger kit-shake">Confirm Password *</label>
-                    : !passwordMatch 
-                      ? <label className="text-danger kit-shake">Passwords do not match *</label>
-                      : <label>Confirm Password</label>
-                  : <label>Confirm Password</label>
-                }
-                <input type="password" 
-                  className={"form-control mb-2 " + 
-                    (confirmPassword 
-                      ? !passwordMatch ? "is-invalid" : "is-valid" 
-                      : submitted ? "is-invalid" : ""
-                    )}
-                  name="confirmPassword" 
-                  value={confirmPassword} 
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value); 
-                    handleValidate();
-                  }} 
-                />
-                
-                {/* Buttons */}
-                <FlexRow className="form-group mt-4" justify="around">
-                  <Link to="/home">
-                    <buton className="btn btn-secondary">Cancel</buton>
-                  </Link>
-                  <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">
-                    + Create Account
+                  {/* Password - Confirm */}
+                  {submitted
+                    ? !confirmPassword
+                      ? <label className="text-danger kit-shake">Confirm Password *</label>
+                      : !passwordMatch
+                        ? <label className="text-danger kit-shake">Passwords do not match *</label>
+                        : <label>Confirm Password</label>
+                    : <label>Confirm Password</label>
+                  }
+                  <input type="password"
+                    className={"form-control mb-2 " +
+                      (confirmPassword
+                        ? !passwordMatch ? "is-invalid" : "is-valid"
+                        : submitted ? "is-invalid" : ""
+                      )}
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      handleValidate();
+                    }}
+                  />
+
+                  {/* Buttons */}
+                  <FlexRow className="form-group mt-4" justify="around">
+                    <Link to="/home">
+                      <buton className="btn btn-secondary">Cancel</buton>
+                    </Link>
+                    <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">
+                      + Create Account
                   </button>
-                </FlexRow>
-              </form>}
+                  </FlexRow>
+                </form>}
             </div>
           </div>
         </div>
