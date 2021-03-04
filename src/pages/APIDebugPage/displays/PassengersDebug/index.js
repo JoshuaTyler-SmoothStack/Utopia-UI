@@ -21,7 +21,7 @@ class PassengersDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isReferenceIDsActive: false,
+      isPassengerInfoActive: false,
       isResultsDropdownActive: false,
       editingValues: {
         status: 0,
@@ -35,7 +35,7 @@ class PassengersDebug extends Component {
   }
   render() { 
     const { passengers } = Store.getState();
-    const { isReferenceIDsActive, searchText } = this.state;
+    const { isPassengerInfoActive, searchText } = this.state;
     const isCreatePromptActive = passengers.create.isActive;
     const isDeletePromptActive = passengers.delete.isActive;
     const isEditPromptActive = passengers.edit.isActive;
@@ -67,7 +67,7 @@ class PassengersDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="ID=X or Confirmation=Y"
+                  placeholder="IDs, name, address, . . ."
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchText: e.target.value})}
@@ -96,12 +96,12 @@ class PassengersDebug extends Component {
               
               {/* Toggle Reference Data */}
               <FlexRow className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1" wrap={"no-wrap"}>
-                <button className={"btn text-white " + (isReferenceIDsActive && "btn-success")}
+                <button className={"btn text-white " + (isPassengerInfoActive && "btn-success")}
                   onClick={() => this.handleIncludeReferenceIDs(true)}
                 >
                   Show Passenger Info
                 </button>
-                <button className={"btn text-white " + (!isReferenceIDsActive && "btn-success")}
+                <button className={"btn text-white " + (!isPassengerInfoActive && "btn-success")}
                   onClick={() => this.handleIncludeReferenceIDs(false)}
                 >
                   Hide
@@ -146,7 +146,7 @@ class PassengersDebug extends Component {
 
 
         {/* Body */}
-        <div className="col-12" style={{overflowY: "auto"}}>
+        <div className="col-12" style={{overflow: "auto"}}>
 
         {/* Error State */}
         {passengersMSStatus === "ERROR" &&
@@ -204,13 +204,12 @@ class PassengersDebug extends Component {
   }
 
   handleIncludeReferenceIDs = (isActive) => {
-    this.setState({isReferenceIDsActive: isActive});
+    this.setState({isPassengerInfoActive: isActive});
   }
 
   handleRenderPassengersList = (passengersList) => {
     const { passengers } = Store.getState();
-    const { isPassengerInfoActive
-    } = this.state;
+    const { isPassengerInfoActive } = this.state;
     const resultsDisplayed = Number(passengers.search.resultsPerPage);
     const resultsStart = passengers.search.resultsPerPage * (passengers.search.resultsPage - 1);
 

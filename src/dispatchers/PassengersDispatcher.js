@@ -555,41 +555,49 @@ class PassengersDispatcher {
     );
   }
 
-  static onFindBy(searchText) {
-    
-    if(!searchText || searchText.length < 4) {
-      PassengersDispatcher.onFindAll();
-      return;
-    }
-    
-    const formattedText = searchText.toLowerCase();
-    if(!formattedText.includes("id=") && !formattedText.includes("confirmation=")){
-      Store.reduce({
-        type: constants.passengers.searchError,
-        payload: "Invalid search term!",
-      });
-      return;
+  static onFindBy(searchTerms, filters) {
+
+    const activeFilters = {};
+    if(searchTerms) activeFilters.searchTerms = searchTerms;
+    if(filters) {
+      if(filters.id) activeFilters.passengerId = filters.id;
+      if(filters.passengerId) activeFilters.passengerId = filters.passenegerId;
+      if(filters.bookingId) activeFilters.bookingId = filters.bookingId;
+      if(filters.passportId) activeFilters.passportId = filters.passportId;
     }
 
-    let searchPath = formattedText.split("id=")[1];
-    if(formattedText.includes("confirmation=")) {
-      searchPath = "confirmation/" +
-      formattedText.split("confirmation=")[1];
-    } else if(isNaN(parseInt(searchPath))) {
-      Store.reduce({
-        type: constants.passengers.searchError,
-        payload: "Invalid search term!",
-      });
-      return;
-    }
-    PassengersDispatcher.onSelect(searchPath);
+    Store.reduce({ type: constants.passengers.request });
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post,
+      "/passengers/search",
+      activeFilters,
+      (httpError) => {
+        Store.reduce({
+          type: constants.passengers.error,
+          payload: httpError,
+        });
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          Store.reduce({
+            type: constants.passengers.error,
+            payload: httpResponseBody.error,
+          });
+        } else {
+          Store.reduce({
+            type: constants.passengers.response,
+            payload: httpResponseBody,
+          });
+        }
+      }
+    );
   }
 
-  static onPromptCreate(){
+  static onPromptCreate() {
     Store.reduce({type: constants.passengers.createPrompt});
   }
 
-  static onPromptDelete(passengerId){
+  static onPromptDelete(passengerId) {
     PassengersDispatcher.onSelect(passengerId, 
     onError => Store.reduce({type: constants.passengers.deleteError, payload: onError}),
     onSuccess => Store.reduce({type: constants.passengers.deletePrompt}));
