@@ -20,7 +20,7 @@ const CreateAccountPage = (props) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitted, setSubmitted] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [validatePassword, setValidatePassword] = useState(false)
   const [validatePhone, setValidatePhone] = useState(false)
@@ -115,13 +115,13 @@ const CreateAccountPage = (props) => {
               <form name="form" onSubmit={(e) => handleSubmit(e)}>
 
                 {/* Firstname */}
-                {(submitted && !firstName)
+                {(isSubmitted && !firstName)
                   ? <label className="text-danger kit-shake">First Name *</label>
                   : <label>First Name</label>
                 }
                 <input type="text" 
                   className={"form-control mb-2 " + 
-                    (submitted ? !firstName ? "is-invalid" : "is-valid" : "")
+                    (isSubmitted ? !firstName ? "is-invalid" : "is-valid" : "")
                   } 
                   name="firstName" 
                   value={firstName} 
@@ -129,13 +129,13 @@ const CreateAccountPage = (props) => {
                 />
 
                 {/* Lastname */}
-                {(submitted && !lastName)
+                {(isSubmitted && !lastName)
                   ? <label className="text-danger kit-shake">Last Name *</label>
                   : <label>Last Name</label>
                 }
                 <input type="text" 
                   className={"form-control mb-2 " + 
-                    (submitted ? !lastName ? "is-invalid" : "is-valid" : "")
+                    (isSubmitted ? !lastName ? "is-invalid" : "is-valid" : "")
                   } 
                   name="lastName" 
                   value={lastName} 
@@ -143,7 +143,7 @@ const CreateAccountPage = (props) => {
                 />
 
                 {/* Email */}
-                {submitted 
+                {isSubmitted 
                   ? !email
                     ? <label className="text-danger kit-shake">Email *</label>
                     : !validateEmail 
@@ -155,7 +155,7 @@ const CreateAccountPage = (props) => {
                   className={"form-control mb-2 " + 
                   (email 
                     ? !validateEmail ? "is-invalid" : "is-valid" 
-                    : submitted ? "is-invalid" : ""
+                    : isSubmitted ? "is-invalid" : ""
                   )}
                   name="email" 
                   value={email}
@@ -166,7 +166,7 @@ const CreateAccountPage = (props) => {
                 />
 
                 {/* Phone */}
-                {submitted 
+                {isSubmitted 
                   ? !phone
                     ? <label className="text-danger kit-shake">Phone *</label>
                     : !validatePhone 
@@ -178,7 +178,7 @@ const CreateAccountPage = (props) => {
                   className={"form-control mb-2 " + 
                     (phone
                       ? !validatePhone ? "is-invalid" : "is-valid" 
-                      : submitted ? "is-invalid" : ""
+                      : isSubmitted ? "is-invalid" : ""
                     )}
                   name="phone" value={phone} 
                   onChange={(e) => {
@@ -188,7 +188,7 @@ const CreateAccountPage = (props) => {
                 />
 
                 {/* Password */}
-                {submitted 
+                {isSubmitted 
                   ? !password
                     ? <label className="text-danger kit-shake">Password *</label>
                     : !validatePassword 
@@ -200,7 +200,7 @@ const CreateAccountPage = (props) => {
                   className={"form-control mb-2 " + 
                     (password 
                       ? !validatePassword ? "is-invalid" : "is-valid" 
-                      : submitted ? "is-invalid" : ""
+                      : isSubmitted ? "is-invalid" : ""
                     )}
                   name="password" 
                   value={password} 
@@ -211,7 +211,7 @@ const CreateAccountPage = (props) => {
                 />
 
                 {/* Password - Confirm */}
-                {submitted 
+                {isSubmitted 
                   ? !confirmPassword
                     ? <label className="text-danger kit-shake">Confirm Password *</label>
                     : !passwordMatch 
@@ -223,7 +223,7 @@ const CreateAccountPage = (props) => {
                   className={"form-control mb-2 " + 
                     (confirmPassword 
                       ? !passwordMatch ? "is-invalid" : "is-valid" 
-                      : submitted ? "is-invalid" : ""
+                      : isSubmitted ? "is-invalid" : ""
                     )}
                   name="confirmPassword" 
                   value={confirmPassword} 

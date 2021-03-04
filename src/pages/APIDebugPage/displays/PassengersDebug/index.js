@@ -120,6 +120,7 @@ class PassengersDebug extends Component {
           <div className="row justify-content-center p-2">
             <FlexColumn className="col-4 col-md-3 text-center">
               <DropDown
+                className="dropdown-menu-right"
                 selection={passengers.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 onSelect={(e) => PassengersDispatcher.onResultsPerPage(e)}

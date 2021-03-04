@@ -54,16 +54,17 @@ const PassengersReducer = (action) => {
         create: {
           ...defaultPassengersState.create,
           isActive: true,
+          resultsStatus: "PENDING",
           status: "PENDING"
-        },
+        }
       };
 
     case passengersRoot.createResponse:
       return {
         create: {
           ...passengers.create,
-          results: action.payload.results,
-          resultsStatus: action.payload.resultsStatus
+          results: action.payload,
+          resultsStatus: "SUCCESS"
         }
       };
 
@@ -104,6 +105,8 @@ const PassengersReducer = (action) => {
           ...defaultPassengersState.edit,
           isActive: true
         },
+        selected: action.payload,
+        status: "SUCCESS"
       };
 
     case passengersRoot.editRequest:

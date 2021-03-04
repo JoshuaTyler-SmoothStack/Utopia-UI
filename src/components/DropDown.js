@@ -1,8 +1,10 @@
 import React, { useState }  from 'react';
 
 const DropDown = (props) => {
-  // @PROP: selection - num
+  // @PROP: align - string
   // @PROP: options - [num]
+  // @PROP: selection - num
+  // @PROP: type - string
 
   // @PROP: isActive - bool
   // @PROP: onSelect - f()
@@ -46,16 +48,24 @@ const DropDown = (props) => {
   }
 
   return ( 
-    <div className={"dropdown " + (props.className || "")} style={props.style}>
+    <div className={"drop" + 
+      (props.type || "down") + " " +
+      (props.className || "")} 
+      style={props.style}
+    >
       <button 
-        className="btn btn-secondary dropdown-toggle" 
+        className="btn btn-secondary dropdown-toggle w-100"
+        style={{textAlign:"left"}}
         type="button"
         onClick={() => setDropDownActive(!isDropDownActive)}
         onBlur={() => setTimeout(() => setDropDownActive(false), 100)}
       >
-        {selection ? selection + " items" : "No items available."}
+        {selection ? selection : "No selection available."}
       </button>
-      <ul className={"dropdown-menu " + (isDropDownActive ? "show" : "")}>
+      <ul className={"dropdown-menu " + 
+        (props.align ? "dropdown-menu-" + props.align : "")+ " " + 
+        (isDropDownActive ? "show" : "")
+      }>
         {optionsRender}
       </ul>
     </div>
