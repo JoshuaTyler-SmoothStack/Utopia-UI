@@ -21,21 +21,13 @@ class PassengersDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isReferenceIDsActive: false,
-      isResultsDropdownActive: false,
-      editingValues: {
-        status: 0,
-        flightId: 0,
-        passengerId: 0,
-        userId: 0,
-        guestEmail: "",
-        guestPhone: ""
-      }
+      isPassengerInfoActive: false,
     };
   }
+
   render() { 
     const { passengers } = Store.getState();
-    const { isReferenceIDsActive, searchText } = this.state;
+    const { isPassengerInfoActive, searchText } = this.state;
     const isCreatePromptActive = passengers.create.isActive;
     const isDeletePromptActive = passengers.delete.isActive;
     const isEditPromptActive = passengers.edit.isActive;
@@ -67,7 +59,7 @@ class PassengersDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="ID=X or Confirmation=Y"
+                  placeholder="IDs, name, address, . . ."
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchText: e.target.value})}
@@ -96,12 +88,12 @@ class PassengersDebug extends Component {
               
               {/* Toggle Reference Data */}
               <FlexRow className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1" wrap={"no-wrap"}>
-                <button className={"btn text-white " + (isReferenceIDsActive && "btn-success")}
+                <button className={"btn text-white " + (isPassengerInfoActive && "btn-success")}
                   onClick={() => this.handleIncludeReferenceIDs(true)}
                 >
                   Show Passenger Info
                 </button>
-                <button className={"btn text-white " + (!isReferenceIDsActive && "btn-success")}
+                <button className={"btn text-white " + (!isPassengerInfoActive && "btn-success")}
                   onClick={() => this.handleIncludeReferenceIDs(false)}
                 >
                   Hide
@@ -122,6 +114,7 @@ class PassengersDebug extends Component {
               <DropDown
                 selection={passengers.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
+                optionsName="items"
                 onSelect={(e) => PassengersDispatcher.onResultsPerPage(e)}
               />
             </FlexColumn>
@@ -146,7 +139,7 @@ class PassengersDebug extends Component {
 
 
         {/* Body */}
-        <div className="col-12" style={{overflowY: "auto"}}>
+        <div className="col-12" style={{overflow: "auto"}}>
 
         {/* Error State */}
         {passengersMSStatus === "ERROR" &&
@@ -204,62 +197,79 @@ class PassengersDebug extends Component {
   }
 
   handleIncludeReferenceIDs = (isActive) => {
-    this.setState({isReferenceIDsActive: isActive});
+    this.setState({isPassengerInfoActive: isActive});
   }
 
   handleRenderPassengersList = (passengersList) => {
     const { passengers } = Store.getState();
-    const { isReferenceIDsActive } = this.state;
+    const { isPassengerInfoActive } = this.state;
     const resultsDisplayed = Number(passengers.search.resultsPerPage);
     const resultsStart = passengers.search.resultsPerPage * (passengers.search.resultsPage - 1);
 
     let passengersTable = [];
-    if(!passengersList.length) passengersList = [passengersList];
-    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
+    if (!passengersList.length) passengersList = [passengersList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
       const passengerId = passengersList[i].id;
-      if(!passengerId) continue;
+      if (!passengerId) continue;
 
       const index = Number(i) + 1;
       passengersTable.push(
         <tr key={index}>
-          <th scrop="row">{index}</th>
-          <td>{passengerId}</td>
-          <td>{passengersList[i].status}</td>
-          <td>{passengersList[i].confirmationCode}</td>
-          {isReferenceIDsActive && <td>{passengersList[i].flightId || "Error"}</td>}
-          {isReferenceIDsActive && <td>{passengersList[i].passengerId || "NR"}</td>}
-          {isReferenceIDsActive && <td>{passengersList[i].userId || "Guest"}</td>}
-          
+          <th scope="col">{index}</th>
+          <td>{passengersList[i].id}</td>
+          <td>{passengersList[i].bookingId}</td>
+          <td>{passengersList[i].passportId}</td>
+          {isPassengerInfoActive && <td>{passengersList[i].firstName}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].lastName}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].dateOfBirth}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].sex}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].address}</td>}
+          {isPassengerInfoActive && 
+          <td>
+            {passengersList[i].isVeteran 
+              ? <div className="h3 text-success" style={{fontFamily: "monospace"}}>✔</div> 
+              : <div className="h3 text-danger" style={{fontFamily: "monospace"}}>X</div>}
+          </td>}
+
           {/* Edit */}
           <td><button className="btn btn-info"
             onClick={() => PassengersDispatcher.onPromptEdit(passengerId)}>
-              Edit
+            Edit
           </button></td>
 
           {/* Delete */}
           <td><button className="btn btn-primary"
             onClick={() => PassengersDispatcher.onPromptDelete(passengerId)}>
-             Delete
+            Delete
           </button></td>
         </tr>
       );
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
         <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
-              <th scope="col">Status</th>
-              <th scope="col">Confirmation Code</th>
-              {isReferenceIDsActive && <th scope="col">Flight ID</th>}
-              {isReferenceIDsActive && <th scope="col">Passenger ID</th>}
-              {isReferenceIDsActive && <th scope="col">User ID</th>}
+              <th scope="col">Booking ID</th>
+              <th scope="col">Passport ID</th>
+              {isPassengerInfoActive
+                && <th scope="col">First Name</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Last Name</th>}
+              {isPassengerInfoActive
+                && <th scope="col">DOB</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Sex</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Address</th>}
+              {isPassengerInfoActive
+                && <th scope="col">Veteran</th>}
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
+                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}
                     onClick={() => PassengersDispatcher.onPromptCreate()}>
                     + Create New
                   </button>
@@ -269,7 +279,7 @@ class PassengersDebug extends Component {
           </thead>
           <tbody>
             {passengersTable}
-            <tr><td colSpan="7"></td>{/* Space at end of table for aesthetic */}</tr>
+            <tr><td colSpan="12"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>

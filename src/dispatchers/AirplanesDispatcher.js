@@ -69,8 +69,6 @@ class AirplanesDispatcher {
       id : Number(airplane.id)
     }
 
-    console.log(newAirplane);
-
     Store.reduce({ type: constants.airplanes.editRequest });
     if(airplane.typeId !== typeId || isRevert) {
     Orchestration.createRequestWithBody(

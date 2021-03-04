@@ -54,16 +54,17 @@ const PassengersReducer = (action) => {
         create: {
           ...defaultPassengersState.create,
           isActive: true,
+          resultsStatus: "PENDING",
           status: "PENDING"
-        },
+        }
       };
 
     case passengersRoot.createResponse:
       return {
         create: {
           ...passengers.create,
-          results: action.payload.results,
-          resultsStatus: action.payload.resultsStatus
+          results: action.payload,
+          resultsStatus: "SUCCESS"
         }
       };
 
@@ -75,6 +76,8 @@ const PassengersReducer = (action) => {
           isActive: true
         },
         edit: defaultPassengersState.edit,
+        selected: action.payload,
+        status: "SUCCESS"
       };
 
     case passengersRoot.deleteRequest:
@@ -90,8 +93,7 @@ const PassengersReducer = (action) => {
       return {
         delete: {
           ...passengers.delete,
-          results: action.payload.results,
-          resultsStatus: action.payload.resultsStatus,
+          resultsStatus: "SUCCESS",
           status: "PENDING"
         }
       };
@@ -104,6 +106,8 @@ const PassengersReducer = (action) => {
           ...defaultPassengersState.edit,
           isActive: true
         },
+        selected: action.payload,
+        status: "SUCCESS"
       };
 
     case passengersRoot.editRequest:
