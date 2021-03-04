@@ -76,6 +76,8 @@ const PassengersReducer = (action) => {
           isActive: true
         },
         edit: defaultPassengersState.edit,
+        selected: action.payload,
+        status: "SUCCESS"
       };
 
     case passengersRoot.deleteRequest:
@@ -91,8 +93,7 @@ const PassengersReducer = (action) => {
       return {
         delete: {
           ...passengers.delete,
-          results: action.payload.results,
-          resultsStatus: action.payload.resultsStatus,
+          resultsStatus: "SUCCESS",
           status: "PENDING"
         }
       };

@@ -2,15 +2,33 @@ import React, { useState }  from 'react';
 
 const DropDown = (props) => {
   // @PROP: align - string
-  // @PROP: options - [num]
-  // @PROP: selection - num
+  // @PROP: options - [string]
+  // @PROP: optionsName - string
+  // @PROP: selection - string
   // @PROP: type - string
 
   // @PROP: isActive - bool
   // @PROP: onSelect - f()
 
+  const [isButtonFocus, setButtonFocus] = useState(false);
   const [isDropDownActive, setDropDownActive] = useState(props.isActive || false);
+  const [isListeningForMouseLeave, setIsListeningForMouseLeave] = useState(false);
   const { options, selection } = props;
+
+  const handleBlur = () => {
+    setTimeout(() => {
+      console.log(isButtonFocus);
+      if(!isButtonFocus) {
+        setDropDownActive(false);
+      }
+    }, 100);
+  };
+
+  const handleSelect = (option) => {
+    if(props.onSelect && option) props.onSelect(option);
+    setDropDownActive(false);
+    setButtonFocus(false);
+  };
 
   let optionsRender = [];
   if(options) {
@@ -20,13 +38,13 @@ const DropDown = (props) => {
         let optionRender = 
         <li key={"option-" + i}><button 
           className={"dropdown-item " + (selection === option && "active")}
-          type="button" 
-          onClick={() => {
-            props.onSelect(option);
-            setDropDownActive(false);
-          }}
+          type="button"
+          onMouseDown={() => {setButtonFocus(true); setIsListeningForMouseLeave(true);}}
+          onMouseUp={() => handleSelect(option)}
+          onTouchStart={() => setButtonFocus(true)}
+          onTouchEnd={() => handleSelect(option)}
         >
-          {option}
+          {option + (props.optionsName ? (" " + props.optionsName) : "")}
         </button></li>;
         optionsRender.push(optionRender);
       }
@@ -34,13 +52,13 @@ const DropDown = (props) => {
       optionsRender = 
       <li><button 
           className={"dropdown-item " + (selection === options && "active")}
-          type="button" 
-          onClick={() => {
-            props.onSelect(options);
-            setDropDownActive(false);
-          }}
+          type="button"
+          onMouseDown={() => {setButtonFocus(true); setIsListeningForMouseLeave(true);}}
+          onMouseUp={() => handleSelect(options)}
+          onTouchStart={() => setButtonFocus(true)}
+          onTouchEnd={() => handleSelect(options)}
         >
-          {options}
+          {options + (props.optionsName ? (" " + props.optionsName) : "")}
       </button></li>;
     }
   } else {
@@ -54,18 +72,20 @@ const DropDown = (props) => {
       style={props.style}
     >
       <button 
-        className="btn btn-secondary dropdown-toggle w-100"
+        className={"btn dropdown-toggle w-100 " + (props.buttonClassName || "btn-secondary")}
         style={{textAlign:"left"}}
         type="button"
-        onClick={() => setDropDownActive(!isDropDownActive)}
-        onBlur={() => setTimeout(() => setDropDownActive(false), 100)}
+        onBlur={() => handleBlur()}
+        onClick={() => setDropDownActive(true)}
       >
-        {selection ? selection : "No selection available."}
+        {selection ? (selection + (props.optionsName ? (" " + props.optionsName) : "")) : "No selection available."}
       </button>
       <ul className={"dropdown-menu " + 
         (props.align ? "dropdown-menu-" + props.align : "")+ " " + 
-        (isDropDownActive ? "show" : "")
-      }>
+        (isDropDownActive ? "show" : "")}
+        onMouseLeave={() => (isListeningForMouseLeave && handleSelect(null))}
+        onTouchLeave={() => (isListeningForMouseLeave && handleSelect(null))}
+      >
         {optionsRender}
       </ul>
     </div>

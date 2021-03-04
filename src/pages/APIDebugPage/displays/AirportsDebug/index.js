@@ -105,6 +105,7 @@ class AirportsDebug extends Component {
             <DropDown 
               selection={airports.search.resultsPerPage}
               options={["3", "10", "25", "50"]}
+              optionsName="items"
               onSelect={(e) => AirportsDispatcher.onResultsPerPage(e)}
             />
 

@@ -22,17 +22,9 @@ class PassengersDebug extends Component {
     super(props);
     this.state = {
       isPassengerInfoActive: false,
-      isResultsDropdownActive: false,
-      editingValues: {
-        status: 0,
-        flightId: 0,
-        passengerId: 0,
-        userId: 0,
-        guestEmail: "",
-        guestPhone: ""
-      }
     };
   }
+
   render() { 
     const { passengers } = Store.getState();
     const { isPassengerInfoActive, searchText } = this.state;
@@ -120,9 +112,9 @@ class PassengersDebug extends Component {
           <div className="row justify-content-center p-2">
             <FlexColumn className="col-4 col-md-3 text-center">
               <DropDown
-                className="dropdown-menu-right"
                 selection={passengers.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
+                optionsName="items"
                 onSelect={(e) => PassengersDispatcher.onResultsPerPage(e)}
               />
             </FlexColumn>
@@ -227,18 +219,17 @@ class PassengersDebug extends Component {
           <td>{passengersList[i].id}</td>
           <td>{passengersList[i].bookingId}</td>
           <td>{passengersList[i].passportId}</td>
-          {isPassengerInfoActive
-            && <td>{passengersList[i].firstName}</td>}
-          {isPassengerInfoActive
-            && <td>{passengersList[i].lastName}</td>}
-          {isPassengerInfoActive
-            && <td>{passengersList[i].dateOfBirth}</td>}
-          {isPassengerInfoActive
-            && <td>{passengersList[i].sex}</td>}
-          {isPassengerInfoActive
-            && <td>{passengersList[i].address}</td>}
-          {isPassengerInfoActive
-            && <td>{passengersList[i].isVeteran}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].firstName}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].lastName}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].dateOfBirth}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].sex}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].address}</td>}
+          {isPassengerInfoActive && 
+          <td>
+            {passengersList[i].isVeteran 
+              ? <div className="h3 text-success" style={{fontFamily: "monospace"}}>✔</div> 
+              : <div className="h3 text-danger" style={{fontFamily: "monospace"}}>X</div>}
+          </td>}
 
           {/* Edit */}
           <td><button className="btn btn-info"

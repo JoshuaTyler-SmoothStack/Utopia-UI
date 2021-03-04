@@ -14,24 +14,42 @@ const EditView = (props) => {
   const { passengers } = Store.getState();
   const selectedPassenger = passengers.selected;
 
-  const [bookingId, setBookingId] = useState(selectedPassenger.bookingId);
-  const [passportId, setPassportId] = useState(selectedPassenger.passportId);
-  const [firstName, setFirstName] = useState(selectedPassenger.firstName);
-  const [lastName, setLastName] = useState(selectedPassenger.lastName);
-  const [dateOfBirth, setDateOfBirth] = useState(selectedPassenger.dateOfBirth);
-  const [sex, setSex] = useState(selectedPassenger.sex);
-  const [address, setAddress] = useState(selectedPassenger.address);
-  const [isVeteran, setIsVeteran] = useState(selectedPassenger.isVeteran);
+  const [bookingId, setBookingId] = useState(selectedPassenger.bookingId || 1);
+  const [passportId, setPassportId] = useState(selectedPassenger.passportId || "");
+  const [firstName, setFirstName] = useState(selectedPassenger.firstName || "");
+  const [lastName, setLastName] = useState(selectedPassenger.lastName || "");
+  const [dateOfBirth, setDateOfBirth] = useState(selectedPassenger.dateOfBirth || "");
+  const [sex, setSex] = useState(selectedPassenger.sex || "prefer not to answer");
+  const [address, setAddress] = useState(selectedPassenger.address || "");
+  const [isVeteran, setIsVeteran] = useState(selectedPassenger.isVeteran || false);
 
   const [isReverted, setIsReverted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const results = passengers.edit.results
+  const results = passengers.edit.results;
   const resultsStatus = passengers.edit.resultsStatus;
   const status = passengers.edit.status;
   
   const resultsPending = JSON.stringify(resultsStatus).includes("PENDING");
   const noChangesMade = results === "N/A";
+
+  const handleValidate = () => {
+    setIsSubmitted(true);
+    if(!passportId) return false;
+    if(!firstName) return false;
+    if(!lastName) return false;
+    if(!dateOfBirth) return false;
+    if(!address) return false;
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if(!handleValidate()) return;
+    PassengersDispatcher.onEdit(
+      selectedPassenger, bookingId, passportId, firstName, 
+      lastName, dateOfBirth, sex, address, isVeteran
+    );
+  }
 
   return (
     <FlexColumn>
@@ -39,7 +57,28 @@ const EditView = (props) => {
       {(status === "PENDING" || status === "ERROR") && 
       <FlexColumn className="mt-5">
         <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Passenger" status={resultsStatus} result={"Passenger with ID: " + results.id + " successfully created."}/>
+        name="Booking ID" status={resultsStatus.bookingId} result={results.bookingId}/>
+
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="Passport ID" status={resultsStatus.passportId} result={results.passportId}/>
+
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="First Name" status={resultsStatus.firstName} result={results.firstName}/>
+
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="Last Name" status={resultsStatus.lastName} result={results.lastName}/>
+
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="Date Of Birth" status={resultsStatus.dateOfBirth} result={results.dateOfBirth}/>
+        
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="Sex" status={resultsStatus.sex} result={results.sex}/>
+
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="Address" status={resultsStatus.address} result={results.address}/>
+
+        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+        name="U.S. Military Active Duty / Veteran" status={resultsStatus.isVeteran} result={results.isVeteran}/>
 
         <FlexRow>
           <button className="btn btn-light m-3"
@@ -151,8 +190,8 @@ const EditView = (props) => {
               <label className="form-label mr-auto">Date Of Birth</label>
               <input 
                 className={"form-control " +  (isSubmitted ? !dateOfBirth ? "is-invalid" : "is-valid" : "")}
-                value={dateOfBirth}
                 type="date"
+                value={dateOfBirth}
                 onChange={(e) => setDateOfBirth(e.target.value)}
               />
             </FlexColumn>
@@ -162,6 +201,7 @@ const EditView = (props) => {
               <label className="form-label mr-auto">Sex</label>
               <DropDown
                 align="right"
+                buttonClassName="btn-info"
                 className="w-100"
                 options={["female", "male", "prefer not to answer"]}
                 selection={sex}
@@ -193,7 +233,7 @@ const EditView = (props) => {
                 className="form-check-input"
                 style={{height:"1.5rem", width:"1.5rem"}}
                 type="checkbox" 
-                value={isVeteran}
+                checked={isVeteran}
                 onChange={(e) => setIsVeteran(!isVeteran)}
               />
             </FlexColumn>
@@ -212,7 +252,7 @@ const EditView = (props) => {
             Cancel
           </button>
           <button className="btn btn-danger m-3"
-            onClick={() => PassengersDispatcher.onEdit(selectedPassenger)}
+            onClick={() => handleSubmit()}
           >
             Save Changes
           </button>

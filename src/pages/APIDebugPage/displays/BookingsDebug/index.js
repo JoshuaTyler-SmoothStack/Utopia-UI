@@ -122,6 +122,7 @@ class BookingsDebug extends Component {
               <DropDown
                 selection={bookings.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
+                optionsName="items"
                 onSelect={(e) => BookingsDispatcher.onResultsPerPage(e)}
               />
             </FlexColumn>
