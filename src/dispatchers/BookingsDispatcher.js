@@ -514,7 +514,7 @@ class BookingsDispatcher {
     }
   }
 
-  static onFindAll() {
+  static onRequest() {
     Store.reduce({ type: constants.bookings.request });
 
     Orchestration.createRequest(
@@ -555,10 +555,10 @@ class BookingsDispatcher {
     );
   }
 
-  static onFindBy(searchText) {
+  static onSearchAndFilter(searchText) {
     
     if(!searchText || searchText.length < 4) {
-      BookingsDispatcher.onFindAll();
+      BookingsDispatcher.onRequest();
       return;
     }
     
@@ -601,14 +601,14 @@ class BookingsDispatcher {
       onSuccess => Store.reduce({type: constants.bookings.editPrompt}));
     }
 
-  static onResultsPage(resultsPage) {
+  static onSelectResultsPage(resultsPage) {
     Store.reduce({
       type: constants.bookings.searchResultsPage,
       payload: resultsPage,
     });
   }
 
-  static onResultsPerPage(resultsPerPage) {
+  static onSelectResultsPerPage(resultsPerPage) {
     Store.reduce({
       type: constants.bookings.searchResultsPerPage,
       payload: resultsPerPage,

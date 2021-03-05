@@ -84,7 +84,7 @@ class AirportsDashboard extends Component {
   }
 
   findAllAirports = () => {
-    AirportsDispatcher.onFindAll();
+    AirportsDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 

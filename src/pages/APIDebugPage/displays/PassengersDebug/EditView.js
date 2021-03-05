@@ -1,4 +1,5 @@
 // Libraries
+import _ from "lodash";
 import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import PassengersDispatcher from "../../../../dispatchers/PassengersDispatcher";
@@ -29,9 +30,41 @@ const EditView = (props) => {
   const results = passengers.edit.results;
   const resultsStatus = passengers.edit.resultsStatus;
   const status = passengers.edit.status;
+
+  const bookingIdChanged = results
+    ? selectedPassenger.bookingId !== results.bookingId
+    : true;
+
+  const passportIdChanged = results
+    ? selectedPassenger.passportId !== results.passportId
+    : true;
+
+  const firstNameChanged = results
+    ? selectedPassenger.firstName !== results.firstName
+    : true;
+
+  const lastNameChanged = results
+    ? selectedPassenger.lastName !== results.lastName
+    : true;
+
+  const dateOfBirthChanged = results
+    ? selectedPassenger.dateOfBirth !== results.dateOfBirth
+    : true;
+
+  const sexChanged = results
+    ? selectedPassenger.sex !== results.sex
+    : true;
+
+  const addressChanged = results
+    ? selectedPassenger.address !== results.address
+    : true;
+
+  const isVeteranChanged = results
+    ? selectedPassenger.isVeteran !== results.isVeteran
+    : true;
   
   const resultsPending = JSON.stringify(resultsStatus).includes("PENDING");
-  const noChangesMade = results === "N/A";
+  const noChangesMade = _.isEqual(selectedPassenger, results);
 
   const handleValidate = () => {
     setIsSubmitted(true);
@@ -45,10 +78,22 @@ const EditView = (props) => {
 
   const handleSubmit = () => {
     if(!handleValidate()) return;
-    PassengersDispatcher.onEdit(
-      selectedPassenger, bookingId, passportId, firstName, 
-      lastName, dateOfBirth, sex, address, isVeteran
-    );
+    const newPassenger = {
+      id: selectedPassenger.id,
+      bookingId,
+      passportId,
+      firstName,
+      lastName,
+      dateOfBirth,
+      sex,
+      address,
+      isVeteran
+    };
+    if(!_.isEqual(selectedPassenger, newPassenger)) {
+      PassengersDispatcher.onEdit(null, newPassenger);
+    } else {
+      PassengersDispatcher.onEditFake(newPassenger);
+    }
   }
 
   return (
@@ -56,33 +101,76 @@ const EditView = (props) => {
 
       {(status === "PENDING" || status === "ERROR") && 
       <FlexColumn className="mt-5">
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Booking ID" status={resultsStatus.bookingId} result={results.bookingId}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Booking ID" 
+          result={results ? results.bookingId : ". . ."}
+          status={bookingIdChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Passport ID" status={resultsStatus.passportId} result={results.passportId}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Passport ID" 
+          result={results ? results.passportId : ". . ."}
+          status={passportIdChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="First Name" status={resultsStatus.firstName} result={results.firstName}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="First Name" 
+          result={results ? results.firstName : ". . ."}
+          status={firstNameChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Last Name" status={resultsStatus.lastName} result={results.lastName}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Last Name" 
+          result={results ? results.lastName : ". . ."}
+          status={lastNameChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Date Of Birth" status={resultsStatus.dateOfBirth} result={results.dateOfBirth}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Date Of Birth" 
+          result={results ? results.dateOfBirth : ". . ."}
+          status={dateOfBirthChanged ? resultsStatus : "DISABLED"} 
+        />
         
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Sex" status={resultsStatus.sex} result={results.sex}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Sex" 
+          result={results ? results.sex : ". . ."}
+          status={sexChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="Address" status={resultsStatus.address} result={results.address}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Address" 
+          result={results ? results.address : ". . ."}
+          status={addressChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-        name="U.S. Military Active Duty / Veteran" status={resultsStatus.isVeteran} result={results.isVeteran}/>
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="U.S. Military Active Duty / Veteran" 
+          result={results ? (results.isVeteran ? "YES" : "NO") : ". . ."}
+          status={isVeteranChanged ? resultsStatus : "DISABLED"} 
+        />
 
         <FlexRow>
           <button className="btn btn-light m-3"
-            onClick={() => PassengersDispatcher.onCancel()}
+            onClick={() => {
+              PassengersDispatcher.onCancel();
+              PassengersDispatcher.onRequest();
+            }}
           >
             Close
           </button>
@@ -99,7 +187,7 @@ const EditView = (props) => {
               onClick={resultsPending 
                 ? () => KitUtils.soundSuccess() 
                 : () => {
-                  PassengersDispatcher.onEdit(selectedPassenger); 
+                  PassengersDispatcher.onEdit(null, selectedPassenger); 
                   setIsReverted(true);
                 }
               }
@@ -120,7 +208,12 @@ const EditView = (props) => {
             {/* ID */}
             <div className="mr-auto">
               <label className="form-label">Passenger ID</label>
-              <input type="text" readOnly className="form-control" value={selectedPassenger.id}/>
+              <input 
+                className="form-control" 
+                readOnly 
+                type="text" 
+                value={selectedPassenger.id}
+              />
             </div>
 
             {/* Booking ID */}
@@ -131,6 +224,7 @@ const EditView = (props) => {
                 min="1" 
                 type="number" 
                 value={bookingId}
+                onChange={(e) => setBookingId(e.target.value)}
               />
             </div>
           </FlexRow>

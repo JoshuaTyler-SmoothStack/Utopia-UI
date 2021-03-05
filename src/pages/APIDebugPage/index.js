@@ -51,7 +51,7 @@ class APIDebugPage extends Component {
   }
 
   componentDidMount() {
-    OrchestrationDispathcer.onServices();
+    OrchestrationDispathcer.onFindActiveServices();
   }
 }
 export default APIDebugPage;

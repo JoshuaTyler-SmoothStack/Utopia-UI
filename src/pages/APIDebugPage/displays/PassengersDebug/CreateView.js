@@ -41,10 +41,17 @@ const CreateView = (props) => {
 
   const handleSubmit = () => {
     if(!handleValidate()) return;
-    PassengersDispatcher.onCreate(
-      bookingId, passportId, firstName, lastName, 
-      dateOfBirth, sex, address, isVeteran
-    );
+    const newPassenger = {
+      bookingId,
+      passportId,
+      firstName,
+      lastName,
+      dateOfBirth,
+      sex,
+      address,
+      isVeteran
+    };
+    PassengersDispatcher.onCreate(null, newPassenger);
   }
 
   return (
@@ -56,13 +63,16 @@ const CreateView = (props) => {
           
           <FlexRow>
             <button className="btn btn-light m-3"
-              onClick={() => PassengersDispatcher.onCancel()}
+              onClick={() => {
+                PassengersDispatcher.onCancel();
+                PassengersDispatcher.onRequest();
+              }}
             >
               Close
             </button>
             {status !== "ERROR" &&
             <button className={"btn btn-info m-3" + (!resultsPending || " disabled")}
-              onClick={!resultsPending ? () => PassengersDispatcher.onPromptEdit(results.id) : () => {KitUtils.soundAlert()}}
+              onClick={!resultsPending ? () => PassengersDispatcher.onPromptEdit("/" + results.id) : () => {KitUtils.soundAlert()}}
             >
               {resultsPending ? "Edit (please wait)" : "Edit"}
             </button>}
@@ -86,15 +96,35 @@ const CreateView = (props) => {
               {/* Booking ID */}
               <div className="ml-3">
                 <label className="form-label">Booking ID</label>
-                <input type="number" min="1" className="form-control" defaultValue={1}/>
+                <input 
+                  className={"form-control " + 
+                  (isSubmitted 
+                    ? !bookingId
+                      ? "is-invalid" 
+                      : "is-valid" 
+                    : ""
+                  )}
+                  min="1" 
+                  type="number" 
+                  defaultValue={1}
+                  onChange={(e) => setBookingId(e.target.value)}
+                />
               </div>
             </FlexRow>
 
               {/* Passport ID */}
               <div className="mt-3 w-100">
                 <label className="form-label">Passport ID</label>
-                <input type="text" placeholder={"31195855"}
-                  className={"form-control " +  (isSubmitted ? !passportId ? "is-invalid" : "is-valid" : "")}
+                <input 
+                  className={"form-control " + 
+                  (isSubmitted 
+                    ? !passportId 
+                      ? "is-invalid" 
+                      : "is-valid" 
+                    : ""
+                  )}
+                  placeholder={"31195855"}
+                  type="text" 
                   onChange={(e) => setPassportId(e.target.value)}
                 />
               </div>
@@ -108,19 +138,35 @@ const CreateView = (props) => {
             {/* First Name */}
             <div className="mr-auto">
               <label className="form-label form-label">First Name</label>
-              <input type="text" placeholder={"John"}
-                className={"form-control " +  (isSubmitted ? !firstName ? "is-invalid" : "is-valid" : "")}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
+              <input 
+                  className={"form-control " + 
+                  (isSubmitted 
+                    ? !firstName 
+                      ? "is-invalid" 
+                      : "is-valid" 
+                    : ""
+                  )}
+                  placeholder={"John"}
+                  type="text" 
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
             </div>
 
             {/* Last Name */}
             <div className="ml-3">
               <label className="form-label">Last Name</label>
-              <input type="text" placeholder={"Smith"}
-                className={"form-control " +  (isSubmitted ? !lastName ? "is-invalid" : "is-valid" : "")}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+              <input 
+                  className={"form-control " + 
+                  (isSubmitted 
+                    ? !lastName 
+                      ? "is-invalid" 
+                      : "is-valid" 
+                    : ""
+                  )}
+                  placeholder={"Smith"}
+                  type="text" 
+                  onChange={(e) => setLastName(e.target.value)}
+                />
             </div>
             <hr className="w-100"></hr>
           </FlexRow>
@@ -134,8 +180,15 @@ const CreateView = (props) => {
               {/* Date Of Birth */}
               <FlexColumn className="mr-auto">
                 <label className="form-label mr-auto">Date Of Birth</label>
-                <input type="date"
-                  className={"form-control " +  (isSubmitted ? !dateOfBirth ? "is-invalid" : "is-valid" : "")}
+                <input 
+                  className={"form-control " + 
+                  (isSubmitted 
+                    ? !dateOfBirth 
+                      ? "is-invalid" 
+                      : "is-valid" 
+                    : ""
+                  )}
+                  type="date" 
                   onChange={(e) => setDateOfBirth(e.target.value)}
                 />
               </FlexColumn>
@@ -158,8 +211,16 @@ const CreateView = (props) => {
               {/* Address */}
               <div className="w-100">
                 <label className="form-label">Address</label>
-                <input type="text" placeholder={"1600 Pennsylvania Avenue NW, Washington, DC 20500"}
-                  className={"form-control " +  (isSubmitted ? !address ? "is-invalid" : "is-valid" : "")}
+                <input 
+                  className={"form-control " + 
+                  (isSubmitted 
+                    ? !address 
+                      ? "is-invalid" 
+                      : "is-valid" 
+                    : ""
+                  )}
+                  placeholder={"1600 Pennsylvania Avenue NW, Washington, DC 20500"}
+                  type="text" 
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
@@ -169,8 +230,10 @@ const CreateView = (props) => {
             <FlexRow className="mt-3 w-100">
               {/* Veteran Status */}
               <FlexColumn>
-                <input type="checkbox" className="form-check-input"
+                <input 
+                  className="form-check-input"
                   style={{height:"1.5rem", width:"1.5rem"}}
+                  type="checkbox" 
                   onChange={(e) => setIsVeteran(!isVeteran)}
                 />
               </FlexColumn>

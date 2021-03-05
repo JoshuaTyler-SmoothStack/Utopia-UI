@@ -84,7 +84,7 @@ class UsersDashboard extends Component {
   }
 
   findAllUsers = () => {
-    UsersDispatcher.onFindAll();
+    UsersDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 

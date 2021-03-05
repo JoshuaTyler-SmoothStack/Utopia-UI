@@ -122,7 +122,7 @@ class AirportsDispatcher {
     }, 1500);
   }
 
-  static onFindAll() {
+  static onRequest() {
     Store.reduce({ type: constants.airports.request });
 
     Orchestration.createRequest(
@@ -150,10 +150,10 @@ class AirportsDispatcher {
     );
   }
 
-  static onFindBy(searchText) {
+  static onSearchAndFilter(searchText) {
     
     if (!searchText || searchText.trim() === "") {
-      AirportsDispatcher.onFindAll();
+      AirportsDispatcher.onRequest();
       return;
     }
 
@@ -217,14 +217,14 @@ class AirportsDispatcher {
     });
   }
 
-  static onResultsPage(resultsPage) {
+  static onSelectResultsPage(resultsPage) {
     Store.reduce({
       type: constants.airports.searchResultsPage,
       payload: resultsPage,
     });
   }
 
-  static onResultsPerPage(resultsPerPage) {
+  static onSelectResultsPerPage(resultsPerPage) {
     Store.reduce({
       type: constants.airports.searchResultsPerPage,
       payload: resultsPerPage,

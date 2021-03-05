@@ -3,7 +3,7 @@ import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
 
 class FlightsDispatcher {
-  static onFindAll() {
+  static onRequest() {
    Store.reduce({type: constants.flights.request});
 
    setTimeout(() => {

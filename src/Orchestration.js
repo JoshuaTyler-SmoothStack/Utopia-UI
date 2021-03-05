@@ -47,16 +47,5 @@ class Orchestration {
       onSuccess(onSuccess2);
     });
   }
-
-  static findActiveServices(onError, onSuccess) {
-    Orchestration.createRequest(constants.httpRequest.get, "services",
-    onError2 => {
-      onError(onError2);
-    }, onSuccess2 => {
-      const data = onSuccess2;
-      console.log("[INCOMING FROM SPRING] services:\n" + data);
-      onSuccess(data);
-    });
-  }
 } 
 export default Orchestration;

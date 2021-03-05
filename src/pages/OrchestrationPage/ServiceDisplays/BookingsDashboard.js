@@ -84,7 +84,7 @@ class BookingsDashboard extends Component {
   }
 
   findAllBookings = () => {
-    BookingsDispatcher.onFindAll();
+    BookingsDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 

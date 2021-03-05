@@ -84,7 +84,7 @@ class AirplanesDashboard extends Component {
   }
 
   findAllAirplanes = () => {
-    AirplanesDispatcher.onFindAll();
+    AirplanesDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 

@@ -75,7 +75,7 @@ class BookingsDebug extends Component {
                 <button 
                   className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                   type="submit"
-                  onClick={() => BookingsDispatcher.onFindBy(searchText)}
+                  onClick={() => BookingsDispatcher.onSearchAndFilter("/search", searchText)}
                 >
                   search
                 </button>
@@ -123,7 +123,7 @@ class BookingsDebug extends Component {
                 selection={bookings.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => BookingsDispatcher.onResultsPerPage(e)}
+                onSelect={(e) => BookingsDispatcher.onSelectResultsPerPage(e)}
               />
             </FlexColumn>
 
@@ -139,7 +139,7 @@ class BookingsDebug extends Component {
               <Pagination
                 currentPage={bookings.search.resultsPage}
                 totalPages={Math.ceil(bookings.search.results.length / Math.max(bookings.search.resultsPerPage, 1))}
-                onSelectPage={(e) => BookingsDispatcher.onResultsPage(e)}
+                onSelectPage={(e) => BookingsDispatcher.onSelectResultsPage(e)}
               />
             </FlexColumn>
           </div>
@@ -199,7 +199,7 @@ class BookingsDebug extends Component {
       BookingsDispatcher.onError("No Orchestration connection.");
     }, onSuccess => {
       const isMSActive = onSuccess.includes("booking-service");
-      if(isMSActive) BookingsDispatcher.onFindAll()
+      if(isMSActive) BookingsDispatcher.onRequest()
       else BookingsDispatcher.onError("No Booking MS connection.");
     });
   }

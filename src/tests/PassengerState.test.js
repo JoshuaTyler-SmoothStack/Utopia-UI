@@ -11,7 +11,7 @@ beforeEach(() => {
   while (!Store.getState().isAppStateMounted) {/* do nothing */ }
 });
 
-test("onFindAll with valid response sets searchresults to passengers returned, has no error, and has status SUCCESS",
+test("onRequest with valid response sets searchresults to passengers returned, has no error, and has status SUCCESS",
 () => {
   const sampleResults = {
     "0": {
@@ -54,7 +54,7 @@ test("onFindAll with valid response sets searchresults to passengers returned, h
     }
   }));
   PassengerDispatcher
-    .onFindAll();
+    .onRequest();
   setTimeout(() => {
     const { passengers } = Store.getState();
     expect(passengers.search.results).toBe(sampleResults);

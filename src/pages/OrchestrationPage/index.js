@@ -60,7 +60,7 @@ class OrchestrationPage extends Component {
             {services.status === "PENDING" && <div className="spinner-border kit-color-cream"/>}
 
             {/* No Active Services Error */}
-            {services.status === "REGISTERED" && services.list.length < 1 && 
+            {services.status === "SUCCESS" && services.list.length < 1 && 
               <FlexRow
                 className="h1 text-warning kit-bg-smoke rounded kit-border-shadow"
                 style={{width: "50%"}}
@@ -70,7 +70,7 @@ class OrchestrationPage extends Component {
             }
 
             {/* ServiceDisplays */}
-            {services.status === "REGISTERED" && services.list.length > 0 && 
+            {services.status === "SUCCESS" && services.list.length > 0 && 
             <FlexColumn style={{width: "66%"}}>
 
               <ServiceDisplay 

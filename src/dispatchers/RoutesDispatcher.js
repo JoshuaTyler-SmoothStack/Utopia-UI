@@ -3,7 +3,7 @@ import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
 
 class RoutesDispatcher {
-  static onFindAll() {
+  static onRequest() {
    Store.reduce({type: constants.routes.request});
 
     Orchestration.createRequest(

@@ -73,7 +73,7 @@ class AirportsDebug extends Component {
               <button 
                 className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                 type="submit"
-                onClick={() => AirportsDispatcher.onFindBy(searchText)}
+                onClick={() => AirportsDispatcher.onSearchAndFilter("/search", searchText)}
               >
                 search
               </button>
@@ -106,7 +106,7 @@ class AirportsDebug extends Component {
               selection={airports.search.resultsPerPage}
               options={["3", "10", "25", "50"]}
               optionsName="items"
-              onSelect={(e) => AirportsDispatcher.onResultsPerPage(e)}
+              onSelect={(e) => AirportsDispatcher.onSelectResultsPerPage(e)}
             />
 
             <ItemsIndexReadout
@@ -120,7 +120,7 @@ class AirportsDebug extends Component {
               className={"m-0 ml-2"}
               currentPage={airports.search.resultsPage}
               totalPages={Math.ceil(airports.search.results.length / Math.max(airports.search.resultsPerPage, 1))}
-              onSelectPage={(e) => AirportsDispatcher.onResultsPage(e)}
+              onSelectPage={(e) => AirportsDispatcher.onSelectResultsPage(e)}
             />
           </FlexRow>
         </div>
@@ -182,7 +182,7 @@ class AirportsDebug extends Component {
       AirportsDispatcher.onError("No Orchestration connection.");
     }, onSuccess => {
       const isMSActive = onSuccess.includes("airport-service");
-      if(isMSActive) AirportsDispatcher.onFindAll();
+      if(isMSActive) AirportsDispatcher.onRequest();
       else AirportsDispatcher.onError("No Airport MS connection.");
     });
   }

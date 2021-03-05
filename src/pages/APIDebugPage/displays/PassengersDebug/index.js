@@ -1,6 +1,6 @@
 // Libraries
 import PassengersDispatcher from "../../../../dispatchers/PassengersDispatcher";
-import Orchestration from "../../../../Orchestration";
+import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
@@ -22,12 +22,13 @@ class PassengersDebug extends Component {
     super(props);
     this.state = {
       isPassengerInfoActive: false,
+      searchTerms: ""
     };
   }
 
   render() { 
     const { passengers } = Store.getState();
-    const { isPassengerInfoActive, searchText } = this.state;
+    const { isPassengerInfoActive, searchTerms } = this.state;
     const isCreatePromptActive = passengers.create.isActive;
     const isDeletePromptActive = passengers.delete.isActive;
     const isEditPromptActive = passengers.edit.isActive;
@@ -48,7 +49,7 @@ class PassengersDebug extends Component {
               status={passengersMSStatus === "INACTIVE" ? "PENDING" : passengersMSStatus}
               style={{maxWidth:"30rem"}}
               onTriggerError={() => PassengersDispatcher.onError()}
-              onTriggerFakeAPICall={() => PassengersDispatcher.onFakeAPICall()}
+              onTriggerFakeAPICall={() => PassengersDispatcher.onFakeAPICall(searchResults)}
             />
 
             {/* Search Bar */}
@@ -62,12 +63,12 @@ class PassengersDebug extends Component {
                   placeholder="IDs, name, address, . . ."
                   type="search" 
                   style={{maxWidth:"15rem"}}
-                  onChange={(e) => this.setState({searchText: e.target.value})}
+                  onChange={(e) => this.setState({searchTerms: e.target.value})}
                 />
                 <button 
                   className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                   type="submit"
-                  onClick={() => PassengersDispatcher.onFindBy(searchText)}
+                  onClick={() => PassengersDispatcher.onSearchAndFilter("/search", searchTerms)}
                 >
                   search
                 </button>
@@ -115,7 +116,7 @@ class PassengersDebug extends Component {
                 selection={passengers.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => PassengersDispatcher.onResultsPerPage(e)}
+                onSelect={(e) => PassengersDispatcher.onSelectResultsPerPage(e)}
               />
             </FlexColumn>
 
@@ -131,7 +132,7 @@ class PassengersDebug extends Component {
               <Pagination
                 currentPage={passengers.search.resultsPage}
                 totalPages={Math.ceil(passengers.search.results.length / Math.max(passengers.search.resultsPerPage, 1))}
-                onSelectPage={(e) => PassengersDispatcher.onResultsPage(e)}
+                onSelectPage={(e) => PassengersDispatcher.onSelectResultsPage(e)}
               />
             </FlexColumn>
           </div>
@@ -186,13 +187,15 @@ class PassengersDebug extends Component {
 
   componentDidMount() {
     PassengersDispatcher.onCancel();
-    Orchestration.findActiveServices(
-    onError => {
-      PassengersDispatcher.onError("No Orchestration connection.");
-    }, onSuccess => {
-      const isMSActive = onSuccess.includes("passenger-service");
-      if(isMSActive) PassengersDispatcher.onFindAll()
-      else PassengersDispatcher.onError("No Passenger MS connection.");
+    OrchestrationDispatcher.onRequestThenCallback(
+      "/services", 
+      httpError => {}, 
+      httpResponseBody => {
+        if(httpResponseBody.includes("passenger-service")) {
+          PassengersDispatcher.onRequest()
+        } else {
+          PassengersDispatcher.onError("No Passenger MS connection.");
+        }
     });
   }
 
@@ -233,13 +236,13 @@ class PassengersDebug extends Component {
 
           {/* Edit */}
           <td><button className="btn btn-info"
-            onClick={() => PassengersDispatcher.onPromptEdit(passengerId)}>
+            onClick={() => PassengersDispatcher.onPromptEdit("/"+passengerId)}>
             Edit
           </button></td>
 
           {/* Delete */}
           <td><button className="btn btn-primary"
-            onClick={() => PassengersDispatcher.onPromptDelete(passengerId)}>
+            onClick={() => PassengersDispatcher.onPromptDelete("/"+passengerId)}>
             Delete
           </button></td>
         </tr>

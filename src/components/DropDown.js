@@ -84,7 +84,6 @@ const DropDown = (props) => {
         (props.align ? "dropdown-menu-" + props.align : "")+ " " + 
         (isDropDownActive ? "show" : "")}
         onMouseLeave={() => (isListeningForMouseLeave && handleSelect(null))}
-        onTouchLeave={() => (isListeningForMouseLeave && handleSelect(null))}
       >
         {optionsRender}
       </ul>

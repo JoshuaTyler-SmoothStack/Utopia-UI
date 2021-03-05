@@ -126,7 +126,7 @@ class AirplanesDispatcher {
     }, 1500);
   }
 
-  static onFindAll() {
+  static onRequest() {
     Store.reduce({ type: constants.airplanes.request });
 
     Orchestration.createRequest(
@@ -154,10 +154,10 @@ class AirplanesDispatcher {
     );
   }
 
-  static onFindBy(searchText) {
+  static onSearchAndFilter(searchText) {
     
     if (!searchText || searchText.trim() === "") {
-      AirplanesDispatcher.onFindAll();
+      AirplanesDispatcher.onRequest();
       return;
     }
 
@@ -234,14 +234,14 @@ class AirplanesDispatcher {
     });
   }
 
-  static onResultsPage(resultsPage) {
+  static onSelectResultsPage(resultsPage) {
     Store.reduce({
       type: constants.airplanes.searchResultsPage,
       payload: resultsPage,
     });
   }
 
-  static onResultsPerPage(resultsPerPage) {
+  static onSelectResultsPerPage(resultsPerPage) {
     Store.reduce({
       type: constants.airplanes.searchResultsPerPage,
       payload: resultsPerPage,

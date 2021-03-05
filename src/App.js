@@ -6,6 +6,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
+import Store from "./reducers/Store";
 
 // Components
 import LoginModal from "./componentgroups/LoginModal";
@@ -23,21 +24,22 @@ import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
-import Store from "./reducers/Store";
 
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.handleResize = _.throttle(this.handleResize.bind(this), 100);
+    // State Management
+    Store.initialize(() => this.state, (e) => this.setState(e));
     this.state = { 
       ...Store.getCombinedDefaultReducerStates(),
       breakPoint: "xx_small",
       isAppStateMounted: false,
     };
-    Store.setState = (e) => this.setState(e);
-    Store.getState = () => this.state;
+
+    // Window Resize throttling
+    this.handleResize = _.throttle(this.handleResize.bind(this), 100);
   }
 
   render() {

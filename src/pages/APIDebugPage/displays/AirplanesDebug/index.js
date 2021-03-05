@@ -20,10 +20,7 @@ import Pagination from "../../../../components/Pagination";
 class AirplanesDebug extends Component {
   constructor(props) {
     super(props);
-    const { airplanes } = Store.getState();
-    this.state = {
-      
-    };
+    this.state = {};
   }
   render() { 
     const { airplanes } = Store.getState();
@@ -70,7 +67,7 @@ class AirplanesDebug extends Component {
               <button 
                 className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                 type="submit"
-                onClick={() => AirplanesDispatcher.onFindBy(searchText)}
+                onClick={() => AirplanesDispatcher.onSearchAndFilter("/search", searchText)}
               >
                 search
               </button>
@@ -103,7 +100,7 @@ class AirplanesDebug extends Component {
               selection={airplanes.search.resultsPerPage}
               options={["3", "10", "25", "50"]}
               optionsName="items"
-              onSelect={(e) => AirplanesDispatcher.onResultsPerPage(e)}
+              onSelect={(e) => AirplanesDispatcher.onSelectResultsPerPage(e)}
             />
 
             <ItemsIndexReadout
@@ -117,7 +114,7 @@ class AirplanesDebug extends Component {
               className={"m-0 ml-2"}
               currentPage={airplanes.search.resultsPage}
               totalPages={Math.ceil(airplanes.search.results.length / Math.max(airplanes.search.resultsPerPage, 1))}
-              onSelectPage={(e) => AirplanesDispatcher.onResultsPage(e)}
+              onSelectPage={(e) => AirplanesDispatcher.onSelectResultsPage(e)}
             />
           </FlexRow>
         </div>
@@ -179,7 +176,7 @@ class AirplanesDebug extends Component {
       AirplanesDispatcher.onError("No Orchestration connection.");
     }, onSuccess => {
       const isMSActive = onSuccess.includes("airplane-service");
-      if(isMSActive) AirplanesDispatcher.onFindAll();
+      if(isMSActive) AirplanesDispatcher.onRequest();
       else AirplanesDispatcher.onError("No Airplane MS connection.");
     });
   }

@@ -63,7 +63,7 @@ class UsersDispatcher {
   }
 
 
-  static onFindAll() {
+  static onRequest() {
     Store.reduce({ type: constants.users.request });
 
     Orchestration.createRequest(
@@ -84,10 +84,10 @@ class UsersDispatcher {
     });
   }
 
-  static onFindBy(searchText) {
+  static onSearchAndFilter(searchText) {
     
     if (!searchText || searchText.trim() === "") {
-      UsersDispatcher.onFindAll();
+      UsersDispatcher.onRequest();
       return;
     }
 
@@ -144,14 +144,14 @@ class UsersDispatcher {
     });
   }
 
-  static onResultsPage(resultsPage) {
+  static onSelectResultsPage(resultsPage) {
     Store.reduce({
       type: constants.users.searchResultsPage,
       payload: resultsPage,
     });
   }
 
-  static onResultsPerPage(resultsPerPage) {
+  static onSelectResultsPerPage(resultsPerPage) {
     Store.reduce({
       type: constants.users.searchResultsPerPage,
       payload: resultsPerPage,

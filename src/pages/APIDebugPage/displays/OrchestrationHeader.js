@@ -17,7 +17,7 @@ const OrchestrationHeader = (props) => {
   const status = props.status || "INACTIVE";
   const isMobileSize = Store.getState().breakPoint.includes("small");
   const isMSActive = name !== "Unkown"
-    ? orchestration.services.list.includes(name.toLowerCase().split(" ")[0] + "-service")
+    ? orchestration.services.includes(name.toLowerCase().split(" ")[0] + "-service")
     : false;
 
   return(
