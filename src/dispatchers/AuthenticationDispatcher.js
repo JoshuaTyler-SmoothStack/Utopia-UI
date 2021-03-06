@@ -1,9 +1,12 @@
+import BaseDispatcher from "./BaseDispatcher";
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
-import BaseDispatcher from "./BaseDispatcher";
 
 class AuthenticationDispatcher extends BaseDispatcher {
+  
+  static apiPath = constants.authentication.apiPath;
+  static constantsParent = constants.authentication;
 
   static onCancel() {
    Store.reduce({type: constants.authentication.cancel});

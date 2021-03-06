@@ -1,8 +1,13 @@
+import BaseDispatcher from "./BaseDispatcher";
+import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
-import BaseDispatcher from "./BaseDispatcher";
 
 class OrchestrationDispatcher extends BaseDispatcher {
+
+  static apiPath = constants.orchestration.apiPath;
+  static constantsParent = constants.orchestration;
+
   static onContentNegotiation(payload) {
     Store.reduce({
       type: this.constantsParent.contentNegotiation,

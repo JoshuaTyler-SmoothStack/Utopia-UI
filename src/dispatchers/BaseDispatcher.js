@@ -6,31 +6,44 @@ class BaseDispatcher {
   static apiPath = null;
   static constantsParent = null;
 
-  static initialize(constantsParent, dispatcherAPIPath) {
-    this.apiPath = dispatcherAPIPath;
-    this.constantsParent = constantsParent;
+  static getApiPath() {
+    if(!this.apiPath) console.error(
+      "Attempting to utilize an unset API Path." +
+      "The Dispatcher will not know how to process this." + 
+      "Check the Dispatcher setup being utilized."
+    );
+    return this.apiPath;
+  }
+
+  static getConstantsParent() {
+    if(!this.constantsParent) console.error(
+      "Attempting to utilize an unset ConstantsParent." +
+      "The Reducer will not know how to process this." + 
+      "Check the Dispatcher setup being utilized."
+    );
+    return this.constantsParent;
   }
 
   static onCancel() {
-    Store.reduce({ type: this.constantsParent.cancel });
+    Store.reduce({ type: this.getConstantsParent().cancel });
   }
 
   static onCreate(httpPath, httpBody) {
-    Store.reduce({ type: this.constantsParent.requestCreate });
+    Store.reduce({ type: this.getConstantsParent().requestCreate });
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
-      this.apiPath + (httpPath || ""),
+      this.getApiPath() + (httpPath || ""),
       httpBody,
       (httpError) => {
         Store.reduce({
-          type: this.constantsParent.error,
+          type: this.getConstantsParent().error,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
         if (httpResponseBody.error) {
           Store.reduce({
-            type: this.constantsParent.responseCreate,
+            type: this.getConstantsParent().responseCreate,
             payload: {
               results: httpResponseBody,
               resultsStatus: "ERROR"
@@ -38,7 +51,7 @@ class BaseDispatcher {
           });
         } else {
           Store.reduce({
-            type: this.constantsParent.responseCreate,
+            type: this.getConstantsParent().responseCreate,
             payload: {
               results: httpResponseBody,
               resultsStatus: "SUCCESS"
@@ -50,20 +63,20 @@ class BaseDispatcher {
   }
 
   static onDelete(httpPath) {
-    Store.reduce({ type: this.constantsParent.requestDelete });
+    Store.reduce({ type: this.getConstantsParent().requestDelete });
     Orchestration.createRequest(
       constants.httpRequest.delete,
-      this.apiPath + (httpPath || ""),
+      this.getApiPath() + (httpPath || ""),
       (httpError) => {
         Store.reduce({
-          type: this.constantsParent.error,
+          type: this.getConstantsParent().error,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
         if (httpResponseBody.error) {
           Store.reduce({
-            type: this.constantsParent.responseDelete,
+            type: this.getConstantsParent().responseDelete,
             payload: {
               results: httpResponseBody,
               resultsStatus: "ERROR"
@@ -71,7 +84,7 @@ class BaseDispatcher {
           });
         } else {
           Store.reduce({
-            type: this.constantsParent.responseDelete,
+            type: this.getConstantsParent().responseDelete,
             payload: {
               results: httpResponseBody,
               resultsStatus: "SUCCESS"
@@ -83,22 +96,21 @@ class BaseDispatcher {
   }
 
   static onEdit(httpPath, httpBody) {
-    Store.reduce({ type: this.constantsParent.requestEdit });
-    console.log(this.apiPath + (httpPath || ""));
+    Store.reduce({ type: this.getConstantsParent().requestEdit });
     Orchestration.createRequestWithBody(
       constants.httpRequest.put,
-      this.apiPath + (httpPath || ""),
+      this.getApiPath() + (httpPath || ""),
       httpBody,
       (httpError) => {
         Store.reduce({
-          type: this.constantsParent.error,
+          type: this.getConstantsParent().error,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
         if (httpResponseBody.error) {
           Store.reduce({
-            type: this.constantsParent.responseEdit,
+            type: this.getConstantsParent().responseEdit,
             payload: {
               results: httpResponseBody,
               resultsStatus: "ERROR"
@@ -106,7 +118,7 @@ class BaseDispatcher {
           });
         } else {
           Store.reduce({
-            type: this.constantsParent.responseEdit,
+            type: this.getConstantsParent().responseEdit,
             payload: {
               results: httpResponseBody,
               resultsStatus: "SUCCESS"
@@ -118,9 +130,9 @@ class BaseDispatcher {
   }
 
   static onEditFake(httpBody) {
-    Store.reduce({ type: this.constantsParent.requestEdit });
+    Store.reduce({ type: this.getConstantsParent().requestEdit });
     Store.reduce({
-      type: this.constantsParent.responseEdit,
+      type: this.getConstantsParent().responseEdit,
       payload: {
         results: httpBody,
         resultsStatus: "SUCCESS"
@@ -130,41 +142,41 @@ class BaseDispatcher {
 
   static onError(message) {
     Store.reduce({
-      type: this.constantsParent.error,
+      type: this.getConstantsParent().error,
       payload: message,
     });
   }
 
   static onFakeAPICall(httpBody) {
-    Store.reduce({ type: this.constantsParent.request });
+    Store.reduce({ type: this.getConstantsParent().request });
     setTimeout(() => {
       Store.reduce({
-        type: this.constantsParent.response,
+        type: this.getConstantsParent().response,
         payload: httpBody
       });
     }, 1500);
   }
 
   static onRequest(httpPath) {
-    Store.reduce({ type: this.constantsParent.request });
+    Store.reduce({ type: this.getConstantsParent().request });
     Orchestration.createRequest(
       constants.httpRequest.get,
-      this.apiPath + (httpPath || ""),
+      this.getApiPath() + (httpPath || ""),
       (httpError) => {
         Store.reduce({
-          type: this.constantsParent.error,
+          type: this.getConstantsParent().error,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
         if(httpResponseBody.error) {
           Store.reduce({
-            type: this.constantsParent.error,
+            type: this.getConstantsParent().error,
             payload: httpResponseBody.error,
           });
         } else {
           Store.reduce({
-            type: this.constantsParent.response,
+            type: this.getConstantsParent().response,
             payload: httpResponseBody,
           });
         }
@@ -173,10 +185,10 @@ class BaseDispatcher {
   }
 
   static onRequestThenCallback(httpPath, onError, onSuccess) {
-    Store.reduce({ type: this.constantsParent.request });
+    Store.reduce({ type: this.getConstantsParent().request });
     Orchestration.createRequest(
       constants.httpRequest.get,
-      this.apiPath + (httpPath || ""),
+      this.getApiPath() + (httpPath || ""),
       (httpError) => onError(httpError),
       (httpResponseBody) => {
         if(httpResponseBody.error) onError(httpResponseBody.error);
@@ -197,27 +209,27 @@ class BaseDispatcher {
       }
     }
 
-    Store.reduce({ type: this.constantsParent.request });
+    Store.reduce({ type: this.getConstantsParent().request });
     console.log("activeFilters -> ", activeFilters);
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
-      this.apiPath + httpPath,
+      this.getApiPath() + httpPath,
       activeFilters,
       (httpError) => {
         Store.reduce({
-          type: this.constantsParent.error,
+          type: this.getConstantsParent().error,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
         if(httpResponseBody.error) {
           Store.reduce({
-            type: this.constantsParent.error,
+            type: this.getConstantsParent().error,
             payload: httpResponseBody.error,
           });
         } else {
           Store.reduce({
-            type: this.constantsParent.response,
+            type: this.getConstantsParent().response,
             payload: httpResponseBody,
           });
         }
@@ -226,35 +238,35 @@ class BaseDispatcher {
   }
 
   static onPromptCreate() {
-    Store.reduce({ type: this.constantsParent.promptCreate });
+    Store.reduce({ type: this.getConstantsParent().promptCreate });
   }
 
   static onPromptDelete(requestPath) {
     this.onRequestThenCallback(
       requestPath, 
-      onError => Store.reduce({type: this.constantsParent.error, payload: onError}),
-      onSuccess => Store.reduce({type: this.constantsParent.promptDelete, payload: onSuccess})
+      onError => Store.reduce({type: this.getConstantsParent().error, payload: onError}),
+      onSuccess => Store.reduce({type: this.getConstantsParent().promptDelete, payload: onSuccess})
     );
   }
 
   static onPromptEdit(requestPath) {
     this.onRequestThenCallback(
       requestPath, 
-      onError => Store.reduce({type: this.constantsParent.error, payload: onError}),
-      onSuccess => Store.reduce({type: this.constantsParent.promptEdit, payload: onSuccess})
+      onError => Store.reduce({type: this.getConstantsParent().error, payload: onError}),
+      onSuccess => Store.reduce({type: this.getConstantsParent().promptEdit, payload: onSuccess})
     );
   }
 
   static onSelectResultsPage(resultsPage) {
     Store.reduce({
-      type: this.constantsParent.searchResultsPage,
+      type: this.getConstantsParent().searchResultsPage,
       payload: resultsPage,
     });
   }
 
   static onSelectResultsPerPage(resultsPerPage) {
     Store.reduce({
-      type: this.constantsParent.searchResultsPerPage,
+      type: this.getConstantsParent().searchResultsPerPage,
       payload: resultsPerPage,
     });
   }
