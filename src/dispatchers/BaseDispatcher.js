@@ -7,18 +7,18 @@ class BaseDispatcher {
   static constantsParent = null;
 
   static getApiPath() {
-    if(!this.apiPath) console.error(
-      "Attempting to utilize an unset API Path." +
-      "The Dispatcher will not know how to process this." + 
+    if(this.apiPath === null) console.error(
+      "Attempting to utilize an unset API Path. " +
+      "The Dispatcher will not know how to process this. " + 
       "Check the Dispatcher setup being utilized."
     );
     return this.apiPath;
   }
 
   static getConstantsParent() {
-    if(!this.constantsParent) console.error(
-      "Attempting to utilize an unset ConstantsParent." +
-      "The Reducer will not know how to process this." + 
+    if(!this.constantsParent === null) console.error(
+      "Attempting to utilize an unset ConstantsParent. " +
+      "The Reducer will not know how to process this. " + 
       "Check the Dispatcher setup being utilized."
     );
     return this.constantsParent;
