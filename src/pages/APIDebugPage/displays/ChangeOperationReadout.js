@@ -28,7 +28,7 @@ const ChangeOperationReadout = (props) => {
       <FlexRow>
         <span className="h3">{props.name}</span>
         <span className="h1 text-light ml-3">-</span>
-        <span className="h5 text-light kit-border-shadow-sm rounded ml-3 p-2">{handleSplitResultDelimiters(props.result)}</span>
+        <span className="h5 text-light kit-border-shadow-sm rounded ml-3 p-2">{handleSplitResultDelimiters(String(props.result))}</span>
       </FlexRow>}
       
       {/* Error */}
@@ -36,7 +36,7 @@ const ChangeOperationReadout = (props) => {
       <FlexRow>
         <span className="h3">{props.name}</span>
         <span className="h1 text-danger ml-3" style={{fontFamily: "monospace"}}>X</span>
-        <span className="h5 text-danger kit-border-shadow-sm rounded ml-3 p-2">{handleSplitResultDelimiters(props.result)}</span>
+        <span className="h5 text-danger kit-border-shadow-sm rounded ml-3 p-2">{handleSplitResultDelimiters(String(props.result))}</span>
       </FlexRow>}
 
       {/* Pending */}
@@ -51,7 +51,7 @@ const ChangeOperationReadout = (props) => {
       <FlexRow>
         <span className="h3">{props.name}</span>
         <span className="h1 text-success ml-3" style={{fontFamily: "monospace"}}>✔</span>
-        <span className="h5 kit-border-shadow-sm rounded ml-3 p-2">{handleSplitResultDelimiters(props.result)}</span>
+        <span className="h5 kit-border-shadow-sm rounded ml-3 p-2">{handleSplitResultDelimiters(String(props.result))}</span>
       </FlexRow>}
     </FlexRow>
   );

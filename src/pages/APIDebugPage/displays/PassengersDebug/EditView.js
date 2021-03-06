@@ -15,14 +15,14 @@ const EditView = (props) => {
   const { passengers } = Store.getState();
   const selectedPassenger = passengers.selected;
 
-  const [bookingId, setBookingId] = useState(selectedPassenger.bookingId || 1);
-  const [passportId, setPassportId] = useState(selectedPassenger.passportId || "");
-  const [firstName, setFirstName] = useState(selectedPassenger.firstName || "");
-  const [lastName, setLastName] = useState(selectedPassenger.lastName || "");
-  const [dateOfBirth, setDateOfBirth] = useState(selectedPassenger.dateOfBirth || "");
-  const [sex, setSex] = useState(selectedPassenger.sex || "prefer not to answer");
-  const [address, setAddress] = useState(selectedPassenger.address || "");
-  const [isVeteran, setIsVeteran] = useState(selectedPassenger.isVeteran || false);
+  const [passengerBookingId, setBookingId] = useState(selectedPassenger.passengerBookingId || 1);
+  const [passengerPassportId, setPassportId] = useState(selectedPassenger.passengerPassportId || "");
+  const [passengerFirstName, setFirstName] = useState(selectedPassenger.passengerFirstName || "");
+  const [passengerLastName, setLastName] = useState(selectedPassenger.passengerLastName || "");
+  const [passengerDateOfBirth, setDateOfBirth] = useState(selectedPassenger.passengerDateOfBirth || "");
+  const [passengerSex, setSex] = useState(selectedPassenger.passengerSex || "prefer not to answer");
+  const [passengerAddress, setAddress] = useState(selectedPassenger.passengerAddress || "");
+  const [passengerIsVeteran, setIsVeteran] = useState(selectedPassenger.passengerIsVeteran || false);
 
   const [isReverted, setIsReverted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -31,36 +31,36 @@ const EditView = (props) => {
   const resultsStatus = passengers.edit.resultsStatus;
   const status = passengers.edit.status;
 
-  const bookingIdChanged = results
-    ? selectedPassenger.bookingId !== results.bookingId
+  const passengerBookingIdChanged = results
+    ? selectedPassenger.passengerBookingId !== results.passengerBookingId
     : true;
 
-  const passportIdChanged = results
-    ? selectedPassenger.passportId !== results.passportId
+  const passengerPassportIdChanged = results
+    ? selectedPassenger.passengerPassportId !== results.passengerPassportId
     : true;
 
-  const firstNameChanged = results
-    ? selectedPassenger.firstName !== results.firstName
+  const passengerFirstNameChanged = results
+    ? selectedPassenger.passengerFirstName !== results.passengerFirstName
     : true;
 
-  const lastNameChanged = results
-    ? selectedPassenger.lastName !== results.lastName
+  const passengerLastNameChanged = results
+    ? selectedPassenger.passengerLastName !== results.passengerLastName
     : true;
 
-  const dateOfBirthChanged = results
-    ? selectedPassenger.dateOfBirth !== results.dateOfBirth
+  const passengerDateOfBirthChanged = results
+    ? selectedPassenger.passengerDateOfBirth !== results.passengerDateOfBirth
     : true;
 
-  const sexChanged = results
-    ? selectedPassenger.sex !== results.sex
+  const passengerSexChanged = results
+    ? selectedPassenger.passengerSex !== results.passengerSex
     : true;
 
-  const addressChanged = results
-    ? selectedPassenger.address !== results.address
+  const passengerAddressChanged = results
+    ? selectedPassenger.passengerAddress !== results.passengerAddress
     : true;
 
-  const isVeteranChanged = results
-    ? selectedPassenger.isVeteran !== results.isVeteran
+  const passengerIsVeteranChanged = results
+    ? selectedPassenger.passengerIsVeteran !== results.passengerIsVeteran
     : true;
   
   const resultsPending = resultsStatus === "PENDING";
@@ -68,26 +68,26 @@ const EditView = (props) => {
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!passportId) return false;
-    if(!firstName) return false;
-    if(!lastName) return false;
-    if(!dateOfBirth) return false;
-    if(!address) return false;
+    if(!passengerPassportId) return false;
+    if(!passengerFirstName) return false;
+    if(!passengerLastName) return false;
+    if(!passengerDateOfBirth) return false;
+    if(!passengerAddress) return false;
     return true;
   };
 
   const handleSubmit = () => {
     if(!handleValidate()) return;
     const newPassenger = {
-      id: selectedPassenger.id,
-      bookingId: bookingId,
-      passportId: passportId,
-      firstName: firstName,
-      lastName: lastName,
-      dateOfBirth: dateOfBirth,
-      sex: sex,
-      address: address,
-      isVeteran: isVeteran
+      passengerId: selectedPassenger.passengerId,
+      passengerBookingId: passengerBookingId,
+      passengerPassportId: passengerPassportId,
+      passengerFirstName: passengerFirstName,
+      passengerLastName: passengerLastName,
+      passengerDateOfBirth: passengerDateOfBirth,
+      passengerSex: passengerSex,
+      passengerAddress: passengerAddress,
+      passengerIsVeteran: passengerIsVeteran
     };
     if(!_.isEqual(selectedPassenger, newPassenger)) {
       PassengersDispatcher.onEdit(null, newPassenger);
@@ -105,64 +105,64 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Booking ID" 
-          result={results ? results.bookingId : ". . ."}
-          status={bookingIdChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerBookingId : ". . ."}
+          status={passengerBookingIdChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Passport ID" 
-          result={results ? results.passportId : ". . ."}
-          status={passportIdChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerPassportId : ". . ."}
+          status={passengerPassportIdChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="First Name" 
-          result={results ? results.firstName : ". . ."}
-          status={firstNameChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerFirstName : ". . ."}
+          status={passengerFirstNameChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Last Name" 
-          result={results ? results.lastName : ". . ."}
-          status={lastNameChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerLastName : ". . ."}
+          status={passengerLastNameChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Date Of Birth" 
-          result={results ? results.dateOfBirth : ". . ."}
-          status={dateOfBirthChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerDateOfBirth : ". . ."}
+          status={passengerDateOfBirthChanged ? resultsStatus : "DISABLED"} 
         />
         
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Sex" 
-          result={results ? results.sex : ". . ."}
-          status={sexChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerSex : ". . ."}
+          status={passengerSexChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Address" 
-          result={results ? results.address : ". . ."}
-          status={addressChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.passengerAddress : ". . ."}
+          status={passengerAddressChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="U.S. Military Active Duty / Veteran" 
-          result={results ? (results.isVeteran ? "YES" : "NO") : ". . ."}
-          status={isVeteranChanged ? resultsStatus : "DISABLED"} 
+          result={results ? (results.passengerIsVeteran ? "YES" : "NO") : ". . ."}
+          status={passengerIsVeteranChanged ? resultsStatus : "DISABLED"} 
         />
 
         <FlexRow>
@@ -212,7 +212,7 @@ const EditView = (props) => {
                 className="form-control" 
                 readOnly 
                 type="text" 
-                value={selectedPassenger.id}
+                value={selectedPassenger.passengerId}
               />
             </div>
 
@@ -220,10 +220,10 @@ const EditView = (props) => {
             <div className="ml-3">
               <label className="form-label">Booking ID</label>
               <input 
-                className={"form-control " +  (isSubmitted ? !bookingId ? "is-invalid" : "is-valid" : "")}
+                className={"form-control " +  (isSubmitted ? !passengerBookingId ? "is-invalid" : "is-valid" : "")}
                 min="1" 
                 type="number" 
-                value={bookingId}
+                value={passengerBookingId}
                 onChange={(e) => setBookingId(e.target.value)}
               />
             </div>
@@ -233,10 +233,10 @@ const EditView = (props) => {
           <div className="mt-3 w-100">
             <label className="form-label">Passport ID</label>
             <input
-              className={"form-control " +  (isSubmitted ? !passportId ? "is-invalid" : "is-valid" : "")}
+              className={"form-control " +  (isSubmitted ? !passengerPassportId ? "is-invalid" : "is-valid" : "")}
               placeholder={"31195855"}
               type="text"
-              value={passportId}
+              value={passengerPassportId}
               onChange={(e) => setPassportId(e.target.value)}
             />
           </div>
@@ -251,10 +251,10 @@ const EditView = (props) => {
           <div className="mr-auto">
             <label className="form-label form-label">First Name</label>
             <input 
-              className={"form-control " +  (isSubmitted ? !firstName ? "is-invalid" : "is-valid" : "")}
+              className={"form-control " +  (isSubmitted ? !passengerFirstName ? "is-invalid" : "is-valid" : "")}
               placeholder={"John"}
               type="text" 
-              value={firstName}
+              value={passengerFirstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
@@ -263,10 +263,10 @@ const EditView = (props) => {
           <div className="ml-3">
             <label className="form-label">Last Name</label>
             <input 
-              className={"form-control " +  (isSubmitted ? !lastName ? "is-invalid" : "is-valid" : "")}
+              className={"form-control " +  (isSubmitted ? !passengerLastName ? "is-invalid" : "is-valid" : "")}
               placeholder={"Smith"}
               type="text" 
-              value={lastName}
+              value={passengerLastName}
               onChange={(e) => setLastName(e.target.value)}
             />
           </div>
@@ -283,9 +283,9 @@ const EditView = (props) => {
             <FlexColumn className="mr-auto">
               <label className="form-label mr-auto">Date Of Birth</label>
               <input 
-                className={"form-control " +  (isSubmitted ? !dateOfBirth ? "is-invalid" : "is-valid" : "")}
+                className={"form-control " +  (isSubmitted ? !passengerDateOfBirth ? "is-invalid" : "is-valid" : "")}
                 type="date"
-                value={dateOfBirth}
+                value={passengerDateOfBirth}
                 onChange={(e) => setDateOfBirth(e.target.value)}
               />
             </FlexColumn>
@@ -298,7 +298,7 @@ const EditView = (props) => {
                 buttonClassName="btn-info"
                 className="w-100"
                 options={["female", "male", "prefer not to answer"]}
-                selection={sex}
+                selection={passengerSex}
                 onSelect={(value) => setSex(value)}
               />
             </FlexColumn>
@@ -310,10 +310,10 @@ const EditView = (props) => {
             <div className="w-100">
               <label className="form-label">Address</label>
               <input 
-                className={"form-control " +  (isSubmitted ? !address ? "is-invalid" : "is-valid" : "")}
+                className={"form-control " +  (isSubmitted ? !passengerAddress ? "is-invalid" : "is-valid" : "")}
                 placeholder={"1600 Pennsylvania Avenue NW, Washington, DC 20500"} 
                 type="text" 
-                value={address}
+                value={passengerAddress}
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
@@ -327,8 +327,8 @@ const EditView = (props) => {
                 className="form-check-input"
                 style={{height:"1.5rem", width:"1.5rem"}}
                 type="checkbox" 
-                checked={isVeteran}
-                onChange={(e) => setIsVeteran(!isVeteran)}
+                checked={passengerIsVeteran}
+                onChange={(e) => setIsVeteran(!passengerIsVeteran)}
               />
             </FlexColumn>
             <div className="ml-2">U.S. Military Active Duty / Veteran</div>

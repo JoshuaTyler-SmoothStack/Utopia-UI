@@ -13,14 +13,14 @@ import DropDown from '../../../../components/DropDown';
 
 
 const CreateView = (props) => {
-  const [bookingId, setBookingId] = useState(1);
-  const [passportId, setPassportId] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [sex, setSex] = useState("female");
-  const [address, setAddress] = useState("");
-  const [isVeteran, setIsVeteran] = useState(false);
+  const [passengerBookingId, setBookingId] = useState(1);
+  const [passengerPassportId, setPassportId] = useState("");
+  const [passengerFirstName, setFirstName] = useState("");
+  const [passengerLastName, setLastName] = useState("");
+  const [passengerDateOfBirth, setDateOfBirth] = useState("");
+  const [passengerSex, setSex] = useState("female");
+  const [passengerAddress, setAddress] = useState("");
+  const [passengerIsVeteran, setIsVeteran] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { passengers } = Store.getState();
@@ -31,25 +31,25 @@ const CreateView = (props) => {
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!passportId) return false;
-    if(!firstName) return false;
-    if(!lastName) return false;
-    if(!dateOfBirth) return false;
-    if(!address) return false;
+    if(!passengerPassportId) return false;
+    if(!passengerFirstName) return false;
+    if(!passengerLastName) return false;
+    if(!passengerDateOfBirth) return false;
+    if(!passengerAddress) return false;
     return true;
   };
 
   const handleSubmit = () => {
     if(!handleValidate()) return;
     const newPassenger = {
-      bookingId,
-      passportId,
-      firstName,
-      lastName,
-      dateOfBirth,
-      sex,
-      address,
-      isVeteran
+      passengerBookingId: passengerBookingId,
+      passengerPassportId: passengerPassportId,
+      passengerFirstName: passengerFirstName,
+      passengerLastName: passengerLastName,
+      passengerDateOfBirth: passengerDateOfBirth,
+      passengerSex: passengerSex,
+      passengerAddress: passengerAddress,
+      passengerIsVeteran: passengerIsVeteran
     };
     PassengersDispatcher.onCreate(null, newPassenger);
   }
@@ -59,7 +59,7 @@ const CreateView = (props) => {
       {(status === "PENDING" || status === "ERROR") && 
         <FlexColumn className="mt-5">
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Passenger" status={resultsStatus} result={"Passenger with ID: " + results.id + " successfully created."}/>
+          name="Passenger" status={resultsStatus} result={"Passenger with ID: " + results.passengerId + " successfully created."}/>
           
           <FlexRow>
             <button className="btn btn-light m-3"
@@ -72,7 +72,7 @@ const CreateView = (props) => {
             </button>
             {status !== "ERROR" &&
             <button className={"btn btn-info m-3" + (!resultsPending || " disabled")}
-              onClick={!resultsPending ? () => PassengersDispatcher.onPromptEdit("/" + results.id) : () => {KitUtils.soundAlert()}}
+              onClick={!resultsPending ? () => PassengersDispatcher.onPromptEdit("/" + results.passengerId) : () => {KitUtils.soundAlert()}}
             >
               {resultsPending ? "Edit (please wait)" : "Edit"}
             </button>}
@@ -99,7 +99,7 @@ const CreateView = (props) => {
                 <input 
                   className={"form-control " + 
                   (isSubmitted 
-                    ? !bookingId
+                    ? !passengerBookingId
                       ? "is-invalid" 
                       : "is-valid" 
                     : ""
@@ -118,7 +118,7 @@ const CreateView = (props) => {
                 <input 
                   className={"form-control " + 
                   (isSubmitted 
-                    ? !passportId 
+                    ? !passengerPassportId 
                       ? "is-invalid" 
                       : "is-valid" 
                     : ""
@@ -141,7 +141,7 @@ const CreateView = (props) => {
               <input 
                   className={"form-control " + 
                   (isSubmitted 
-                    ? !firstName 
+                    ? !passengerFirstName 
                       ? "is-invalid" 
                       : "is-valid" 
                     : ""
@@ -158,7 +158,7 @@ const CreateView = (props) => {
               <input 
                   className={"form-control " + 
                   (isSubmitted 
-                    ? !lastName 
+                    ? !passengerLastName 
                       ? "is-invalid" 
                       : "is-valid" 
                     : ""
@@ -183,7 +183,7 @@ const CreateView = (props) => {
                 <input 
                   className={"form-control " + 
                   (isSubmitted 
-                    ? !dateOfBirth 
+                    ? !passengerDateOfBirth 
                       ? "is-invalid" 
                       : "is-valid" 
                     : ""
@@ -200,7 +200,7 @@ const CreateView = (props) => {
                   align="right"
                   className="w-100"
                   options={["female", "male", "prefer not to answer"]}
-                  selection={sex}
+                  selection={passengerSex}
                   onSelect={(value) => setSex(value)}
                 />
               </FlexColumn>
@@ -214,7 +214,7 @@ const CreateView = (props) => {
                 <input 
                   className={"form-control " + 
                   (isSubmitted 
-                    ? !address 
+                    ? !passengerAddress 
                       ? "is-invalid" 
                       : "is-valid" 
                     : ""
@@ -234,7 +234,7 @@ const CreateView = (props) => {
                   className="form-check-input"
                   style={{height:"1.5rem", width:"1.5rem"}}
                   type="checkbox" 
-                  onChange={(e) => setIsVeteran(!isVeteran)}
+                  onChange={(e) => setIsVeteran(!passengerIsVeteran)}
                 />
               </FlexColumn>
               <div className="ml-2">U.S. Military Active Duty / Veteran</div>

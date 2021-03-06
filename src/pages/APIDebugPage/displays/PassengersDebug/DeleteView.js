@@ -12,14 +12,14 @@ const DeleteView = () => {
   const { passengers } = Store.getState();
   const selectedPassenger = passengers.selected;
 
-  const bookingId = (selectedPassenger.bookingId || 1);
-  const passportId = (selectedPassenger.passportId || "");
-  const firstName = (selectedPassenger.firstName || "");
-  const lastName = (selectedPassenger.lastName || "");
-  const dateOfBirth = (selectedPassenger.dateOfBirth || "");
-  const sex = (selectedPassenger.sex || "prefer not to answer");
-  const address = (selectedPassenger.address || "");
-  const isVeteran = (selectedPassenger.isVeteran || false);
+  const passengerBookingId = (selectedPassenger.passengerBookingId || 1);
+  const passengerPassportId = (selectedPassenger.passengerPassportId || "");
+  const passengerFirstName = (selectedPassenger.passengerFirstName || "");
+  const passengerLastName = (selectedPassenger.passengerLastName || "");
+  const passengerDateOfBirth = (selectedPassenger.passengerDateOfBirth || "");
+  const passengerSex = (selectedPassenger.passengerSex || "prefer not to answer");
+  const passengerAddress = (selectedPassenger.passengerAddress || "");
+  const passengerIsVeteran = (selectedPassenger.passengerIsVeteran || false);
 
   const resultsStatus = passengers.delete.resultsStatus;
   const status = passengers.delete.status;
@@ -29,7 +29,7 @@ const DeleteView = () => {
       {status === "PENDING" && 
         <FlexColumn className="mt-5">
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Passenger" status={resultsStatus} result={"Passenger with ID: " + selectedPassenger.id + " successfully deleted."}/>
+          name="Passenger" status={resultsStatus} result={"Passenger with ID: " + selectedPassenger.passengerId + " successfully deleted."}/>
           
           <FlexRow>
             <button className="btn btn-light m-3"
@@ -54,7 +54,7 @@ const DeleteView = () => {
             {/* ID */}
             <div className="mr-auto">
               <label className="form-label">Passenger ID</label>
-              <input type="text" readOnly className="form-control" value={selectedPassenger.id}/>
+              <input type="text" readOnly className="form-control" value={selectedPassenger.passengerId}/>
             </div>
 
             {/* Booking ID */}
@@ -64,7 +64,7 @@ const DeleteView = () => {
                 className="form-control" 
                 readOnly
                 type="number" 
-                value={bookingId}
+                value={passengerBookingId}
               />
             </div>
           </FlexRow>
@@ -76,7 +76,7 @@ const DeleteView = () => {
               className={"form-control"}
               readOnly
               type="text"
-              value={passportId}
+              value={passengerPassportId}
             />
           </div>
           <hr className="w-100"></hr>
@@ -93,7 +93,7 @@ const DeleteView = () => {
               className={"form-control"}
               readOnly
               type="text"
-              value={firstName}
+              value={passengerFirstName}
             />
           </div>
 
@@ -104,7 +104,7 @@ const DeleteView = () => {
               className={"form-control"}
               readOnly
               type="text" 
-              value={lastName}
+              value={passengerLastName}
             />
           </div>
           <hr className="w-100"></hr>
@@ -123,7 +123,7 @@ const DeleteView = () => {
                 className={"form-control"}
                 readOnly
                 type="date"
-                value={dateOfBirth}
+                value={passengerDateOfBirth}
               />
             </FlexColumn>
 
@@ -134,7 +134,7 @@ const DeleteView = () => {
                 className={"form-control"}
                 readOnly
                 type="text"
-                value={sex}
+                value={passengerSex}
               />
             </FlexColumn>
           </FlexRow>
@@ -148,7 +148,7 @@ const DeleteView = () => {
                 className={"form-control"} 
                 readOnly
                 type="text" 
-                value={address}
+                value={passengerAddress}
               />
             </div>
           </FlexRow>
@@ -162,7 +162,7 @@ const DeleteView = () => {
                 style={{height:"1.5rem", width:"1.5rem"}}
                 readOnly
                 type="checkbox" 
-                checked={isVeteran}
+                checked={passengerIsVeteran}
               />
             </FlexColumn>
             <div className="ml-2">U.S. Military Active Duty / Veteran</div>
@@ -179,7 +179,7 @@ const DeleteView = () => {
             Cancel
           </button>
           <button className="btn btn-primary m-3"
-            onClick={() => PassengersDispatcher.onDelete("/" + selectedPassenger.id)}
+            onClick={() => PassengersDispatcher.onDelete("/" + selectedPassenger.passengerId)}
           >
             Confirm Delete (cannot be undone)
           </button>
