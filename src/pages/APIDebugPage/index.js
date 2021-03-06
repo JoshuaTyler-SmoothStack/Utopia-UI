@@ -6,6 +6,7 @@ import AirplanesDebug from "./displays/AirplanesDebug";
 import AirportsDebug from "./displays/AirportsDebug";
 import BookingsDebug from "./displays/BookingsDebug";
 import PassengersDebug from "./displays/PassengersDebug";
+import FlightsDebug from "./displays/FlightsDebug";
 import LocalSidebar from "./LocalSidebar";
 import NavBar from "../../componentgroups/NavBar";
 
@@ -43,6 +44,7 @@ class APIDebugPage extends Component {
             {activeDisplay === "AIRPORTS" && <AirportsDebug/>}
             {activeDisplay === "BOOKINGS" && <BookingsDebug/>}
             {activeDisplay === "PASSENGERS" && <PassengersDebug/>}
+            {activeDisplay === "FLIGHTS" && <FlightsDebug/>}
           </div>
         </div>
       </div>
