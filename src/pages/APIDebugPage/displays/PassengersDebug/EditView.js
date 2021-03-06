@@ -63,7 +63,7 @@ const EditView = (props) => {
     ? selectedPassenger.isVeteran !== results.isVeteran
     : true;
   
-  const resultsPending = JSON.stringify(resultsStatus).includes("PENDING");
+  const resultsPending = resultsStatus === "PENDING";
   const noChangesMade = _.isEqual(selectedPassenger, results);
 
   const handleValidate = () => {
@@ -80,21 +80,21 @@ const EditView = (props) => {
     if(!handleValidate()) return;
     const newPassenger = {
       id: selectedPassenger.id,
-      bookingId,
-      passportId,
-      firstName,
-      lastName,
-      dateOfBirth,
-      sex,
-      address,
-      isVeteran
+      bookingId: bookingId,
+      passportId: passportId,
+      firstName: firstName,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      sex: sex,
+      address: address,
+      isVeteran: isVeteran
     };
     if(!_.isEqual(selectedPassenger, newPassenger)) {
       PassengersDispatcher.onEdit(null, newPassenger);
     } else {
       PassengersDispatcher.onEditFake(newPassenger);
     }
-  }
+  };
 
   return (
     <FlexColumn>
@@ -220,7 +220,7 @@ const EditView = (props) => {
             <div className="ml-3">
               <label className="form-label">Booking ID</label>
               <input 
-                className="form-control" 
+                className={"form-control " +  (isSubmitted ? !bookingId ? "is-invalid" : "is-valid" : "")}
                 min="1" 
                 type="number" 
                 value={bookingId}

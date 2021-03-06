@@ -46,7 +46,7 @@ class BookingsDashboard extends Component {
           className={"btn btn-info rounded"}
           onClick={() => this.findAllBookings()}
         >
-          {"findAllBookings()"}
+          {"findAllBookings(10)"}
         </button>
       </FlexRow>
 
@@ -90,29 +90,28 @@ class BookingsDashboard extends Component {
 
   handleRenderBookingsList = (bookingsList) => {
     const { bookings } = Store.getState();
-    const resultsDisplayed = bookings.search.resultsPerPage;
+    const isReferenceIDsActive = true;
+    const resultsDisplayed = Number(bookings.search.resultsPerPage);
     const resultsStart = bookings.search.resultsPerPage * (bookings.search.resultsPage - 1);
 
     let bookingsTable = [];
     if(!bookingsList.length) bookingsList = [bookingsList];
-    for(var i = resultsStart; i < bookingsList.length; i++) {
-      if(i < resultsStart + resultsDisplayed) {
-        
-        const bookingId = bookingsList[i].id;
-        if(!bookingId) continue;
+    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < bookingsList.length); i++) {
+      const bookingId = bookingsList[i].bookingId;
+      if(!bookingId) continue;
 
-        const index = Number(i) + 1;
-        bookingsTable.push(
-          <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{bookingId}</td>
-            <td>{bookingsList[i].status}</td>
-            <td>{bookingsList[i].confirmationCode}</td>
-          </tr>
-        );
-      } else {
-        break;
-      }
+      const index = Number(i) + 1;
+      bookingsTable.push(
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{bookingId}</td>
+          <td>{bookingsList[i].bookingStatus}</td>
+          <td>{bookingsList[i].bookingConfirmationCode}</td>
+          {isReferenceIDsActive && <td>{bookingsList[i].bookingFlightId || "Error"}</td>}
+          {isReferenceIDsActive && <td>{bookingsList[i].bookingPassengerId || "NR"}</td>}
+          {isReferenceIDsActive && <td>{bookingsList[i].bookingUserId || "Guest"}</td>}
+        </tr>
+      );
     }
 
     return (
@@ -124,11 +123,14 @@ class BookingsDashboard extends Component {
               <th scope="col">ID</th>
               <th scope="col">Status</th>
               <th scope="col">Confirmation Code</th>
+              {isReferenceIDsActive && <th scope="col">Flight ID</th>}
+              {isReferenceIDsActive && <th scope="col">Passenger ID</th>}
+              {isReferenceIDsActive && <th scope="col">User ID</th>}
             </tr>
           </thead>
           <tbody>
             {bookingsTable}
-            <tr><td colSpan="4"></td>{/* Space at end of table for aesthetic */}</tr>
+            <tr><td colSpan="5"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>

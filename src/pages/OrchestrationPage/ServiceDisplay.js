@@ -52,7 +52,7 @@ const ServiceDisplay = (props) => {
         <StatusAsyncIndicator className="ml-auto mr-2" status={_status} />
 
         {/* Status Indicator */}
-        <StatusIndicator className="ml-2 mr-2" status={isActive ? "ACTIVE" : "INACTIVE"} />
+        <StatusIndicator className="ml-2 mr-2" status={isActive ? "SUCCESS" : "INACTIVE"} />
 
         {/* URI Path Text */}
         <FlexRow 

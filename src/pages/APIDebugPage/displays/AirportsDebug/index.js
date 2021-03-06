@@ -1,6 +1,6 @@
 // Libraries
 import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
-import Orchestration from "../../../../Orchestration";
+import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
@@ -21,174 +21,160 @@ class AirportsDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editingValues: {
-        airportName: "0",
-        iataId: "0",
-        cityName: "0"
-      }
+      searchTerms: ""
     };
   }
+
   render() { 
-    const { airports } = Store.getState();
-    const { searchText } = this.state;
+    const { orchestration, airports } = Store.getState();
+    const { searchTerms } = this.state;
     const isCreatePromptActive = airports.create.isActive;
     const isDeletePromptActive = airports.delete.isActive;
     const isEditPromptActive = airports.edit.isActive;
+    const isMSActive = orchestration.services.includes("airport-service");
     const airportsMSStatus = airports.status;
     const searchError = airports.search.error;
     const searchFilters = airports.search.filters;
     const searchResults = airports.search.results;
 
     return ( 
-      <div className={this.props.className || ""} style={this.props.style}>
+      <div className={"row" + (this.props.className || "")} style={this.props.style}>
         
         {/* Header */}
-        <div className="row bg-light p-2 kit-border-shadow">
-          
-          {/* MS Orchestration Indicators */}
-          <OrchestrationHeader className="col-12 col-md-7"
-            name="Airport MS"
-            status={airportsMSStatus === "INACTIVE" ? "PENDING" : airportsMSStatus}
-            style={{maxWidth:"30rem"}}
-            onTriggerError={() => AirportsDispatcher.onError()}
-            onTriggerFakeAPICall={() => AirportsDispatcher.onFakeAPICall()}
-          />
+        <div className="col-12 bg-light kit-border-shadow">
+          <div className="row mt-1">
+            {/* MS Orchestration Indicators */}
+            <OrchestrationHeader className="col-12 col-md-6"
+              name="Airport MS"
+              status={airportsMSStatus === "INACTIVE" ? "PENDING" : airportsMSStatus}
+              style={{maxWidth:"30rem"}}
+              onTriggerError={() => AirportsDispatcher.onError()}
+              onTriggerFakeAPICall={() => AirportsDispatcher.onFakeAPICall(searchResults)}
+            />
 
-          {/* Search Bar */}
-          <div className="col-12 col-md-5">
-
-            {/* Text Input */}
-            <FlexRow className="mt-2" wrap="no-wrap">
-              <input 
-                aria-label="Search" 
-                className={"form-control " + (searchError && " is-invalid kit-shake")}
-                label={searchError}
-                placeholder="IATA=X or City=Y"
-                type="search" 
-                style={{maxWidth:"15rem"}}
-                onChange={(e) => this.setState({searchText: e.target.value})}
-              />
-
-              {/* Button */}
-              <button 
-                className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
-                type="submit"
-                onClick={() => AirportsDispatcher.onSearchAndFilter("/search", searchText)}
-              >
-                search
-              </button>
-            </FlexRow>
+            {/* Search Bar */}
+            <div className="col-12 col-md-5">
+              {/* Search */}
+              <FlexRow className="mt-1" justify="end" wrap="no-wrap">
+                <input 
+                  aria-label="Search" 
+                  className={"form-control " + (searchError && " is-invalid kit-shake")}
+                  label={searchError}
+                  placeholder="IATA ID, City"
+                  type="search" 
+                  style={{maxWidth:"15rem"}}
+                  onChange={(e) => this.setState({searchTerms: e.target.value})}
+                />
+                <button 
+                  className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
+                  type="submit"
+                  onClick={() => AirportsDispatcher.onSearchAndFilter("/search", searchTerms)}
+                >
+                  search
+                </button>
+              </FlexRow>
+            </div>
           </div>
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"row bg-light " + 
+        <div className={"col-12 bg-light " +
           ((airportsMSStatus === "INACTIVE" || airportsMSStatus === "ERROR" ||
            isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
           "kit-opacity-50 kit-no-user kit-pointer-none")}
         >
+          
           {/* Filters */}
-          <div className="col-12 p-2">
-            <FlexRow wrap={"no-wrap"}>
+          <div className="row p-2 justify-content-center p-2">
 
               {/* # of Filters Active */}
-              <div className="list-group ml-1">
+              <div className="col-auto list-group ml-2">
                 <div className="list-group-item" style={{fontSize: "0.85rem", padding:"0.5rem"}}>
                   {searchFilters.activeCount + " filters active"}
                 </div>
               </div>
-            </FlexRow>
           </div>
 
           {/* Resuts Count & Page Selection */}
-          <FlexRow className="col-12 p-2">
-            <DropDown 
-              selection={airports.search.resultsPerPage}
-              options={["3", "10", "25", "50"]}
-              optionsName="items"
-              onSelect={(e) => AirportsDispatcher.onSelectResultsPerPage(e)}
-            />
+          <div className="row justify-content-center p-2">
+            <FlexColumn className="col-4 col-md-3 text-center">
+              <DropDown
+                selection={airports.search.resultsPerPage}
+                options={["3", "10", "25", "50"]}
+                optionsName="items"
+                onSelect={(e) => AirportsDispatcher.onSelectResultsPerPage(e)}
+              />
+            </FlexColumn>
 
-            <ItemsIndexReadout
-              className={"ml-2"}
-              currentPage={airports.search.resultsPage}
-              itemsPerPage={airports.search.resultsPerPage}
-              itemsTotal={airports.search.results.length}
-            />
+            <FlexColumn className="col-6 col-md-3 text-center">
+              <ItemsIndexReadout
+                currentPage={airports.search.resultsPage}
+                itemsPerPage={airports.search.resultsPerPage}
+                itemsTotal={airports.search.results.length}
+              />
+            </FlexColumn>
 
-            <Pagination
-              className={"m-0 ml-2"}
-              currentPage={airports.search.resultsPage}
-              totalPages={Math.ceil(airports.search.results.length / Math.max(airports.search.resultsPerPage, 1))}
-              onSelectPage={(e) => AirportsDispatcher.onSelectResultsPage(e)}
-            />
-          </FlexRow>
+            <FlexColumn className="col-8 mt-2 col-md-3 text-center">
+              <Pagination
+                currentPage={airports.search.resultsPage}
+                totalPages={Math.ceil(airports.search.results.length / Math.max(airports.search.resultsPerPage, 1))}
+                onSelectPage={(e) => AirportsDispatcher.onSelectResultsPage(e)}
+              />
+            </FlexColumn>
+          </div>
         </div>
 
 
         {/* Body */}
-        <div className="row">
-          <div className="col-12" style={{height:"80vh", overflowY: "auto"}}>
-            
-            {/* Error State */}
-            {airportsMSStatus === "ERROR" &&
-            <FlexColumn className="h-100">
-              <ErrorMessage className="h1" soundAlert={true}>
-                {airports.error}
-              </ErrorMessage>
-              <button className="btn btn-light m-3"
-                onClick={() => AirportsDispatcher.onCancel()}
-              >
-                Back
-              </button>
-            </FlexColumn>}
+        <div className="col-12" style={{overflow: "auto"}}>
 
-            {/* Inactive State */}
-            {airportsMSStatus === "INACTIVE" &&
-            <FlexColumn className="h-100">
-            <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-              name="Establishing Connection . . ." status={"PENDING"}/>
-            </FlexColumn>}
+        {/* Error State */}
+        {airportsMSStatus === "ERROR" &&
+          <FlexColumn className="h-100">
+            <ErrorMessage className="h1" soundAlert={true}>
+              {isMSActive ? airports.error : "No Airport MS connection."}
+            </ErrorMessage>
+            <button className="btn btn-light m-3"
+              onClick={() => AirportsDispatcher.onCancel()}
+            >
+              Back
+            </button>
+          </FlexColumn>}
 
-            {/* Pending State */}
-            {(airportsMSStatus === "PENDING" || airportsMSStatus === "INACTIVE") &&
-            <FlexColumn className="h-100">
-              <div className="spinner-border"/>
-            </FlexColumn>}
+          {/* Inactive State */}
+          {airportsMSStatus === "INACTIVE" &&
+          <FlexColumn style={{minHeight:"10rem"}}>
+          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
+            name="Establishing Connection . . ." status={"PENDING"}/>
+          </FlexColumn>}
 
-            {/* Success State */}
-            {(airportsMSStatus === "SUCCESS" &&   !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) &&
-            this.handleRenderAirportsList(searchResults)}           
+          {/* Pending State */}
+          {(airportsMSStatus === "PENDING" || airportsMSStatus === "INACTIVE") &&
+          <FlexColumn style={{minHeight:"10rem"}}>
+            <div className="spinner-border"/>
+          </FlexColumn>}
 
-            {(airportsMSStatus === "SUCCESS" && isCreatePromptActive) && 
-            <CreateView/>}
+          {/* Success State */}
+          {(airportsMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
+          this.handleRenderAirportsList(searchResults)}
 
-            {(airportsMSStatus === "SUCCESS" && isDeletePromptActive) && 
-            <DeleteView/>}
+          {(airportsMSStatus === "SUCCESS" && isCreatePromptActive) && 
+          <CreateView/>}
 
-            {(airportsMSStatus === "SUCCESS" && isEditPromptActive) && 
-            <EditView/>}
-          </div>
+          {(airportsMSStatus === "SUCCESS" && isDeletePromptActive) && 
+          <DeleteView/>}
+
+          {(airportsMSStatus === "SUCCESS" && isEditPromptActive) && 
+          <EditView/>}
         </div>
-
       </div>
     );
   }
 
   componentDidMount() {
     AirportsDispatcher.onCancel();
-    Orchestration.findActiveServices(
-    onError => {
-      AirportsDispatcher.onError("No Orchestration connection.");
-    }, onSuccess => {
-      const isMSActive = onSuccess.includes("airport-service");
-      if(isMSActive) AirportsDispatcher.onRequest();
-      else AirportsDispatcher.onError("No Airport MS connection.");
-    });
-  }
-
-  handleIncludeReferenceIDs = (isActive) => {
-    this.setState({isReferenceIDsActive: isActive});
+    OrchestrationDispatcher.onFindActiveServices();
+    AirportsDispatcher.onRequest();
   }
 
   handleRenderAirportsList = (airportsList) => {
@@ -197,36 +183,35 @@ class AirportsDebug extends Component {
     const resultsStart = airports.search.resultsPerPage * (airports.search.resultsPage - 1);
 
     let airportsTable = [];
-    if(!airportsList.length) airportsList = [airportsList];
-    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airportsList.length); i++) {
-      const airport = airportsList[i];
-      const airportIataId = airport.iataId;
-      if(!airportIataId) continue;
+    if (!airportsList.length) airportsList = [airportsList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airportsList.length); i++) {
+      const airportIataId = airportsList[i].airportIataId;
+      if (!airportIataId) continue;
 
       const index = Number(i) + 1;
       airportsTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
           <td>{airportIataId}</td>
-          <td>{airportsList[i].city}</td>
-          
+          <td>{airportsList[i].airportCityName}</td>
+
           {/* Edit */}
           <td><button className="btn btn-info"
-            onClick={() => AirportsDispatcher.onPromptEdit(airport)}>
-              Edit
+            onClick={() => AirportsDispatcher.onPromptEdit("/"+airportIataId)}>
+            Edit
           </button></td>
 
           {/* Delete */}
           <td><button className="btn btn-primary"
-            onClick={() => AirportsDispatcher.onPromptDelete(airport)}>
-             Delete
+            onClick={() => AirportsDispatcher.onPromptDelete("/"+airportIataId)}>
+            Delete
           </button></td>
         </tr>
       );
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "95%", width: "95%"}}>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
         <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
@@ -235,7 +220,7 @@ class AirportsDebug extends Component {
               <th scope="col">City</th>
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
+                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}
                     onClick={() => AirportsDispatcher.onPromptCreate()}>
                     + Create New
                   </button>
@@ -250,6 +235,6 @@ class AirportsDebug extends Component {
         </table>
       </FlexColumn>
     );
-  };
+  }
 }
 export default AirportsDebug;

@@ -47,7 +47,7 @@ const OrchestrationHeader = (props) => {
         {/* Status Indicator */}
         <StatusIndicator 
           className="ml-1"
-          status={isMSActive ? "ACTIVE" : "INACTIVE"}
+          status={isMSActive ? "SUCCESS" : "INACTIVE"}
         />
       </FlexRow>
 

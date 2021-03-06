@@ -26,7 +26,7 @@ const CreateView = (props) => {
   const { passengers } = Store.getState();
   const results = passengers.create.results
   const resultsStatus = passengers.create.resultsStatus;
-  const resultsPending = JSON.stringify(resultsStatus).includes("PENDING");
+  const resultsPending = resultsStatus === "PENDING";
   const status = passengers.create.status;
 
   const handleValidate = () => {

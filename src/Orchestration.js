@@ -6,6 +6,12 @@ class Orchestration {
 
   static createRequestWithBody(requestType, requestPath, payload, onError, onSuccess) {
     
+    console.log("BODY HERE -> ", 
+      requestType !== constants.httpRequest.get 
+        ? JSON.stringify(payload)
+        : null
+    );
+
     const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
     fetch("http://localhost:8080" + formattedRequestPath, {
       headers: {
@@ -13,8 +19,8 @@ class Orchestration {
         "Content-Type": "application/" + Orchestration.contentType,
       },
       body: requestType !== constants.httpRequest.get 
-      ? JSON.stringify(payload)
-      : null,
+        ? JSON.stringify(payload)
+        : null,
       method: requestType
     })
     .then((response) => {

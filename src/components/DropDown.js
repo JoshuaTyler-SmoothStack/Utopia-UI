@@ -17,7 +17,6 @@ const DropDown = (props) => {
 
   const handleBlur = () => {
     setTimeout(() => {
-      console.log(isButtonFocus);
       if(!isButtonFocus) {
         setDropDownActive(false);
       }

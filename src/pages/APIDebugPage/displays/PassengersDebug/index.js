@@ -27,11 +27,12 @@ class PassengersDebug extends Component {
   }
 
   render() { 
-    const { passengers } = Store.getState();
+    const { orchestration, passengers } = Store.getState();
     const { isPassengerInfoActive, searchTerms } = this.state;
     const isCreatePromptActive = passengers.create.isActive;
     const isDeletePromptActive = passengers.delete.isActive;
     const isEditPromptActive = passengers.edit.isActive;
+    const isMSActive = orchestration.services.includes("passengers");
     const passengersMSStatus = passengers.status;
     const searchError = passengers.search.error;
     const searchFilters = passengers.search.filters;
@@ -146,7 +147,7 @@ class PassengersDebug extends Component {
         {passengersMSStatus === "ERROR" &&
           <FlexColumn className="h-100">
             <ErrorMessage className="h1" soundAlert={true}>
-              {passengers.error}
+              {isMSActive ? passengers.error : "No Passenger MS connection."}
             </ErrorMessage>
             <button className="btn btn-light m-3"
               onClick={() => PassengersDispatcher.onCancel()}
@@ -157,14 +158,14 @@ class PassengersDebug extends Component {
 
           {/* Inactive State */}
           {passengersMSStatus === "INACTIVE" &&
-          <FlexColumn className="h-100">
+          <FlexColumn style={{minHeight:"10rem"}}>
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
             name="Establishing Connection . . ." status={"PENDING"}/>
           </FlexColumn>}
 
           {/* Pending State */}
           {(passengersMSStatus === "PENDING" || passengersMSStatus === "INACTIVE") &&
-          <FlexColumn className="h-100">
+          <FlexColumn style={{minHeight:"10rem"}}>
             <div className="spinner-border"/>
           </FlexColumn>}
 
@@ -187,16 +188,8 @@ class PassengersDebug extends Component {
 
   componentDidMount() {
     PassengersDispatcher.onCancel();
-    OrchestrationDispatcher.onRequestThenCallback(
-      "/services", 
-      httpError => {}, 
-      httpResponseBody => {
-        if(httpResponseBody.includes("passenger-service")) {
-          PassengersDispatcher.onRequest()
-        } else {
-          PassengersDispatcher.onError("No Passenger MS connection.");
-        }
-    });
+    OrchestrationDispatcher.onFindActiveServices();
+    PassengersDispatcher.onRequest();
   }
 
   handleIncludeReferenceIDs = (isActive) => {

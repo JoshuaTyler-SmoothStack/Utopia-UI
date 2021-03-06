@@ -12,15 +12,15 @@ class BaseDispatcher {
   }
 
   static onCancel() {
-    Store.reduce({type: this.constantsParent.cancel});
+    Store.reduce({ type: this.constantsParent.cancel });
   }
 
-  static onCreate(createPath, createObject) {
+  static onCreate(httpPath, httpBody) {
     Store.reduce({ type: this.constantsParent.requestCreate });
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
-      this.apiPath + (createPath || ""),
-      createObject,
+      this.apiPath + (httpPath || ""),
+      httpBody,
       (httpError) => {
         Store.reduce({
           type: this.constantsParent.error,
@@ -49,11 +49,11 @@ class BaseDispatcher {
     );
   }
 
-  static onDelete(deletePath) {
+  static onDelete(httpPath) {
     Store.reduce({ type: this.constantsParent.requestDelete });
     Orchestration.createRequest(
       constants.httpRequest.delete,
-      this.apiPath + (deletePath || ""),
+      this.apiPath + (httpPath || ""),
       (httpError) => {
         Store.reduce({
           type: this.constantsParent.error,
@@ -82,15 +82,14 @@ class BaseDispatcher {
     );
   }
 
-  static onEdit(editPath, editObject) {
+  static onEdit(httpPath, httpBody) {
     Store.reduce({ type: this.constantsParent.requestEdit });
-    console.log(this.apiPath + (editPath || ""));
+    console.log(this.apiPath + (httpPath || ""));
     Orchestration.createRequestWithBody(
       constants.httpRequest.put,
-      this.apiPath + (editPath || ""),
-      editObject,
+      this.apiPath + (httpPath || ""),
+      httpBody,
       (httpError) => {
-        console.log(httpError);
         Store.reduce({
           type: this.constantsParent.error,
           payload: httpError,
@@ -118,12 +117,12 @@ class BaseDispatcher {
     );
   }
 
-  static onEditFake(editObject) {
+  static onEditFake(httpBody) {
     Store.reduce({ type: this.constantsParent.requestEdit });
     Store.reduce({
       type: this.constantsParent.responseEdit,
       payload: {
-        results: editObject,
+        results: httpBody,
         resultsStatus: "SUCCESS"
       }
     });
@@ -136,21 +135,21 @@ class BaseDispatcher {
     });
   }
 
-  static onFakeAPICall(fakeResponse) {
+  static onFakeAPICall(httpBody) {
     Store.reduce({ type: this.constantsParent.request });
     setTimeout(() => {
       Store.reduce({
         type: this.constantsParent.response,
-        payload: fakeResponse
+        payload: httpBody
       });
     }, 1500);
   }
 
-  static onRequest(requestPath) {
+  static onRequest(httpPath) {
     Store.reduce({ type: this.constantsParent.request });
     Orchestration.createRequest(
       constants.httpRequest.get,
-      this.apiPath + (requestPath || ""),
+      this.apiPath + (httpPath || ""),
       (httpError) => {
         Store.reduce({
           type: this.constantsParent.error,
@@ -173,11 +172,11 @@ class BaseDispatcher {
     );
   }
 
-  static onRequestThenCallback(requestPath, onError, onSuccess) {
+  static onRequestThenCallback(httpPath, onError, onSuccess) {
     Store.reduce({ type: this.constantsParent.request });
     Orchestration.createRequest(
       constants.httpRequest.get,
-      this.apiPath + (requestPath || ""),
+      this.apiPath + (httpPath || ""),
       (httpError) => onError(httpError),
       (httpResponseBody) => {
         if(httpResponseBody.error) onError(httpResponseBody.error);
@@ -186,7 +185,7 @@ class BaseDispatcher {
     );
   }
 
-  static onSearchAndFilter(searchAndFilterPath, searchTermsString, filtersObject) {
+  static onSearchAndFilter(httpPath, searchTermsString, filtersObject) {
 
     const activeFilters = {};
     if(searchTermsString) activeFilters.searchTerms = searchTermsString;
@@ -199,9 +198,10 @@ class BaseDispatcher {
     }
 
     Store.reduce({ type: this.constantsParent.request });
+    console.log("activeFilters -> ", activeFilters);
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
-      this.apiPath + searchAndFilterPath,
+      this.apiPath + httpPath,
       activeFilters,
       (httpError) => {
         Store.reduce({

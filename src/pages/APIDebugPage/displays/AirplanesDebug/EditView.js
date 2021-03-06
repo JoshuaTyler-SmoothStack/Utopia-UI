@@ -1,5 +1,6 @@
 // Libraries
-import React, { Component } from 'react';
+import _ from "lodash";
+import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
@@ -10,124 +11,137 @@ import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
 
-class EditView extends Component {
-  constructor(props) {
-    super(props);
+const EditView = (props) => {
 
+  const { airplanes } = Store.getState();
+  const selectedAirplane = airplanes.selected;
 
-    const { airplanes } = Store.getState();
-    const selectedAirplane = airplanes.selected;
-    this.state = {
-      id: selectedAirplane.id,
-      typeId: selectedAirplane.typeId,
-      reverted: false
+  const [airplaneTypeId, setTypeId] = useState(selectedAirplane.airplaneTypeId);
+  const [isReverted, setIsReverted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const results = airplanes.edit.results
+  const resultsStatus = airplanes.edit.resultsStatus;
+  const status = airplanes.edit.status;
+  
+  const airplaneTypeIdChanged = results
+    ? selectedAirplane.airplaneTypeId !== results.airplaneTypeId
+    : true;
+
+  const resultsPending = resultsStatus === "PENDING";
+  const noChangesMade = _.isEqual(selectedAirplane, results);
+
+  const handleValidate = () => {
+    setIsSubmitted(true);
+    if(!airplaneTypeId || isNaN(airplaneTypeId) || airplaneTypeId === 0) return false;
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if(!handleValidate()) return;
+    const newAirplane = {
+      airplaneId: selectedAirplane.airplaneId,
+      airplaneTypeId: airplaneTypeId,
     };
-  }
-  render() { 
-    const { airplanes } = Store.getState();
-    const { id, typeId, reverted } = this.state;
+    if(!_.isEqual(selectedAirplane, newAirplane)) {
+      AirplanesDispatcher.onEdit(null, newAirplane);
+    } else {
+      AirplanesDispatcher.onEditFake(newAirplane);
+    }
+  };
 
-    const selectedAirplane = airplanes.selected;
-    const results = airplanes.edit.results
-    const resultsStatus = airplanes.edit.resultsStatus;
-    const status = airplanes.edit.status;
-    
-    const resultsPending = resultsStatus === "PENDING";
-    const noChangesMade = results.typeId === selectedAirplane.typeId;
+  return (
+    <FlexColumn>
 
+      {(status === "PENDING" || status === "ERROR") && 
+      <FlexColumn className="mt-5">
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Airplane" 
+          result={results ? results.airplaneTypeId : ". . ."}
+          status={airplaneTypeIdChanged ? resultsStatus : "DISABLED"} 
+        />
 
-    return (
-      <FlexColumn>
-
-        {(status === "PENDING" || status === "ERROR") && 
-        <FlexColumn className="mt-5">
-          <ChangeOperationReadout 
-            className="m-1" 
-            style={{minHeight: "4rem"}} 
-            name="Airplane" status={resultsStatus} 
-            result={(!noChangesMade 
-              ? "Updated Airplane: " + results.id + 
-                " typeId to: " + results.typeId + "."
-              : "No changes made.")
-            }
-          />
-
-          <FlexRow>
-              <button className="btn btn-light m-3"
-                onClick={() => AirplanesDispatcher.onCancel()}
-              >
-                Close
-              </button>
-              
-              {(status !== "ERROR" && noChangesMade && !reverted) &&
-                <button className={"btn btn-danger m-3 disabled"}
-                  onClick={() => KitUtils.soundAlert()}
-                >
-                  {"Revert Changes (no changes made)"}
-                </button>}
-
-
-              {(status !== "ERROR" && !noChangesMade && !reverted) &&
-                <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
-                  onClick={resultsPending 
-                    ? () => KitUtils.soundSuccess() 
-                    : () => {
-                      this.handleValidate(selectedAirplane, selectedAirplane.typeId, true);
-                      this.setState({reverted: true});
-                    }
-                  }
-                >
-                  {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
-                </button>
-              }
-          </FlexRow>
-        </FlexColumn>
-      }
-
-
-      {(status !== "ERROR" && status !== "PENDING") &&
-      <FlexColumn>
-        {/* Airplane */}
-        <FlexColumn>
-          <FlexRow>
-            <div className="mt-3" style={{width:"14rem"}}>
-              <label className="form-label">Airplane ID</label>
-              <input type="text" readOnly className="form-control" value={id}/>
-            </div>
-            <div className="mt-3 ml-3" style={{width:"14rem"}}>
-              <label className="form-label">TypeId</label>
-              <input type="number" min="1" className="form-control" defaultValue={typeId}
-                onChange={(e) => this.setState({typeId: e.target.value})}
-              />
-            </div>
-          </FlexRow>
-          <hr className="w-100"></hr>
-        </FlexColumn>     
-
-
-        {/* Buttons */}
         <FlexRow>
-          <button className="btn btn-light m-3"
-            onClick={() => AirplanesDispatcher.onCancel()}
-          >
-            Cancel
-          </button>
-          <button className="btn btn-danger m-3"
-            onClick={() => this.handleValidate(selectedAirplane, typeId, false)}
-          >
-            Save Changes
-          </button>
-        </FlexRow>
-      </FlexColumn>}
-    </FlexColumn>
-    );
-  }
+            <button className="btn btn-light m-3"
+              onClick={() => {
+                AirplanesDispatcher.onCancel();
+                AirplanesDispatcher.onRequest();
+              }}
+            >
+              Close
+            </button>
+            
+            {(status !== "ERROR" && noChangesMade && !isReverted) &&
+              <button className={"btn btn-danger m-3 disabled"}
+                onClick={() => KitUtils.soundAlert()}
+              >
+                {"Revert Changes (no changes made)"}
+              </button>}
 
-  handleValidate = (id, typeId, isRevert) => {
-    // TODO validate pre-API call 
-    // (though API does validate, this will provide 
-    // a better UX with more responsive feedback);
-    AirplanesDispatcher.onEdit(id, typeId, isRevert);
-  }
+
+            {(status !== "ERROR" && !noChangesMade && !isReverted) &&
+              <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
+                onClick={resultsPending 
+                  ? () => KitUtils.soundSuccess() 
+                  : () => {
+                    AirplanesDispatcher.onEdit(null, selectedAirplane);
+                    setIsReverted(true);
+                  }
+                }
+              >
+                {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
+              </button>
+            }
+        </FlexRow>
+      </FlexColumn>
+    }
+
+
+    {(status !== "ERROR" && status !== "PENDING") &&
+    <FlexColumn>
+      {/* Airplane */}
+      <FlexColumn>
+        <FlexRow>
+          <div className="mt-3" style={{width:"14rem"}}>
+            <label className="form-label">Airplane ID</label>
+            <input 
+              className="form-control" 
+              readOnly 
+              type="text" 
+              value={selectedAirplane.airplaneId}/>
+          </div>
+          <div className="mt-3 ml-3" style={{width:"14rem"}}>
+            <label className="form-label">Type ID</label>
+            <input 
+              className={"form-control " +  (isSubmitted ? !airplaneTypeId ? "is-invalid" : "is-valid" : "")}
+              defaultValue={airplaneTypeId}
+              min="1" 
+              type="number" 
+              onChange={(e) => setTypeId(e.target.value)}
+            />
+          </div>
+        </FlexRow>
+        <hr className="w-100"></hr>
+      </FlexColumn>     
+
+
+      {/* Buttons */}
+      <FlexRow>
+        <button className="btn btn-light m-3"
+          onClick={() => AirplanesDispatcher.onCancel()}
+        >
+          Cancel
+        </button>
+        <button className="btn btn-danger m-3"
+          onClick={() => handleSubmit()}
+        >
+          Save Changes
+        </button>
+      </FlexRow>
+    </FlexColumn>}
+  </FlexColumn>
+  );
 }
 export default EditView;

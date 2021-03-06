@@ -12,7 +12,7 @@ class OrchestrationReducer extends BaseReducer {
     return defaultOrchestrationState;
   }
 
-  static chainReduce(action, state){
+  static reduce(action, state) {
     switch(action.type) {    
       case this.constantsParent.contentNegotiation:
         return {
@@ -23,15 +23,17 @@ class OrchestrationReducer extends BaseReducer {
         return {
           error: "",
           ready: true,
-          status: "ACTIVE"
-        };
-  
-      case this.constantsParent.services:
-        console.log("chainreduce called services");
-        return {
-          services: action.payload,
           status: "SUCCESS"
         };
+  
+      case this.constantsParent.request:
+        return {
+          services: action.payload || [],
+          status: "SUCCESS"
+        };
+
+      case this.constantsParent.services:
+        return {services: action.payload || []};
   
       case this.constantsParent.start:
         return {
@@ -48,13 +50,14 @@ class OrchestrationReducer extends BaseReducer {
         return null;
     }
   }
-};
+}
 export default OrchestrationReducer;
 
 export const defaultOrchestrationState = {
   contentNegotiation: "JSON",
   error: "",
   ready: false,
+  results: [],
   services: [],
   status: "INACTIVE"
 };

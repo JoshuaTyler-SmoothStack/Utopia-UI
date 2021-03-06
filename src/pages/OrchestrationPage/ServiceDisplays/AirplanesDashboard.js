@@ -46,7 +46,7 @@ class AirplanesDashboard extends Component {
           className={"btn btn-info rounded m-1"}
           onClick={() => this.findAllAirplanes()}
         >
-          {"findAllAirplanes()"}
+          {"findAllAirplanes(10)"}
         </button>
       </FlexRow>
 
@@ -90,39 +90,33 @@ class AirplanesDashboard extends Component {
 
   handleRenderAirplanesList = (airplanesList) => {
     const { airplanes } = Store.getState();
-    const resultsDisplayed = airplanes.search.resultsPerPage;
+    const resultsDisplayed = Number(airplanes.search.resultsPerPage);
     const resultsStart = airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1);
 
     let airplanesTable = [];
-    if(!airplanesList.length) airplanesList = [airplanesList];
-    for(var i = resultsStart; i < airplanesList.length; i++) {
-      if(i < resultsStart + resultsDisplayed) {
-        
-        const airplane = airplanesList[i];
-        const airplaneId = airplane.id;
-        if(!airplaneId) continue;
+    if (!airplanesList.length) airplanesList = [airplanesList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airplanesList.length); i++) {
+      const airplaneId = airplanesList[i].airplaneId;
+      if (!airplaneId) continue;
 
-        const index = Number(i) + 1;
-        airplanesTable.push(
-          <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{airplaneId}</td>
-            <td>{airplanesList[i].typeId}</td>
-          </tr>
-        );
-      } else {
-        break;
-      }
+      const index = Number(i) + 1;
+      airplanesTable.push(
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{airplaneId}</td>
+          <td>{airplanesList[i].airplaneTypeId}</td>
+        </tr>
+      );
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
         <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
-              <th scope="col">TypeID</th>
+              <th scope="col">Type ID</th>
             </tr>
           </thead>
           <tbody>
@@ -132,6 +126,6 @@ class AirplanesDashboard extends Component {
         </table>
       </FlexColumn>
     );
-  };
+  }
 }
 export default AirplanesDashboard;

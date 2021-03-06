@@ -2,16 +2,16 @@
 import constants from "../resources/constants.json"
 
 // Reducers
-import AirplanesReducer, { defaultAirplanesState } from "./AirplanesReducer";
-import AirportsReducer, { defaultAirportsState } from "./AirportsReducer";
-import AuthenticationReducer, {defaultAuthenticationState} from "./AuthenticationReducer";
-import BookingsReducer, { defaultBookingsState } from "./BookingsReducer";
-import FlightsReducer, { defaultFlightsState } from "./FlightsReducer";
-import OrchestrationReducer, {defaultOrchestrationState} from "./OrchestrationReducer";
+import AirplanesReducer from "./AirplanesReducer";
+import AirportsReducer from "./AirportsReducer";
+import AuthenticationReducer from "./AuthenticationReducer";
+import BookingsReducer from "./BookingsReducer";
+import FlightsReducer from "./FlightsReducer";
+import OrchestrationReducer from "./OrchestrationReducer";
 import PassengersReducer from "./PassengersReducer";
-import PaymentsReducer, { defaultPaymentsState } from "./PaymentsReducer";
-import RoutesReducer, { defaultRoutesState } from "./RoutesReducer";
-import UsersReducer, { defaultUsersState } from "./UsersReducer";
+import PaymentsReducer from "./PaymentsReducer";
+import RoutesReducer from "./RoutesReducer";
+import UsersReducer from "./UsersReducer";
 
 class Store {
   static setState = null;
@@ -22,11 +22,26 @@ class Store {
     Store.getState = getState;
     Store.setState = setState;
     Store.reducers = [
-      AirplanesReducer, 
-      AirportsReducer,
-      AuthenticationReducer,
-      BookingsReducer,
-      FlightsReducer,
+      AirplanesReducer.initialize(
+        constants.airplanes,
+        constants.airplanes.apiPath
+      ),
+      AirportsReducer.initialize(
+        constants.airports,
+        constants.airports.apiPath
+      ),
+      AuthenticationReducer.initialize(
+        constants.authentication,
+        constants.authentication.apiPath
+      ),
+      BookingsReducer.initialize(
+        constants.bookings,
+        constants.bookings.apiPath
+      ),
+      FlightsReducer.initialize(
+        constants.flights,
+        constants.flights.apiPath
+      ),
       OrchestrationReducer.initialize(
         constants.orchestration,
         constants.orchestration.apiPath
@@ -35,9 +50,18 @@ class Store {
         constants.passengers,
         constants.passengers.apiPath
       ),
-      PaymentsReducer,
-      RoutesReducer,
-      UsersReducer
+      PaymentsReducer.initialize(
+        constants.payments,
+        constants.payments.apiPath
+      ),
+      RoutesReducer.initialize(
+        constants.routes,
+        constants.routes.apiPath
+      ),
+      UsersReducer.initialize(
+        constants.users,
+        constants.users.apiPath
+      )
     ];
   }
 
@@ -80,16 +104,16 @@ class Store {
 
   static getCombinedDefaultReducerStates() {
     return { 
-      airplanes: defaultAirplanesState,
-      airports: defaultAirportsState,
-      authentication: defaultAuthenticationState,
-      bookings: defaultBookingsState,
-      flights: defaultFlightsState,
-      orchestration: defaultOrchestrationState,
+      airplanes: AirplanesReducer.getDefaultReducerState(),
+      airports: AirportsReducer.getDefaultReducerState(),
+      authentication: AuthenticationReducer.getDefaultReducerState(),
+      bookings: BookingsReducer.getDefaultReducerState(),
+      flights: FlightsReducer.getDefaultReducerState(),
+      orchestration: OrchestrationReducer.getDefaultReducerState(),
       passengers: PassengersReducer.getDefaultReducerState(),
-      payments: defaultPaymentsState,
-      routes: defaultRoutesState,
-      users: defaultUsersState
+      payments: PaymentsReducer.getDefaultReducerState(),
+      routes: RoutesReducer.getDefaultReducerState(),
+      users: UsersReducer.getDefaultReducerState()
     };
   }
 }

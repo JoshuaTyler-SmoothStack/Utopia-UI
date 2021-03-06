@@ -111,7 +111,10 @@ class KitUtils {
   ====================*/
   static playSound(sound) {
     var newSound = new Audio(sound);
-    newSound.play();
+    newSound.play().catch(() => {
+      // Insert here to know if
+      //sound has failed to play
+    });
   }
 
   static soundAlert() {

@@ -8,14 +8,13 @@ import BookingsDebug from "./displays/BookingsDebug";
 import PassengersDebug from "./displays/PassengersDebug";
 import LocalSidebar from "./LocalSidebar";
 import NavBar from "../../componentgroups/NavBar";
-import OrchestrationDispathcer from "../../dispatchers/OrchestrationDispatcher";
 
 class APIDebugPage extends Component {
   constructor(props) {
     super(props);
     this.navbar = React.createRef()
     this.state = {
-      activeDisplay: "PASSENGERS",
+      activeDisplay: "BOOKINGS",
     };
   }
 
@@ -48,10 +47,6 @@ class APIDebugPage extends Component {
         </div>
       </div>
     );
-  }
-
-  componentDidMount() {
-    OrchestrationDispathcer.onFindActiveServices();
   }
 }
 export default APIDebugPage;
