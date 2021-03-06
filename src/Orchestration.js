@@ -1,16 +1,10 @@
 import constants from "./resources/constants.json"
 
 class Orchestration {
-  
+
   static contentType = "json";
 
   static createRequestWithBody(requestType, requestPath, payload, onError, onSuccess) {
-    
-    console.log("BODY HERE -> ", 
-      requestType !== constants.httpRequest.get 
-        ? JSON.stringify(payload)
-        : null
-    );
 
     const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
     fetch("http://localhost:8080" + formattedRequestPath, {

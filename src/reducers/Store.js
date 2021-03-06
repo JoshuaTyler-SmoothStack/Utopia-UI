@@ -22,46 +22,16 @@ class Store {
     Store.getState = getState;
     Store.setState = setState;
     Store.reducers = [
-      AirplanesReducer.initialize(
-        constants.airplanes,
-        constants.airplanes.apiPath
-      ),
-      AirportsReducer.initialize(
-        constants.airports,
-        constants.airports.apiPath
-      ),
-      AuthenticationReducer.initialize(
-        constants.authentication,
-        constants.authentication.apiPath
-      ),
-      BookingsReducer.initialize(
-        constants.bookings,
-        constants.bookings.apiPath
-      ),
-      FlightsReducer.initialize(
-        constants.flights,
-        constants.flights.apiPath
-      ),
-      OrchestrationReducer.initialize(
-        constants.orchestration,
-        constants.orchestration.apiPath
-      ),
-      PassengersReducer.initialize(
-        constants.passengers,
-        constants.passengers.apiPath
-      ),
-      PaymentsReducer.initialize(
-        constants.payments,
-        constants.payments.apiPath
-      ),
-      RoutesReducer.initialize(
-        constants.routes,
-        constants.routes.apiPath
-      ),
-      UsersReducer.initialize(
-        constants.users,
-        constants.users.apiPath
-      )
+      AirplanesReducer.initialize(constants.airplanes),
+      AirportsReducer.initialize(constants.airports),
+      AuthenticationReducer.initialize(constants.authentication),
+      BookingsReducer.initialize(constants.bookings),
+      FlightsReducer.initialize(constants.flights),
+      OrchestrationReducer.initialize(constants.orchestration),
+      PassengersReducer.initialize(constants.passengers),
+      PaymentsReducer.initialize(constants.payments),
+      RoutesReducer.initialize(constants.routes),
+      UsersReducer.initialize(constants.users)
     ];
   }
 

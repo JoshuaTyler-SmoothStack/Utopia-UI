@@ -1,12 +1,6 @@
 import BaseReducer from "./BaseReducer";
-import FlightsDispatcher from "../dispatchers/FlightsDispatcher";
 
 class FlightsReducer extends BaseReducer {
-  static initialize(constantsParent, dispatcherAPIPath) {
-    FlightsDispatcher.initialize(constantsParent, dispatcherAPIPath);
-    this.constantsParent = constantsParent;
-    return this;
-  }
 
   static getDefaultReducerState() {
     return defaultFlightsReducerState;

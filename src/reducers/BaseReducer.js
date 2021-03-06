@@ -3,6 +3,7 @@ class BaseReducer {
 
   static initialize(constantsParent) {
     this.constantsParent = constantsParent;
+    return this;
   }
 
   static getDefaultReducerState() {

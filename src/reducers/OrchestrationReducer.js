@@ -1,12 +1,6 @@
 import BaseReducer from "./BaseReducer";
-import OrchestrationDispatcher from "../dispatchers/OrchestrationDispatcher";
 
 class OrchestrationReducer extends BaseReducer {
-  static initialize(constantsParent, dispatcherAPIPath) {
-    OrchestrationDispatcher.initialize(constantsParent, dispatcherAPIPath);
-    this.constantsParent = constantsParent;
-    return this;
-  }
 
   static getDefaultReducerState() {
     return defaultOrchestrationState;
