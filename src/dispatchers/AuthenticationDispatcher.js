@@ -1,8 +1,9 @@
 import constants from "../resources/constants.json"
 import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
+import BaseDispatcher from "./BaseDispatcher";
 
-class AuthenticationDispatcher {
+class AuthenticationDispatcher extends BaseDispatcher {
 
   static onCancel() {
    Store.reduce({type: constants.authentication.cancel});
@@ -90,7 +91,7 @@ class AuthenticationDispatcher {
   }
 
   static onPromptLogin() {
-   Store.reduce({type: constants.authentication.prompt});
+   Store.reduce({type: constants.authentication.promptLogin});
   }
 }
 export default AuthenticationDispatcher;

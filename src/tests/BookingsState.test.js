@@ -37,7 +37,7 @@ test("onError sets error to the error message & status to error",
 });
 
 // onSearchResults_WithValidResults_exceptSearchResultsAndNoErrorAndStatusSuccess()
-test("onFindAll with valid response sets searchresults to bookings returned, has no error, and has status SUCCESS", 
+test("onRequest with valid response sets searchresults to bookings returned, has no error, and has status SUCCESS", 
 () => {
   const sampleResults = {
     "0": {
@@ -61,7 +61,7 @@ test("onFindAll with valid response sets searchresults to bookings returned, has
       onSuccess(sampleResults);
     }
   }));
-  BookingsDispatcher.onFindAll();
+  BookingsDispatcher.onRequest();
   setTimeout(() => {
     const { bookings } = Store.getState();
     expect(bookings.search.results).toBe(sampleResults);
@@ -79,7 +79,7 @@ test("onSearchResults with invalid response has error and has status ERROR",
       onError(errorMessage);
     }
   }));
-  BookingsDispatcher.onFindAll();
+  BookingsDispatcher.onRequest();
   setTimeout(() => {
     const { bookings } = Store.getState();
     expect(bookings.error).toBe(errorMessage);
@@ -123,22 +123,22 @@ test("onPromptEdit() sets the edit view active, sets the create and delete views
   }, 100);
 });
 
-// onResultsPage_expectCorrectPageValue()
-test("onResultsPage(pageValue) sets the search.resultsPage to the passed value.", 
+// onSelectResultsPage_expectCorrectPageValue()
+test("onSelectResultsPage(pageValue) sets the search.resultsPage to the passed value.", 
 () => { 
   const pageValue = 789;
-  BookingsDispatcher.onResultsPage(pageValue);
+  BookingsDispatcher.onSelectResultsPage(pageValue);
   setTimeout(() => {
     const { bookings } = Store.getState();
     expect(bookings.search.resultsPage).toBe(pageValue);
   }, 100);
 });
 
-// onResultsPerPage_expectCorrectPageValue()
-test("onResultsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
+// onSelectResultsPerPage_expectCorrectPageValue()
+test("onSelectResultsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
 () => { 
   const perPageValue = 75;
-  BookingsDispatcher.onResultsPerPage(perPageValue);
+  BookingsDispatcher.onSelectResultsPerPage(perPageValue);
   setTimeout(() => {
     const { bookings } = Store.getState();
     expect(bookings.search.resultsPerPage).toBe(perPageValue);

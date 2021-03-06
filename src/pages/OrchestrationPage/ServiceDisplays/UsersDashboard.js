@@ -46,7 +46,7 @@ class UsersDashboard extends Component {
           className={"btn btn-info rounded"}
           onClick={() => this.findAllUsers()}
         >
-          {"findAllUsers()"}
+          {"findAllUsers(10)"}
         </button>
       </FlexRow>
 
@@ -84,7 +84,7 @@ class UsersDashboard extends Component {
   }
 
   findAllUsers = () => {
-    UsersDispatcher.onFindAll();
+    UsersDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 

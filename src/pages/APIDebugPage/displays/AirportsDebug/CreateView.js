@@ -1,5 +1,5 @@
 // Libraries
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
 
@@ -9,104 +9,119 @@ import FlexRow from "../../../../components/FlexRow";
 import ChangeOperationReadout from '../ChangeOperationReadout';
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
 
-class CreateView extends Component {
-  constructor(props) {
-    super(props);
+const CreateView = (props) => {
+  const [airportIataId, setAirportIataId] = useState("");
+  const [airportCityName, setAirportCityName] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-    this.state = {
-      iataId: "",
-      city: "",
+  const { airports } = Store.getState();
+  const results = airports.create.results
+  const resultsStatus = airports.create.resultsStatus;
+  const resultsPending = resultsStatus === "PENDING";
+  const status = airports.create.status;
+
+  const handleValidate = () => {
+    setIsSubmitted(true);
+    if(!airportIataId) return false;
+    if(!airportCityName) return false;
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if(!handleValidate()) return;
+    const newAirport = {
+      airportIataId: airportIataId,
+      airportCityName: airportCityName,
     };
-  }
+    AirportsDispatcher.onCreate(null, newAirport);
+  };
 
-  render() { 
-    const { airports } = Store.getState();
-    const { iataId, city } = this.state;
+  return (
+    <FlexColumn>
+      {(status === "PENDING" || status === "ERROR") && 
+        <FlexColumn className="mt-5">
+          {/* Operation Readout */}
+          <ChangeOperationReadout 
+            className="m-1" 
+            style={{minHeight: "4rem"}} 
+            name="Airport"
+            result={"Created Airport with IATA ID: " + results.airportIataId + 
+            " and City: " + results.airportCityName + "."}
+            status={resultsStatus || "DISABLED"}
+          />
+          
+          {/* Divider */}
+          <hr className="w-100"></hr>
 
-    const results = airports.create.results
-    const resultsStatus = airports.create.resultsStatus;
-    const resultsPending = resultsStatus === "PENDING";
-    const status = airports.create.status;
+          {/* Buttons */}
+          <FlexRow>
+            <button className="btn btn-light m-3"
+              onClick={() => {
+                AirportsDispatcher.onCancel();
+                AirportsDispatcher.onRequest();
+              }}
+            >
+              Close
+            </button>
+            {status !== "ERROR" &&
+            <button className={"btn btn-info m-3" + (!resultsPending || " disabled")}
+              onClick={!resultsPending 
+                ? () => AirportsDispatcher.onPromptEdit("/" + results.airportIataId)
+                : () => {KitUtils.soundAlert()
+              }}
+            >
+              {resultsPending ? "Edit (please wait)" : "Edit"}
+            </button>}
+          </FlexRow>
+        </FlexColumn>
+      }
 
-    return (
-      <FlexColumn>
-        {(status === "PENDING" || status === "ERROR") && 
-          <FlexColumn className="mt-5">
-            {/* Operation Readout */}
-            <ChangeOperationReadout 
-              className="m-1" 
-              style={{minHeight: "4rem"}} 
-              name="Airport" status={resultsStatus} 
-              result={"Created Airport with IATA ID: " + results.iataId + 
-              " in City: " + results.city + "."}
-            />
-            
-            {/* Divider */}
-            <hr className="w-100"></hr>
-
-            {/* Buttons */}
-            <FlexRow>
-              <button className="btn btn-light m-3"
-                onClick={() => AirportsDispatcher.onCancel()}
-              >
-                Close
-              </button>
-              {status !== "ERROR" &&
-              <button className={"btn btn-info m-3" + (!resultsPending || " disabled")}
-                onClick={!resultsPending ? () => AirportsDispatcher.onPromptEdit(airports.selected.iataId) : () => {KitUtils.soundAlert()}}
-              >
-                {resultsPending ? "Edit (please wait)" : "Edit"}
-              </button>}
-            </FlexRow>
-          </FlexColumn>
-        }
-
-        {(status !== "ERROR" && status !== "PENDING") &&
+      {(status !== "ERROR" && status !== "PENDING") &&
+        <FlexColumn>
+          {/* Airport */}
           <FlexColumn>
-            {/* Airport */}
-            <FlexColumn>
-              <FlexRow>
-                <div className="mt-3" style={{width:"14rem"}}>
-                  <label className="form-label">Airport IATA ID</label>
-                  <input type="text" className="form-control" defaultValue={iataId} placeholder={"ORD"}
-                    onChange={(e) => this.setState({iataId: e.target.value})}
-                  />
-                </div>
-                <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                  <label className="form-label">City</label>
-                  <input type="text" className="form-control" defaultValue={city} placeholder={"Chicago"}
-                    onChange={(e) => this.setState({city: e.target.value})}
-                  />
-                </div>
-              </FlexRow>
-              <hr className="w-100"></hr>
-            </FlexColumn>
-            
-
-            {/* Buttons */}
             <FlexRow>
-              <button className="btn btn-light m-3"
-                onClick={() => AirportsDispatcher.onCancel()}
-              >
-                Cancel
-              </button>
-              <button className="btn btn-success text-white kit-text-shadow-thin m-3"
-                onClick={() => this.handleValidate(iataId, city)}
-              >
-                + Create New Airport
-              </button>
+              <div className="mt-3" style={{width:"14rem"}}>
+                <label className="form-label">IATA ID</label>
+                <input 
+                  className={"form-control " +  (isSubmitted ? !airportIataId ? "is-invalid" : "is-valid" : "")}
+                  defaultValue={airportIataId}
+                  placeholder="ORD"
+                  type="text" 
+                  onChange={(e) => setAirportIataId(e.target.value)}
+                />
+              </div>
+              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+                <label className="form-label">City</label>
+                <input 
+                  className={"form-control " +  (isSubmitted ? !airportCityName ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={airportCityName}
+                  placeholder="Chicago"
+                  type="text" 
+                  onChange={(e) => setAirportCityName(e.target.value)}
+                />
+              </div>
             </FlexRow>
+            <hr className="w-100"></hr>
           </FlexColumn>
-        }
-      </FlexColumn>
-    );
-  }
+          
 
-  handleValidate = (iataId, city) => {
-    // TODO validate pre-API call 
-    // (though API does validate, this will provide 
-    // a better UX with more responsive feedback);
-    AirportsDispatcher.onCreate(iataId, city);
-  }
+          {/* Buttons */}
+          <FlexRow>
+            <button className="btn btn-light m-3"
+              onClick={() => AirportsDispatcher.onCancel()}
+            >
+              Cancel
+            </button>
+            <button className="btn btn-success text-white m-3"
+              onClick={() => handleSubmit()}
+            >
+              + Create New Airport
+            </button>
+          </FlexRow>
+        </FlexColumn>
+      }
+    </FlexColumn>
+  );
 }
 export default CreateView;

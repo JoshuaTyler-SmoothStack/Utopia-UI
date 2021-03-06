@@ -46,7 +46,7 @@ class AirportsDashboard extends Component {
           className={"btn btn-info rounded"}
           onClick={() => this.findAllAirports()}
         >
-          {"findAllAirports()"}
+          {"findAllAirports(10)"}
         </button>
       </FlexRow>
 
@@ -84,39 +84,33 @@ class AirportsDashboard extends Component {
   }
 
   findAllAirports = () => {
-    AirportsDispatcher.onFindAll();
+    AirportsDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 
   handleRenderAirportsList = (airportsList) => {
     const { airports } = Store.getState();
-    const resultsDisplayed = airports.search.resultsPerPage;
+    const resultsDisplayed = Number(airports.search.resultsPerPage);
     const resultsStart = airports.search.resultsPerPage * (airports.search.resultsPage - 1);
 
     let airportsTable = [];
-    if(!airportsList.length) airportsList = [airportsList];
-    for(var i = resultsStart; i < airportsList.length; i++) {
-      if(i < resultsStart + resultsDisplayed) {
-        
-        const airport = airportsList[i];
-        const airportIataId = airport.iataId;
-        if(!airportIataId) continue;
+    if (!airportsList.length) airportsList = [airportsList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airportsList.length); i++) {
+      const airportIataId = airportsList[i].airportIataId;
+      if (!airportIataId) continue;
 
-        const index = Number(i) + 1;
-        airportsTable.push(
-          <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{airportIataId}</td>
-            <td>{airportsList[i].city}</td>
-          </tr>
-        );
-      } else {
-        break;
-      }
+      const index = Number(i) + 1;
+      airportsTable.push(
+        <tr key={index}>
+          <th scrop="row">{index}</th>
+          <td>{airportIataId}</td>
+          <td>{airportsList[i].airportCityName}</td>
+        </tr>
+      );
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "95%", width: "95%"}}>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
         <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
@@ -132,6 +126,6 @@ class AirportsDashboard extends Component {
         </table>
       </FlexColumn>
     );
-  };
+  }
 }
 export default AirportsDashboard;

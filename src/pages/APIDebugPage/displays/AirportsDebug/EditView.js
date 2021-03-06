@@ -1,5 +1,6 @@
 // Libraries
-import React, { Component } from 'react';
+import _ from "lodash";
+import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
@@ -9,119 +10,137 @@ import ChangeOperationReadout from '../ChangeOperationReadout';
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
-class EditView extends Component {
-  constructor(props) {
-    super(props);
 
-    const { airports } = Store.getState();
-    const selectedAirport = airports.selected;
-    this.state = {
-      iataId: selectedAirport.iataId,
-      city: selectedAirport.city,
-      reverted: false
+const EditView = (props) => {
+
+  const { airports } = Store.getState();
+  const selectedAirport = airports.selected;
+
+  const [airportCityName, setAirportCityName] = useState(selectedAirport.airportCityName);
+  const [isReverted, setIsReverted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const results = airports.edit.results
+  const resultsStatus = airports.edit.resultsStatus;
+  const status = airports.edit.status;
+  
+  const airportCityNameChanged = results
+    ? selectedAirport.airportCityName !== results.airportCityName
+    : true;
+
+  const resultsPending = resultsStatus === "PENDING";
+  const noChangesMade = _.isEqual(selectedAirport, results);
+
+  const handleValidate = () => {
+    setIsSubmitted(true);
+    if(!airportCityName) return false;
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if(!handleValidate()) return;
+    const newAirport = {
+      airportIataId: selectedAirport.airportIataId,
+      airportCityName: airportCityName,
     };
-  }
-  render() { 
-    const { airports } = Store.getState();
-    const { iataId, city, reverted } = this.state;
+    if(!_.isEqual(selectedAirport, newAirport)) {
+      AirportsDispatcher.onEdit(null, newAirport);
+    } else {
+      AirportsDispatcher.onEditFake(newAirport);
+    }
+  };
 
-    const selectedAirport = airports.selected;
-    const results = airports.edit.results
-    const resultsStatus = airports.edit.resultsStatus;
-    const status = airports.edit.status;
-    
-    const resultsPending = resultsStatus === "PENDING";
-    const noChangesMade = results.city === selectedAirport.city;
+  return (
+    <FlexColumn>
 
-    return (
-      <FlexColumn>
+      {(status === "PENDING" || status === "ERROR") && 
+      <FlexColumn className="mt-5">
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Airport" 
+          result={results ? results.airportCityName : ". . ."}
+          status={airportCityNameChanged ? resultsStatus : "DISABLED"} 
+        />
 
-        {(status === "PENDING" || status === "ERROR") && 
-        <FlexColumn className="mt-5">
-          <ChangeOperationReadout 
-            className="m-1" 
-            style={{minHeight: "4rem"}} 
-            name="Airport" status={resultsStatus} 
-            result={(!noChangesMade 
-              ? "Updated Airport: " + results.iataId + 
-                " city to: " + results.city + "."
-              : "No changes made.")
-            }
-          />
-
-          <FlexRow>
-              <button className="btn btn-light m-3"
-                onClick={() => AirportsDispatcher.onCancel()}
-              >
-                Close
-              </button>
-              
-              {(status !== "ERROR" && noChangesMade && !reverted) &&
-                <button className={"btn btn-danger m-3 disabled"}
-                  onClick={() => KitUtils.soundAlert()}
-                >
-                  {"Revert Changes (no changes made)"}
-                </button>}
-
-              {(status !== "ERROR" && !noChangesMade && !reverted) &&
-                <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
-                  onClick={resultsPending 
-                    ? () => KitUtils.soundSuccess() 
-                    : () => {
-                      this.handleValidate(selectedAirport, selectedAirport.city, true);
-                      this.setState({reverted: true});
-                    }
-                  }
-                >
-                  {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
-                </button>
-              }
-          </FlexRow>
-        </FlexColumn>
-      }
-
-      {(status !== "ERROR" && status !== "PENDING") &&
-      <FlexColumn>
-        {/* Airport */}
-        <FlexColumn>
-          <FlexRow>
-            <div className="mt-3" style={{width:"14rem"}}>
-              <label className="form-label">Airport IATA ID</label>
-              <input type="text" readOnly className="form-control" value={iataId}/>
-            </div>
-            <div className="mt-3 ml-3" style={{width:"14rem"}}>
-              <label className="form-label">City</label>
-              <input type="text" className="form-control" defaultValue={city}
-                onChange={(e) => this.setState({city: e.target.value})}
-              />
-            </div>
-          </FlexRow>
-          <hr className="w-100"></hr>
-        </FlexColumn>     
-
-        {/* Buttons */}
         <FlexRow>
-          <button className="btn btn-light m-3"
-            onClick={() => AirportsDispatcher.onCancel()}
-          >
-            Cancel
-          </button>
-          <button className="btn btn-danger m-3"
-            onClick={() => this.handleValidate(selectedAirport, city, false)}
-          >
-            Save Changes
-          </button>
-        </FlexRow>
-      </FlexColumn>}
-    </FlexColumn>
-    );
-  }
+            <button className="btn btn-light m-3"
+              onClick={() => {
+                AirportsDispatcher.onCancel();
+                AirportsDispatcher.onRequest();
+              }}
+            >
+              Close
+            </button>
+            
+            {(status !== "ERROR" && noChangesMade && !isReverted) &&
+              <button className={"btn btn-danger m-3 disabled"}
+                onClick={() => KitUtils.soundAlert()}
+              >
+                {"Revert Changes (no changes made)"}
+              </button>}
 
-  handleValidate = (airport, newCityName, isRevert) => {
-    // TODO validate pre-API call 
-    // (though API does validate, this will provide 
-    // a better UX with more responsive feedback);
-    AirportsDispatcher.onEdit(airport, newCityName, isRevert);
-  }
+
+            {(status !== "ERROR" && !noChangesMade && !isReverted) &&
+              <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
+                onClick={resultsPending 
+                  ? () => KitUtils.soundSuccess() 
+                  : () => {
+                    AirportsDispatcher.onEdit(null, selectedAirport);
+                    setIsReverted(true);
+                  }
+                }
+              >
+                {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
+              </button>
+            }
+        </FlexRow>
+      </FlexColumn>
+    }
+
+
+    {(status !== "ERROR" && status !== "PENDING") &&
+    <FlexColumn>
+      {/* Airport */}
+      <FlexColumn>
+        <FlexRow>
+          <div className="mt-3" style={{width:"14rem"}}>
+            <label className="form-label">IATA ID</label>
+            <input 
+              className="form-control" 
+              readOnly 
+              type="text" 
+              value={selectedAirport.airportIataId}/>
+          </div>
+          <div className="mt-3 ml-3" style={{width:"14rem"}}>
+            <label className="form-label">City</label>
+            <input 
+              className={"form-control " +  (isSubmitted ? !airportCityName ? "is-invalid" : "is-valid" : "")}
+              defaultValue={airportCityName}
+              type="text" 
+              onChange={(e) => setAirportCityName(e.target.value)}
+            />
+          </div>
+        </FlexRow>
+        <hr className="w-100"></hr>
+      </FlexColumn>     
+
+
+      {/* Buttons */}
+      <FlexRow>
+        <button className="btn btn-light m-3"
+          onClick={() => AirportsDispatcher.onCancel()}
+        >
+          Cancel
+        </button>
+        <button className="btn btn-danger m-3"
+          onClick={() => handleSubmit()}
+        >
+          Save Changes
+        </button>
+      </FlexRow>
+    </FlexColumn>}
+  </FlexColumn>
+  );
 }
 export default EditView;

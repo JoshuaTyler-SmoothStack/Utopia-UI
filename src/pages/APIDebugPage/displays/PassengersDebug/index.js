@@ -1,6 +1,6 @@
 // Libraries
 import PassengersDispatcher from "../../../../dispatchers/PassengersDispatcher";
-import Orchestration from "../../../../Orchestration";
+import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
@@ -22,15 +22,17 @@ class PassengersDebug extends Component {
     super(props);
     this.state = {
       isPassengerInfoActive: false,
+      searchTerms: ""
     };
   }
 
   render() { 
-    const { passengers } = Store.getState();
-    const { isPassengerInfoActive, searchText } = this.state;
+    const { orchestration, passengers } = Store.getState();
+    const { isPassengerInfoActive, searchTerms } = this.state;
     const isCreatePromptActive = passengers.create.isActive;
     const isDeletePromptActive = passengers.delete.isActive;
     const isEditPromptActive = passengers.edit.isActive;
+    const isMSActive = orchestration.services.includes("passengers");
     const passengersMSStatus = passengers.status;
     const searchError = passengers.search.error;
     const searchFilters = passengers.search.filters;
@@ -48,7 +50,7 @@ class PassengersDebug extends Component {
               status={passengersMSStatus === "INACTIVE" ? "PENDING" : passengersMSStatus}
               style={{maxWidth:"30rem"}}
               onTriggerError={() => PassengersDispatcher.onError()}
-              onTriggerFakeAPICall={() => PassengersDispatcher.onFakeAPICall()}
+              onTriggerFakeAPICall={() => PassengersDispatcher.onFakeAPICall(searchResults)}
             />
 
             {/* Search Bar */}
@@ -62,12 +64,12 @@ class PassengersDebug extends Component {
                   placeholder="IDs, name, address, . . ."
                   type="search" 
                   style={{maxWidth:"15rem"}}
-                  onChange={(e) => this.setState({searchText: e.target.value})}
+                  onChange={(e) => this.setState({searchTerms: e.target.value})}
                 />
                 <button 
                   className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                   type="submit"
-                  onClick={() => PassengersDispatcher.onFindBy(searchText)}
+                  onClick={() => PassengersDispatcher.onSearchAndFilter("/search", searchTerms)}
                 >
                   search
                 </button>
@@ -115,7 +117,7 @@ class PassengersDebug extends Component {
                 selection={passengers.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => PassengersDispatcher.onResultsPerPage(e)}
+                onSelect={(e) => PassengersDispatcher.onSelectResultsPerPage(e)}
               />
             </FlexColumn>
 
@@ -131,7 +133,7 @@ class PassengersDebug extends Component {
               <Pagination
                 currentPage={passengers.search.resultsPage}
                 totalPages={Math.ceil(passengers.search.results.length / Math.max(passengers.search.resultsPerPage, 1))}
-                onSelectPage={(e) => PassengersDispatcher.onResultsPage(e)}
+                onSelectPage={(e) => PassengersDispatcher.onSelectResultsPage(e)}
               />
             </FlexColumn>
           </div>
@@ -145,7 +147,7 @@ class PassengersDebug extends Component {
         {passengersMSStatus === "ERROR" &&
           <FlexColumn className="h-100">
             <ErrorMessage className="h1" soundAlert={true}>
-              {passengers.error}
+              {isMSActive ? passengers.error : "No Passenger MS connection."}
             </ErrorMessage>
             <button className="btn btn-light m-3"
               onClick={() => PassengersDispatcher.onCancel()}
@@ -156,14 +158,14 @@ class PassengersDebug extends Component {
 
           {/* Inactive State */}
           {passengersMSStatus === "INACTIVE" &&
-          <FlexColumn className="h-100">
+          <FlexColumn style={{minHeight:"10rem"}}>
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
             name="Establishing Connection . . ." status={"PENDING"}/>
           </FlexColumn>}
 
           {/* Pending State */}
           {(passengersMSStatus === "PENDING" || passengersMSStatus === "INACTIVE") &&
-          <FlexColumn className="h-100">
+          <FlexColumn style={{minHeight:"10rem"}}>
             <div className="spinner-border"/>
           </FlexColumn>}
 
@@ -186,14 +188,8 @@ class PassengersDebug extends Component {
 
   componentDidMount() {
     PassengersDispatcher.onCancel();
-    Orchestration.findActiveServices(
-    onError => {
-      PassengersDispatcher.onError("No Orchestration connection.");
-    }, onSuccess => {
-      const isMSActive = onSuccess.includes("passenger-service");
-      if(isMSActive) PassengersDispatcher.onFindAll()
-      else PassengersDispatcher.onError("No Passenger MS connection.");
-    });
+    OrchestrationDispatcher.onFindActiveServices();
+    PassengersDispatcher.onRequest();
   }
 
   handleIncludeReferenceIDs = (isActive) => {
@@ -233,13 +229,13 @@ class PassengersDebug extends Component {
 
           {/* Edit */}
           <td><button className="btn btn-info"
-            onClick={() => PassengersDispatcher.onPromptEdit(passengerId)}>
+            onClick={() => PassengersDispatcher.onPromptEdit("/"+passengerId)}>
             Edit
           </button></td>
 
           {/* Delete */}
           <td><button className="btn btn-primary"
-            onClick={() => PassengersDispatcher.onPromptDelete(passengerId)}>
+            onClick={() => PassengersDispatcher.onPromptDelete("/"+passengerId)}>
             Delete
           </button></td>
         </tr>

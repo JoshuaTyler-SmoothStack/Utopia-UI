@@ -19,8 +19,13 @@ const DeleteView = () => {
       {status === "PENDING" && 
         <FlexColumn className="mt-5">
           {/* Change Readout */}
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Airplane" status={resultsStatus} result={"Successfully Deleted"}/>
+          <ChangeOperationReadout 
+            className="m-1" 
+            style={{minHeight: "4rem"}} 
+            name="Airplane" 
+            result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
+            status={resultsStatus}
+          />
 
           {/* Divider */}
           <hr className="w-100"></hr>
@@ -28,7 +33,10 @@ const DeleteView = () => {
           {/* Button */}
           <FlexRow>
             <button className="btn btn-light m-3"
-              onClick={() => AirplanesDispatcher.onCancel()}
+              onClick={() => {
+                AirplanesDispatcher.onCancel();
+                AirplanesDispatcher.onRequest();
+              }}
             >
               Close
             </button>
@@ -43,11 +51,11 @@ const DeleteView = () => {
             <FlexRow>
               <div className="mt-3">
                 <label className="form-label">Airplane ID</label>
-                <input type="text" readOnly className="form-control" value={selectedAirplane.id}/>
+                <input type="text" readOnly className="form-control" value={selectedAirplane.airplaneId}/>
               </div>
               <div className="mt-3 ml-3">
                 <label className="form-label">Type ID</label>
-                <input type="text" readOnly className="form-control" value={selectedAirplane.typeId}/>
+                <input type="text" readOnly className="form-control" value={selectedAirplane.airplaneTypeId}/>
               </div>
             </FlexRow>
           </FlexColumn>
@@ -61,7 +69,7 @@ const DeleteView = () => {
               Cancel
             </button>
             <button className="btn btn-primary m-3"
-              onClick={() => AirplanesDispatcher.onDelete(selectedAirplane.id)}
+              onClick={() => AirplanesDispatcher.onDelete("/" + selectedAirplane.airplaneId)}
             >
               Confirm Delete (cannot be undone)
             </button>

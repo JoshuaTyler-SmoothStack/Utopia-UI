@@ -28,7 +28,8 @@ class OrchestrationPage extends Component {
 
   render() { 
     const { orchestration, airplanes, airports, bookings, users } = Store.getState();
-    const isActive_OrchestrationDashboard = orchestration.status;
+    const isActive_OrchestrationDashboard = orchestration.ready;
+    const status = orchestration.status;
     const services = orchestration.services;
 
     return ( 
@@ -57,10 +58,10 @@ class OrchestrationPage extends Component {
           <FlexColumn style={{height: "auto", width: "100%"}}>
             
             {/* Loading Spinner */}
-            {services.status === "PENDING" && <div className="spinner-border kit-color-cream"/>}
+            {status === "PENDING" && <div className="spinner-border kit-color-cream"/>}
 
             {/* No Active Services Error */}
-            {services.status === "REGISTERED" && services.list.length < 1 && 
+            {status === "SUCCESS" && services.length < 1 && 
               <FlexRow
                 className="h1 text-warning kit-bg-smoke rounded kit-border-shadow"
                 style={{width: "50%"}}
@@ -70,11 +71,11 @@ class OrchestrationPage extends Component {
             }
 
             {/* ServiceDisplays */}
-            {services.status === "REGISTERED" && services.list.length > 0 && 
+            {status === "SUCCESS" && services.length > 0 && 
             <FlexColumn style={{width: "66%"}}>
 
               <ServiceDisplay 
-                isActive={services.list.includes("airplane-service")}
+                isActive={services.includes("airplane-service")}
                 location={"http://airplane-service"}
                 name={"Airplane MS"}
                 status={airplanes.status}
@@ -83,7 +84,7 @@ class OrchestrationPage extends Component {
               </ServiceDisplay>
 
               <ServiceDisplay 
-                isActive={services.list.includes("airport-service")}
+                isActive={services.includes("airport-service")}
                 location={"http://airport-service"}
                 name={"Airport MS"}
                 status={airports.status}
@@ -92,7 +93,7 @@ class OrchestrationPage extends Component {
               </ServiceDisplay>
 
               <ServiceDisplay 
-                isActive={services.list.includes("booking-service")}
+                isActive={services.includes("booking-service")}
                 location={"http://booking-service"}
                 name={"Booking MS"}
                 status={bookings.status}
@@ -101,7 +102,7 @@ class OrchestrationPage extends Component {
               </ServiceDisplay>
 
               <ServiceDisplay 
-                isActive={services.list.includes("user-service")}
+                isActive={services.includes("user-service")}
                 location={"http://user-service"}
                 name={"User MS"}
                 status={users.status}

@@ -1,153 +1,119 @@
-// Constants
+// Libraries
 import constants from "../resources/constants.json"
 
 // Reducers
-import airplanesReducer, { defaultAirplanesState } from "./AirplanesReducer";
-import airportsReducer, { defaultAirportsState } from "./AirportsReducer";
-import authenticationReducer, {defaultAuthenticationState} from "./AuthenticationReducer";
-import bookingsReducer, { defaultBookingsState } from "./BookingsReducer";
-import flightsReducer, { defaultFlightsState } from "./FlightsReducer";
-import orchestrationReducer, {defaultOrchestrationState} from "./OrchestrationReducer";
-import passengersReducer, { defaultPassengersState } from "./PassengersReducer";
-import paymentsReducer, { defaultPaymentsState } from "./PaymentsReducer";
-import routesReducer, { defaultRoutesState } from "./RoutesReducer";
-import usersReducer, { defaultUsersState } from "./UsersReducer";
+import AirplanesReducer from "./AirplanesReducer";
+import AirportsReducer from "./AirportsReducer";
+import AuthenticationReducer from "./AuthenticationReducer";
+import BookingsReducer from "./BookingsReducer";
+import FlightsReducer from "./FlightsReducer";
+import OrchestrationReducer from "./OrchestrationReducer";
+import PassengersReducer from "./PassengersReducer";
+import PaymentsReducer from "./PaymentsReducer";
+import RoutesReducer from "./RoutesReducer";
+import UsersReducer from "./UsersReducer";
 
 class Store {
-
-  // Requires App.js to initialize State in constructor() 
   static setState = null;
   static getState = null;
+  static reducers = [];
 
+  static initialize(getState, setState) {
+    Store.getState = getState;
+    Store.setState = setState;
+    Store.reducers = [
+      AirplanesReducer.initialize(
+        constants.airplanes,
+        constants.airplanes.apiPath
+      ),
+      AirportsReducer.initialize(
+        constants.airports,
+        constants.airports.apiPath
+      ),
+      AuthenticationReducer.initialize(
+        constants.authentication,
+        constants.authentication.apiPath
+      ),
+      BookingsReducer.initialize(
+        constants.bookings,
+        constants.bookings.apiPath
+      ),
+      FlightsReducer.initialize(
+        constants.flights,
+        constants.flights.apiPath
+      ),
+      OrchestrationReducer.initialize(
+        constants.orchestration,
+        constants.orchestration.apiPath
+      ),
+      PassengersReducer.initialize(
+        constants.passengers,
+        constants.passengers.apiPath
+      ),
+      PaymentsReducer.initialize(
+        constants.payments,
+        constants.payments.apiPath
+      ),
+      RoutesReducer.initialize(
+        constants.routes,
+        constants.routes.apiPath
+      ),
+      UsersReducer.initialize(
+        constants.users,
+        constants.users.apiPath
+      )
+    ];
+  }
 
   static reduce(action) {
-    // Check setState is valid
-    if(!Store.setState) {
-      console.error("Cannot reduce action! Invalid setState() method.", action);
+
+    // Check action is valid
+    if(!action.type) {
+      console.error("Cannot reduce action - invalid action.type", action);
       return;
     }
 
-    // Route reduction based on action.type,  
-    // utilizes constants.json to determine reducer
-    switch(action.type.split("_")[0]) {
-      
-      // airplanes
-      case constants.airplanes.root:
-        Store.setState((state) => ({
-          airplanes: {
-            ...state.airplanes, 
-            ...airplanesReducer(action)
+    // Check action.type root is valid
+    const actionTypeRoot = action.type.split("_")[0];
+    if(!actionTypeRoot) {
+      console.error("Cannot reduce action - invalid action.type root", action);
+      return;
+    }
+
+    // Check setState is valid
+    if(!this.setState) {
+      console.error("Cannot reduce action - invalid setState() method", action);
+      return;
+    }
+    
+    for(var i in this.reducers) {
+      const reducer = this.reducers[i];
+      if(!reducer.constantsParent) continue;
+      if(reducer.constantsParent.root === actionTypeRoot) {
+        const reducerName = reducer.constantsParent.name;
+        this.setState((state) => ({
+          [reducerName]: {
+            ...state[reducerName],
+            ...reducer.reduce(action, state[reducerName])
           }
         }));
-      break;
-
-      // airports
-      case constants.airports.root:
-        Store.setState((state) => ({
-          airports: {
-            ...state.airports, 
-            ...airportsReducer(action)
-          }
-        }));
-      break;
-
-      // authentication
-      case constants.authentication.root:
-        Store.setState((state) => ({
-          authentication: {
-            ...state.authentication, 
-            ...authenticationReducer(action)
-          }
-        }));
-      break;
-
-      // bookings
-      case constants.bookings.root:
-        Store.setState((state) => ({
-          bookings: {
-            ...state.bookings, 
-            ...bookingsReducer(action)
-          }
-        }));
-      break;
-
-      // flights
-      case constants.flights.root:
-        Store.setState((state) => ({
-          flights: {
-            ...state.flights, 
-            ...flightsReducer(action)
-          }
-        }));
-      break;
-
-      // orchestration
-      case constants.orchestration.root:
-        Store.setState((state) => ({ 
-          orchestration: {
-            ...state.orchestration,
-            ...orchestrationReducer(action)
-          }
-        }));
-      break;
-
-      // passenger
-      case constants.passengers.root:
-        Store.setState((state) => ({
-          passengers: {
-            ...state.passengers, 
-            ...passengersReducer(action)
-          }
-        }));
-      break;
-
-      // payments
-      case constants.payments.root:
-        Store.setState((state) => ({
-          payments: {
-            ...state.payments, 
-            ...paymentsReducer(action)
-          }
-        }));
-      break;
-
-      // routes
-      case constants.routes.root:
-        Store.setState((state) => ({
-          routes: {
-            ...state.routes, 
-            ...routesReducer(action)
-          }
-        }));
-      break;
-
-      // users
-      case constants.users.root:
-        Store.setState((state) => ({
-          users: {
-            ...state.users, 
-            ...usersReducer(action)
-          }
-        }));
-      break;
-
-      default:
-        console.error("Invalid action.type!", action);
+        break;
+      }
     }
   }
 
   static getCombinedDefaultReducerStates() {
     return { 
-      airplanes: defaultAirplanesState,
-      airports: defaultAirportsState,
-      authentication: defaultAuthenticationState,
-      bookings: defaultBookingsState,
-      flights: defaultFlightsState,
-      orchestration: defaultOrchestrationState,
-      passengers: defaultPassengersState,
-      payments: defaultPaymentsState,
-      routes: defaultRoutesState,
-      users: defaultUsersState
+      airplanes: AirplanesReducer.getDefaultReducerState(),
+      airports: AirportsReducer.getDefaultReducerState(),
+      authentication: AuthenticationReducer.getDefaultReducerState(),
+      bookings: BookingsReducer.getDefaultReducerState(),
+      flights: FlightsReducer.getDefaultReducerState(),
+      orchestration: OrchestrationReducer.getDefaultReducerState(),
+      passengers: PassengersReducer.getDefaultReducerState(),
+      payments: PaymentsReducer.getDefaultReducerState(),
+      routes: RoutesReducer.getDefaultReducerState(),
+      users: UsersReducer.getDefaultReducerState()
     };
   }
 }

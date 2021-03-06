@@ -6,6 +6,12 @@ class Orchestration {
 
   static createRequestWithBody(requestType, requestPath, payload, onError, onSuccess) {
     
+    console.log("BODY HERE -> ", 
+      requestType !== constants.httpRequest.get 
+        ? JSON.stringify(payload)
+        : null
+    );
+
     const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
     fetch("http://localhost:8080" + formattedRequestPath, {
       headers: {
@@ -13,8 +19,8 @@ class Orchestration {
         "Content-Type": "application/" + Orchestration.contentType,
       },
       body: requestType !== constants.httpRequest.get 
-      ? JSON.stringify(payload)
-      : null,
+        ? JSON.stringify(payload)
+        : null,
       method: requestType
     })
     .then((response) => {
@@ -45,17 +51,6 @@ class Orchestration {
     }, onSuccess2 => {
       console.log("[INCOMING FROM SPRING] status: " + onSuccess2["status"]);
       onSuccess(onSuccess2);
-    });
-  }
-
-  static findActiveServices(onError, onSuccess) {
-    Orchestration.createRequest(constants.httpRequest.get, "services",
-    onError2 => {
-      onError(onError2);
-    }, onSuccess2 => {
-      const data = onSuccess2;
-      console.log("[INCOMING FROM SPRING] services:\n" + data);
-      onSuccess(data);
     });
   }
 } 

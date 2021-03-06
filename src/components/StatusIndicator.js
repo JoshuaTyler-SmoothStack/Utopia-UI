@@ -6,7 +6,7 @@ const StatusIndicator = (props) => {
 
   const status = props.status || "INACTIVE";
   let classColorName = "kit-bg-red";
-  if(status === "ACTIVE") classColorName = "kit-bg-green";
+  if(status === "SUCCESS") classColorName = "kit-bg-green";
   if(status === "PENDING") classColorName = "kit-bg-yellow";
 
   return (

@@ -1,105 +1,183 @@
 // Libraries
+import React from 'react';
+import Store from '../../../../reducers/Store';
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
-import Store from "../../../../reducers/Store";
 
 // Components
-import ChangeOperationReadout from "../ChangeOperationReadout";
+import ChangeOperationReadout from '../ChangeOperationReadout';
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
-const DeleteView = () => {
-  const { bookings } = Store.getState();
 
-  const results = bookings.delete.results
+const EditView = (props) => {
+  const { bookings } = Store.getState();
+  // const results = bookings.delete.results
   const resultsStatus = bookings.delete.resultsStatus;
+  // const resultsPending = resultsStatus === "PENDING";
   const selectedBooking = bookings.selected;
   const status = bookings.delete.status;
 
-  return(
+  const bookingId = selectedBooking.bookingId || "ERROR - INVALID";
+  const bookingConfirmationCode = selectedBooking.bookingConfirmationCode || "ERROR - INVALID";
+  const bookingPassengerId = selectedBooking.passengerId || "unkown";
+  const bookingStatus = (selectedBooking.bookingStatus || "INACTIVE");
+  const bookingFlightId = (selectedBooking.bookingFlightId || "unkown");
+  const bookingUserId = (selectedBooking.bookingUserId || "unkown");
+  const bookingGuestEmail = (selectedBooking.bookingGuestEmail || "unkown");
+  const bookingGuestPhone = (selectedBooking.bookingGuestPhone || "unkown");
+
+  return (
     <FlexColumn>
-      {status === "PENDING" && 
-        <FlexColumn className="mt-5">
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Booking" status={resultsStatus.booking} result={results.booking}/>
-          
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Flights" status={resultsStatus.flights} result={results.flights}/>
-          
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Guests" status={resultsStatus.guests} result={results.guests}/>
-          
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Passengers" status={resultsStatus.passengers} result={results.passengers}/>
+      {(status === "PENDING" || status === "ERROR") && 
+      <FlexColumn className="mt-5">
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Booking" 
+          result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
+          status={resultsStatus}
+        />
+        
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Flights" 
+          result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
+          status={resultsStatus}
+        />
+        
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Guest Contact" 
+          result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
+          status={resultsStatus}
+        />
+        
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Passengers" 
+          result={"N/A"}
+          status={"DISABLED"} 
+        />
 
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-          name="Users" status={resultsStatus.users} result={results.users}/>
-          <FlexRow>
-            <button className="btn btn-light m-3"
-              onClick={() => BookingsDispatcher.onCancel()}
-            >
-              Close
-            </button>
-          </FlexRow>
-        </FlexColumn>
-      }
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Users" 
+          result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
+          status={resultsStatus}
+        />
 
-      {status !== "PENDING" &&
-        <FlexColumn>
+        <FlexRow>
+          <button className="btn btn-light m-3"
+            onClick={() => {
+              BookingsDispatcher.onCancel();
+              BookingsDispatcher.onRequest();
+            }}
+          >
+            Close
+          </button>
+        </FlexRow>
+      </FlexColumn>}
+
+
+      {(status !== "ERROR" && status !== "PENDING") &&
+        <FlexColumn className="form-group row w-100">
           {/* Booking */}
-          <FlexColumn>
-            <FlexRow>
-              <div className="mt-3">
+          <div className="col-12 col-md-8">
+            <FlexRow className="w-100 mt-3" wrap="no-wrap">
+              <div style={{width:"47.5%"}}>
                 <label className="form-label">Booking ID</label>
-                <input type="text" readOnly className="form-control" value={selectedBooking.id}/>
+                <input 
+                  className="form-control" 
+                  readOnly 
+                  type="text"
+                  value={bookingId}
+                />
               </div>
-              <div className="mt-3 ml-3">
+              <div className="ml-auto" style={{width:"47.5%"}}>
                 <label className="form-label">Status</label>
-                <input type="text" readOnly className="form-control" value={selectedBooking.status}/>
+                <input 
+                  className="form-control" 
+                  readOnly 
+                  type="text" 
+                  value={bookingStatus}
+                />
               </div>
             </FlexRow>
-              <div className="mt-3 w-100">
-                <label className="form-label">Confirmation Code</label>
-                <input type="text" readOnly className="form-control" value={selectedBooking.confirmationCode}/>
-              </div>
-              <hr className="w-100"></hr>
-          </FlexColumn>
+            <div className="w-100 mt-3">
+              <label className="form-label">Confirmation Code</label>
+              <input 
+                className="form-control" 
+                readOnly 
+                type="text" 
+                value={bookingConfirmationCode}
+              />
+            </div>
+            <hr className="w-100"></hr>
+          </div>
+
           
           {/* Flight / Passenger */}
-          <FlexRow className="mt-3">
-            <div>
-              <label className="form-label">Flight ID</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.flightId}/>
+          <FlexRow className="col-12 col-md-8 mt-3">
+            <div style={{width:"47.5%"}}>
+              <label className="form-label form-label-success">Flight ID</label>
+              <input 
+                className={"form-control"}
+                readOnly
+                type="number" 
+                value={bookingFlightId}
+              />
             </div>
-            <div className="ml-3">
+            <div className="ml-auto" style={{width:"47.5%"}}>
               <label className="form-label">Passenger ID</label>
-              <input type="text" readOnly className="form-control" value={selectedBooking.passengerId}/>
+              <input 
+                className={"form-control"}
+                readOnly
+                type="text" 
+                value={bookingPassengerId}
+              />
             </div>
             <hr className="w-100"></hr>
           </FlexRow>
           
 
           {/* User / Guest */}
-          <FlexColumn>
-            <FlexRow align={"start"} className="mt-3">
-              <div className="mr-3">
-                <label className="form-label">User ID</label>
-                <input type="text" readOnly className="form-control" value={selectedBooking.userId || "Not a user"}/>
+          <FlexRow className="col-12 col-md-8 mt-3" align="start">
+            <div style={{width:"47.5%"}}>
+              <label className="form-label">User ID</label>
+              <input 
+                className={"form-control"}
+                readOnly
+                type="number" 
+                value={bookingUserId}
+              />
+            </div>
+            <FlexColumn className="ml-auto" style={{width:"47.5%"}}>
+              <div>
+                <label className="form-label">Guest Email</label>
+                <input 
+                  className={"form-control"}
+                  readOnly
+                  type="email"
+                  value={bookingGuestEmail}
+                />
               </div>
-              <FlexColumn>
-                <div>
-                  <label className="form-label">Guest Email</label>
-                  <input type="text" readOnly className="form-control" value={selectedBooking.guestEmail || "No guests email available."}/>
-                </div>
-                <div className="mt-3">
-                  <label className="form-label">Guest Phone</label>
-                  <input type="text" readOnly className="form-control" value={selectedBooking.guestPhone || "No guests phone available."}/>
-                </div>
-              </FlexColumn>
-            </FlexRow>
+              <div className="mt-3">
+                <label className="form-label">Guest Phone</label>
+                <input 
+                  className={"form-control"}
+                  readOnly
+                  type="phone" 
+                  value={bookingGuestPhone}
+                />
+              </div>
+            </FlexColumn>
             <hr className="w-100"></hr>
-          </FlexColumn>
+          </FlexRow>
           
-
           {/* Buttons */}
           <FlexRow>
             <button className="btn btn-light m-3"
@@ -108,14 +186,13 @@ const DeleteView = () => {
               Cancel
             </button>
             <button className="btn btn-primary m-3"
-              onClick={() => BookingsDispatcher.onDelete(selectedBooking.id)}
+              onClick={() => BookingsDispatcher.onDelete("/" + selectedBooking.bookingId)}
             >
               Confirm Delete (cannot be undone)
             </button>
           </FlexRow>
-        </FlexColumn>
-      }
-    </FlexColumn>
+        </FlexColumn>}
+  </FlexColumn>
   );
 }
-export default DeleteView;
+export default EditView;

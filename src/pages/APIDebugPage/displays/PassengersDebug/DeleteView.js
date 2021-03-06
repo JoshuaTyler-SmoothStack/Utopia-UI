@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from 'react';
+import React from 'react';
 import PassengersDispatcher from "../../../../dispatchers/PassengersDispatcher";
 import Store from "../../../../reducers/Store";
 
@@ -12,16 +12,15 @@ const DeleteView = () => {
   const { passengers } = Store.getState();
   const selectedPassenger = passengers.selected;
 
-  const [bookingId, setBookingId] = useState(selectedPassenger.bookingId || 1);
-  const [passportId, setPassportId] = useState(selectedPassenger.passportId || "");
-  const [firstName, setFirstName] = useState(selectedPassenger.firstName || "");
-  const [lastName, setLastName] = useState(selectedPassenger.lastName || "");
-  const [dateOfBirth, setDateOfBirth] = useState(selectedPassenger.dateOfBirth || "");
-  const [sex, setSex] = useState(selectedPassenger.sex || "prefer not to answer");
-  const [address, setAddress] = useState(selectedPassenger.address || "");
-  const [isVeteran, setIsVeteran] = useState(selectedPassenger.isVeteran || false);
+  const bookingId = (selectedPassenger.bookingId || 1);
+  const passportId = (selectedPassenger.passportId || "");
+  const firstName = (selectedPassenger.firstName || "");
+  const lastName = (selectedPassenger.lastName || "");
+  const dateOfBirth = (selectedPassenger.dateOfBirth || "");
+  const sex = (selectedPassenger.sex || "prefer not to answer");
+  const address = (selectedPassenger.address || "");
+  const isVeteran = (selectedPassenger.isVeteran || false);
 
-  const results = passengers.delete.results
   const resultsStatus = passengers.delete.resultsStatus;
   const status = passengers.delete.status;
 
@@ -34,7 +33,10 @@ const DeleteView = () => {
           
           <FlexRow>
             <button className="btn btn-light m-3"
-              onClick={() => PassengersDispatcher.onCancel()}
+              onClick={() => {
+                PassengersDispatcher.onCancel();
+                PassengersDispatcher.onRequest();
+              }}
             >
               Close
             </button>
@@ -177,7 +179,7 @@ const DeleteView = () => {
             Cancel
           </button>
           <button className="btn btn-primary m-3"
-            onClick={() => PassengersDispatcher.onDelete(selectedPassenger.id)}
+            onClick={() => PassengersDispatcher.onDelete("/" + selectedPassenger.id)}
           >
             Confirm Delete (cannot be undone)
           </button>

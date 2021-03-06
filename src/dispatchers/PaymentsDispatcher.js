@@ -1,6 +1,4 @@
-// import constants from "../resources/constants.json"
-// import Orchestration from "../Orchestration";
-// import Store from "../reducers/Store";
+import BaseDispatcher from "./BaseDispatcher";
 
-class PaymentsDispatcher {}
+class PaymentsDispatcher extends BaseDispatcher {}
 export default PaymentsDispatcher;
