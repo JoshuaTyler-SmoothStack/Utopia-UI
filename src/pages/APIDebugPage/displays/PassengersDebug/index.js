@@ -205,24 +205,24 @@ class PassengersDebug extends Component {
     let passengersTable = [];
     if (!passengersList.length) passengersList = [passengersList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
-      const passengerId = passengersList[i].id;
+      const passengerId = passengersList[i].passengerId;
       if (!passengerId) continue;
 
       const index = Number(i) + 1;
       passengersTable.push(
         <tr key={index}>
           <th scope="col">{index}</th>
-          <td>{passengersList[i].id}</td>
-          <td>{passengersList[i].bookingId}</td>
-          <td>{passengersList[i].passportId}</td>
-          {isPassengerInfoActive && <td>{passengersList[i].firstName}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].lastName}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].dateOfBirth}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].sex}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].address}</td>}
+          <td>{passengersList[i].passengerId}</td>
+          <td>{passengersList[i].passengerBookingId}</td>
+          <td>{passengersList[i].passengerPassportId}</td>
+          {isPassengerInfoActive && <td>{passengersList[i].passengerFirstName}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].passengerLastName}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].passengerDateOfBirth}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].passengerSex}</td>}
+          {isPassengerInfoActive && <td>{passengersList[i].passengerAddress}</td>}
           {isPassengerInfoActive && 
           <td>
-            {passengersList[i].isVeteran 
+            {passengersList[i].passengerIsVeteran 
               ? <div className="h3 text-success" style={{fontFamily: "monospace"}}>✔</div> 
               : <div className="h3 text-danger" style={{fontFamily: "monospace"}}>X</div>}
           </td>}
