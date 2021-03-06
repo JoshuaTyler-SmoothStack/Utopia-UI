@@ -4,6 +4,8 @@ import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
 
 class FlightsDispatcher extends BaseDispatcher {
+  static apiPath = constants.flights.apiPath;
+  static constantsParent = constants.flights;
 
   static onSearchOneWayFlights(destination, destinationDate, 
     origin, originDate, adults, seniors, children) {
@@ -119,6 +121,5 @@ class FlightsDispatcher extends BaseDispatcher {
       }
     );
   }
-
 }
 export default FlightsDispatcher;

@@ -1,12 +1,6 @@
 import BaseReducer from "./BaseReducer";
-import AuthenticationDispatcher from "../dispatchers/AuthenticationDispatcher";
 
 class AuthenticationReducer extends BaseReducer {
-  static initialize(constantsParent, dispatcherAPIPath) {
-    AuthenticationDispatcher.initialize(constantsParent, dispatcherAPIPath);
-    this.constantsParent = constantsParent;
-    return this;
-  }
 
   static getDefaultReducerState() {
     return defaultAuthenticationState;
