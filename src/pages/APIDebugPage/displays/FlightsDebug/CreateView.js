@@ -108,7 +108,7 @@ const CreateView = (props) => {
                 />
               </div>
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                <label className="form-label">AirplaneId</label>
+                <label className="form-label">Airplane ID</label>
                 <input 
                   className={"form-control " +  (isSubmitted ? !airplaneId ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={airplaneId}
@@ -119,7 +119,7 @@ const CreateView = (props) => {
               </div>
 
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                <label className="form-label">SeatingId</label>
+                <label className="form-label">Seating ID</label>
                 <input 
                   className={"form-control " +  (isSubmitted ? !seatingId ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={seatingId}
@@ -132,7 +132,7 @@ const CreateView = (props) => {
 
             <FlexRow>
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                <label className="form-label">RouteId</label>
+                <label className="form-label">Route ID</label>
                 <input 
                   className={"form-control " +  (isSubmitted ? !routeId ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={routeId}
@@ -146,7 +146,6 @@ const CreateView = (props) => {
                 <label className="form-label">Departure</label>
                 <input 
                   className={"form-control"}
-                  placeholder="Auto-generated"
                   type="datetime-local"
                   onChange={(e) => setDateTime(e.target.value)}
                 />

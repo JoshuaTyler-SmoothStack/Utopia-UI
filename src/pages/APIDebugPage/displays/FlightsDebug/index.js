@@ -60,7 +60,7 @@ class FlightsDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="IATA ID, City"
+                  placeholder="RouteID, AirplaneID"
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchTerms: e.target.value})}
@@ -182,8 +182,6 @@ class FlightsDebug extends Component {
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
-    console.log(flights.search.results);
-
     let flightsTable = [];
     if (!flightsList.length) flightsList = [flightsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
@@ -192,7 +190,7 @@ class FlightsDebug extends Component {
 
       let flightSplit = flightsList[i].dateTime.split('T');
       let date = flightSplit[0];
-      let time = flightSplit[1];
+      let time = flightSplit[1].split('.')[0];
 
       const index = Number(i) + 1;
       flightsTable.push(
