@@ -25,7 +25,6 @@
     "searchResultsPerPage": "AIRPLANES_SEARCH_RESULTS_PER_PAGE",
     "select": "AIRPLANES_SELECT"
   },
-
   "airports": {
     "root": "AIRPORTS",
     "apiPath": "/airports",
@@ -52,10 +51,9 @@
     "searchResultsPerPage": "AIRPORTS_SEARCH_RESULTS_PER_PAGE",
     "select": "AIRPORTS_SELECT"
   },
-  
   "authentication": {
     "root": "AUTHENTICATION",
-    "apiPath": "/authentication",
+    "apiPath": "/auth",
     "cancel": "AUTHENTICATION_CANCEL",
     "create": "AUTHENTICATION_CREATE",
     "error": "AUTHENTICATION_ERROR",
@@ -64,15 +62,16 @@
     "promptLogin": "AUTHENTICATION_DELETE_PROMPT",
     "request": "AUTHENTICATION_REQUEST",
     "requestCreate": "AUTHENTICATION_CREATE_REQUEST",
+    "requestLogin": "AUTHENTICATION_LOGIN_REQUEST",
     "reset": "AUTHENTICATION_RESET",
     "response": "AUTHENTICATION_RESPONSE",
+    "responseLogin": "AUTHENTICATION_LOGIN_RESPONSE",
     "responseCreate": "AUTHENTICATION_CREATE_RESPONSE",
     "searchError": "AUTHENTICATION_SEARCH_ERROR",
     "searchResultsPage": "AUTHENTICATION_SEARCH_RESULTS_PAGE",
     "searchResultsPerPage": "AUTHENTICATION_SEARCH_RESULTS_PER_PAGE",
     "select": "AUTHENTICATION_SELECT"
   },
-
   "bookings": {
     "root": "BOOKINGS",
     "apiPath": "/bookings",
@@ -99,7 +98,6 @@
     "searchResultsPerPage": "BOOKINGS_SEARCH_RESULTS_PER_PAGE",
     "select": "BOOKINGS_SELECT"
   },
-
   "flights": {
     "root": "FLIGHTS",
     "apiPath": "/flights",
@@ -126,14 +124,12 @@
     "searchResultsPerPage": "FLIGHTS_SEARCH_RESULTS_PER_PAGE",
     "select": "FLIGHTS_SELECT"
   },
-
   "httpRequest": {
     "delete": "DELETE",
     "get": "GET",
     "post": "POST",
     "put": "PUT"
   },
-
   "orchestration": {
     "root": "ORCHESTRATION",
     "apiPath": "",
@@ -147,7 +143,6 @@
     "start": "ORCHESTRATION_START",
     "stop": "ORCHESTRATION_STOP"
   },
-
   "passengers": {
     "root": "PASSENGERS",
     "apiPath": "/passengers",
@@ -174,7 +169,6 @@
     "searchResultsPerPage": "PASSENGERS_SEARCH_RESULTS_PER_PAGE",
     "select": "PASSENGERS_SELECT"
   },
-
   "payments": {
     "root": "PAYMENTS",
     "apiPath": "/payments",
@@ -201,7 +195,6 @@
     "searchResultsPerPage": "PAYMENTS_SEARCH_RESULTS_PER_PAGE",
     "select": "PAYMENTS_SELECT"
   },
-
   "routes": {
     "root": "ROUTES",
     "apiPath": "/routes",
@@ -228,7 +221,6 @@
     "searchResultsPerPage": "ROUTES_SEARCH_RESULTS_PER_PAGE",
     "select": "ROUTES_SELECT"
   },
-
   "users": {
     "root": "USERS",
     "apiPath": "/users",

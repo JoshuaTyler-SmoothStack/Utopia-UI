@@ -134,6 +134,7 @@ class LoginModal extends Component {
                   style={{ width: "100%" }}
                   wrap={"no-wrap"}
                 >
+
                   {/* Email */}
                   <InputText
                     className="rounded kit-border-shadow m-3"
@@ -158,7 +159,7 @@ class LoginModal extends Component {
                       height: "4rem",
                       width: "66%"
                     }}
-                    onChange={(e) => this.setState({ email: e })}
+                    onChange={(e) => this.setState({ password: e })}
                   />
                 </FlexColumn>
 
@@ -206,6 +207,8 @@ class LoginModal extends Component {
   handleLogin = () => {
     const { email, password } = this.state;
 
+    console.log(email, password)
+
     if (this.validateEmail(email)) {
       AuthenticationDispatcher.onLogin(email, password);
 
@@ -220,7 +223,10 @@ class LoginModal extends Component {
   }
 
   validateEmail = (email) => {
-    return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(.\w{2,3})+$/.test(email);
-  }
+    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
+    return regexEmailValidation.test(email);
+
+  };
 }
+
 export default LoginModal;
