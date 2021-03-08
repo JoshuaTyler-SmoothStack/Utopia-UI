@@ -24,14 +24,14 @@ export const defaultFlightsReducerState = {
     results: {},
     resultsStatus: "INACTIVE"
   },
-  departureFlights: {},
-  returnFlights: {},
   error: "",
   selected: {},
   search: {
     filters: {
       activeCount: 0,
     },
+    originToDestination: [],
+    destinationToOrigin: [],
     results: [],
     resultsPage: 1,
     resultsPerPage: 10,
