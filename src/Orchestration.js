@@ -8,16 +8,16 @@ class Orchestration {
   static httpRequest(requestType, requestPath, requestHeaders, requestBody, httpError, httpResponseBody) {
     
     const { authentication } = Store.getState();
-    const authorization = {"Authorization": (authentication.userToken || authentication.userLogin)};
+    const authorization = (authentication.userToken || authentication.userLogin);
     
     const contentNegotiation = {
       "Accept": "application/" + Orchestration.contentType,
       "Content-Type": "application/" + Orchestration.contentType
     };
 
-    const headers = requestHeaders.hasOwnProperty("Authorization")
-      ? {...contentNegotiation, ...requestHeaders}
-      : {...authorization, ...contentNegotiation, ...requestHeaders};
+    const headers = (!requestHeaders.hasOwnProperty("Authorization") && authorization)
+      ? {Authorization: authorization, ...contentNegotiation, ...requestHeaders}
+      : {...contentNegotiation, ...requestHeaders};
 
     const body = (requestType !== constants.httpRequest.get && requestType !== constants.httpRequest.delete)
       ? JSON.stringify(requestBody)
