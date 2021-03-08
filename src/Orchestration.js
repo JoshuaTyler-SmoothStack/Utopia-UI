@@ -45,15 +45,15 @@ class Orchestration {
   }
   
   static createRequest(requestType, requestPath, httpError, httpResponseBody) {
-    Orchestration.httpRequest(requestType, requestPath, null, null, httpError, httpResponseBody);
+    Orchestration.httpRequest(requestType, requestPath, {}, {}, httpError, httpResponseBody);
   }
   
   static createRequestWithHeader(requestType, requestPath, requestHeader, httpError, httpResponseBody) {
-    Orchestration.httpRequest(requestType, requestPath, requestHeader, null, httpError, httpResponseBody);
+    Orchestration.httpRequest(requestType, requestPath, requestHeader, {}, httpError, httpResponseBody);
   }
   
   static createRequestWithBody(requestType, requestPath, requestBody, httpError, httpResponseBody) {
-    Orchestration.httpRequest(requestType, requestPath, null, requestBody, httpError, httpResponseBody);
+    Orchestration.httpRequest(requestType, requestPath, {}, requestBody, httpError, httpResponseBody);
   }
 
   static validate(onError, onSuccess) {
