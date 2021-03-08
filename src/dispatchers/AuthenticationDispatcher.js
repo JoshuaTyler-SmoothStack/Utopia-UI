@@ -53,7 +53,7 @@ class AuthenticationDispatcher extends BaseDispatcher {
   static onLogin(email, password) {
 
     const encodedLogin = window.btoa("Basic " + email + ":" + password);
-    const authorization = {"Authroization": encodedLogin};
+    const authorization = {"Authorization": encodedLogin};
 
     Store.reduce({
       type: constants.authentication.requestLogin,
