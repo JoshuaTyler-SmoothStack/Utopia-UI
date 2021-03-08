@@ -21,7 +21,7 @@ class AuthenticationDispatcher extends BaseDispatcher {
       constants.httpRequest.post,
       "/users/forgotpassword",
       httpRequestBody,
-      onError => {
+      httpError => {
         Store.reduce({ type: constants.authentication.forgotPasswordError });
       }, httpResponseBody => {
         if (httpResponseBody.error) {
@@ -42,7 +42,7 @@ class AuthenticationDispatcher extends BaseDispatcher {
       constants.httpRequest.post,
       "/users/create",
       httpRequestBody,
-      onError => {
+      httpError => {
         Store.reduce({ type: constants.authentication.createAccountError });
       }, httpResponseBody => {
         Store.reduce({ type: constants.authentication.createAccountSuccess });
@@ -52,47 +52,37 @@ class AuthenticationDispatcher extends BaseDispatcher {
 
   static onLogin(email, password) {
 
-    const { authentication } = Store.getState();
+    const encodedLogin = window.btoa("Basic " + email + ":" + password);
+    const authorization = {"Authroization": encodedLogin};
 
     Store.reduce({
       type: constants.authentication.requestLogin,
-      payload: window.btoa(email + ":" + password)
+      payload: encodedLogin
     });
-    setTimeout(() => {
-      console.log(authentication.userLogin);
-      Orchestration.createRequest(
-        constants.httpRequest.get,
-        this.apiPath + "/login",
-        onError => {
-          const errorMsg = onError;
+
+    Orchestration.createRequestWithHeader(
+      constants.httpRequest.get,
+      this.apiPath + "/login",
+      authorization,
+      httpError => {
+        console.log("ERROR -> ", httpError);
+        Store.reduce({
+          type: constants.authentication.error,
+          payload: httpError
+        });
+      }, httpResponseBody => {
+        if (httpResponseBody.error) {
           Store.reduce({
             type: constants.authentication.error,
-            payload: errorMsg
-          })
-
-        }, httpResponseBody => {
-          const user = httpResponseBody;
-          console.log(httpResponseBody)
-
-          if (user.error) {
-            // invalid
-            Store.reduce({
-              type: constants.authentication.error,
-              payload: user.error
-
-            });
-          } else {
-            // valid
-            Store.reduce({
-              type: constants.authentication.responseLogin,
-              payload: user.token
-            });
-          }
-        });
-
-    }, 250);
-
-
+            payload: httpResponseBody.error
+          });
+        } else {
+          Store.reduce({
+            type: constants.authentication.responseLogin,
+            payload: httpResponseBody.token
+          });
+        }
+      });
   }
 
   static onLogout() {

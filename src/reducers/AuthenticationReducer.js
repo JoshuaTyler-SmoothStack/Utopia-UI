@@ -37,10 +37,9 @@ class AuthenticationReducer extends BaseReducer {
         return { status: "PENDING" };
 
       case this.constantsParent.requestLogin:
-        console.log(action.payload)
         return {
           status: "PENDING",
-          userLogin: "Basic " + action.payload
+          userLogin: action.payload
         };
 
 

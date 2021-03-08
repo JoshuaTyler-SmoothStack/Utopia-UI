@@ -94,7 +94,7 @@ class LoginModal extends Component {
                 wrap={"no-wrap"}
               >
                 <div className="text-danger">
-                  {authentication.error}
+                  {String(authentication.error)}
                 </div>
               </FlexColumn>}
 

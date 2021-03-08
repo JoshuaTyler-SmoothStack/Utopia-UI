@@ -5,40 +5,55 @@ class Orchestration {
 
   static contentType = "json";
 
-  static createRequestWithBody(requestType, requestPath, payload, onError, onSuccess) {
-
+  static httpRequest(requestType, requestPath, requestHeaders, requestBody, httpError, httpResponseBody) {
+    
     const { authentication } = Store.getState();
+    const authorization = {"Authorization": (authentication.userToken || authentication.userLogin)};
+    
+    const contentNegotiation = {
+      "Accept": "application/" + Orchestration.contentType,
+      "Content-Type": "application/" + Orchestration.contentType
+    };
+
+    const headers = requestHeaders.hasOwnProperty("Authorization")
+      ? {...contentNegotiation, ...requestHeaders}
+      : {...authorization, ...contentNegotiation, ...requestHeaders};
+
+    const body = (requestType !== constants.httpRequest.get && requestType !== constants.httpRequest.delete)
+      ? JSON.stringify(requestBody)
+      : null;
 
     const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
     fetch("http://localhost:8080" + formattedRequestPath, {
-      headers: {
-        "Accept": "application/" + Orchestration.contentType,
-        "Content-Type": "application/" + Orchestration.contentType,
-        "Authorization": authentication.userToken || authentication.userLogin
-      },
-      body: requestType !== constants.httpRequest.get
-        ? JSON.stringify(payload)
-        : null,
+      headers: headers,
+      body: body,
       method: requestType
     })
-      .then((response) => {
-        if (Orchestration.contentType === "json") {
-          return response.clone().json().catch(() => response.text());
-        }
-        return response.text();
-      })
-      .then((data) => {
-        onSuccess(data);
-      })
-      .catch((err) => {
-        console.error("[ERROR]: " + err);
-        onError(err);
-      });
+    .then((response) => {
+      if (Orchestration.contentType === "json") {
+        return response.clone().json().catch(() => response.text());
+      }
+      return response.text();
+    })
+    .then((data) => {
+      httpResponseBody(data);
+    })
+    .catch((err) => {
+      console.error("[ERROR]: " + err);
+      httpError(err);
+    });
   }
-
-  // "Overload" without HTTP body payload
-  static createRequest(requestType, requestPath, onError, onSuccess) {
-    Orchestration.createRequestWithBody(requestType, requestPath, {}, onError, onSuccess);
+  
+  static createRequest(requestType, requestPath, httpError, httpResponseBody) {
+    Orchestration.httpRequest(requestType, requestPath, null, null, httpError, httpResponseBody);
+  }
+  
+  static createRequestWithHeader(requestType, requestPath, requestHeader, httpError, httpResponseBody) {
+    Orchestration.httpRequest(requestType, requestPath, requestHeader, null, httpError, httpResponseBody);
+  }
+  
+  static createRequestWithBody(requestType, requestPath, requestBody, httpError, httpResponseBody) {
+    Orchestration.httpRequest(requestType, requestPath, null, requestBody, httpError, httpResponseBody);
   }
 
   static validate(onError, onSuccess) {
