@@ -7,18 +7,18 @@ class AuthenticationReducer extends BaseReducer {
   }
 
   static reduce(action, state) {
-    switch(action.type) {
+    switch (action.type) {
 
       case this.constantsParent.cancel:
-        return {isActive_LoginUI: false};
-  
+        return { isActive_LoginUI: false };
+
       case this.constantsParent.error:
         return {
           error: action.payload || "[ERROR]: 404 - Not Found!",
           status: "ERROR",
           userId: "UNKNOWN"
         };
-  
+
       // Prompts
       // =====================================
       case this.constantsParent.promptLogin:
@@ -27,39 +27,42 @@ class AuthenticationReducer extends BaseReducer {
           isActive_LoginUI: true,
           status: "INACTIVE",
         };
-  
+
       // Requests
       // =====================================
       case this.constantsParent.requestCreateAccount:
-        return {status: "PENDING"};
+        return { status: "PENDING" };
 
       case this.constantsParent.forgotPasswordRequest:
-        return {status: "PENDING"};
+        return { status: "PENDING" };
 
       case this.constantsParent.requestLogin:
-        return {status: "PENDING"};
-  
+        console.log(action.payload)
+        return {
+          status: "PENDING",
+          userLogin: "Basic " + action.payload
+        };
+
+
       // Responses
       // =====================================
       case this.constantsParent.responseCreateAccount:
         return {
-          status: "ACTIVE",
+          status: "SUCCESS",
           userId: action.payload.id
         };
 
       case this.constantsParent.responseLogin:
         return {
-          status: "ACTIVE",
-          userId: action.payload 
-          ? action.payload.id
-          : "UNKNOWN"
+          status: "SUCCESS",
+          userToken: action.payload
         };
-  
+
       // Reset
       // =====================================
       case this.constantsParent.reset:
         return defaultAuthenticationState;
-  
+
       default:
         console.error("Invalid action.type!", action);
     }
@@ -71,6 +74,6 @@ export const defaultAuthenticationState = {
   error: "",
   isActive_LoginUI: false,
   status: "INACTIVE",
-  userId: "",
+  userLogin: '',
   userToken: ""
 };

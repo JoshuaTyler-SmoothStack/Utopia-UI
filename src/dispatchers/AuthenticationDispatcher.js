@@ -4,97 +4,104 @@ import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
 
 class AuthenticationDispatcher extends BaseDispatcher {
-  
+
   static apiPath = constants.authentication.apiPath;
   static constantsParent = constants.authentication;
 
   static onCancel() {
-   Store.reduce({type: constants.authentication.cancel});
+    Store.reduce({ type: constants.authentication.cancel });
   }
 
   static onForgotPassword(email) {
-    Store.reduce({type: constants.authentication.forgotPasswordRequest});
+    Store.reduce({ type: constants.authentication.forgotPasswordRequest });
 
-    const httpRequestBody = {email: email};
+    const httpRequestBody = { email: email };
 
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
       "/users/forgotpassword",
       httpRequestBody,
       onError => {
-        Store.reduce({type: constants.authentication.forgotPasswordError});
+        Store.reduce({ type: constants.authentication.forgotPasswordError });
       }, httpResponseBody => {
-        if(httpResponseBody.error) {
-          Store.reduce({type: constants.authentication.forgotPasswordError});
+        if (httpResponseBody.error) {
+          Store.reduce({ type: constants.authentication.forgotPasswordError });
         } else {
-          Store.reduce({type: constants.authentication.forgotPasswordSuccess});
+          Store.reduce({ type: constants.authentication.forgotPasswordSuccess });
         }
       }
     )
   }
 
   static onCreateAccount(email) {
-    Store.reduce({type: constants.authentication.createAccountRequest});
+    Store.reduce({ type: constants.authentication.createAccountRequest });
 
-    const httpRequestBody = {email: email};
+    const httpRequestBody = { email: email };
 
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
       "/users/create",
       httpRequestBody,
       onError => {
-        Store.reduce({type: constants.authentication.createAccountError});
+        Store.reduce({ type: constants.authentication.createAccountError });
       }, httpResponseBody => {
-        Store.reduce({type: constants.authentication.createAccountSuccess});
+        Store.reduce({ type: constants.authentication.createAccountSuccess });
       }
     );
   }
 
   static onLogin(email, password) {
-   Store.reduce({type: constants.authentication.loginRequest});
 
-    const httpRequestBody = {
-      email: email,
-      password: password,
-    };
+    const { authentication } = Store.getState();
 
-    Orchestration.createRequestWithBody(
-      constants.httpRequest.get, 
-      "/users", 
-      httpRequestBody,
-      onError => {
-      const errorMsg = onError;
-      Store.reduce({
-        type: constants.authentication.loginError,
-        payload: errorMsg
-      })
-
-    }, httpResponseBody => {
-      const user = httpResponseBody;
-
-      if(user.error) {
-        // invalid
-        Store.reduce({
-          type: constants.authentication.loginError,
-          payload: user.error
-        });
-      } else {
-        // valid
-        Store.reduce({
-          type: constants.authentication.loginSuccess,
-          payload: user
-        });
-      }
+    Store.reduce({
+      type: constants.authentication.requestLogin,
+      payload: window.btoa(email + ":" + password)
     });
+    setTimeout(() => {
+      console.log(authentication.userLogin);
+      Orchestration.createRequest(
+        constants.httpRequest.get,
+        this.apiPath + "/login",
+        onError => {
+          const errorMsg = onError;
+          Store.reduce({
+            type: constants.authentication.error,
+            payload: errorMsg
+          })
+
+        }, httpResponseBody => {
+          const user = httpResponseBody;
+          console.log(httpResponseBody)
+
+          if (user.error) {
+            // invalid
+            Store.reduce({
+              type: constants.authentication.error,
+              payload: user.error
+
+            });
+          } else {
+            // valid
+            Store.reduce({
+              type: constants.authentication.responseLogin,
+              payload: user.token
+            });
+          }
+        });
+
+    }, 250);
+
+
   }
 
   static onLogout() {
-   Store.reduce({type: constants.authentication.logout});
-   // TODO clear Auth
+    Store.reduce({ type: constants.authentication.logout });
+    // TODO clear Auth
   }
 
   static onPromptLogin() {
-   Store.reduce({type: constants.authentication.promptLogin});
+    Store.reduce({ type: constants.authentication.promptLogin });
   }
 }
 export default AuthenticationDispatcher;
