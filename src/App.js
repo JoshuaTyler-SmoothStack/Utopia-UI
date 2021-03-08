@@ -19,6 +19,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
 import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
+import LoginPage from './pages/LoginPage/LoginPage'
 
 // Styles
 import "./styles/UtopiaBootstrap.css";
@@ -31,7 +32,7 @@ class App extends Component {
     super(props);
 
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
-    this.state = { 
+    this.state = {
       ...Store.getCombinedDefaultReducerStates(),
       breakPoint: "xx_small",
       isAppStateMounted: false,
@@ -42,7 +43,7 @@ class App extends Component {
 
   render() {
     const isActive_LoginModal = this.state.authentication.isActive_LoginUI
-    
+
     return (
       <main>
         {/* Pages */}
@@ -87,39 +88,44 @@ class App extends Component {
               <UserProfilePage />
             </Route>
 
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+
+
           </Switch>
 
           {/* Login Modal - zIndex 2 */}
-          {isActive_LoginModal && <LoginModal/>}
+          {isActive_LoginModal && <LoginModal />}
         </Router>
       </main>
     );
   }
 
   componentDidMount() {
-    this.setState({isAppStateMounted: true});
+    this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener("resize", () => this.handleResize());
   }
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
+  // componentDidUpdate() {
+  //   console.log(this.state);
+  // }
 
   handleResize = () => {
     const { breakPoint } = this.state;
 
     let newSize = "xx_small";
-    if(window.innerWidth > 375) newSize = "x_small";
-    if(window.innerWidth >= 576) newSize = "small";
-    if(window.innerWidth >= 768) newSize = "medium";
-    if(window.innerWidth >= 992) newSize = "large";
-    if(window.innerWidth >= 1200) newSize = "x_large";
-    if(window.innerWidth >= 1400) newSize = "xx_large";
+    if (window.innerWidth > 375) newSize = "x_small";
+    if (window.innerWidth >= 576) newSize = "small";
+    if (window.innerWidth >= 768) newSize = "medium";
+    if (window.innerWidth >= 992) newSize = "large";
+    if (window.innerWidth >= 1200) newSize = "x_large";
+    if (window.innerWidth >= 1400) newSize = "xx_large";
 
-    if(breakPoint !== newSize) {
+    if (breakPoint !== newSize) {
       // console.log(newSize);
-      this.setState({breakPoint: newSize});
+      this.setState({ breakPoint: newSize });
     }
   }
 }

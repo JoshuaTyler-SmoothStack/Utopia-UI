@@ -235,16 +235,13 @@ class LandingPage extends Component {
     const returnStatus = returnFlights.status || "INACTIVE";
 
     return (
-      <div
-        className="kit-bg-blue"
-        style={{ height: "100%", width: "100%", minHeight: "100vh" }}
-      >
+      <div className="container-fluid kit-bg-blue" style={{height:"100vh", width:"100vw"}}>
         <div className="row">
         {/* Navbar */}
         <NavBar className="col-12" hideSearchBar={true} />
 
         {/* Content */}
-          <FlexColumn className="col-12" style={{height: "auto"}}>
+        <FlexColumn className="col-12" style={{height: "auto"}}>
               
               {/* Flights Search & Tables */}
               <div className="rounded kit-bg-smoke mt-4 p-3">

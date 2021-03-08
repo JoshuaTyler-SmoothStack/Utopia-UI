@@ -31,7 +31,7 @@ const CreateAccountPage = (props) => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    handleValidate();
+    handleValidate(email, phone, password, confirmPassword);
     setSubmitted(true)
 
     if (!firstName || !lastName || !validateEmail ||
@@ -60,15 +60,15 @@ const CreateAccountPage = (props) => {
       });
   }
 
-  function handleValidate() {
+  function handleValidate(currentEmail, currentPhone, currentPassword, currentConfirmPassword) {
     const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g)
     const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$")
     const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
 
-    setValidateEmail(regexEmailValidation.test(email));
-    setValidatePhone(regexPhoneNumberValidation.test(phone));
-    setValidatePassword(strongRegexPasswordValidation.test(password));
-    setPasswordMatch(password === confirmPassword);
+    setValidateEmail(regexEmailValidation.test(currentEmail));
+    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
+    setValidatePassword(strongRegexPasswordValidation.test(currentPassword));
+    setPasswordMatch(password === currentConfirmPassword);
   }
 
   return (
@@ -162,7 +162,7 @@ const CreateAccountPage = (props) => {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value);
-                      handleValidate();
+                      handleValidate(e.target.value, phone, password, confirmPassword);
                     }}
                   />
 
@@ -184,7 +184,7 @@ const CreateAccountPage = (props) => {
                     name="phone" value={phone}
                     onChange={(e) => {
                       setPhone(e.target.value);
-                      handleValidate();
+                      handleValidate(email, e.target.value, password, confirmPassword);
                     }}
                   />
 
@@ -207,7 +207,7 @@ const CreateAccountPage = (props) => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      handleValidate();
+                      handleValidate(email, phone, e.target.value, confirmPassword);
                     }}
                   />
 
@@ -230,7 +230,7 @@ const CreateAccountPage = (props) => {
                     value={confirmPassword}
                     onChange={(e) => {
                       setConfirmPassword(e.target.value);
-                      handleValidate();
+                      handleValidate(email, phone, password, e.target.value);
                     }}
                   />
 
