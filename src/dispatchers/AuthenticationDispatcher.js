@@ -52,8 +52,9 @@ class AuthenticationDispatcher extends BaseDispatcher {
 
   static onLogin(email, password) {
 
-    const encodedLogin = window.btoa("Basic " + email + ":" + password);
-    const authorization = {"Authroization": encodedLogin};
+    const encodedLogin = "Basic " + window.btoa(email + ":" + password);
+    const authorization = { "Authorization": encodedLogin };
+    console.log(authorization);
 
     Store.reduce({
       type: constants.authentication.requestLogin,
@@ -71,6 +72,7 @@ class AuthenticationDispatcher extends BaseDispatcher {
           payload: httpError
         });
       }, httpResponseBody => {
+        console.log(httpResponseBody)
         if (httpResponseBody.error) {
           Store.reduce({
             type: constants.authentication.error,

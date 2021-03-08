@@ -53,6 +53,7 @@ class AuthenticationReducer extends BaseReducer {
 
       case this.constantsParent.responseLogin:
         return {
+          isActive_LoginUI: false,
           status: "SUCCESS",
           userToken: action.payload
         };

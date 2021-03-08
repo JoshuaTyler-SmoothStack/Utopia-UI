@@ -1,6 +1,6 @@
 // Libraries
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 import Store from "../../reducers/Store";
@@ -109,6 +109,10 @@ class LoginModal extends Component {
                   {"login success!"}
                 </div>
               </FlexColumn>}
+
+            {authentication.status === "SUCCESS" &&
+              <Redirect to="home" />
+            }
 
             {/* Login UI */}
             {authentication.status === "INACTIVE" &&
