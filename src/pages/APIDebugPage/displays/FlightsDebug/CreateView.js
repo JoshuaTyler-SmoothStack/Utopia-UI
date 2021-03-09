@@ -11,10 +11,10 @@ import ChangeOperationReadout from '../ChangeOperationReadout';
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
 
 const CreateView = (props) => {
-  const [airplaneId, setAirplaneId] = useState("");
-  const [seatingId, setSeatingId] = useState("");
-  const [routeId, setRouteId] = useState("");
-  const [dateTime, setDateTime] = useState("");
+  const [flightAirplaneId, setAirplaneId] = useState("");
+  const [flightSeatingId, setSeatingId] = useState("");
+  const [flightRouteId, setRouteId] = useState("");
+  const [flightDepartureTime, setDateTime] = useState("");
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -27,10 +27,10 @@ const CreateView = (props) => {
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!airplaneId) return false;
-    if(!seatingId) return false;
-    if(!routeId) return false;
-    if(!dateTime) return false;
+    if(!flightAirplaneId) return false;
+    if(!flightSeatingId) return false;
+    if(!flightRouteId) return false;
+    if(!flightDepartureTime) return false;
     if(!hours) return false;
     if(!minutes) return false;
     return true;
@@ -39,16 +39,16 @@ const CreateView = (props) => {
   const handleSubmit = () => {
     if(!handleValidate()) return;
 
-    const duration = (hours * 3600) + (minutes * 60) ;
-    console.log(dateTime);
-    var formattedDate = moment(dateTime).format('YYYY-MM-DD HH:mm:ss').toString();
+    const flightDuration = (hours * 3600) + (minutes * 60) ;
+    console.log(flightDepartureTime);
+    var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
-      airplaneId : airplaneId,
-      seatingId : seatingId,
-      routeId : routeId,
-      dateTime : formattedDate,
-      duration : duration,
+      flightAirplaneId : flightAirplaneId,
+      flightSeatingId : flightSeatingId,
+      flightRouteId : flightRouteId,
+      flightDepartureTime : formattedDate,
+      flightDuration : flightDuration,
       status: "INACTIVE"
     };
 
@@ -67,8 +67,8 @@ const CreateView = (props) => {
             className="m-1" 
             style={{minHeight: "4rem"}} 
             name="Flight"
-            result={"Created Flight with Airplane ID: " + results.airplaneId + 
-            " and RouteId: " + results.routeId + "."}
+            result={"Created Flight with Airplane ID: " + results.flightAirplaneId + 
+            " and RouteId: " + results.flightRouteId + "."}
             status={resultsStatus || "DISABLED"}
           />
           
@@ -115,8 +115,8 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Airplane ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !airplaneId ? "is-invalid" : "is-valid" : "")} 
-                  defaultValue={airplaneId}
+                  className={"form-control " +  (isSubmitted ? !flightAirplaneId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightAirplaneId}
                   placeholder="Number"
                   type="number" 
                   onInput={(e) => setAirplaneId(e.target.value)}
@@ -126,8 +126,8 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Seating ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !seatingId ? "is-invalid" : "is-valid" : "")} 
-                  defaultValue={seatingId}
+                  className={"form-control " +  (isSubmitted ? !flightSeatingId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightSeatingId}
                   placeholder="Number"
                   type="number" 
                   onChange={(e) => setSeatingId(e.target.value)}
@@ -139,8 +139,8 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Route ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !routeId ? "is-invalid" : "is-valid" : "")} 
-                  defaultValue={routeId}
+                  className={"form-control " +  (isSubmitted ? !flightRouteId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightRouteId}
                   placeholder="Number"
                   type="number" 
                   onInput={(e) => setRouteId(e.target.value)}

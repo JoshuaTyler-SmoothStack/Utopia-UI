@@ -51,11 +51,11 @@ const DeleteView = () => {
             <FlexRow>
               <div className="mt-3">
                 <label className="form-label">Flight ID</label>
-                <input type="text" readOnly className="form-control" value={selectedFlight.id}/>
+                <input type="text" readOnly className="form-control" value={selectedFlight.flightId}/>
               </div>
               <div className="mt-3 ml-3">
-                <label className="form-label">airplaneId</label>
-                <input type="text" readOnly className="form-control" value={selectedFlight.airplaneId}/>
+                <label className="form-label">Airplane ID</label>
+                <input type="text" readOnly className="form-control" value={selectedFlight.flightAirplaneId}/>
               </div>
             </FlexRow>
           </FlexColumn>

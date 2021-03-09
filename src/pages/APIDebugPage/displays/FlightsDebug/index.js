@@ -187,22 +187,22 @@ class FlightsDebug extends Component {
     let flightsTable = [];
     if (!flightsList.length) flightsList = [flightsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
-      const flightId = flightsList[i].id;
+      const flightId = flightsList[i].flightId;
       if (!flightId) continue;
 
-      let departure = moment(flightsList[i].dateTime).format('MMMM DD YYYY, h:mm:ss a')
+      let departure = moment(flightsList[i].flightDepartureTime).format('MMMM DD YYYY, h:mm:ss a')
 
       const index = Number(i) + 1;
       flightsTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
           <td>{flightId}</td>
-          <td>{flightsList[i].routeId}</td>
-          <td>{flightsList[i].airplaneId}</td>
+          <td>{flightsList[i].flightRouteId}</td>
+          <td>{flightsList[i].flightAirplaneId}</td>
           <td>{departure}</td>
-          <td>{flightsList[i].duration}</td>
-          <td>{flightsList[i].seatingId}</td>
-          <td>{flightsList[i].status}</td>
+          <td>{flightsList[i].flightDuration}</td>
+          <td>{flightsList[i].flightSeatingId}</td>
+          <td>{flightsList[i].flightStatus}</td>
 
           {/* Edit */}
           <td><button className="btn btn-info"

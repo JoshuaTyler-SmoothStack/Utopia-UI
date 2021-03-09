@@ -17,17 +17,17 @@ const EditView = (props) => {
   const { flights } = Store.getState();
   const selectedFlight = flights.selected;
 
-  const selectedHours = Math.floor(selectedFlight.duration / 3600);
-  const selectedMinutes = Math.floor(selectedFlight.duration % 3600 / 60);
-  const selectedDateTime = selectedFlight.dateTime.split('.')[0];
+  const selectedHours = Math.floor(selectedFlight.flightDuration / 3600);
+  const selectedMinutes = Math.floor(selectedFlight.flightDuration % 3600 / 60);
+  const selectedDateTime = selectedFlight.flightDepartureTime.split('.')[0];
   
-  const [airplaneId, setAirplaneId] = useState(selectedFlight.airplaneId);
-  const [seatingId, setSeatingId] = useState(selectedFlight.seatingId);
-  const [routeId, setRouteId] = useState(selectedFlight.routeId);
-  const [dateTime, setDateTime] = useState(selectedDateTime);
+  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplaneId);
+  const [flightSeatingId, setSeatingId] = useState(selectedFlight.flightSeatingId);
+  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRouteId);
+  const [flightDepartureTime, setDateTime] = useState(selectedDateTime);
   const [hours, setHours] = useState(selectedHours);
   const [minutes, setMinutes] = useState(selectedMinutes);
-  const [flightStatus, setFlightStatus] = useState(selectedFlight.status);
+  const [flightStatus, setFlightStatus] = useState(selectedFlight.flightStatus);
   const [isReverted, setIsReverted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -35,23 +35,23 @@ const EditView = (props) => {
   const resultsStatus = flights.edit.resultsStatus;
   const status = flights.edit.status;
 
-  const airplaneIdChanged = results
-    ? selectedFlight.airplaneId !== results.airplaneId
+  const flightAirplaneIdChanged = results
+    ? selectedFlight.flightAirplaneId !== results.flightAirplaneId
     : true;
-  const seatingIdChanged = results
-    ? selectedFlight.seatingId !== results.seatingId
+  const flightSeatingIdChanged = results
+    ? selectedFlight.flightSeatingId !== results.flightSeatingId
     : true;
-  const routeIdChanged = results
-    ? selectedFlight.routeId !== results.routeId
+  const flightRouteIdChanged = results
+    ? selectedFlight.flightRouteId !== results.flightRouteId
     : true;
-  const durationChanged = results
-    ? selectedFlight.duration !== results.duration
+  const flightDurationChanged = results
+    ? selectedFlight.flightDuration !== results.flightDuration
     : true;
-  const dateTimeChanged = results
-    ? selectedFlight.dateTime !== results.dateTime
+  const flightDepartureTimeChanged = results
+    ? selectedFlight.flightDepartureTime !== results.flightDepartureTime
     : true;
   const flightStatusChanged = results
-    ? selectedFlight.status !== results.status
+    ? selectedFlight.flightStatus !== results.flightStatus
     : true;
 
   const resultsPending = resultsStatus === "PENDING";
@@ -59,10 +59,10 @@ const EditView = (props) => {
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!airplaneId) return false;
-    if(!seatingId) return false;
-    if(!routeId) return false;
-    if(!dateTime) return false;
+    if(!flightAirplaneId) return false;
+    if(!flightSeatingId) return false;
+    if(!flightRouteId) return false;
+    if(!flightDepartureTime) return false;
     if(!hours) return false;
     if(!minutes) return false;
     return true;
@@ -70,17 +70,17 @@ const EditView = (props) => {
 
   const handleSubmit = () => {
     if(!handleValidate()) return;
-    const duration = (hours * 3600) + (minutes * 60) ;
-    console.log(dateTime);
-    var formattedDate = moment(dateTime).format('YYYY-MM-DD HH:mm:ss').toString();
+    const flightDuration = (hours * 3600) + (minutes * 60) ;
+    console.log(flightDepartureTime);
+    var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
-      id: selectedFlight.id,
-      airplaneId : airplaneId,
-      seatingId : seatingId,
-      routeId : routeId,
-      dateTime : formattedDate,
-      duration : duration,
+      flightId: selectedFlight.flightId,
+      flightAirplaneId : flightAirplaneId,
+      flightSeatingId : flightSeatingId,
+      flightRouteId : flightRouteId,
+      flightDepartureTime : formattedDate,
+      flightDuration : flightDuration,
       status: flightStatus
     };
 
@@ -101,40 +101,40 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Airplane ID" 
-          result={results ? results.airplaneId : ". . ."}
-          status={airplaneIdChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.flightAirplaneId : ". . ."}
+          status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Seating ID" 
-          result={results ? results.seatingId : ". . ."}
-          status={seatingIdChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.flightSeatingId : ". . ."}
+          status={flightSeatingIdChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Route ID" 
-          result={results ? results.routeId : ". . ."}
-          status={routeIdChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.flightRouteId : ". . ."}
+          status={flightRouteIdChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Duration" 
-          result={results ? results.duration : ". . ."}
-          status={durationChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.flightDuration : ". . ."}
+          status={flightDurationChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Departure" 
-          result={results ? results.dateTime : ". . ."}
-          status={dateTimeChanged ? resultsStatus : "DISABLED"} 
+          result={results ? results.flightDepartureTime : ". . ."}
+          status={flightDepartureTimeChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
@@ -190,16 +190,16 @@ const EditView = (props) => {
                 <label className="form-label">Flight ID</label>
                 <input 
                   className={"form-control"}
-                  value={selectedFlight.id}
+                  value={selectedFlight.flightId}
                   type="number"
                   readOnly
                 />
               </div>
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                <label className="form-label">AirplaneId</label>
+                <label className="form-label">Airplane ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !airplaneId ? "is-invalid" : "is-valid" : "")} 
-                  defaultValue={airplaneId}
+                  className={"form-control " +  (isSubmitted ? !flightAirplaneId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightAirplaneId}
                   placeholder="Number"
                   type="number" 
                   onInput={(e) => setAirplaneId(e.target.value)}
@@ -207,10 +207,10 @@ const EditView = (props) => {
               </div>
 
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                <label className="form-label">SeatingId</label>
+                <label className="form-label">Seating ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !seatingId ? "is-invalid" : "is-valid" : "")} 
-                  defaultValue={seatingId}
+                  className={"form-control " +  (isSubmitted ? !flightSeatingId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightSeatingId}
                   placeholder="Number"
                   type="number" 
                   onChange={(e) => setSeatingId(e.target.value)}
@@ -220,10 +220,10 @@ const EditView = (props) => {
 
             <FlexRow>
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
-                <label className="form-label">RouteId</label>
+                <label className="form-label">Route ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !routeId ? "is-invalid" : "is-valid" : "")} 
-                  defaultValue={routeId}
+                  className={"form-control " +  (isSubmitted ? !flightRouteId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightRouteId}
                   placeholder="Number"
                   type="number" 
                   onInput={(e) => setRouteId(e.target.value)}
