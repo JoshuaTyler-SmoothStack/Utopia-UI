@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
+import moment from 'moment';
 
 // Components
 import FlexColumn from "../../../../components/FlexColumn";
@@ -39,16 +40,20 @@ const CreateView = (props) => {
     if(!handleValidate()) return;
 
     const duration = (hours * 3600) + (minutes * 60) ;
-    const departure = dateTime.split("T");
-
+    console.log(dateTime);
+    var formattedDate = moment(dateTime).format('YYYY-MM-DD HH:mm:ss').toString();
+    
     const newFlight = {
       airplaneId : airplaneId,
       seatingId : seatingId,
       routeId : routeId,
-      dateTime : departure[0]+" "+departure[1]+":00",
+      dateTime : formattedDate,
       duration : duration,
       status: "INACTIVE"
     };
+
+    //Date format: "2021-03-09 18:45:00"
+    console.log(newFlight);
 
     FlightsDispatcher.onCreate(null, newFlight);
   };
@@ -143,7 +148,7 @@ const CreateView = (props) => {
               </div>
 
               <div className="mt-3 ml-3" style={{width:"20rem"}}>
-                <label className="form-label">Departure</label>
+                <label className="form-label">Departure (UTC)</label>
                 <input 
                   className={"form-control"}
                   type="datetime-local"

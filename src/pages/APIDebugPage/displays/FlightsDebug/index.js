@@ -3,6 +3,7 @@ import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
 import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
+import moment from 'moment';
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
@@ -188,9 +189,7 @@ class FlightsDebug extends Component {
       const flightId = flightsList[i].id;
       if (!flightId) continue;
 
-      let flightSplit = flightsList[i].dateTime.split('T');
-      let date = flightSplit[0];
-      let time = flightSplit[1].split('.')[0];
+      let departure = moment(flightsList[i].dateTime).format('MMMM DD YYYY, h:mm:ss a')
 
       const index = Number(i) + 1;
       flightsTable.push(
@@ -199,8 +198,7 @@ class FlightsDebug extends Component {
           <td>{flightId}</td>
           <td>{flightsList[i].routeId}</td>
           <td>{flightsList[i].airplaneId}</td>
-          <td>{date}</td>
-          <td>{time}</td>
+          <td>{departure}</td>
           <td>{flightsList[i].duration}</td>
           <td>{flightsList[i].seatingId}</td>
           <td>{flightsList[i].status}</td>
@@ -229,8 +227,7 @@ class FlightsDebug extends Component {
               <th scope="col">Flight ID</th>
               <th scope="col">Route ID</th>
               <th scope="col">Airplane ID</th>
-              <th scope="col">Date</th>
-              <th scope="col">Time</th>
+              <th scope="col">Date & Time (UTC)</th>
               <th scope="col">Duration</th>
               <th scope="col">Seating ID</th>
               <th scope="col">Status</th>

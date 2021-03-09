@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
+import moment from 'moment';
 
 // Components
 import ChangeOperationReadout from '../ChangeOperationReadout';
@@ -67,14 +68,15 @@ const EditView = (props) => {
   const handleSubmit = () => {
     if(!handleValidate()) return;
     const duration = (hours * 3600) + (minutes * 60) ;
-    const departure = dateTime.split("T");
-
+    console.log(dateTime);
+    var formattedDate = moment(dateTime).format('YYYY-MM-DD HH:mm:ss').toString();
+    
     const newFlight = {
       id: selectedFlight.id,
       airplaneId : airplaneId,
       seatingId : seatingId,
       routeId : routeId,
-      dateTime : departure[0]+" "+departure[1]+":00",
+      dateTime : formattedDate,
       duration : duration,
       status: flightStatus
     };
@@ -218,10 +220,10 @@ const EditView = (props) => {
               </div>
 
               <div className="mt-3 ml-3" style={{width:"20rem"}}>
-                <label className="form-label">Departure</label>
+                <label className="form-label">Departure (UTC)</label>
                 <input 
                   className={"form-control"}
-                  defaultValue={selectedDateTime}
+                  defaultValue={moment(selectedDateTime).format('YYYY-MM-DDTHH:mm').toString()}
                   type="datetime-local"
                   onChange={(e) => setDateTime(e.target.value)}
                 />
