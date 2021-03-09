@@ -28,15 +28,13 @@ const LocalUserButtons = (props) => {
               {"Profile"}
             </button>
           </Link>
-          <Link to={"/logout"}>
-            <button className={buttonClassName} style={buttonStyle}>
-              {"Logout"}
-            </button>
-          </Link>
+          {/* Logout */}
+          <button className={buttonClassName} style={buttonStyle}
+            onClick={() => AuthenticationDispatcher.onLogout()}
+          >
+            {"Logout"}
+          </button>
         </div>
-
-
-
       }
 
       {!authentication.userToken &&

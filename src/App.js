@@ -24,6 +24,7 @@ import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
+import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
 
 
 class App extends Component {
@@ -40,6 +41,9 @@ class App extends Component {
 
     // Window Resize throttling
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
+
+    AuthenticationDispatcher.onLoginWithToken();
+
   }
 
   render() {

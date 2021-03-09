@@ -50,11 +50,26 @@ class AuthenticationDispatcher extends BaseDispatcher {
     );
   }
 
+
+  static onDeleteAccount(id) {
+
+    Orchestration.createRequest(
+      constants.httpRequest.delete,
+      this.apiPath + `/${id}`,
+      httpError => {
+        Store.reduce({ type: constants.authentication.error });
+      }, httpResponseBody => {
+        Store.reduce({ type: constants.authentication.reset });
+      }
+    )
+    this.onLogout();
+
+  }
+
   static onLogin(email, password) {
 
     const encodedLogin = "Basic " + window.btoa(email + ":" + password);
     const authorization = { "Authorization": encodedLogin };
-    console.log(authorization);
 
     Store.reduce({
       type: constants.authentication.requestLogin,
@@ -83,12 +98,42 @@ class AuthenticationDispatcher extends BaseDispatcher {
             type: constants.authentication.responseLogin,
             payload: httpResponseBody.token
           });
+          localStorage.setItem("JWT", httpResponseBody.token)
+        }
+      });
+  }
+
+  static onLoginWithToken() {
+    const authorization = { "Authorization": 'Bearer ' + localStorage.getItem("JWT") };
+    Orchestration.createRequestWithHeader(
+      constants.httpRequest.get,
+      this.apiPath + "/login",
+      authorization,
+      httpError => {
+        console.log("ERROR -> ", httpError);
+        Store.reduce({
+          type: constants.authentication.error,
+          payload: httpError
+        });
+      }, httpResponseBody => {
+        console.log(httpResponseBody)
+        if (httpResponseBody.error) {
+          Store.reduce({
+            type: constants.authentication.error,
+            payload: httpResponseBody.error
+          });
+        } else {
+          Store.reduce({
+            type: constants.authentication.responseLogin,
+            payload: httpResponseBody.token
+          });
         }
       });
   }
 
   static onLogout() {
-    Store.reduce({ type: constants.authentication.logout });
+    localStorage.removeItem('JWT');
+    Store.reduce({ type: constants.authentication.reset });
     // TODO clear Auth
   }
 
