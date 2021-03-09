@@ -44,6 +44,9 @@ const EditView = (props) => {
   const routeIdChanged = results
     ? selectedFlight.routeId !== results.routeId
     : true;
+  const durationChanged = results
+    ? selectedFlight.duration !== results.duration
+    : true;
   const dateTimeChanged = results
     ? selectedFlight.dateTime !== results.dateTime
     : true;
@@ -116,6 +119,14 @@ const EditView = (props) => {
           name="Route ID" 
           result={results ? results.routeId : ". . ."}
           status={routeIdChanged ? resultsStatus : "DISABLED"} 
+        />
+
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Duration" 
+          result={results ? results.duration : ". . ."}
+          status={durationChanged ? resultsStatus : "DISABLED"} 
         />
 
         <ChangeOperationReadout 
