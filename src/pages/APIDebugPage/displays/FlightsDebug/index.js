@@ -3,6 +3,7 @@ import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
 import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
+import moment from 'moment';
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
@@ -60,7 +61,7 @@ class FlightsDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="IATA ID, City"
+                  placeholder="RouteID, AirplaneID"
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchTerms: e.target.value})}
@@ -183,17 +184,13 @@ class FlightsDebug extends Component {
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
-    console.log(flights.search.results);
-
     let flightsTable = [];
     if (!flightsList.length) flightsList = [flightsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
       const flightId = flightsList[i].id;
       if (!flightId) continue;
 
-      let flightSplit = flightsList[i].dateTime.split('T');
-      let date = flightSplit[0];
-      let time = flightSplit[1];
+      let departure = moment(flightsList[i].dateTime).format('MMMM DD YYYY, h:mm:ss a')
 
       const index = Number(i) + 1;
       flightsTable.push(
@@ -202,8 +199,7 @@ class FlightsDebug extends Component {
           <td>{flightId}</td>
           <td>{flightsList[i].routeId}</td>
           <td>{flightsList[i].airplaneId}</td>
-          <td>{date}</td>
-          <td>{time}</td>
+          <td>{departure}</td>
           <td>{flightsList[i].duration}</td>
           <td>{flightsList[i].seatingId}</td>
           <td>{flightsList[i].status}</td>
@@ -232,8 +228,7 @@ class FlightsDebug extends Component {
               <th scope="col">Flight ID</th>
               <th scope="col">Route ID</th>
               <th scope="col">Airplane ID</th>
-              <th scope="col">Date</th>
-              <th scope="col">Time</th>
+              <th scope="col">Date & Time (UTC)</th>
               <th scope="col">Duration</th>
               <th scope="col">Seating ID</th>
               <th scope="col">Status</th>
