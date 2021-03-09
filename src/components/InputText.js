@@ -6,8 +6,8 @@ class InputText extends React.Component {
     super(props);
     // @PROP: error - string
     // @PROP: fontClass - string
-    // @PROP: label - sitring
-    // @PROP: labelClassName - sitring
+    // @PROP: label - string
+    // @PROP: labelClassName - string
     // @PROP: value - string
 
     // @PROP: isActive - bool
@@ -28,8 +28,8 @@ class InputText extends React.Component {
   }
 
   render() {
-    const { value, isActive, isHover } = this.state;
     const { className, error, fontClassName, isHidden, isLocked, label, labelClassName, style } = this.props;
+    const { isActive, isHover, value } = this.state;
 
     // Locked
     let textInput = (
@@ -98,7 +98,7 @@ class InputText extends React.Component {
                   outline: "none",
                 }}
                 type={isHidden ? "password" : "text"}
-                value={value}
+                value={this.props.value || value}
                 onChange={(e) => this.handleValueChange(e)}
                 onFocus={() => this.handleOnFocus()}
                 onBlur={() => this.handleOnBlur()}
@@ -141,6 +141,7 @@ class InputText extends React.Component {
         onMouseLeave={() => this.setState({ isHover: false })}
       >
         {textInput}
+        {this.props.children}
       </div>
     );
   }
@@ -183,8 +184,8 @@ class InputText extends React.Component {
     const { onChange } = this.props;
     const value = event.target.value;
     this.setState({ value: value, error: "" });
-    if (onChange) {
-      onChange(value);
+    if(value) {
+      if (onChange) onChange(value);
     }
   };
 }

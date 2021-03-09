@@ -180,6 +180,9 @@ class LandingPage extends Component {
 
             </div>
           </div>
+          <FlexRow className="col-12 mt-5">
+            <h1 className="text-white">Landing Page</h1>
+          </FlexRow>
         </div>
       </div>
     );

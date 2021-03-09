@@ -37,6 +37,13 @@ const LocalPageButtons = (props) => {
         </button>
       </Link> 
 
+      {/* Flight Search Page */}
+      <Link to={"/flights"}>
+        <button className={buttonClassName} style={buttonStyle}>
+          {"Flight Search Page"}
+        </button>
+      </Link> 
+
       {/* Forgot Password Page */}
       <Link to={"/forgotpassword"}>
         <button className={buttonClassName} style={buttonStyle}>

@@ -120,6 +120,7 @@ class BookingsDebug extends Component {
           <div className="row justify-content-center p-2">
             <FlexColumn className="col-4 col-md-3 text-center">
               <DropDown
+                buttonClassName="btn-secondary dropdown-toggle"
                 selection={bookings.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"

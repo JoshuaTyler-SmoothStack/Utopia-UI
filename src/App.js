@@ -24,6 +24,7 @@ import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
+import FlightSearchPage from "./pages/FlightSearchPage";
 
 
 class App extends Component {
@@ -76,15 +77,22 @@ class App extends Component {
               <CreateAccountPage />
             </Route>
 
+            {/* Flight Search Page */}
+            <Route path="/flights">
+              <FlightSearchPage />
+            </Route>
+
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
               <ForgotPasswordPage />
             </Route>
 
+            {/* Password Recovery Page */}
             <Route path="/password-recovery/**">
               <PasswordRecoveryPage />
             </Route>
 
+            {/* Profile Page */}
             <Route path="/profile">
               <UserProfilePage />
             </Route>
