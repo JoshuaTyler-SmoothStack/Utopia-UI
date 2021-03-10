@@ -67,7 +67,6 @@ class AuthenticationDispatcher extends BaseDispatcher {
   }
 
   static onLogin(email, password) {
-
     const encodedLogin = "Basic " + window.btoa(email + ":" + password);
     const authorization = { "Authorization": encodedLogin };
 

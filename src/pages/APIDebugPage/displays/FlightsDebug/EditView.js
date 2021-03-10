@@ -2,8 +2,9 @@
 import _ from "lodash";
 import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
-import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
+import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
+import moment from 'moment';
 
 // Components
 import ChangeOperationReadout from '../ChangeOperationReadout';
@@ -13,40 +14,81 @@ import FlexRow from "../../../../components/FlexRow";
 
 const EditView = (props) => {
 
-  const { airports } = Store.getState();
-  const selectedAirport = airports.selected;
+  const { flights } = Store.getState();
+  const selectedFlight = flights.selected;
 
-  const [airportCityName, setAirportCityName] = useState(selectedAirport.airportCityName);
+  const selectedHours = Math.floor(selectedFlight.flightDuration / 3600);
+  const selectedMinutes = Math.floor(selectedFlight.flightDuration % 3600 / 60);
+  const selectedDateTime = selectedFlight.flightDepartureTime.split('.')[0];
+  
+  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplaneId);
+  const [flightSeatingId, setSeatingId] = useState(selectedFlight.flightSeatingId);
+  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRouteId);
+  const [flightDepartureTime, setDateTime] = useState(selectedDateTime);
+  const [hours, setHours] = useState(selectedHours);
+  const [minutes, setMinutes] = useState(selectedMinutes);
+  const [flightStatus, setFlightStatus] = useState(selectedFlight.flightStatus);
   const [isReverted, setIsReverted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const results = airports.edit.results
-  const resultsStatus = airports.edit.resultsStatus;
-  const status = airports.edit.status;
-  
-  const airportCityNameChanged = results
-    ? selectedAirport.airportCityName !== results.airportCityName
+  const results = flights.edit.results
+  const resultsStatus = flights.edit.resultsStatus;
+  const status = flights.edit.status;
+
+  const flightAirplaneIdChanged = results
+    ? selectedFlight.flightAirplaneId !== results.flightAirplaneId
+    : true;
+  const flightSeatingIdChanged = results
+    ? selectedFlight.flightSeatingId !== results.flightSeatingId
+    : true;
+  const flightRouteIdChanged = results
+    ? selectedFlight.flightRouteId !== results.flightRouteId
+    : true;
+  const flightDurationChanged = results
+    ? selectedFlight.flightDuration !== results.flightDuration
+    : true;
+  const flightDepartureTimeChanged = results
+    ? selectedFlight.flightDepartureTime !== results.flightDepartureTime
+    : true;
+  const flightStatusChanged = results
+    ? selectedFlight.flightStatus !== results.flightStatus
     : true;
 
   const resultsPending = resultsStatus === "PENDING";
-  const noChangesMade = _.isEqual(selectedAirport, results);
+  const noChangesMade = _.isEqual(selectedFlight, results);
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!airportCityName) return false;
+    if(!flightAirplaneId) return false;
+    if(!flightSeatingId) return false;
+    if(!flightRouteId) return false;
+    if(!flightDepartureTime) return false;
+    if(!hours) return false;
+    if(!minutes) return false;
     return true;
   };
 
   const handleSubmit = () => {
     if(!handleValidate()) return;
-    const newAirport = {
-      airportIataId: selectedAirport.airportIataId,
-      airportCityName: airportCityName,
+    const flightDuration = (hours * 3600) + (minutes * 60) ;
+    console.log(flightDepartureTime);
+    var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
+    
+    const newFlight = {
+      flightId: selectedFlight.flightId,
+      flightAirplaneId : flightAirplaneId,
+      flightSeatingId : flightSeatingId,
+      flightRouteId : flightRouteId,
+      flightDepartureTime : formattedDate,
+      flightDuration : flightDuration,
+      status: flightStatus
     };
-    if(!_.isEqual(selectedAirport, newAirport)) {
-      AirportsDispatcher.onEdit(null, newAirport);
+
+    console.log(newFlight);
+    if(!_.isEqual(selectedFlight, newFlight)) {
+      FlightsDispatcher.onEdit(null, newFlight);
     } else {
-      AirportsDispatcher.onEditFake(newAirport);
+      FlightsDispatcher.onEditFake(newFlight);
     }
   };
 
@@ -58,16 +100,56 @@ const EditView = (props) => {
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
-          name="Airport" 
-          result={results ? results.airportCityName : ". . ."}
-          status={airportCityNameChanged ? resultsStatus : "DISABLED"} 
+          name="Airplane ID" 
+          result={results ? results.flightAirplaneId : ". . ."}
+          status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"} 
+        />
+
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Seating ID" 
+          result={results ? results.flightSeatingId : ". . ."}
+          status={flightSeatingIdChanged ? resultsStatus : "DISABLED"} 
+        />
+
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Route ID" 
+          result={results ? results.flightRouteId : ". . ."}
+          status={flightRouteIdChanged ? resultsStatus : "DISABLED"} 
+        />
+
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Duration" 
+          result={results ? results.flightDuration : ". . ."}
+          status={flightDurationChanged ? resultsStatus : "DISABLED"} 
+        />
+
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Departure" 
+          result={results ? results.flightDepartureTime : ". . ."}
+          status={flightDepartureTimeChanged ? resultsStatus : "DISABLED"} 
+        />
+
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Status" 
+          result={results ? results.status : ". . ."}
+          status={flightStatusChanged ? resultsStatus : "DISABLED"} 
         />
 
         <FlexRow>
             <button className="btn btn-light m-3"
               onClick={() => {
-                AirportsDispatcher.onCancel();
-                AirportsDispatcher.onRequest();
+                FlightsDispatcher.onCancel();
+                FlightsDispatcher.onRequest();
               }}
             >
               Close
@@ -86,7 +168,7 @@ const EditView = (props) => {
                 onClick={resultsPending 
                   ? () => KitUtils.soundSuccess() 
                   : () => {
-                    AirportsDispatcher.onEdit(null, selectedAirport);
+                    FlightsDispatcher.onEdit(null, selectedFlight);
                     setIsReverted(true);
                   }
                 }
@@ -101,35 +183,104 @@ const EditView = (props) => {
 
     {(status !== "ERROR" && status !== "PENDING") &&
     <FlexColumn>
-      {/* Airport */}
+      {/* Flight */}
       <FlexColumn>
-        <FlexRow>
-          <div className="mt-3" style={{width:"14rem"}}>
-            <label className="form-label">IATA ID</label>
-            <input 
-              className="form-control" 
-              readOnly 
-              type="text" 
-              value={selectedAirport.airportIataId}/>
-          </div>
-          <div className="mt-3 ml-3" style={{width:"14rem"}}>
-            <label className="form-label">City</label>
-            <input 
-              className={"form-control " +  (isSubmitted ? !airportCityName ? "is-invalid" : "is-valid" : "")}
-              defaultValue={airportCityName}
-              type="text" 
-              onChange={(e) => setAirportCityName(e.target.value)}
-            />
-          </div>
-        </FlexRow>
-        <hr className="w-100"></hr>
+      <FlexRow>
+              <div className="mt-3" style={{width:"14rem"}}>
+                <label className="form-label">Flight ID</label>
+                <input 
+                  className={"form-control"}
+                  value={selectedFlight.flightId}
+                  type="number"
+                  readOnly
+                />
+              </div>
+              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+                <label className="form-label">Airplane ID</label>
+                <input 
+                  className={"form-control " +  (isSubmitted ? !flightAirplaneId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightAirplaneId}
+                  placeholder="Number"
+                  type="number" 
+                  onInput={(e) => setAirplaneId(e.target.value)}
+                />
+              </div>
+
+              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+                <label className="form-label">Seating ID</label>
+                <input 
+                  className={"form-control " +  (isSubmitted ? !flightSeatingId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightSeatingId}
+                  placeholder="Number"
+                  type="number" 
+                  onChange={(e) => setSeatingId(e.target.value)}
+                />
+              </div>
+            </FlexRow>
+
+            <FlexRow>
+              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+                <label className="form-label">Route ID</label>
+                <input 
+                  className={"form-control " +  (isSubmitted ? !flightRouteId ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={flightRouteId}
+                  placeholder="Number"
+                  type="number" 
+                  onInput={(e) => setRouteId(e.target.value)}
+                />
+              </div>
+
+              <div className="mt-3 ml-3" style={{width:"20rem"}}>
+                <label className="form-label">Departure (UTC)</label>
+                <input 
+                  className={"form-control"}
+                  defaultValue={moment(selectedDateTime).format('YYYY-MM-DDTHH:mm').toString()}
+                  type="datetime-local"
+                  onChange={(e) => setDateTime(e.target.value)}
+                />
+              </div>
+        
+            </FlexRow>
+
+            <FlexRow>
+              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+                <label className="form-label">Duration</label>
+                <input 
+                  className={"form-control " +  (isSubmitted ? !hours ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={selectedHours || 0}
+                  type="number" 
+                  onInput={(e) => setHours(e.target.value)}
+                />
+                <input 
+                  className={"form-control " +  (isSubmitted ? !minutes ? "is-invalid" : "is-valid" : "")} 
+                  defaultValue={selectedMinutes}
+                  type="number"
+                  max = "60" 
+                  onInput={(e) => setMinutes(e.target.value)}
+                />
+              </div>
+
+              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+                <label className="form-label">Status</label>
+                <select 
+                  className={"form-control"}
+                  value={flightStatus}
+                  onChange={(e) => setFlightStatus(e.target.value)}
+                >
+                  <option value="INACTIVE">INACTIVE</option>
+                  <option value="ACTIVE">ACTIVE</option>
+                </select>
+              </div>
+        
+            </FlexRow>
+            <hr className="w-100"></hr>
       </FlexColumn>     
 
 
       {/* Buttons */}
       <FlexRow>
         <button className="btn btn-light m-3"
-          onClick={() => AirportsDispatcher.onCancel()}
+          onClick={() => FlightsDispatcher.onCancel()}
         >
           Cancel
         </button>

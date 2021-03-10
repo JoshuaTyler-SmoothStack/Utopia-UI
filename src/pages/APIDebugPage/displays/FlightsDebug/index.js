@@ -3,6 +3,7 @@ import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
 import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
+import moment from 'moment';
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
@@ -60,7 +61,7 @@ class FlightsDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="IATA ID, City"
+                  placeholder="RouteID, AirplaneID"
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchTerms: e.target.value})}
@@ -99,6 +100,7 @@ class FlightsDebug extends Component {
           <div className="row justify-content-center p-2">
             <FlexColumn className="col-4 col-md-3 text-center">
               <DropDown
+                buttonClassName="btn-secondary dropdown-toggle"
                 selection={flights.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
@@ -182,30 +184,25 @@ class FlightsDebug extends Component {
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
-    console.log(flights.search.results);
-
     let flightsTable = [];
     if (!flightsList.length) flightsList = [flightsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
-      const flightId = flightsList[i].id;
+      const flightId = flightsList[i].flightId;
       if (!flightId) continue;
 
-      let flightSplit = flightsList[i].dateTime.split('T');
-      let date = flightSplit[0];
-      let time = flightSplit[1];
+      let departure = moment(flightsList[i].flightDepartureTime).format('MMMM DD YYYY, h:mm:ss a')
 
       const index = Number(i) + 1;
       flightsTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
           <td>{flightId}</td>
-          <td>{flightsList[i].routeId}</td>
-          <td>{flightsList[i].airplaneId}</td>
-          <td>{date}</td>
-          <td>{time}</td>
-          <td>{flightsList[i].duration}</td>
-          <td>{flightsList[i].seatingId}</td>
-          <td>{flightsList[i].status}</td>
+          <td>{flightsList[i].flightRouteId}</td>
+          <td>{flightsList[i].flightAirplaneId}</td>
+          <td>{departure}</td>
+          <td>{flightsList[i].flightDuration}</td>
+          <td>{flightsList[i].flightSeatingId}</td>
+          <td>{flightsList[i].flightStatus}</td>
 
           {/* Edit */}
           <td><button className="btn btn-info"
@@ -231,8 +228,7 @@ class FlightsDebug extends Component {
               <th scope="col">Flight ID</th>
               <th scope="col">Route ID</th>
               <th scope="col">Airplane ID</th>
-              <th scope="col">Date</th>
-              <th scope="col">Time</th>
+              <th scope="col">Date & Time (UTC)</th>
               <th scope="col">Duration</th>
               <th scope="col">Seating ID</th>
               <th scope="col">Status</th>
