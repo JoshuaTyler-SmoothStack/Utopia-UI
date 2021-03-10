@@ -41,13 +41,13 @@ const UserProfilePage = (props) => {
 
   return (
 
-    <div className="container-fluid"
+    <div className="kit-bg-blue container-fluid "
       style={{ height: "100vh", width: "100vw" }}
     >
-      {/* Navbar */}
       <NavBar className="col-12" hideSearchBar={true} />
+      <FlexColumn className={"bg-white col-12 h-100 "} justify="start">
+        {/* Navbar */}
 
-      <FlexColumn className={"kit-bg-blue col-12 h-100"}>
 
         {authentication.status === "INACTIVE" &&
           <Redirect to="/home" />
@@ -55,26 +55,31 @@ const UserProfilePage = (props) => {
         }
 
         {!user &&
-          <div class="container emp-profile">loading...</div>
+          <div class="container emp-profile">Loading...</div>
         }
 
         {user &&
           <div class="container emp-profile">
             <div class="row">
               <div class="col-md-4">
-                <div class="profile-img">
-                  <h3>{user.firstName} {user.lastName} </h3>
 
-                  <p class="proile-rating">Miles earned : <span>11, 000</span></p>
+                <h3>{user.firstName} {user.lastName} </h3>
+                <p class="proile-rating">Miles earned : <span>11, 000</span></p>
+                <br />
+                <button variant="primary" className="btn btn-primary" onClick={handleShow}>
+                  Delete account </button>
+                <br />
+                <button variant="primary" className="btn btn-primary" onClick={handleShow}>
+                  Delete account </button>
 
-                </div>
+
               </div>
               <div class="col-md-6">
                 <div class="profile-head">
 
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Upcoming flights</a>
                     </li>
                   </ul>
                 </div>
