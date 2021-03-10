@@ -40,8 +40,10 @@ const DropDown = (props) => {
   useEffect(() => {
     const handleClick = event => {  
       const { target } = event;
-      if (!rootNode.contains(target)) {
-        handleSelect(null);
+      if(rootNode.current) {
+        if (!rootNode.current.contains(target)) {
+          handleSelect(null);
+        }
       }
     }
 
