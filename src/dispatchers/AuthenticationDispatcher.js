@@ -90,7 +90,7 @@ class AuthenticationDispatcher extends BaseDispatcher {
         console.log(httpResponseBody)
         if (httpResponseBody.error) {
           Store.reduce({
-            type: constants.authentication.error,
+            type: constants.authentication.errorLogin,
             payload: httpResponseBody.error
           });
         } else {

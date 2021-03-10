@@ -15,13 +15,13 @@ const UserProfilePage = (props) => {
   const { authentication } = Store.getState();
   const [user, setUser] = useState();
   const [show, setShow] = useState(false);
+  const [accountDeleted, setAccountDeleted] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const history = useHistory();
 
   useEffect((e) => {
-
     const headers = {
       authorization: 'Bearer ' + authentication.userToken
     };
@@ -79,12 +79,6 @@ const UserProfilePage = (props) => {
                   </ul>
                 </div>
               </div>
-              <div class="col-md-2">
-                <a href='/home' className="btn btn-primary"> Edit profile</a>
-                <button variant="primary" className="btn btn-primary" onClick={handleShow}>
-                  Delete account
-      </button>
-              </div>
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -109,6 +103,23 @@ const UserProfilePage = (props) => {
                         <p>{user.phone}</p>
                       </div>
                     </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <button variant="primary" className="btn btn-primary" onClick={handleShow}>
+                          Delete account </button>
+                      </div>
+
+                      <div class="col-md-6">
+                        <a href='/home' className="btn btn-primary"> Edit profile</a>
+
+                      </div>
+
+                    </div>
+
+
+
+
 
                   </div>
                 </div>

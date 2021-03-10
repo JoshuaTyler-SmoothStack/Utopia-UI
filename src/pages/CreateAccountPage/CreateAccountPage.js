@@ -30,6 +30,8 @@ const CreateAccountPage = (props) => {
   const [status, setStatus] = useState("DEFAULT");
 
 
+
+
   function handleSubmit(e) {
     e.preventDefault();
     handleValidate(email, phone, password, confirmPassword);

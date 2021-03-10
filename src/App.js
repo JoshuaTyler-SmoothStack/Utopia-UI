@@ -42,7 +42,7 @@ class App extends Component {
     // Window Resize throttling
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
 
-    AuthenticationDispatcher.onLoginWithToken();
+
 
   }
 
@@ -103,12 +103,14 @@ class App extends Component {
   }
 
   componentDidMount() {
+    AuthenticationDispatcher.onLoginWithToken();
     this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener("resize", () => this.handleResize());
   }
 
   componentDidUpdate() {
+
     console.log(this.state);
   }
 

@@ -57,6 +57,7 @@
     "cancel": "AUTHENTICATION_CANCEL",
     "create": "AUTHENTICATION_CREATE",
     "error": "AUTHENTICATION_ERROR",
+    "errorLogin": "AUTHENTICATION_ERROR_LOGIN",
     "name": "authentication",
     "promptCreate": "AUTHENTICATION_CREATE_PROMPT",
     "promptLogin": "AUTHENTICATION_DELETE_PROMPT",

@@ -1,6 +1,7 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../componentgroups/NavBar';
+import Store from '../../reducers/Store';
 import { Redirect } from 'react-router'
 import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
@@ -8,6 +9,7 @@ import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
+import { useHistory } from 'react-router-dom';
 
 // Styles
 import './style.css';
@@ -27,6 +29,11 @@ const PasswordRecoveryPage = (props) => {
   const [loading, setLoading] = useState(true);
   const [verifyToken, setVerifyToken] = useState(false);
 
+  const { authentication } = Store.getState();
+  const history = useHistory();
+  if (authentication.status === "SUCCESS") {
+    history.push("/home");
+  }
 
   let search = window.location.search;
   let params = new URLSearchParams(search);
