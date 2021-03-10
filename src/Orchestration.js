@@ -6,7 +6,7 @@ class Orchestration {
   static contentType = "json";
 
   static httpRequest(requestType, requestPath, requestHeaders, requestBody, httpError, httpResponseBody) {
-    
+
     const { authentication } = Store.getState();
     const authorization = (authentication.userToken || authentication.userLogin);
     
@@ -29,29 +29,29 @@ class Orchestration {
       body: body,
       method: requestType
     })
-    .then((response) => {
-      if (Orchestration.contentType === "json") {
-        return response.clone().json().catch(() => response.text());
-      }
-      return response.text();
-    })
-    .then((data) => {
-      httpResponseBody(data);
-    })
-    .catch((err) => {
-      console.error("[ERROR]: " + err);
-      httpError(err);
-    });
+      .then((response) => {
+        if (Orchestration.contentType === "json") {
+          return response.clone().json().catch(() => response.text());
+        }
+        return response.text();
+      })
+      .then((data) => {
+        httpResponseBody(data);
+      })
+      .catch((err) => {
+        console.error("[ERROR]: " + err);
+        httpError(err);
+      });
   }
-  
+
   static createRequest(requestType, requestPath, httpError, httpResponseBody) {
     Orchestration.httpRequest(requestType, requestPath, {}, {}, httpError, httpResponseBody);
   }
-  
+
   static createRequestWithHeader(requestType, requestPath, requestHeader, httpError, httpResponseBody) {
     Orchestration.httpRequest(requestType, requestPath, requestHeader, {}, httpError, httpResponseBody);
   }
-  
+
   static createRequestWithBody(requestType, requestPath, requestBody, httpError, httpResponseBody) {
     Orchestration.httpRequest(requestType, requestPath, {}, requestBody, httpError, httpResponseBody);
   }

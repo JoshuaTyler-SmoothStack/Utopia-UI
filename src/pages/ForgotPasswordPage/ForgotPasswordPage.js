@@ -1,7 +1,9 @@
 // Libraries
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import UsersDispatcher from '../../dispatchers/UsersDispatcher'
+import UsersDispatcher from '../../dispatchers/UsersDispatcher';
+import { useHistory } from 'react-router-dom';
+import Store from '../../reducers/Store';
 
 // Components
 import NavBar from '../../componentgroups/NavBar';
@@ -21,6 +23,12 @@ const ForgotPasswordPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false)
   const [redirect, setRedirect] = useState(false);
+
+  const history = useHistory();
+  if (localStorage.getItem("JWT")) {
+    history.push("/home")
+  }
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -104,11 +112,13 @@ const ForgotPasswordPage = (props) => {
           </div>
         }
 
-        {redirect &&
-          <Redirect to="/home" />
-        }
 
       </FlexColumn>
+
+      {redirect &&
+        <Redirect to="/home" />
+      }
+
     </div >
   );
 }

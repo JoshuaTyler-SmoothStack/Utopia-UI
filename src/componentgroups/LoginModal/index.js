@@ -1,9 +1,10 @@
 // Libraries
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 import Store from "../../reducers/Store";
+
 
 // Components
 import InputText from "../../components/InputText";
@@ -22,11 +23,14 @@ class LoginModal extends Component {
       password: "",
       warning: "",
     };
+
   }
 
   render() {
     const { authentication } = Store.getState();
-    const { warning } = this.state;
+    const warning = this.state.warning || authentication.error;
+
+
 
     return (
       // zIndex: 6
@@ -86,18 +90,6 @@ class LoginModal extends Component {
                 <div className="spinner-border" />
               </FlexColumn>}
 
-            {/* Error */}
-            {authentication.status === "ERROR" &&
-              <FlexColumn
-                justify={"around"}
-                style={{ height: "100%", width: "100%" }}
-                wrap={"no-wrap"}
-              >
-                <div className="text-danger">
-                  {String(authentication.error)}
-                </div>
-              </FlexColumn>}
-
             {/* Login Successful */}
             {authentication.status === "ACTIVE" &&
               <FlexColumn
@@ -110,9 +102,13 @@ class LoginModal extends Component {
                 </div>
               </FlexColumn>}
 
+            {authentication.status === "SUCCESS" &&
+              <Redirect to="home" />
+            }
+
             {/* Login UI */}
-            {authentication.status === "INACTIVE" &&
-              <FlexColumn
+            {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
+              < FlexColumn
                 justify={"around"}
                 style={{ height: "100%", width: "100%" }}
                 wrap={"no-wrap"}
@@ -122,10 +118,10 @@ class LoginModal extends Component {
                   className="card text-white bg-dark mt-5 mb-3"
                   style={{ width: "75%" }}
                 >
-                  <FlexRow style={{ minHeight: "3rem" }}>
+                  <FlexColumn style={{ minHeight: "3rem" }}>
                     <div className="h5">{"Login or create an account."}</div>
                     {warning !== "" && <div className="text-warning kit-shake">{warning}</div>}
-                  </FlexRow>
+                  </FlexColumn>
                 </FlexColumn>
 
                 {/* Inputs */}
@@ -200,7 +196,7 @@ class LoginModal extends Component {
               </FlexColumn>}
           </FlexColumn>
         </FlexColumn>
-      </FlexColumn>
+      </FlexColumn >
     );
   }
 

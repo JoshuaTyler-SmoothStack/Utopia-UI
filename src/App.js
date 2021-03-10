@@ -7,6 +7,7 @@ import {
   Switch,
 } from "react-router-dom";
 import Store from "./reducers/Store";
+import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
 
 // Components
 import LoginModal from "./componentgroups/LoginModal";
@@ -16,6 +17,7 @@ import APIDebugPage from "./pages/APIDebugPage";
 import BootPage from "./pages/BootPage";
 import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
+import FlightSearchPage from "./pages/FlightSearchPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
@@ -24,8 +26,6 @@ import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
-import FlightSearchPage from "./pages/FlightSearchPage";
-
 
 class App extends Component {
   constructor(props) {
@@ -41,6 +41,9 @@ class App extends Component {
 
     // Window Resize throttling
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
+
+
+
   }
 
   render() {
@@ -107,12 +110,14 @@ class App extends Component {
   }
 
   componentDidMount() {
+    AuthenticationDispatcher.onLoginWithToken();
     this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener("resize", () => this.handleResize());
   }
 
   componentDidUpdate() {
+
     console.log(this.state);
   }
 

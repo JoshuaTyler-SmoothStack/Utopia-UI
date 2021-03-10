@@ -19,13 +19,19 @@ class AuthenticationReducer extends BaseReducer {
           userId: "UNKNOWN"
         };
 
+      case this.constantsParent.errorLogin:
+        return {
+          error: "Invalid email or password.",
+          status: "ERROR",
+          userId: "UNKNOWN"
+        };
+
       // Prompts
       // =====================================
       case this.constantsParent.promptLogin:
         return {
           error: "",
           isActive_LoginUI: true,
-          status: "INACTIVE",
         };
 
       // Requests
