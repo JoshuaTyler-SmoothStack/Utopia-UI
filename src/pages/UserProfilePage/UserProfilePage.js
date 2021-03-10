@@ -11,19 +11,15 @@ import Store from '../../reducers/Store';
 import NavBar from '../../componentgroups/NavBar';
 import FlexColumn from '../../components/FlexColumn';
 
-import Modal from 'react-bootstrap/Modal'
 import FlexRow from '../../components/FlexRow';
 import InputText from '../../components/InputText';
+import Modal from '../../components/Modal';
 
 const UserProfilePage = (props) => {
 
   const { authentication, users } = Store.getState();
-  const [user, setUser] = useState();
-  const [show, setShow] = useState(false);
+  const [isActive_DeleteModal, setIsActive_DeleteModal] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const history = useHistory();
 
   useEffect((e) => {
@@ -32,21 +28,18 @@ const UserProfilePage = (props) => {
       httpError => {
         // handle error getting user here
     }, httpResponseBody => {
-      
+      UsersDispatcher.onSelectItem(httpResponseBody);
     });
   }, [!users.selected]);
 
   const deleteAccount = () => {
-    AuthenticationDispatcher.onDeleteAccount(user.userId);
+    AuthenticationDispatcher.onDeleteAccount(users.selected.userId);
     history.push("/home");
   }
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw"}}>
       <div className="row">
-
-        {/* Redirects */}
-        {authentication.status === "INACTIVE" && <Redirect to="/home" />}
 
         {/* Navbar */}
         <NavBar className="col-12" hideSearchBar={true} />
@@ -77,16 +70,35 @@ const UserProfilePage = (props) => {
                 </div>
 
                 {/* User Information */}
-                <div className="col-4">
-                  <InputText
-                    className="h-100 rounded kit-border-shadow mb-0"
-                    label={"First Name"}
-                    labelClassName={"text-info"}
-                    fontClass={"h4"}
-                    name="firstName"
-                    value={user.userFirstName}
-                  />
-                </div>
+                <FlexColumn className="col-8" justify="around">
+                  
+                  {/* Names */}
+                  <FlexRow className="w-100" justify="around">
+                    <FlexColumn>
+                      <label>First Name</label>
+                      <h5 className="kit-border-shadow">{users.selected.userFirstName}</h5>
+                    </FlexColumn>
+                    
+                    <FlexColumn>
+                      <label>Last Name</label>
+                      <h5 className="kit-border-shadow">{users.selected.userLastName}</h5>
+                    </FlexColumn>
+                  </FlexRow>
+
+                  {/* Email & Phone */}
+                  <FlexRow className="w-100" justify="around">
+                    <FlexColumn>
+                      <label>Email</label>
+                      <h5 className="kit-border-shadow">{users.selected.userEmail}</h5>
+                    </FlexColumn>
+                    
+                    <FlexColumn>
+                      <label>Phone</label>
+                      <h5 className="kit-border-shadow">{users.selected.userPhone}</h5>
+                    </FlexColumn>
+                  </FlexRow>
+                </FlexColumn>
+
               </div>
 
             </div>
@@ -99,7 +111,9 @@ const UserProfilePage = (props) => {
               </button>
 
               {/* Delete Button */}
-              <button className="btn btn-primary">
+              <button className="btn btn-primary"
+                onClick={() => setIsActive_DeleteModal(true)}
+              >
                 Delete Account
               </button>
             </FlexRow>
@@ -107,25 +121,24 @@ const UserProfilePage = (props) => {
 
         </FlexColumn>
 
-        <Modal
-          show={show}
-          onHide={handleClose}
-          backdrop="static"
-          keyboard={false}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Are you sure you want to delete account?</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            This action will permanently delete your flight history and earned loyalty points
-          </Modal.Body>
-          <Modal.Footer>
-            <button variant="secondary" onClick={handleClose}>
-              Cancel
-            </button>
-            <button variant="primary" onClick={deleteAccount} >Understood / Continue</button>
-          </Modal.Footer>
-        </Modal>
+        {/* Modals */}
+        {/* Delete Account Modal */}
+        {isActive_DeleteModal && 
+          <Modal onClose={() => setIsActive_DeleteModal(false)}>
+              {/* Cancel Button */}
+              <button className="btn btn-secondary">
+                Cancel
+              </button>
+
+              {/* Delete Button */}
+              <button className="btn btn-primary">
+                Yes I want to delete
+              </button>
+          </Modal>
+        }
+
+        {/* Redirects */}
+        {authentication.status === "INACTIVE" && <Redirect to="/home" />}
       </div>
     </div>
   )

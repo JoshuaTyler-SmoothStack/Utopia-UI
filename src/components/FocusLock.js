@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 const TAB_KEY = 9;
 const FocusLock = (props) => {
-    const isLocked = !props.disableLock || true;
+    const isLocked = props.isLocked || false;
     const rootNode = useRef(null);
     const focusableItems = useRef([]);
    
