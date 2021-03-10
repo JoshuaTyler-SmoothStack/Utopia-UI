@@ -1,22 +1,25 @@
 // Libraries
+import moment from "moment";
 import React, { Component } from "react";
 import Store from "../../reducers/Store";
+import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
-import NavBar from "../../componentgroups/NavBar";
-import FlexRow from "../../components/FlexRow";
-import InputText from "../../components/InputText";
-import FlexColumn from "../../components/FlexColumn";
 import DropDown from "../../components/DropDown";
-import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
+import FlexRow from "../../components/FlexRow";
+import FlexColumn from "../../components/FlexColumn";
+import FlightModal from "../../componentgroups/FlightModal";
+import InputText from "../../components/InputText";
+import NavBar from "../../componentgroups/NavBar";
+import Pagination from "../../components/Pagination";
 
 class FlightSearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dateDeparture: "",
-      dateReturn: "",
+      dateTimeDeparture: "",
+      dateTimeReturn: "",
       destination: "",
       origin: "",
       flightType: "One-Way",
@@ -30,7 +33,8 @@ class FlightSearchPage extends Component {
 
   render() {
     const { flights } = Store.getState();
-    const { flightType, destination, origin, isFocus_Destination, isFocus_Origin } = this.state;
+    const { flightType, destination, origin, isActive_FlightModal,
+      isFocus_Destination, isFocus_Origin } = this.state;
 
     const departureFlights = flights.search.originToDestination;
     const returnFlights = flights.search.destinationToOrigin;
@@ -39,7 +43,7 @@ class FlightSearchPage extends Component {
     const isActive_DestinationRecommendations = isFocus_Destination && destination.trim() !== "";
 
     return (
-      <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw"}}>
+      <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw",  overflowY: "hidden" }}>
         <div className="row">
           {/* Navbar */}
           <NavBar className="col-12" hideSearchBar={true} />
@@ -153,9 +157,9 @@ class FlightSearchPage extends Component {
                       <input 
                         className="form-label w-75 mr-auto" 
                         style={{height: "3.5rem"}}
-                        name="dateDeparture"
-                        type="date" 
-                        onChange={(e) => this.setState({dateDeparture: e.target.value})}
+                        name="dateTimeDeparture"
+                        type="datetime-local" 
+                        onChange={(e) => this.setState({dateTimeDeparture: e.target.value})}
                       />
                     </FlexColumn>
                   </div>
@@ -170,8 +174,8 @@ class FlightSearchPage extends Component {
                       </label>
                       <input 
                         className="form-label w-75 mr-auto" 
-                        name="dateDeparture"
-                        onChange={(e) => this.setState({dateReturn: e.target.value})}
+                        name="dateTimeDeparture"
+                        onChange={(e) => this.setState({dateTimeReturn: e.target.value})}
                         style={{height: "3.5rem"}}
                         type="date" 
                       />
@@ -180,17 +184,54 @@ class FlightSearchPage extends Component {
                 </div>
               </div>
 
-              {/* Search Button */}
+              {/* Buttons */}
               <div className="row m-4">
+                
+                {/* Drop Down */}
+                <FlexRow className="col-3">
+                  <DropDown 
+                    buttonClassName="btn-secondary dropdown-toggle"
+                    selection={flights.search.resultsPerPage}
+                    options={["3", "10", "25", "50"]}
+                    optionsName="flights"
+                    onSelect={(e) => FlightsDispatcher.onSelectItemsPerPage(e)}
+                  />
+                </FlexRow>
+
+                {/* Pagination */}
+                <FlexRow className="col-5">
+                  <Pagination
+                    className="text-center"
+                    currentPage={flights.search.resultsPage}
+                    totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
+                    onSelectPage={(e) => FlightsDispatcher.onSelectItemsPage(e)}
+                  />
+                </FlexRow>
+
+                {/* Search Button */}
                 <div className="col-4 ml-auto">
-                  <button className="btn btn-lg btn-success text-white kit-border-shadow-thin"
-                  onClick={() => this.handleSubmit()}>
+                  <button className="btn btn-lg btn-success text-white kit-text-shadow-thin"
+                    onClick={() => this.handleSubmit()}>
                     Search Flights
                   </button>
                 </div>
               </div>
           </div>
+
+
+          {/* Flights Table */}
+          <FlexRow className="col-12 bg-white">
+            {this.handleRenderFlightsList(flights.search.results)}
+          </FlexRow>
+
         </div>
+
+        {/* Flight Modal */}
+        {isActive_FlightModal && 
+        <FlightModal 
+          zIndex="4"
+          onClose={() => this.handleFlightModalToggle(false, null)}
+        />}
       </div>
     );
   }
@@ -221,9 +262,84 @@ class FlightSearchPage extends Component {
     return matchingAirports;
   }
 
-  handleSubmit = () => {
-    const { dateDeparture, dateReturn, destination, origin, flightType } = this.state;
+  handleFlightModalToggle = (toggleOn, flightIndex) => {
+    if(toggleOn !== this.isActive_FlightModal) this.setState({isActive_FlightModal: toggleOn});
+    if(toggleOn) {
+      const { flights } = Store.getState();
+      FlightsDispatcher.onSelectItem(flights.search.results[flightIndex]);
+    }
+  }
 
+  handleRenderFlightsList = (flightsList) => {
+    const { flights } = Store.getState();
+    const resultsDisplayed = Number(flights.search.resultsPerPage);
+    const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
+
+    let flightsTable = [];
+    if (!flightsList.length) flightsList = [flightsList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
+      
+      const flightId = flightsList[i].flightId;
+      if (!flightId) continue;
+
+      let departure = moment(flightsList[i].flightDepartureTime).format('M/DD/YY | h:mm a')
+
+      const index = Number(i) + 1;
+      flightsTable.push(
+        <tr key={index} onClick={() => this.handleFlightModalToggle(true, (index - 0))}>
+          <th scrop="row">{index}</th>
+          <td><h5 className="text-light">{flightId}</h5></td>
+          <td>
+            <h5 className="text-info">{flightsList[i].flightRouteOriginIataId}</h5>
+            <div className="text-warning">{flightsList[i].flightRouteOriginCityName}</div>
+          </td>
+          <td>
+            <h5 className="text-info">{flightsList[i].flightRouteDestinationIataId}</h5>
+            <div className="text-warning">{flightsList[i].flightRouteDestinationCityName}</div>
+          </td>
+          <td>
+            <h5 className="text-dark">{departure.split("|")[1]}</h5>
+            <div>{departure.split("|")[0]}</div>
+          </td>
+          <td>{flightsList[i].flightDuration}</td>
+        </tr>
+      );
+    }
+
+    return (
+      <FlexColumn justify="start" style={{ height: "50vh", width: "99%", overflowY: "scroll" }}>
+        <table className="table table-hover kit-border-shadow rounded overflow-hidden">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Flight ID</th>
+              <th scope="col">Origin</th>
+              <th scope="col">Destination</th>
+              <th scope="col">{"Date & Time (UTC)"}</th>
+              <th scope="col">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {flightsTable}
+            <tr><td colSpan="6"></td>{/* Space at end of table for aesthetic */}</tr>
+          </tbody>
+        </table>
+      </FlexColumn>
+    );
+  }
+
+  handleSubmit = () => {
+    const { dateTimeDeparture, dateTimeReturn, destination, origin, flightType } = this.state;
+    const globalDateTimeDeparture = moment.utc(dateTimeDeparture).format("YYYY-MM-DD H:MM:SS");
+    const globalDateTimeReturn = moment.utc(dateTimeReturn).format("YYYY-MM-DD H:MM:SS");
+    console.log(globalDateTimeDeparture);
+
+    const filterMap = {
+      flightRouteOriginIataId: origin.split(":")[0],
+      flightRouteDestinationIataId: destination.split(":")[0],
+    };
+
+    FlightsDispatcher.onSearchAndFilter("/search", "", filterMap);
   }
 }
 export default FlightSearchPage;

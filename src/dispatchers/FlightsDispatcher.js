@@ -108,18 +108,5 @@ class FlightsDispatcher extends BaseDispatcher {
         });
     });
   }
-
-  static onSelect(path, onError, onSuccess) {
-    Store.reduce({ type: constants.bookings.request });
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "/flights/" + path,
-      (httpError) => onError("Service temporarily unavailable."),
-      (httpResponseBody) => {
-        if(httpResponseBody.error) onError(httpResponseBody.error);
-        else onSuccess(httpResponseBody);
-      }
-    );
-  }
 }
 export default FlightsDispatcher;

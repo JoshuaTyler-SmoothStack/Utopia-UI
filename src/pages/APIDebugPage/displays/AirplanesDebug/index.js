@@ -103,7 +103,7 @@ class AirplanesDebug extends Component {
                 selection={airplanes.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => AirplanesDispatcher.onSelectResultsPerPage(e)}
+                onSelect={(e) => AirplanesDispatcher.onSelectItemsPerPage(e)}
               />
             </FlexColumn>
 
@@ -119,7 +119,7 @@ class AirplanesDebug extends Component {
               <Pagination
                 currentPage={airplanes.search.resultsPage}
                 totalPages={Math.ceil(airplanes.search.results.length / Math.max(airplanes.search.resultsPerPage, 1))}
-                onSelectPage={(e) => AirplanesDispatcher.onSelectResultsPage(e)}
+                onSelectPage={(e) => AirplanesDispatcher.onSelectItemsPage(e)}
               />
             </FlexColumn>
           </div>

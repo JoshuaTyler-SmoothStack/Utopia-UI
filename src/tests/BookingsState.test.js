@@ -13,8 +13,8 @@ beforeEach(() => {
   {/* do nothing */}
 });
 
-// onCancel_expectAllActiveStatesFalseAndSearchResultsPage1AndNoErrorAndStatusSuccess()
-test("onCancel sets CRUD isActive bools to false, searchResultsPage to 1, error to none, and status to SUCCESS.",
+// onCancel_expectAllActiveStatesFalseAndselectItemsPage1AndNoErrorAndStatusSuccess()
+test("onCancel sets CRUD isActive bools to false, selectItemsPage to 1, error to none, and status to SUCCESS.",
 () => {
   BookingsDispatcher.onCancel();
   const { bookings } = Store.getState();
@@ -123,22 +123,22 @@ test("onPromptEdit() sets the edit view active, sets the create and delete views
   }, 100);
 });
 
-// onSelectResultsPage_expectCorrectPageValue()
-test("onSelectResultsPage(pageValue) sets the search.resultsPage to the passed value.", 
+// onSelectItemsPage_expectCorrectPageValue()
+test("onSelectItemsPage(pageValue) sets the search.resultsPage to the passed value.", 
 () => { 
   const pageValue = 789;
-  BookingsDispatcher.onSelectResultsPage(pageValue);
+  BookingsDispatcher.onSelectItemsPage(pageValue);
   setTimeout(() => {
     const { bookings } = Store.getState();
     expect(bookings.search.resultsPage).toBe(pageValue);
   }, 100);
 });
 
-// onSelectResultsPerPage_expectCorrectPageValue()
-test("onSelectResultsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
+// onSelectItemsPerPage_expectCorrectPageValue()
+test("onSelectItemsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
 () => { 
   const perPageValue = 75;
-  BookingsDispatcher.onSelectResultsPerPage(perPageValue);
+  BookingsDispatcher.onSelectItemsPerPage(perPageValue);
   setTimeout(() => {
     const { bookings } = Store.getState();
     expect(bookings.search.resultsPerPage).toBe(perPageValue);
