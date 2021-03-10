@@ -81,7 +81,7 @@ const EditView = (props) => {
       flightRouteId : flightRouteId,
       flightDepartureTime : formattedDate,
       flightDuration : flightDuration,
-      status: flightStatus
+      flightStatus: flightStatus
     };
 
     console.log(newFlight);
@@ -141,7 +141,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Status" 
-          result={results ? results.status : ". . ."}
+          result={results ? results.flightStatus : ". . ."}
           status={flightStatusChanged ? resultsStatus : "DISABLED"} 
         />
 

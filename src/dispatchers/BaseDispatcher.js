@@ -257,17 +257,24 @@ class BaseDispatcher {
     );
   }
 
-  static onSelectResultsPage(resultsPage) {
+  static onSelectItem(item) {
     Store.reduce({
-      type: this.getConstantsParent().searchResultsPage,
-      payload: resultsPage,
+      type: this.getConstantsParent().selectItem,
+      payload: item,
     });
   }
 
-  static onSelectResultsPerPage(resultsPerPage) {
+  static onSelectItemsPage(itemsPage) {
     Store.reduce({
-      type: this.getConstantsParent().searchResultsPerPage,
-      payload: resultsPerPage,
+      type: this.getConstantsParent().selectItemsPage,
+      payload: itemsPage,
+    });
+  }
+
+  static onSelectItemsPerPage(itemsPerPage) {
+    Store.reduce({
+      type: this.getConstantsParent().selectItemsPerPage,
+      payload: itemsPerPage,
     });
   }
 }

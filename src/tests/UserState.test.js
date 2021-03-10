@@ -11,8 +11,8 @@ beforeEach(() => {
   while (!Store.getState().isAppStateMounted) {/* do nothing */ }
 });
 
-// onCancel_expectAllActiveStatesFalseAndSearchResultsPage1AndNoErrorAndStatusSuccess()
-test("onCancel sets CRUD isActive bools to false, searchResultsPage to 1, error to none, and status to SUCCESS.",
+// onCancel_expectAllActiveStatesFalseAndselectItemsPage1AndNoErrorAndStatusSuccess()
+test("onCancel sets CRUD isActive bools to false, selectItemsPage to 1, error to none, and status to SUCCESS.",
 () => {
   PassengersDispatcher.onCancel();
   const { passengers } = Store.getState();
@@ -113,22 +113,22 @@ test("onPromptEdit() sets the edit view active, sets the create and delete views
   }, 100);
 });
 
-// onSelectResultsPage_expectCorrectPageValue()
-test("onSelectResultsPage(pageValue) sets the search.resultsPage to the passed value.", 
+// onSelectItemsPage_expectCorrectPageValue()
+test("onSelectItemsPage(pageValue) sets the search.resultsPage to the passed value.", 
 () => { 
   const pageValue = 789;
-  PassengersDispatcher.onSelectResultsPage(pageValue);
+  PassengersDispatcher.onSelectItemsPage(pageValue);
   setTimeout(() => {
     const { passengers } = Store.getState();
     expect(passengers.search.resultsPage).toBe(pageValue);
   }, 100);
 });
 
-// onSelectResultsPerPage_expectCorrectPageValue()
-test("onSelectResultsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
+// onSelectItemsPerPage_expectCorrectPageValue()
+test("onSelectItemsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
 () => { 
   const perPageValue = 75;
-  PassengersDispatcher.onSelectResultsPerPage(perPageValue);
+  PassengersDispatcher.onSelectItemsPerPage(perPageValue);
   setTimeout(() => {
     const { passengers } = Store.getState();
     expect(passengers.search.resultsPerPage).toBe(perPageValue);

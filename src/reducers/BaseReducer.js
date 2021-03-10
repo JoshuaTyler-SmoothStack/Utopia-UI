@@ -149,7 +149,7 @@ class BaseReducer {
   
       // Search Results Filtering
       // =====================================
-      case this.constantsParent.searchResultsPage:
+      case this.constantsParent.selectItemsPage:
         return {
           search: {
             ...state.search,
@@ -157,7 +157,7 @@ class BaseReducer {
           }
         };
   
-      case this.constantsParent.searchResultsPerPage:
+      case this.constantsParent.selectItemsPerPage:
         return {
           search: {
             ...state.search,
@@ -168,7 +168,7 @@ class BaseReducer {
   
       // Select
       // =====================================
-      case this.constantsParent.select:
+      case this.constantsParent.selectItem:
         return {selected: action.payload};
   
       // Reset

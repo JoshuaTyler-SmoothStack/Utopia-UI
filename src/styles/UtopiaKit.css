@@ -79,6 +79,9 @@ Text Styling
 .kit-svg-yellow {
   fill: var(--vYellow);
 }
+.kit-svg-white {
+  fill: white;
+}
 
 .kit-text-align-center {
   text-align: center;
