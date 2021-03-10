@@ -10,7 +10,7 @@ const Modal = (props) => {
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const disableCloseButton = props.disableCloseButton || false;
-  const disableFocusLock = props.disableLock || false;
+  const disableFocusLock = props.disableFocusLock || false;
   const zIndex = props.zIndex || 2;
 
   return (
