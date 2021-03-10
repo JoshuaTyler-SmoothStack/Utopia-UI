@@ -43,11 +43,11 @@ const CreateAccountPage = (props) => {
     }
 
     const newUser = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      password: password
+      userFirstName: firstName,
+      userLastName: lastName,
+      userEmail: email,
+      userPhone: phone,
+      userPassword: password
     }
 
     setStatus("PENDING")

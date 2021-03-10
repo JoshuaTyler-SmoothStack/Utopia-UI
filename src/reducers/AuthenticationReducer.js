@@ -54,14 +54,17 @@ class AuthenticationReducer extends BaseReducer {
       case this.constantsParent.responseCreateAccount:
         return {
           status: "SUCCESS",
-          userId: action.payload.id
+          userId: action.payload.userId
         };
 
       case this.constantsParent.responseLogin:
+        console.log(action.payload);
         return {
           isActive_LoginUI: false,
           status: "SUCCESS",
-          userToken: action.payload
+          userId: action.payload.userId,
+          userRole: action.payload.userRole, 
+          userToken: action.payload.userToken
         };
 
       // Reset
@@ -80,6 +83,7 @@ export const defaultAuthenticationState = {
   error: "",
   isActive_LoginUI: false,
   status: "INACTIVE",
-  userLogin: '',
+  userId: "",
+  userRole: "", 
   userToken: ""
 };

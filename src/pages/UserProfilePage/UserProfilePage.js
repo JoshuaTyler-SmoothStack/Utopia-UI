@@ -1,18 +1,23 @@
+// Libraries
 import React, { useEffect, useState } from 'react';
-import FlexColumn from '../../components/FlexColumn';
-import NavBar from '../../componentgroups/NavBar';
-import './userProgileStyle.css'
-import Store from '../../reducers/Store';
-import axios from 'axios';
-import { Redirect } from 'react-router';
-import Modal from 'react-bootstrap/Modal'
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import axios from 'axios';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import UsersDispatcher from '../../dispatchers/UsersDispatcher';
+import Store from '../../reducers/Store';
 
+// Components
+import NavBar from '../../componentgroups/NavBar';
+import FlexColumn from '../../components/FlexColumn';
+
+import Modal from 'react-bootstrap/Modal'
+import FlexRow from '../../components/FlexRow';
+import InputText from '../../components/InputText';
 
 const UserProfilePage = (props) => {
 
-  const { authentication } = Store.getState();
+  const { authentication, users } = Store.getState();
   const [user, setUser] = useState();
   const [show, setShow] = useState(false);
   const [accountDeleted, setAccountDeleted] = useState(false);
@@ -22,134 +27,106 @@ const UserProfilePage = (props) => {
   const history = useHistory();
 
   useEffect((e) => {
-    const headers = {
-      authorization: 'Bearer ' + authentication.userToken
-    };
-
-    axios.get("http://localhost:8080/auth/login", { headers: headers })
-      .then(response => {
-        setUser(response.data)
-      }, error => {
-        console.log(error)
-      });
-  }, []);
+    UsersDispatcher.onRequestThenCallback(
+    "/" + authentication.userId,
+      httpError => {
+        // handle error getting user here
+    }, httpResponseBody => {
+      
+    });
+  }, [!users.selected]);
 
   const deleteAccount = () => {
-    AuthenticationDispatcher.onDeleteAccount(user.id);
+    AuthenticationDispatcher.onDeleteAccount(user.userId);
     history.push("/home");
   }
 
   return (
+    <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw"}}>
+      <div className="row">
 
-    <div className="container-fluid"
-      style={{ height: "100vh", width: "100vw" }}
-    >
-      {/* Navbar */}
-      <NavBar className="col-12" hideSearchBar={true} />
+        {/* Redirects */}
+        {authentication.status === "INACTIVE" && <Redirect to="/home" />}
 
-      <FlexColumn className={"kit-bg-blue col-12 h-100"}>
+        {/* Navbar */}
+        <NavBar className="col-12" hideSearchBar={true} />
 
-        {authentication.status === "INACTIVE" &&
-          <Redirect to="/home" />
+        {/* Content */}
+        <FlexColumn className={"bg-white col-12 h-100 "} justify="start">
 
-        }
+          {/* PENDING */}
+          {authentication.status === "PENDING" && <div className="spinner-border"/>}
 
-        {!user &&
-          <div class="container emp-profile">loading...</div>
-        }
+          {/* SUCCESS */}
+          {authentication.status === "SUCCESS" && 
+          <div className="bg-white col-12">
+            
+            {/* Title */}
+            <div className="h2 mt-3 mb-0">User Profile</div>
+            <hr className="w-100 mt-2"></hr>
 
-        {user &&
-          <div class="container emp-profile">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="profile-img">
-                  <h3>{user.firstName} {user.lastName} </h3>
+            {/* User Profile */}
+            <div className="col-12">
+              <div className="row">
+                
+                {/* Miles Display */}
+                <div className="col-4">
+                  <FlexRow className="p-2 kit-border-shadow">
+                    <h4 className="text-light">11,000 Miles</h4>
+                  </FlexRow>
+                </div>
 
-                  <p class="proile-rating">Miles earned : <span>11, 000</span></p>
-
+                {/* User Information */}
+                <div className="col-4">
+                  <InputText
+                    className="h-100 rounded kit-border-shadow mb-0"
+                    label={"First Name"}
+                    labelClassName={"text-info"}
+                    fontClass={"h4"}
+                    name="firstName"
+                    value={user.userFirstName}
+                  />
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="profile-head">
 
-                  <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </div>
-            <div class="row">
-              <div class="col-md-4">
-              </div>
-              <div class="col-md-8">
-                <div class="tab-content profile-tab" id="myTabContent">
-                  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              
+            {/* Buttons */}
+            <FlexRow className="col-6 p-2 ml-auto" justify="around">
+              {/* Delete Button */}
+              <button className="btn btn-info">
+                Edit Account
+              </button>
 
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>Email</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>{user.email}</p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <label>Phone</label>
-                      </div>
-                      <div class="col-md-6">
-                        <p>{user.phone}</p>
-                      </div>
-                    </div>
+              {/* Delete Button */}
+              <button className="btn btn-primary">
+                Delete Account
+              </button>
+            </FlexRow>
+          </div>}
 
-                    <div class="row">
-                      <div class="col-md-6">
-                        <button variant="primary" className="btn btn-primary" onClick={handleShow}>
-                          Delete account </button>
-                      </div>
+        </FlexColumn>
 
-                      <div class="col-md-6">
-                        <a href='/home' className="btn btn-primary"> Edit profile</a>
-
-                      </div>
-
-                    </div>
-
-
-
-
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        }
-
-      </FlexColumn>
-
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Are you sure you want to delete account?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          This action will permanently delete your flight history and earned loyalty points
-        </Modal.Body>
-        <Modal.Footer>
-          <button variant="secondary" onClick={handleClose}>
-            Cancel
-          </button>
-          <button variant="primary" onClick={deleteAccount} >Understood / Continue</button>
-        </Modal.Footer>
-      </Modal>
+        <Modal
+          show={show}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Are you sure you want to delete account?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            This action will permanently delete your flight history and earned loyalty points
+          </Modal.Body>
+          <Modal.Footer>
+            <button variant="secondary" onClick={handleClose}>
+              Cancel
+            </button>
+            <button variant="primary" onClick={deleteAccount} >Understood / Continue</button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     </div>
   )
 

@@ -120,7 +120,7 @@ class LoginModal extends Component {
                 >
                   <FlexColumn style={{ minHeight: "3rem" }}>
                     <div className="h5">{"Login or create an account."}</div>
-                    {warning !== "" && <div className="text-warning kit-shake">{warning}</div>}
+                    {warning !== "" && <div className="text-warning kit-shake">{String(warning)}</div>}
                   </FlexColumn>
                 </FlexColumn>
 
