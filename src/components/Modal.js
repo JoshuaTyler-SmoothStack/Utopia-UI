@@ -1,17 +1,20 @@
 // Libraries
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 // Components
 import FlexColumn from "./FlexColumn";
+import FocusLock from "./FocusLock";
 
 const Modal = (props) => {
 
-  const align = props.align || "center"
+  const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const disableCloseButton = props.disableCloseButton || false;
+  const disableFocusLock = props.disableLock || false;
   const zIndex = props.zIndex || 2;
 
-    return (
+  return (
+    <FocusLock isLocked={!disableFocusLock}>
       <FlexColumn
         align={align}
         className={
@@ -51,6 +54,7 @@ const Modal = (props) => {
           </svg>
         </button>}
       </FlexColumn>
-    );
+    </FocusLock>
+  );
 }
 export default Modal;
