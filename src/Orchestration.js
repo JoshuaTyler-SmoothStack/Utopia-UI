@@ -8,18 +8,16 @@ class Orchestration {
   static httpRequest(requestType, requestPath, requestHeaders, requestBody, httpError, httpResponseBody) {
 
     const { authentication } = Store.getState();
-    const authorization = { "Authorization": (authentication.userToken || authentication.userLogin) };
-
+    const authorization = (authentication.userToken || authentication.userLogin);
+    
     const contentNegotiation = {
       "Accept": "application/" + Orchestration.contentType,
       "Content-Type": "application/" + Orchestration.contentType
     };
 
-    const headers = requestHeaders.hasOwnProperty("Authorization")
-      ? { ...contentNegotiation, ...requestHeaders }
-      : { ...authorization, ...contentNegotiation, ...requestHeaders };
-
-    console.log(headers)
+    const headers = (!requestHeaders.hasOwnProperty("Authorization") && authorization)
+      ? {Authorization: authorization, ...contentNegotiation, ...requestHeaders}
+      : {...contentNegotiation, ...requestHeaders};
 
     const body = (requestType !== constants.httpRequest.get && requestType !== constants.httpRequest.delete)
       ? JSON.stringify(requestBody)
@@ -60,13 +58,13 @@ class Orchestration {
 
   static validate(onError, onSuccess) {
     Orchestration.createRequest(constants.httpRequest.get, "actuator/health",
-      onError2 => {
-        console.error("[ERROR] could not validate Orchestrator Service!");
-        onError(onError2);
-      }, onSuccess2 => {
-        console.log("[INCOMING FROM SPRING] status: " + onSuccess2["status"]);
-        onSuccess(onSuccess2);
-      });
+    onError2 => {
+      console.error("[ERROR] could not validate Orchestrator Service!");
+      onError(onError2);
+    }, onSuccess2 => {
+      console.log("[INCOMING FROM SPRING] status: " + onSuccess2["status"]);
+      onSuccess(onSuccess2);
+    });
   }
 }
 export default Orchestration;

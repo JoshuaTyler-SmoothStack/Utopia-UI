@@ -7,6 +7,7 @@ import {
   Switch,
 } from "react-router-dom";
 import Store from "./reducers/Store";
+import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
 
 // Components
 import LoginModal from "./componentgroups/LoginModal";
@@ -16,6 +17,7 @@ import APIDebugPage from "./pages/APIDebugPage";
 import BootPage from "./pages/BootPage";
 import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
+import FlightSearchPage from "./pages/FlightSearchPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
@@ -24,8 +26,6 @@ import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
-import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
-
 
 class App extends Component {
   constructor(props) {
@@ -80,15 +80,22 @@ class App extends Component {
               <CreateAccountPage />
             </Route>
 
+            {/* Flight Search Page */}
+            <Route path="/flights">
+              <FlightSearchPage />
+            </Route>
+
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
               <ForgotPasswordPage />
             </Route>
 
+            {/* Password Recovery Page */}
             <Route path="/password-recovery/**">
               <PasswordRecoveryPage />
             </Route>
 
+            {/* Profile Page */}
             <Route path="/profile">
               <UserProfilePage />
             </Route>

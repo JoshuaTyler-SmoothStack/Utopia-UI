@@ -17,9 +17,7 @@ const DropDown = (props) => {
 
   const handleBlur = () => {
     setTimeout(() => {
-      if(!isButtonFocus) {
-        setDropDownActive(false);
-      }
+      if(!isButtonFocus) setDropDownActive(false);
     }, 100);
   };
 
@@ -71,7 +69,7 @@ const DropDown = (props) => {
       style={props.style}
     >
       <button 
-        className={"btn dropdown-toggle w-100 " + (props.buttonClassName || "btn-secondary")}
+        className={"btn w-100 " + (props.buttonClassName || "")}
         style={{textAlign:"left"}}
         type="button"
         onBlur={() => handleBlur()}
@@ -81,7 +79,7 @@ const DropDown = (props) => {
       </button>
       <ul className={"dropdown-menu " + 
         (props.align ? "dropdown-menu-" + props.align : "")+ " " + 
-        (isDropDownActive ? "show" : "")}
+        ((isDropDownActive || props.isActive) ? "show" : "")}
         onMouseLeave={() => (isListeningForMouseLeave && handleSelect(null))}
       >
         {optionsRender}
