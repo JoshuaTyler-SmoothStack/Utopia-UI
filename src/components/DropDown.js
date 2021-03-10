@@ -40,7 +40,7 @@ const DropDown = (props) => {
   useEffect(() => {
     const handleClick = event => {  
       const { target } = event;
-      if (!this.rootNode.contains(target)) {
+      if (!rootNode.contains(target)) {
         handleSelect(null);
       }
     }
@@ -51,7 +51,7 @@ const DropDown = (props) => {
       window.removeEventListener('mousedown', handleClick);
       window.removeEventListener('touchdown', handleClick);
     }
-  });
+  }, [rootNode]);
 
   let optionsRender = [];
   if(options) {
