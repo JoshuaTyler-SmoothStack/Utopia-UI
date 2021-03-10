@@ -95,39 +95,50 @@ class AuthenticationDispatcher extends BaseDispatcher {
         } else {
           Store.reduce({
             type: constants.authentication.responseLogin,
-            payload: httpResponseBody.token
+            payload: {
+              userId: httpResponseBody.userId,
+              userRole: httpResponseBody.userRole,
+              userToken: httpResponseBody.userToken,
+            }
           });
-          localStorage.setItem("JWT", httpResponseBody.token)
+          localStorage.setItem("JWT", httpResponseBody.userToken)
         }
       });
   }
 
   static onLoginWithToken() {
-    const authorization = { "Authorization": 'Bearer ' + localStorage.getItem("JWT") };
-    Orchestration.createRequestWithHeader(
-      constants.httpRequest.get,
-      this.apiPath + "/login",
-      authorization,
-      httpError => {
-        console.log("ERROR -> ", httpError);
-        Store.reduce({
-          type: constants.authentication.error,
-          payload: httpError
-        });
-      }, httpResponseBody => {
-        console.log(httpResponseBody)
-        if (httpResponseBody.error) {
+    const webToken = localStorage.getItem("JWT");
+    console.log(webToken);
+    if(webToken) {
+      const authorization = { "Authorization": 'Bearer ' + webToken };
+      Orchestration.createRequestWithHeader(
+        constants.httpRequest.get,
+        this.apiPath + "/login",
+        authorization,
+        httpError => {
+          console.log("ERROR -> ", httpError);
           Store.reduce({
             type: constants.authentication.error,
-            payload: httpResponseBody.error
+            payload: httpError
           });
-        } else {
-          Store.reduce({
-            type: constants.authentication.responseLogin,
-            payload: httpResponseBody.token
-          });
-        }
-      });
+        }, httpResponseBody => {
+          if (httpResponseBody.error) {
+            Store.reduce({
+              type: constants.authentication.error,
+              payload: httpResponseBody.error
+            });
+          } else {
+            Store.reduce({
+              type: constants.authentication.responseLogin,
+              payload: {
+                userId: httpResponseBody.userId,
+                userRole: httpResponseBody.userRole,
+                userToken: httpResponseBody.userToken,
+              }
+            });
+          }
+        });
+    }
   }
 
   static onLogout() {
