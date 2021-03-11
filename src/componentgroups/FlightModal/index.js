@@ -1,11 +1,10 @@
 // Libraries
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Store from "../../reducers/Store";
 
 // Components
 import Modal from "../../components/Modal";
-import SeatingModal from "../SeatingModal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 
@@ -21,8 +20,6 @@ const FlightModal = (props) => {
   const departureTime = moment(flights.selected.flightDepartureTime).format('M/DD/YY | h:mm a');
   const flightHours = Math.floor(Math.max(flights.selected.flightDuration, 1) / 3600);
   const flightMinutes = Math.floor(Math.max(flights.selected.flightDuration - (flightHours * 3600), 1) / 60);
-
-  const [isActive_SeatingModal, setIsActive_SeatingModal] = useState(false);
 
   // Escape Key Listener
   useEffect(() => {
@@ -48,7 +45,7 @@ const FlightModal = (props) => {
     >
       <div className="container-fluid">
         <div className="row">
-          <div className="col-12 col-md-9 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow">
+          <div className="col-12 col-md-9 col-lg-6 col-xl-5 bg-primary p-2 m-auto rounded kit-border-shadow">
             <div className="row">
               
               {/* Close Button */}
@@ -76,128 +73,119 @@ const FlightModal = (props) => {
 
               {/* Title */}
               <div className="col-12 bg-white rounded p-2 kit-border-shadow">
-                <FlexRow className="h-100" justify="start">
+                <FlexRow className="h-100 row" justify="start">
 
                   {/* Flight ID */}
-                  <FlexColumn className="h-100 ml-2">
-                    <FlexRow className="mb-0 mr-auto" justify="start">
+                  <FlexColumn className="col-12 col-md-5">
+                    <FlexRow className="ml-2 mb-0 mr-auto" justify="start">
                       <h2 className="text-dark">{"Flight: "}</h2>
                       <h2 className="ml-2 text-info">{"UA" + flights.selected.flightId}</h2>
                     </FlexRow>
-                    <h5 className="text-light mr-auto">
+                    <h5 className=" ml-2 text-light mr-auto">
                       {flights.selected.flightAirplaneTypeName || "Airplane not yet selected."}
                     </h5>
                   </FlexColumn>
 
-                  {/* Date & Time */}
-                  <FlexColumn className="h-100 ml-auto mr-auto">
-                    <h4 className="text-dark">{departureTime.split("|")[1]}</h4>
-                    <h5 className="text-dark">{departureTime.split("|")[0]}</h5 >
-                  </FlexColumn>
+                  {/* Date & Route (together) */}
+                  <FlexRow className="col-12 col-md-7 row">
+                    {/* Date & Time */}
+                    <FlexColumn className="col-5">
+                      <h4 className="text-dark">{departureTime.split("|")[1]}</h4>
+                      <h5 className="text-dark">{departureTime.split("|")[0]}</h5 >
+                    </FlexColumn>
 
-                  {/* Origin To Destination */}
-                  <FlexColumn className="h-100 ml-auto mr-auto">
-                    <FlexRow>
-                      <h3 className="text-warning">{flights.selected.flightRouteOriginIataId}</h3>
-                      <h3 className="text-dark ml-1 mr-1">{"➜"}</h3>
-                      <h3 className="text-warning">{flights.selected.flightRouteDestinationIataId}</h3>
-                    </FlexRow>
-                    <h5>{flightHours + "h " + flightMinutes + "m"}</h5>
-                  </FlexColumn>
+                    {/* Origin To Destination */}
+                    <FlexColumn className="col-7">
+                      <FlexRow>
+                        <h3 className="text-warning">{flights.selected.flightRouteOriginIataId}</h3>
+                        <h3 className="text-dark ml-1 mr-1">{"➜"}</h3>
+                        <h3 className="text-warning">{flights.selected.flightRouteDestinationIataId}</h3>
+                      </FlexRow>
+                      <h5>{flightHours + "h " + flightMinutes + "m"}</h5>
+                    </FlexColumn>
+                  </FlexRow>
+                  
                 </FlexRow>
               </div>
 
-              {/* Seating Chart */}
-              <FlexRow className="col-12 mt-2">
-                <div 
-                  className="bg-white rounded p-2" 
-                  style={{height:"150px", width:"400px"}}
-                >
-                  {isActive_SeatingModal &&
-                  <SeatingModal
-                    background="kit-bg-smoke-dark"
-                    zIndex={zIndex + 1}
-                    onClose={() => setIsActive_SeatingModal(false)}
-                  />}
-                </div>
-              </FlexRow>
-
               {/* Seat Pricing */}
               <FlexRow className="col-12 mt-2">
-                <FlexRow className="bg-white rounded">
+                <FlexRow className="bg-white rounded" wrap="no-wrap">
 
-                {/* First Class */}                  
-                <button className="btn btn-dark rounded m-2"
-                  style={{minWidth:"8rem"}}
-                  onClick={() => setIsActive_SeatingModal(true)}
-                >
-                  <FlexColumn>
-                    {/* Label */}
-                    <h5>First Class</h5>
+                  {/* First Class */}                  
+                  <button className="btn btn-dark rounded m-2"
+                    style={{minWidth:"7rem", maxWidth:"30%"}}
+                    onClick={() => props.onSelectSeat(true)}
+                  >
+                    <FlexColumn>
+                      {/* Label */}
+                      <h5>First</h5>
 
-                    {/* Sofa Svg */}
-                    <svg 
-                      className="kit-svg-gold"
-                      height="2rem"
-                      width="2rem"
-                      viewBox="0 0 512 512"
-                    >
-                      <path d="M160 224v64h192v-64c0-35.3 28.7-64 64-64h32c0-53-43-96-96-96H160c-53 0-96 43-96 96h32c35.3 0 64 28.7 64 64zm288-32h-32c-17.7 0-32 14.3-32 32v96H128v-96c0-17.7-14.3-32-32-32H64c-35.3 0-64 28.7-64 64 0 23.6 13 44 32 55.1V432c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-16h256v16c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16V311.1c19-11.1 32-31.5 32-55.1 0-35.3-28.7-64-64-64z"/>
-                    </svg>
+                      {/* Sofa Svg */}
+                      <svg 
+                        className="kit-svg-gold"
+                        height="2rem"
+                        width="2rem"
+                        viewBox="0 0 512 512"
+                      >
+                        <path d="M160 224v64h192v-64c0-35.3 28.7-64 64-64h32c0-53-43-96-96-96H160c-53 0-96 43-96 96h32c35.3 0 64 28.7 64 64zm288-32h-32c-17.7 0-32 14.3-32 32v96H128v-96c0-17.7-14.3-32-32-32H64c-35.3 0-64 28.7-64 64 0 23.6 13 44 32 55.1V432c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-16h256v16c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16V311.1c19-11.1 32-31.5 32-55.1 0-35.3-28.7-64-64-64z"/>
+                      </svg>
 
-                    {/* Price */}
-                    <div>$1200</div>
-                  </FlexColumn>
-                </button>
-                
+                      {/* Price */}
+                      <div>$1200</div>
+                    </FlexColumn>
+                  </button>
+                  
 
-                {/* Business Class */}
-                <button className="btn btn-dark rounded m-2"
-                  style={{minWidth:"8rem"}}
-                >
-                  <FlexColumn>
-                    {/* Label */}
-                    <h5>Business</h5>
+                  {/* Business Class */}
+                  <button className="btn btn-dark rounded m-2"
+                    style={{minWidth:"7rem", maxWidth:"30%"}}
+                    onClick={() => props.onSelectSeat(true)}
+                  >
+                    <FlexColumn>
+                      {/* Label */}
+                      <h5>Business</h5>
 
-                    {/* Sofa Svg */}
-                    <svg 
-                      className="kit-svg-silver"
-                      height="2rem"
-                      width="2rem"
-                      viewBox="0 0 512 512"
-                    >
-                      <path d="M160 224v64h192v-64c0-35.3 28.7-64 64-64h32c0-53-43-96-96-96H160c-53 0-96 43-96 96h32c35.3 0 64 28.7 64 64zm288-32h-32c-17.7 0-32 14.3-32 32v96H128v-96c0-17.7-14.3-32-32-32H64c-35.3 0-64 28.7-64 64 0 23.6 13 44 32 55.1V432c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-16h256v16c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16V311.1c19-11.1 32-31.5 32-55.1 0-35.3-28.7-64-64-64z"/>
-                    </svg>
-                    
-                    {/* Price */}
-                    <div>$700</div>
-                  </FlexColumn>
-                </button>
+                      {/* Sofa Svg */}
+                      <svg 
+                        className="kit-svg-silver"
+                        height="2rem"
+                        width="2rem"
+                        viewBox="0 0 512 512"
+                      >
+                        <path d="M160 224v64h192v-64c0-35.3 28.7-64 64-64h32c0-53-43-96-96-96H160c-53 0-96 43-96 96h32c35.3 0 64 28.7 64 64zm288-32h-32c-17.7 0-32 14.3-32 32v96H128v-96c0-17.7-14.3-32-32-32H64c-35.3 0-64 28.7-64 64 0 23.6 13 44 32 55.1V432c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-16h256v16c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16V311.1c19-11.1 32-31.5 32-55.1 0-35.3-28.7-64-64-64z"/>
+                      </svg>
+                      
+                      {/* Price */}
+                      <div>$700</div>
+                    </FlexColumn>
+                  </button>
 
-                {/* Economy Class */}
-                <button className="btn btn-dark rounded m-2"
-                  style={{minWidth:"8rem"}}
-                >
-                  <FlexColumn>
-                    {/* Label */}
-                    <h5>Economy</h5>
+                  {/* Economy Class */}
+                  <button className="btn btn-dark rounded m-2"
+                    style={{minWidth:"7rem", maxWidth:"30%"}}
+                    onClick={() => props.onSelectSeat(true)}
+                  >
+                    <FlexColumn>
+                      {/* Label */}
+                      <h5>Economy</h5>
 
-                    {/* Sofa Svg */}
-                    <svg 
-                      className="kit-svg-bronze"
-                      height="2rem"
-                      width="2rem"
-                      viewBox="0 0 512 512"
-                    >
-                      <path d="M160 224v64h192v-64c0-35.3 28.7-64 64-64h32c0-53-43-96-96-96H160c-53 0-96 43-96 96h32c35.3 0 64 28.7 64 64zm288-32h-32c-17.7 0-32 14.3-32 32v96H128v-96c0-17.7-14.3-32-32-32H64c-35.3 0-64 28.7-64 64 0 23.6 13 44 32 55.1V432c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-16h256v16c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16V311.1c19-11.1 32-31.5 32-55.1 0-35.3-28.7-64-64-64z"/>
-                    </svg>
+                      {/* Sofa Svg */}
+                      <svg 
+                        className="kit-svg-bronze"
+                        height="2rem"
+                        width="2rem"
+                        viewBox="0 0 512 512"
+                      >
+                        <path d="M160 224v64h192v-64c0-35.3 28.7-64 64-64h32c0-53-43-96-96-96H160c-53 0-96 43-96 96h32c35.3 0 64 28.7 64 64zm288-32h-32c-17.7 0-32 14.3-32 32v96H128v-96c0-17.7-14.3-32-32-32H64c-35.3 0-64 28.7-64 64 0 23.6 13 44 32 55.1V432c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16v-16h256v16c0 8.8 7.2 16 16 16h64c8.8 0 16-7.2 16-16V311.1c19-11.1 32-31.5 32-55.1 0-35.3-28.7-64-64-64z"/>
+                      </svg>
 
-                    {/* Price */}
-                    <div>$239</div>
-                  </FlexColumn>
-                </button>
+                      {/* Price */}
+                      <div>$239</div>
+                    </FlexColumn>
+                  </button>
+                </FlexRow>
               </FlexRow>
-            </FlexRow>
 
               {/* Lay-Overs */}
               <div className="col-12"></div>

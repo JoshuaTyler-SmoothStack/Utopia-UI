@@ -11,8 +11,10 @@ import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 import FlightModal from "../../componentgroups/FlightModal";
 import InputText from "../../components/InputText";
+import ItemsIndexReadout from "../../components/ItemsIndexReadout";
 import NavBar from "../../componentgroups/NavBar";
 import Pagination from "../../components/Pagination";
+import SeatingModal from "../../componentgroups/SeatingModal";
 
 class FlightSearchPage extends Component {
   constructor(props) {
@@ -21,7 +23,9 @@ class FlightSearchPage extends Component {
       dateTimeDeparture: "",
       dateTimeReturn: "",
       destination: "",
+      destinationRecommendations: [],
       origin: "",
+      originRecommendations: [],
       flightType: "One-Way",
       adultSelect: 1,
       seniorSelect: 0,
@@ -33,14 +37,12 @@ class FlightSearchPage extends Component {
 
   render() {
     const { flights } = Store.getState();
-    const { flightType, destination, origin, isActive_FlightModal,
+    const { flightType, destination, destinationRecommendations, origin,
+      originRecommendations, isActive_FlightModal, isActive_SeatingModal, 
       isFocus_Destination, isFocus_Origin } = this.state;
 
-    const departureFlights = flights.search.originToDestination;
-    const returnFlights = flights.search.destinationToOrigin;
-
-    const originRecommendations = this.handleAirportRecommendations(origin, "origin");
-    const destinationRecommendations = this.handleAirportRecommendations(destination, "destination");
+    // const departureFlights = flights.search.originToDestination;
+    // const returnFlights = flights.search.destinationToOrigin;
 
     const isActive_OriginRecommendations = isFocus_Origin && originRecommendations.length > 0;
     const isActive_DestinationRecommendations = isFocus_Destination && destinationRecommendations.length > 0;
@@ -65,39 +67,42 @@ class FlightSearchPage extends Component {
                   {/* One-Way */}
                   <FlexRow onClick={() => this.setState({flightType: "One-Way"})}>
                     <input 
-                      className="ml-2" 
+                      className="m-auto" 
                       style={{height:"1.5rem", width:"1.5rem"}}
                       type="radio" 
                       checked={flightType === "One-Way"}
                       readOnly
                     />
-                    <label className="ml-2 mt-auto mb-auto kit-no-user">
+                    <label className="ml-2 mt-auto mb-auto text-center kit-no-user">
                       One-Way
                     </label>
                   </FlexRow>
 
                   {/* Round-Trip */}
-                  <FlexRow onClick={() => this.setState({flightType: "Round-Trip"})}>
+                  <FlexRow 
+                    className="ml-4"
+                    onClick={() => this.setState({flightType: "Round-Trip"})}
+                  >
                     <input 
-                      className="ml-4" 
+                      className="m-auto" 
                       style={{height:"1.5rem", width:"1.5rem"}}
                       type="radio" 
                       checked={flightType === "Round-Trip"}
                       readOnly
                     />
-                    <label className="ml-2 mt-auto mb-auto kit-no-user">
+                    <label className="ml-2 mt-auto mb-auto text-center kit-no-user">
                       Round-Trip
                     </label>
                   </FlexRow>
 
                   {/* Sign-Post SVGs */}
-                  <div className="ml-2">
+                  <div className="ml-2 mb-auto">
                     {flightType === "One-Way"
                       ? <div>
                           <svg
                             className="kit-svg-turqouise" 
-                            height="2rem" 
-                            width="2rem" 
+                            height="2.5rem" 
+                            width="2.5rem" 
                             viewBox="0 0 16 16"
                           >
                             <path d="M7.293.707A1 1 0 0 0 7 1.414V4H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h5v6h2v-6h3.532a1 1 0 0 0 .768-.36l1.933-2.32a.5.5 0 0 0 0-.64L13.3 4.36a1 1 0 0 0-.768-.36H9V1.414A1 1 0 0 0 7.293.707z"/>
@@ -106,8 +111,8 @@ class FlightSearchPage extends Component {
                       : <div>
                         <svg
                           className="kit-svg-turqouise" 
-                          height="2rem" 
-                          width="2rem" 
+                          height="2.5rem" 
+                          width="2.5rem" 
                           viewBox="0 0 16 16"
                         >
                           <path d="M7.293.707A1 1 0 0 0 7 1.414V2H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h5v1H2.5a1 1 0 0 0-.8.4L.725 8.7a.5.5 0 0 0 0 .6l.975 1.3a1 1 0 0 0 .8.4H7v5h2v-5h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9V6h4.5a1 1 0 0 0 .8-.4l.975-1.3a.5.5 0 0 0 0-.6L14.3 2.4a1 1 0 0 0-.8-.4H9v-.586A1 1 0 0 0 7.293.707z"/>
@@ -122,21 +127,24 @@ class FlightSearchPage extends Component {
               {/* Origin & Destination */}
               <div className="row mt-3">
                 {/* Origin */}
-                <div className="col-12 col-sm-6" style={{height: "3.5rem"}}>
+                <div className="col-6" style={{height: "3.5rem"}}>
                   <InputText
                     className="h-100 rounded kit-border-shadow mb-0"
                     label={"Origin"}
                     labelClassName={"text-info"}
                     fontClass={"h4"}
                     name="origin"
+                    value={origin}
                     onBlur={() => {
                       setTimeout(() => {
                         this.setState({isFocus_Origin: false})
                       }, 100);
                     }}
                     onFocus={() => this.setState({isFocus_Origin: true})}
-                    onChange={(value) => this.setState({origin: value})}
-                    value={origin}
+                    onChange={(value) => {
+                      this.setState({origin: value});
+                      this.handleAirportRecommendations(value, "origin");
+                    }}
                   />
                   {isActive_OriginRecommendations &&
                   <DropDown
@@ -149,27 +157,30 @@ class FlightSearchPage extends Component {
                 </div>
 
                 {/* Destination */}
-                <div className="col-12 col-sm-6" style={{height: "3.5rem"}}>
+                <div className="col-6" style={{height: "3.5rem"}}>
                   <InputText
                     className="h-100 rounded kit-border-shadow mb-0"
                     label={"Destination"}
                     labelClassName={"text-info"}
                     fontClass={"h4"}
                     name="destination"
+                    value={destination}
                     onBlur={() => {
                       setTimeout(() => {
                         this.setState({isFocus_Destination: false})
                       }, 100);
                     }}
                     onFocus={() => this.setState({isFocus_Destination: true})}
-                    onChange={(value) => this.setState({destination: value})}
-                    value={destination}
+                    onChange={(value) => {
+                      this.setState({destination: value});
+                      this.handleAirportRecommendations(value, "destination");
+                    }}
                   />
                   {isActive_DestinationRecommendations &&
                   <DropDown
                     style={{height: 0}}
                     isActive={isActive_DestinationRecommendations}
-                    options={this.handleAirportRecommendations(destination, "destination")}
+                    options={destinationRecommendations}
                     selection={" "}
                     onSelect={(value) => this.setState({destination: value})}
                   />}
@@ -187,8 +198,8 @@ class FlightSearchPage extends Component {
                         Departure Date
                       </label>
                       <input 
-                        className="form-label w-75 mr-auto" 
-                        style={{height: "3.5rem"}}
+                        className="form-label mr-auto" 
+                        style={{height: "3.5rem", maxWidth:"99%"}}
                         name="dateTimeDeparture"
                         type="datetime-local" 
                         onChange={(e) => this.setState({dateTimeDeparture: e.target.value})}
@@ -205,11 +216,11 @@ class FlightSearchPage extends Component {
                         Return Date
                       </label>
                       <input 
-                        className="form-label w-75 mr-auto" 
+                        className="form-label mr-auto"
+                        style={{height: "3.5rem", maxWidth:"99%"}}
                         name="dateTimeDeparture"
-                        onChange={(e) => this.setState({dateTimeReturn: e.target.value})}
-                        style={{height: "3.5rem"}}
                         type="date" 
+                        onChange={(e) => this.setState({dateTimeReturn: e.target.value})}
                       />
                     </FlexColumn>
                   </div>}
@@ -217,33 +228,50 @@ class FlightSearchPage extends Component {
               </div>
 
               {/* Buttons */}
-              <div className="row m-4">
+              <div className="row mt-3 mb-3">
                 
-                {/* Drop Down */}
-                <FlexRow className="col-3">
-                  <DropDown 
-                    buttonClassName="btn-secondary dropdown-toggle"
-                    selection={flights.search.resultsPerPage}
-                    options={["3", "10", "25", "50"]}
-                    optionsName="flights"
-                    onSelect={(e) => FlightsDispatcher.onSelectItemsPerPage(e)}
-                  />
-                </FlexRow>
+                {/* Results Info */}
+                <div className="col-8">
+                  <div className="row">
+                    
+                    {/* DropDown & Results (together) */}
+                    <FlexRow className="col-12 col-md-6" justify="around" wrap="no-wrap">
+                      
+                      {/* DropDown */}
+                      <DropDown
+                        buttonClassName="btn-secondary dropdown-toggle"
+                        selection={flights.search.resultsPerPage}
+                        options={["3", "10", "25", "50"]}
+                        optionsName="flights"
+                        onSelect={(e) => FlightsDispatcher.onSelectItemsPerPage(e)}
+                      />
 
-                {/* Pagination */}
-                <FlexRow className="col-5">
-                  <Pagination
-                    className="text-center"
-                    currentPage={flights.search.resultsPage}
-                    totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
-                    onSelectPage={(e) => FlightsDispatcher.onSelectItemsPage(e)}
-                  />
-                </FlexRow>
+                      {/* Results Readout */}
+                      <ItemsIndexReadout
+                        className="ml-2"
+                        currentPage={flights.search.resultsPage}
+                        itemsPerPage={flights.search.resultsPerPage}
+                        itemsTotal={flights.search.results.length}
+                      />
+                    </FlexRow>
+
+                    {/* Pagination (seperate) */}
+                    <FlexRow className="col-12 col-md-6 mt-2 mt-md-0">
+                      <Pagination
+                        className="text-center"
+                        currentPage={flights.search.resultsPage}
+                        totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
+                        onSelectPage={(e) => FlightsDispatcher.onSelectItemsPage(e)}
+                      />
+                    </FlexRow>
+                  </div>
+                </div>
 
                 {/* Search Button */}
                 <div className="col-4 ml-auto">
                   <button className="btn btn-lg btn-success text-white kit-text-shadow-thin"
-                    onClick={() => this.handleSubmit()}>
+                    onClick={() => this.handleSubmit()}
+                  >
                     Search Flights
                   </button>
                 </div>
@@ -252,9 +280,10 @@ class FlightSearchPage extends Component {
 
 
           {/* Flights Table */}
+          {flights.search.results.length > 0 &&
           <FlexRow className="col-12 bg-white">
             {this.handleRenderFlightsList(flights.search.results)}
-          </FlexRow>
+          </FlexRow>}
 
         </div>
 
@@ -262,7 +291,21 @@ class FlightSearchPage extends Component {
         {isActive_FlightModal && 
         <FlightModal 
           zIndex="4"
+          onSelectSeat={() => {
+            this.setState({isActive_SeatingModal: true});
+            this.handleFlightModalToggle(false, null);
+          }}
           onClose={() => this.handleFlightModalToggle(false, null)}
+        />}
+
+        {/* Seating Modal */}
+        {isActive_SeatingModal && 
+        <SeatingModal
+          zIndex="4"
+          onClose={() => {
+            this.setState({isActive_SeatingModal: false});
+            this.handleFlightModalToggle(true, null);
+          }}
         />}
       </div>
     );
@@ -273,10 +316,10 @@ class FlightSearchPage extends Component {
   }
 
   handleAirportRecommendations = (inputText, type) => {
-    inputText = inputText.toLowerCase();
-    
     const { airports } = Store.getState();
+    const { destination, origin } = this.state;    
     const matchingAirports = [];
+    inputText = inputText.toLowerCase();
 
     for(var i in airports.search.results) {
       const airport = airports.search.results[i];
@@ -286,15 +329,19 @@ class FlightSearchPage extends Component {
       .replace("airportcityname", "");
 
       if(airportAsString.includes(inputText)) {
-        matchingAirports.push(airport.airportIataId + ": " + airport.airportCityName);
+        const formattedAirport = airport.airportIataId + ": " + airport.airportCityName;
+        if(type === "origin" && formattedAirport !== destination) matchingAirports.push(formattedAirport);
+        if(type === "destination" && formattedAirport !== origin) matchingAirports.push(formattedAirport);
       }
     }
+    if(type === "origin") this.setState({originRecommendations: matchingAirports});
+    if(type === "destination") this.setState({destinationRecommendations: matchingAirports});
     return matchingAirports;
   }
 
   handleFlightModalToggle = (toggleOn, flightIndex) => {
     if(toggleOn !== this.isActive_FlightModal) this.setState({isActive_FlightModal: toggleOn});
-    if(toggleOn) {
+    if(toggleOn && (flightIndex !== null && flightIndex !== undefined)) {
       const { flights } = Store.getState();
       FlightsDispatcher.onSelectItem(flights.search.results[flightIndex]);
     }
