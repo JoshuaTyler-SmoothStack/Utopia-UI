@@ -69,7 +69,7 @@ const DeleteView = () => {
               Cancel
             </button>
             <button className="btn btn-primary m-3"
-              onClick={() => FlightsDispatcher.onDelete("/" + selectedFlight.id)}
+              onClick={() => FlightsDispatcher.onDelete("/" + selectedFlight.flightId)}
             >
               Confirm Delete (cannot be undone)
             </button>
