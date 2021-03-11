@@ -21,7 +21,9 @@ class AirportsDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTerms: ""
+      searchTerms: "",
+      currentSort: "up",
+      sortedItem: ""
     };
   }
 
@@ -178,12 +180,34 @@ class AirportsDebug extends Component {
     AirportsDispatcher.onRequest();
   }
 
+  onSortChange = (e) => {
+		const { currentSort } = this.state;
+		let nextSort;
+
+		if (currentSort === 'down') nextSort = 'up';
+		else if (currentSort === 'up') nextSort = 'down';
+
+		this.setState({
+			currentSort: nextSort,
+      sortedItem: e.target.value
+		});
+	};
+
   handleRenderAirportsList = (airportsList) => {
     const { airports } = Store.getState();
     const resultsDisplayed = Number(airports.search.resultsPerPage);
     const resultsStart = airports.search.resultsPerPage * (airports.search.resultsPage - 1);
 
     let airportsTable = [];
+    if(this.state.sortedItem === "airportIataId")
+    airportsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.airportIataId.localeCompare(b.airportIataId) : b.airportIataId.localeCompare(a.airportIataId);
+    });
+    else if(this.state.sortedItem === "airportCityName")
+    airportsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.airportCityName.localeCompare(b.airportCityName) : b.airportCityName.localeCompare(a.airportCityName);
+    });
+
     if (!airportsList.length) airportsList = [airportsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airportsList.length); i++) {
       const airportIataId = airportsList[i].airportIataId;
@@ -217,8 +241,8 @@ class AirportsDebug extends Component {
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">IATA ID</th>
-              <th scope="col">City</th>
+              <th scope="col">IATA ID<button className="btn text-white" value="airportIataId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">City<button className="btn text-white" value="airportCityName" onClick={this.onSortChange}>⇅</button></th>
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}

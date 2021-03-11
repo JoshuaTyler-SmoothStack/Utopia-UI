@@ -77,7 +77,7 @@ const EditView = (props) => {
           style={{minHeight: "4rem"}} 
           name="Destination Iata ID" 
           result={results ? results.routeDestinationIataId : ". . ."}
-          status={routeDestinationIataId ? resultsStatus : "DISABLED"} 
+          status={routeDestinationIataIdChanged ? resultsStatus : "DISABLED"} 
         />
 
         <FlexRow>

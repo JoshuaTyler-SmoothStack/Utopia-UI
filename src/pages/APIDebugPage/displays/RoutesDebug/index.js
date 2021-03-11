@@ -21,7 +21,9 @@ class RoutesDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTerms: ""
+      searchTerms: "",
+      currentSort: "up",
+      sortedItem: "routeId"
     };
   }
 
@@ -178,12 +180,38 @@ class RoutesDebug extends Component {
     RoutesDispatcher.onRequest();
   }
 
+  onSortChange = (e) => {
+		const { currentSort } = this.state;
+		let nextSort;
+
+		if (currentSort === 'down') nextSort = 'up';
+		else if (currentSort === 'up') nextSort = 'down';
+
+		this.setState({
+			currentSort: nextSort,
+      sortedItem: e.target.value
+		});
+	};
+
   handleRenderRoutesList = (routesList) => {
     const { routes } = Store.getState();
     const resultsDisplayed = Number(routes.search.resultsPerPage);
     const resultsStart = routes.search.resultsPerPage * (routes.search.resultsPage - 1);
 
     let routesTable = [];
+    if(this.state.sortedItem === "routeId")
+    routesList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.routeId-b.routeId : b.routeId-a.routeId;
+    });
+    else if(this.state.sortedItem === "routeOriginIataId")
+    routesList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.routeOriginIataId.localeCompare(b.routeOriginIataId) : b.routeOriginIataId.localeCompare(a.routeOriginIataId);
+    });
+    else if(this.state.sortedItem === "routeDestinationIataId")
+    routesList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.routeDestinationIataId.localeCompare(b.routeDestinationIataId) : b.routeDestinationIataId.localeCompare(a.routeDestinationIataId);
+    });
+
     if (!routesList.length) routesList = [routesList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < routesList.length); i++) {
       const routeId = routesList[i].routeId;
@@ -217,9 +245,9 @@ class RoutesDebug extends Component {
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Route ID</th>
-              <th scope="col">Origin Iata ID</th>
-              <th scope="col">Destination Iata ID</th>
+              <th scope="col">Route ID<button className="btn text-white" value="routeId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Origin Iata ID<button className="btn text-white" value="routeOriginIataId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Destination Iata ID<button className="btn text-white" value="routeDestinationIataId" onClick={this.onSortChange}>⇅</button></th>
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}

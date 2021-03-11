@@ -22,7 +22,9 @@ class FlightsDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchTerms: ""
+      searchTerms: "",
+      currentSort: "up",
+      sortedItem: "flightId",
     };
   }
 
@@ -61,7 +63,7 @@ class FlightsDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="RouteID, AirplaneID"
+                  placeholder="flightid=&quot;1&quot;"
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchTerms: e.target.value})}
@@ -179,18 +181,61 @@ class FlightsDebug extends Component {
     FlightsDispatcher.onRequest();
   }
 
+  onSortChange = (e) => {
+		const { currentSort } = this.state;
+		let nextSort;
+
+		if (currentSort === 'down') nextSort = 'up';
+		else if (currentSort === 'up') nextSort = 'down';
+
+		this.setState({
+			currentSort: nextSort,
+      sortedItem: e.target.value
+		});
+	};
+
   handleRenderFlightsList = (flightsList) => {
     const { flights } = Store.getState();
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
     let flightsTable = [];
+    if(this.state.sortedItem === "flightId")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.flightId-b.flightId : b.flightId-a.flightId;
+    });
+    else if(this.state.sortedItem === "flightDuration")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.flightDuration-b.flightDuration : b.flightDuration-a.flightDuration;
+    });
+    else if(this.state.sortedItem === "flightDepartureTime")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? new Date(a.flightDepartureTime)-new Date(b.flightDepartureTime) : new Date(b.flightDepartureTime)-new Date(a.flightDepartureTime);
+    });
+    else if(this.state.sortedItem === "flightRouteId")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.flightRouteId-b.flightRouteId : b.flightRouteId-a.flightRouteId;
+    });
+    else if(this.state.sortedItem === "flightAirplaneId")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.flightAirplaneId-b.flightAirplaneId : b.flightAirplaneId-a.flightAirplaneId;
+    });
+    else if(this.state.sortedItem === "flightSeatingId")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.flightSeatingId-b.flightSeatingId : b.flightSeatingId-a.flightSeatingId;
+    });
+    else if(this.state.sortedItem === "flightStatus")
+    flightsList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.flightStatus.localeCompare(b.flightStatus) : b.flightStatus.localeCompare(a.flightStatus);
+    });
+
     if (!flightsList.length) flightsList = [flightsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
       const flightId = flightsList[i].flightId;
       if (!flightId) continue;
 
-      let departure = moment(flightsList[i].flightDepartureTime).format('MMMM DD YYYY, h:mm:ss a')
+      let departure = moment(flightsList[i].flightDepartureTime).format('MMMM DD YYYY, h:mm:ss a');
+      let duration = Math.floor(flightsList[i].flightDuration / 3600) + "h " + Math.floor(flightsList[i].flightDuration % 3600 / 60) +"m"
 
       const index = Number(i) + 1;
       flightsTable.push(
@@ -200,7 +245,7 @@ class FlightsDebug extends Component {
           <td>{flightsList[i].flightRouteId}</td>
           <td>{flightsList[i].flightAirplaneId}</td>
           <td>{departure}</td>
-          <td>{flightsList[i].flightDuration}</td>
+          <td>{duration}</td>
           <td>{flightsList[i].flightSeatingId}</td>
           <td>{flightsList[i].flightStatus}</td>
 
@@ -225,13 +270,13 @@ class FlightsDebug extends Component {
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Flight ID</th>
-              <th scope="col">Route ID</th>
-              <th scope="col">Airplane ID</th>
-              <th scope="col">Date & Time (UTC)</th>
-              <th scope="col">Duration</th>
-              <th scope="col">Seating ID</th>
-              <th scope="col">Status</th>
+              <th scope="col">Flight ID<button className="btn text-white" value="flightId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Route ID<button className="btn text-white" value="flightRouteId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Airplane ID<button className="btn text-white" value="flightAirplaneId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Date & Time (UTC)<button className="btn text-white" value="flightDepartureTime" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Duration<button className="btn text-white" value="flightDuration" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Seating ID<button className="btn text-white" value="flightSeatingId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Status<button className="btn text-white" value="flightStatus" onClick={this.onSortChange}>⇅</button></th>
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}
