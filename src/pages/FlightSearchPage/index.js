@@ -39,8 +39,11 @@ class FlightSearchPage extends Component {
     const departureFlights = flights.search.originToDestination;
     const returnFlights = flights.search.destinationToOrigin;
 
-    const isActive_OriginRecommendations = isFocus_Origin && origin.trim() !== "";
-    const isActive_DestinationRecommendations = isFocus_Destination && destination.trim() !== "";
+    const originRecommendations = this.handleAirportRecommendations(origin, "origin");
+    const destinationRecommendations = this.handleAirportRecommendations(destination, "destination");
+
+    const isActive_OriginRecommendations = isFocus_Origin && originRecommendations.length > 0;
+    const isActive_DestinationRecommendations = isFocus_Destination && destinationRecommendations.length > 0;
 
     return (
       <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw",  overflowY: "hidden" }}>
@@ -55,14 +58,14 @@ class FlightSearchPage extends Component {
             <div className="h2 mt-3 mb-0">Search Flights</div>
             <hr className="w-100 mt-2"></hr>
 
-              {/* DropDown One-way/Round-Trip */}
+              {/* Radio One-way/Round-Trip */}
               <div className="row">
-                <FlexRow className="col-6" justify="around" wrap="no-wrap">
+                <FlexRow className="col-6" justify="start" wrap="no-wrap">
                   
                   {/* One-Way */}
                   <FlexRow onClick={() => this.setState({flightType: "One-Way"})}>
                     <input 
-                      className="" 
+                      className="ml-2" 
                       style={{height:"1.5rem", width:"1.5rem"}}
                       type="radio" 
                       checked={flightType === "One-Way"}
@@ -76,7 +79,7 @@ class FlightSearchPage extends Component {
                   {/* Round-Trip */}
                   <FlexRow onClick={() => this.setState({flightType: "Round-Trip"})}>
                     <input 
-                      className="" 
+                      className="ml-4" 
                       style={{height:"1.5rem", width:"1.5rem"}}
                       type="radio" 
                       checked={flightType === "Round-Trip"}
@@ -86,6 +89,33 @@ class FlightSearchPage extends Component {
                       Round-Trip
                     </label>
                   </FlexRow>
+
+                  {/* Sign-Post SVGs */}
+                  <div className="ml-2">
+                    {flightType === "One-Way"
+                      ? <div>
+                          <svg
+                            className="kit-svg-turqouise" 
+                            height="2rem" 
+                            width="2rem" 
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M7.293.707A1 1 0 0 0 7 1.414V4H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h5v6h2v-6h3.532a1 1 0 0 0 .768-.36l1.933-2.32a.5.5 0 0 0 0-.64L13.3 4.36a1 1 0 0 0-.768-.36H9V1.414A1 1 0 0 0 7.293.707z"/>
+                          </svg>
+                        </div>
+                      : <div>
+                        <svg
+                          className="kit-svg-turqouise" 
+                          height="2rem" 
+                          width="2rem" 
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M7.293.707A1 1 0 0 0 7 1.414V2H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h5v1H2.5a1 1 0 0 0-.8.4L.725 8.7a.5.5 0 0 0 0 .6l.975 1.3a1 1 0 0 0 .8.4H7v5h2v-5h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9V6h4.5a1 1 0 0 0 .8-.4l.975-1.3a.5.5 0 0 0 0-.6L14.3 2.4a1 1 0 0 0-.8-.4H9v-.586A1 1 0 0 0 7.293.707z"/>
+                        </svg>
+                      </div>
+                    }
+                  </div>
+                  
                 </FlexRow>
               </div>
 
@@ -108,13 +138,14 @@ class FlightSearchPage extends Component {
                     onChange={(value) => this.setState({origin: value})}
                     value={origin}
                   />
+                  {isActive_OriginRecommendations &&
                   <DropDown
                     style={{height: 0}}
                     isActive={isActive_OriginRecommendations}
-                    options={this.handleAirportRecommendations(origin, "origin")}
+                    options={originRecommendations}
                     selection={" "}
                     onSelect={(value) => this.setState({origin: value})}
-                  />
+                  />}
                 </div>
 
                 {/* Destination */}
@@ -134,13 +165,14 @@ class FlightSearchPage extends Component {
                     onChange={(value) => this.setState({destination: value})}
                     value={destination}
                   />
+                  {isActive_DestinationRecommendations &&
                   <DropDown
                     style={{height: 0}}
                     isActive={isActive_DestinationRecommendations}
                     options={this.handleAirportRecommendations(destination, "destination")}
                     selection={" "}
                     onSelect={(value) => this.setState({destination: value})}
-                  />
+                  />}
                 </div>
               </div>
 
@@ -240,20 +272,18 @@ class FlightSearchPage extends Component {
     AirportsDispatcher.onRequest();
   }
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
   handleAirportRecommendations = (inputText, type) => {
-    inputText.toLowerCase();
+    inputText = inputText.toLowerCase();
     
     const { airports } = Store.getState();
     const matchingAirports = [];
 
     for(var i in airports.search.results) {
       const airport = airports.search.results[i];
-      const airportAsString = JSON.stringify(airport).toLowerCase()
-      .replace("aiportIataId", "").replace("airportCityName", "");
+      const airportAsString = JSON.stringify(airport)
+      .toLowerCase()
+      .replace("aiportiataid", "")
+      .replace("airportcityname", "");
 
       if(airportAsString.includes(inputText)) {
         matchingAirports.push(airport.airportIataId + ": " + airport.airportCityName);
@@ -282,26 +312,25 @@ class FlightSearchPage extends Component {
       const flightId = flightsList[i].flightId;
       if (!flightId) continue;
 
-      let departure = moment(flightsList[i].flightDepartureTime).format('M/DD/YY | h:mm a')
+      const departureTime = moment(flightsList[i].flightDepartureTime).format('M/DD/YY | h:mm a');
 
       const index = Number(i) + 1;
       flightsTable.push(
-        <tr key={index} onClick={() => this.handleFlightModalToggle(true, (index - 0))}>
-          <th scrop="row">{index}</th>
+        <tr key={index} onClick={() => this.handleFlightModalToggle(true, (index - 1))}>
+          <th scope="row">{index}</th>
           <td><h5 className="text-light">{flightId}</h5></td>
           <td>
-            <h5 className="text-info">{flightsList[i].flightRouteOriginIataId}</h5>
-            <div className="text-warning">{flightsList[i].flightRouteOriginCityName}</div>
+            <h5 className="text-primary">{flightsList[i].flightRouteOriginIataId}</h5>
+            <div className="text-dark">{flightsList[i].flightRouteOriginCityName}</div>
           </td>
           <td>
-            <h5 className="text-info">{flightsList[i].flightRouteDestinationIataId}</h5>
-            <div className="text-warning">{flightsList[i].flightRouteDestinationCityName}</div>
+            <h5 className="text-primary">{flightsList[i].flightRouteDestinationIataId}</h5>
+            <div className="text-dark">{flightsList[i].flightRouteDestinationCityName}</div>
           </td>
           <td>
-            <h5 className="text-dark">{departure.split("|")[1]}</h5>
-            <div>{departure.split("|")[0]}</div>
+            <h5 className="text-dark">{departureTime.split("|")[1]}</h5>
+            <div>{departureTime.split("|")[0]}</div>
           </td>
-          <td>{flightsList[i].flightDuration}</td>
         </tr>
       );
     }
@@ -316,12 +345,11 @@ class FlightSearchPage extends Component {
               <th scope="col">Origin</th>
               <th scope="col">Destination</th>
               <th scope="col">{"Date & Time (UTC)"}</th>
-              <th scope="col">Duration</th>
             </tr>
           </thead>
           <tbody>
             {flightsTable}
-            <tr><td colSpan="6"></td>{/* Space at end of table for aesthetic */}</tr>
+            <tr><td colSpan="5"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>

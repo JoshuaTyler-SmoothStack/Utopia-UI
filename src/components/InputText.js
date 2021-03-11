@@ -98,7 +98,7 @@ class InputText extends React.Component {
                   outline: "none",
                 }}
                 type={isHidden ? "password" : "text"}
-                value={this.props.value || value}
+                value={value}
                 onChange={(e) => this.handleValueChange(e)}
                 onFocus={() => this.handleOnFocus()}
                 onBlur={() => this.handleOnBlur()}
@@ -147,13 +147,19 @@ class InputText extends React.Component {
   }
 
   componentDidUpdate() {
-    const { onSetFocus } = this.props;
+    const { onSetFocus, value } = this.props;
     const { isActive } = this.state;
     const textInputRef = this.textInputRef.current;
+    
+    if(value !== this.state.value) {
+      this.setState({value: value});
+    }
+    
     if (onSetFocus) {
       onSetFocus();
       this.handleOnFocus();
     }
+
     if (isActive && textInputRef !== window.document.activeElement) {
       textInputRef.focus();
     }
@@ -184,9 +190,7 @@ class InputText extends React.Component {
     const { onChange } = this.props;
     const value = event.target.value;
     this.setState({ value: value, error: "" });
-    if(value) {
-      if (onChange) onChange(value);
-    }
+    if (onChange) onChange(value);
   };
 }
 export default InputText;
