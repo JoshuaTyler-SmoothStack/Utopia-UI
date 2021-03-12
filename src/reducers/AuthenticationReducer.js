@@ -26,6 +26,12 @@ class AuthenticationReducer extends BaseReducer {
           userId: "UNKNOWN"
         };
 
+      case this.constantsParent.errorForgotPassword:
+        return {
+          forgotPasswordStatus: "ERROR",
+          error: action.payload
+        }
+
       // Prompts
       // =====================================
       case this.constantsParent.promptLogin:
@@ -39,8 +45,8 @@ class AuthenticationReducer extends BaseReducer {
       case this.constantsParent.requestCreateAccount:
         return { status: "PENDING" };
 
-      case this.constantsParent.forgotPasswordRequest:
-        return { status: "PENDING" };
+      case this.constantsParent.requestForgotPassword:
+        return { forgotPasswordStatus: "PENDING" };
 
       case this.constantsParent.requestLogin:
         return {
@@ -63,9 +69,14 @@ class AuthenticationReducer extends BaseReducer {
           isActive_LoginUI: false,
           status: "SUCCESS",
           userId: action.payload.userId,
-          userRole: action.payload.userRole, 
+          userRole: action.payload.userRole,
           userToken: action.payload.userToken
         };
+
+      case this.constantsParent.responseForgotPassword:
+        return {
+          forgotPasswordStatus: "SUCCESS",
+        }
 
       // Reset
       // =====================================
@@ -84,6 +95,8 @@ export const defaultAuthenticationState = {
   isActive_LoginUI: false,
   status: "INACTIVE",
   userId: "",
-  userRole: "", 
-  userToken: ""
+  userRole: "",
+  userToken: "",
+  forgotPasswordStatus: "INACTIVE",
+
 };

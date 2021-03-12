@@ -13,21 +13,33 @@ class AuthenticationDispatcher extends BaseDispatcher {
   }
 
   static onForgotPassword(email) {
-    Store.reduce({ type: constants.authentication.forgotPasswordRequest });
+
+    Store.reduce({ type: constants.authentication.requestForgotPassword });
 
     const httpRequestBody = { email: email };
 
     Orchestration.createRequestWithBody(
       constants.httpRequest.post,
-      "/users/forgotpassword",
+      "/users/forgot-password",
       httpRequestBody,
       httpError => {
-        Store.reduce({ type: constants.authentication.forgotPasswordError });
+        Store.reduce({
+          type: constants.authentication.error,
+          payload: httpError
+        });
       }, httpResponseBody => {
+        console.log(httpResponseBody)
         if (httpResponseBody.error) {
-          Store.reduce({ type: constants.authentication.forgotPasswordError });
+          Store.reduce({
+            type: constants.authentication.errorForgotPassword,
+            payload: httpResponseBody.error
+          });
         } else {
-          Store.reduce({ type: constants.authentication.forgotPasswordSuccess });
+          Store.reduce({
+            type: constants.authentication.responseForgotPassword,
+            payload: httpResponseBody
+
+          });
         }
       }
     )
@@ -106,10 +118,9 @@ class AuthenticationDispatcher extends BaseDispatcher {
       });
   }
 
-  static onLoginWithToken() {
-    const webToken = localStorage.getItem("JWT");
-    console.log(webToken);
-    if(webToken) {
+  static onLoginWithToken(overrideToken) {
+    const webToken = overrideToken || localStorage.getItem("JWT");
+    if (webToken) {
       const authorization = { "Authorization": 'Bearer ' + webToken };
       Orchestration.createRequestWithHeader(
         constants.httpRequest.get,
@@ -135,7 +146,9 @@ class AuthenticationDispatcher extends BaseDispatcher {
                 userRole: httpResponseBody.userRole,
                 userToken: httpResponseBody.userToken,
               }
+
             });
+            localStorage.setItem("JWT", httpResponseBody.userToken)
           }
         });
     }
