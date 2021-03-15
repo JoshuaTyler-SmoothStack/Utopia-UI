@@ -6,290 +6,50 @@ import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
-import DropDown from "../../components/DropDown";
-import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 import FlightModal from "../../componentgroups/FlightModal";
-import InputText from "../../components/InputText";
-import ItemsIndexReadout from "../../components/ItemsIndexReadout";
 import NavBar from "../../componentgroups/NavBar";
-import Pagination from "../../components/Pagination";
 import SeatingModal from "../../componentgroups/SeatingModal";
+import FlightSearch from "../../componentgroups/FlightSearch";
 
 class FlightSearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dateTimeDeparture: "",
-      dateTimeReturn: "",
-      destination: "",
-      destinationRecommendations: [],
-      origin: "",
-      originRecommendations: [],
-      flightType: "One-Way",
-      adultSelect: 1,
-      seniorSelect: 0,
-      childrenSelect: 0,
-      currentSort: "ascending",
-      sortedItem: "seatPrice",
+      isActive_FlightModal: false,
+      isActive_SeatingModal: false,
     };
   }
 
   render() {
     const { flights } = Store.getState();
-    const { flightType, destination, destinationRecommendations, origin,
-      originRecommendations, isActive_FlightModal, isActive_SeatingModal, 
-      isFocus_Destination, isFocus_Origin } = this.state;
-
-    // const departureFlights = flights.search.originToDestination;
-    // const returnFlights = flights.search.destinationToOrigin;
-
-    const isActive_OriginRecommendations = isFocus_Origin && originRecommendations.length > 0;
-    const isActive_DestinationRecommendations = isFocus_Destination && destinationRecommendations.length > 0;
+    const { isActive_FlightModal, isActive_SeatingModal } = this.state;
 
     return (
       <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw",  overflowY: "hidden" }}>
         <div className="row">
+
           {/* Navbar */}
           <NavBar className="col-12" hideSearchBar={true} />
 
-          {/* Search & Filter Header */}
-          <div className="bg-white col-12">
-            
-            {/* Title */}
-            <div className="h2 mt-3 mb-0">Search Flights</div>
-            <hr className="w-100 mt-2"></hr>
+          {/* Search Flights Header */}
+          <FlightSearch 
+            className="col-12 bg-white"
+            onSubmit={() => this.handleSubmit()}
+          />
 
-              {/* Radio One-way/Round-Trip */}
-              <div className="row">
-                <FlexRow className="col-6" justify="start" wrap="no-wrap">
-                  
-                  {/* One-Way */}
-                  <FlexRow onClick={() => this.setState({flightType: "One-Way"})}>
-                    <input 
-                      className="m-auto" 
-                      style={{height:"1.5rem", width:"1.5rem"}}
-                      type="radio" 
-                      checked={flightType === "One-Way"}
-                      readOnly
-                    />
-                    <label className="ml-2 mt-auto mb-auto text-center kit-no-user">
-                      One-Way
-                    </label>
-                  </FlexRow>
-
-                  {/* Round-Trip */}
-                  <FlexRow 
-                    className="ml-4"
-                    onClick={() => this.setState({flightType: "Round-Trip"})}
-                  >
-                    <input 
-                      className="m-auto" 
-                      style={{height:"1.5rem", width:"1.5rem"}}
-                      type="radio" 
-                      checked={flightType === "Round-Trip"}
-                      readOnly
-                    />
-                    <label className="ml-2 mt-auto mb-auto text-center kit-no-user">
-                      Round-Trip
-                    </label>
-                  </FlexRow>
-
-                  {/* Sign-Post SVGs */}
-                  <div className="ml-2 mb-auto">
-                    {flightType === "One-Way"
-                      ? <div>
-                          <svg
-                            className="kit-svg-turqouise" 
-                            height="2.5rem" 
-                            width="2.5rem" 
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M7.293.707A1 1 0 0 0 7 1.414V4H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h5v6h2v-6h3.532a1 1 0 0 0 .768-.36l1.933-2.32a.5.5 0 0 0 0-.64L13.3 4.36a1 1 0 0 0-.768-.36H9V1.414A1 1 0 0 0 7.293.707z"/>
-                          </svg>
-                        </div>
-                      : <div>
-                        <svg
-                          className="kit-svg-turqouise" 
-                          height="2.5rem" 
-                          width="2.5rem" 
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M7.293.707A1 1 0 0 0 7 1.414V2H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h5v1H2.5a1 1 0 0 0-.8.4L.725 8.7a.5.5 0 0 0 0 .6l.975 1.3a1 1 0 0 0 .8.4H7v5h2v-5h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9V6h4.5a1 1 0 0 0 .8-.4l.975-1.3a.5.5 0 0 0 0-.6L14.3 2.4a1 1 0 0 0-.8-.4H9v-.586A1 1 0 0 0 7.293.707z"/>
-                        </svg>
-                      </div>
-                    }
-                  </div>
-                  
-                </FlexRow>
-              </div>
-
-              {/* Origin & Destination */}
-              <div className="row mt-3">
-                {/* Origin */}
-                <div className="col-6" style={{height: "3.5rem"}}>
-                  <InputText
-                    className="h-100 rounded kit-border-shadow mb-0"
-                    label={"Origin"}
-                    labelClassName={"text-info"}
-                    fontClass={"h4"}
-                    name="origin"
-                    value={origin}
-                    onBlur={() => {
-                      setTimeout(() => {
-                        this.setState({isFocus_Origin: false})
-                      }, 100);
-                    }}
-                    onFocus={() => this.setState({isFocus_Origin: true})}
-                    onChange={(value) => {
-                      this.setState({origin: value});
-                      this.handleAirportRecommendations(value, "origin");
-                    }}
-                  />
-                  {isActive_OriginRecommendations &&
-                  <DropDown
-                    style={{height: 0}}
-                    isActive={isActive_OriginRecommendations}
-                    options={originRecommendations}
-                    selection={" "}
-                    onSelect={(value) => this.setState({origin: value})}
-                  />}
-                </div>
-
-                {/* Destination */}
-                <div className="col-6" style={{height: "3.5rem"}}>
-                  <InputText
-                    className="h-100 rounded kit-border-shadow mb-0"
-                    label={"Destination"}
-                    labelClassName={"text-info"}
-                    fontClass={"h4"}
-                    name="destination"
-                    value={destination}
-                    onBlur={() => {
-                      setTimeout(() => {
-                        this.setState({isFocus_Destination: false})
-                      }, 100);
-                    }}
-                    onFocus={() => this.setState({isFocus_Destination: true})}
-                    onChange={(value) => {
-                      this.setState({destination: value});
-                      this.handleAirportRecommendations(value, "destination");
-                    }}
-                  />
-                  {isActive_DestinationRecommendations &&
-                  <DropDown
-                    style={{height: 0}}
-                    isActive={isActive_DestinationRecommendations}
-                    options={destinationRecommendations}
-                    selection={" "}
-                    onSelect={(value) => this.setState({destination: value})}
-                  />}
-                </div>
-              </div>
-
-              {/* Date Pickers */}
-              <div className="col-12 mt-3">
-                <div className="row">
-
-                  {/* Departure Date */}
-                  <div className="col-6">
-                    <FlexColumn>
-                      <label className="form-label mr-auto">
-                        Departure Date
-                      </label>
-                      <input 
-                        className="form-label mr-auto" 
-                        style={{height: "3.5rem", maxWidth:"99%"}}
-                        name="dateTimeDeparture"
-                        type="datetime-local" 
-                        onChange={(e) => this.setState({dateTimeDeparture: e.target.value})}
-                      />
-                    </FlexColumn>
-                  </div>
-
-
-                  {/* Return Date */}
-                  {flightType === "Round-Trip" &&
-                  <div className="col-6">
-                    <FlexColumn>
-                      <label className="form-label mr-auto">
-                        Return Date
-                      </label>
-                      <input 
-                        className="form-label mr-auto"
-                        style={{height: "3.5rem", maxWidth:"99%"}}
-                        name="dateTimeDeparture"
-                        type="date" 
-                        onChange={(e) => this.setState({dateTimeReturn: e.target.value})}
-                      />
-                    </FlexColumn>
-                  </div>}
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="row mt-3 mb-3">
-                
-                {/* Results Info */}
-                <div className="col-8">
-                  <div className="row">
-                    
-                    {/* DropDown & Results (together) */}
-                    <FlexRow className="col-12 col-md-6" justify="around" wrap="no-wrap">
-                      
-                      {/* DropDown */}
-                      <DropDown
-                        buttonClassName="btn-secondary dropdown-toggle"
-                        selection={flights.search.resultsPerPage}
-                        options={["3", "10", "25", "50"]}
-                        optionsName="flights"
-                        onSelect={(e) => FlightsDispatcher.onSelectItemsPerPage(e)}
-                      />
-
-                      {/* Results Readout */}
-                      <ItemsIndexReadout
-                        className="ml-2"
-                        currentPage={flights.search.resultsPage}
-                        itemsPerPage={flights.search.resultsPerPage}
-                        itemsTotal={flights.search.results.length}
-                      />
-                    </FlexRow>
-
-                    {/* Pagination (seperate) */}
-                    <FlexRow className="col-12 col-md-6 mt-2 mt-md-0">
-                      <Pagination
-                        className="text-center"
-                        currentPage={flights.search.resultsPage}
-                        totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
-                        onSelectPage={(e) => FlightsDispatcher.onSelectItemsPage(e)}
-                      />
-                    </FlexRow>
-                  </div>
-                </div>
-
-                {/* Search Button */}
-                <div className="col-4 ml-auto">
-                  <button className="btn btn-lg btn-success text-white kit-text-shadow-thin"
-                    onClick={() => this.handleSubmit()}
-                  >
-                    Search Flights
-                  </button>
-                </div>
-              </div>
-          </div>
-
-
-          {/* Flights Table */}
+          {/* Flights List */}
           {flights.search.results.length > 0 &&
-          <FlexRow className="col-12 bg-white">
-            {this.handleRenderFlightsList(flights.search.results)}
-          </FlexRow>}
+          <div className="col-12 mt-3">
+            {this.handleRenderFlightsList()}
+          </div>}
 
         </div>
 
         {/* Flight Modal */}
         {isActive_FlightModal && 
-        <FlightModal 
+        <FlightModal
+          className="col-12 col-sm-10 col-md-8 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow"
           zIndex="4"
           onSelectSeat={() => {
             this.setState({isActive_SeatingModal: true});
@@ -304,7 +64,7 @@ class FlightSearchPage extends Component {
           zIndex="4"
           onClose={() => {
             this.setState({isActive_SeatingModal: false});
-            this.handleFlightModalToggle(true, null);
+            this.handleFlightModalToggle(false, null);
           }}
         />}
       </div>
@@ -312,31 +72,8 @@ class FlightSearchPage extends Component {
   }
 
   componentDidMount() {
-    AirportsDispatcher.onRequest();
-  }
-
-  handleAirportRecommendations = (inputText, type) => {
     const { airports } = Store.getState();
-    const { destination, origin } = this.state;    
-    const matchingAirports = [];
-    inputText = inputText.toLowerCase();
-
-    for(var i in airports.search.results) {
-      const airport = airports.search.results[i];
-      const airportAsString = JSON.stringify(airport)
-      .toLowerCase()
-      .replace("aiportiataid", "")
-      .replace("airportcityname", "");
-
-      if(airportAsString.includes(inputText)) {
-        const formattedAirport = airport.airportIataId + ": " + airport.airportCityName;
-        if(type === "origin" && formattedAirport !== destination) matchingAirports.push(formattedAirport);
-        if(type === "destination" && formattedAirport !== origin) matchingAirports.push(formattedAirport);
-      }
-    }
-    if(type === "origin") this.setState({originRecommendations: matchingAirports});
-    if(type === "destination") this.setState({destinationRecommendations: matchingAirports});
-    return matchingAirports;
+    if(!airports.search.results) AirportsDispatcher.onRequest();
   }
 
   handleFlightModalToggle = (toggleOn, flightIndex) => {
@@ -347,13 +84,13 @@ class FlightSearchPage extends Component {
     }
   }
 
-  handleRenderFlightsList = (flightsList) => {
+  handleRenderFlightsList = () => {
     const { flights } = Store.getState();
+    const flightsList = flights.search.results;
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
     let flightsTable = [];
-    if (!flightsList.length) flightsList = [flightsList];
     for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
       
       const flightId = flightsList[i].flightId;
@@ -383,8 +120,12 @@ class FlightSearchPage extends Component {
     }
 
     return (
-      <FlexColumn justify="start" style={{ height: "50vh", width: "99%", overflowY: "scroll" }}>
-        <table className="table table-hover kit-border-shadow rounded overflow-hidden">
+      <FlexColumn 
+        className="bg-white rounded overflow-hidden" 
+        style={{ height: "50vh", width: "99%", overflowY: "scroll" }}
+        justify="start" 
+      >
+        <table className="table table-hover kit-border-shadow">
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
@@ -404,17 +145,8 @@ class FlightSearchPage extends Component {
   }
 
   handleSubmit = () => {
-    const { dateTimeDeparture, dateTimeReturn, destination, origin, flightType } = this.state;
-    const globalDateTimeDeparture = moment.utc(dateTimeDeparture).format("YYYY-MM-DD H:MM:SS");
-    const globalDateTimeReturn = moment.utc(dateTimeReturn).format("YYYY-MM-DD H:MM:SS");
-    console.log(globalDateTimeDeparture);
-
-    const filterMap = {
-      flightRouteOriginIataId: origin.split(":")[0],
-      flightRouteDestinationIataId: destination.split(":")[0],
-    };
-
-    FlightsDispatcher.onSearchAndFilter("/search", "", filterMap);
+    const { flights } = Store.getState();
+    FlightsDispatcher.onSearchAndFilter("/search", "", flights.search.filters);
   }
 }
 export default FlightSearchPage;

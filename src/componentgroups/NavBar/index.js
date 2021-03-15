@@ -47,6 +47,11 @@ class NavBar extends Component {
           </ul>
         </FlexRow>
 
+        {/* Utopia */}
+        <h1 className="kit-cursive kit-color-cream kit-text-shadow-xsm">
+          {"Utopia"}
+        </h1>
+
         {/* Search */}
         {!hideSearchBar &&
           <form className="form-inline ml-auto mr-5">

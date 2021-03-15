@@ -11,8 +11,8 @@ class InputText extends React.Component {
     // @PROP: value - string
 
     // @PROP: isActive - bool
-    // @PROP: isHidden - bool
-    // @PROP: islocked - bool
+    // @PROP: isLocked - bool
+    // @PROP: isPassword - bool
 
     // @PROP: onBlur - f()
     // @PROP: onChange - f()
@@ -28,7 +28,7 @@ class InputText extends React.Component {
   }
 
   render() {
-    const { className, error, fontClassName, isHidden, isLocked, label, labelClassName, style } = this.props;
+    const { className, error, fontClassName, isPassword, isLocked, label, labelClassName, style } = this.props;
     const { isActive, isHover, value } = this.state;
 
     // Locked
@@ -97,7 +97,7 @@ class InputText extends React.Component {
                   border: "none",
                   outline: "none",
                 }}
-                type={isHidden ? "password" : "text"}
+                type={isPassword ? "password" : "text"}
                 value={value}
                 onChange={(e) => this.handleValueChange(e)}
                 onFocus={() => this.handleOnFocus()}

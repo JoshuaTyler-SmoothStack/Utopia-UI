@@ -1,9 +1,8 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import axios from 'axios';
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+// import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 import Store from '../../reducers/Store';
 
@@ -12,30 +11,31 @@ import NavBar from '../../componentgroups/NavBar';
 import FlexColumn from '../../components/FlexColumn';
 
 import FlexRow from '../../components/FlexRow';
-import InputText from '../../components/InputText';
 import Modal from '../../components/Modal';
 
 const UserProfilePage = (props) => {
 
   const { authentication, users } = Store.getState();
   const [isActive_DeleteModal, setIsActive_DeleteModal] = useState(false);
-  const [accountDeleted, setAccountDeleted] = useState(false);
-  const history = useHistory();
+  // const history = useHistory();
 
   useEffect((e) => {
-    UsersDispatcher.onRequestThenCallback(
-    "/" + authentication.userId,
-      httpError => {
-        // handle error getting user here
-    }, httpResponseBody => {
-      UsersDispatcher.onSelectItem(httpResponseBody);
-    });
-  }, [!users.selected]);
+    if(users.selected.userId && (users.selected.userId === authentication.userId)) {
+      const { authentication } = Store.getState();
+      UsersDispatcher.onRequestThenCallback(
+      "/" + authentication.userId,
+        httpError => {
+          // handle error getting user here
+      }, httpResponseBody => {
+        UsersDispatcher.onSelectItem(httpResponseBody);
+      });
+    }
+  });
 
-  const deleteAccount = () => {
-    AuthenticationDispatcher.onDeleteAccount(users.selected.userId);
-    history.push("/home");
-  }
+  // const deleteAccount = () => {
+  //   AuthenticationDispatcher.onDeleteAccount(users.selected.userId);
+  //   history.push("/home");
+  // }
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw"}}>

@@ -1,16 +1,15 @@
 // Libraries
+import axios from 'axios';
 import React, { useState } from 'react';
-import NavBar from '../../componentgroups/NavBar';
-import { Redirect } from 'react-router'
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher'
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 // Components
 import ErrorMessage from '../../components/ErrorMessage';
-import FlexRow from '../../components/FlexRow';
-import { Link } from 'react-router-dom';
-import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
-import axios from 'axios';
+import FlexRow from '../../components/FlexRow';
+import LogoGif from '../../components/LogoGif';
+import NavBar from '../../componentgroups/NavBar';
 
 const CreateAccountPage = (props) => {
 
@@ -28,9 +27,6 @@ const CreateAccountPage = (props) => {
   const [validateEmail, setValidateEmail] = useState(false)
   const [redirect, setRedirect] = useState(false);
   const [status, setStatus] = useState("DEFAULT");
-
-
-
 
   function handleSubmit(e) {
     e.preventDefault();

@@ -1,14 +1,12 @@
 // Libraries
 import moment from "moment";
-import React, { useEffect } from "react";
+import React from "react";
 import Store from "../../reducers/Store";
 
 // Components
 import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
-
-const ESCAPE_KEY = 27;
 
 const FlightModal = (props) => {
 
@@ -21,20 +19,6 @@ const FlightModal = (props) => {
   const flightHours = Math.floor(Math.max(flights.selected.flightDuration, 1) / 3600);
   const flightMinutes = Math.floor(Math.max(flights.selected.flightDuration - (flightHours * 3600), 1) / 60);
 
-  // Escape Key Listener
-  useEffect(() => {
-    const handleKeyPress = event => {  
-      const { keyCode } = event;
-      if (keyCode === ESCAPE_KEY) {
-        event.preventDefault();  
-        props.onClose();
-      }
-    }
-  
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  });
-
   return (
     <Modal
       align={align}
@@ -45,7 +29,7 @@ const FlightModal = (props) => {
     >
       <div className="container-fluid">
         <div className="row">
-          <div className="col-12 col-md-9 col-lg-6 col-xl-5 bg-primary p-2 m-auto rounded kit-border-shadow">
+          <div className={props.className || ""} style={props.style}>
             <div className="row">
               
               {/* Close Button */}
@@ -71,39 +55,40 @@ const FlightModal = (props) => {
                 </button>
               </FlexRow>
 
-              {/* Title */}
+              {/* Header */}
               <div className="col-12 bg-white rounded p-2 kit-border-shadow">
                 <FlexRow className="h-100 row" justify="start">
 
                   {/* Flight ID */}
-                  <FlexColumn className="col-12 col-md-5">
+                  <FlexColumn className="col-6 col-sm-4">
                     <FlexRow className="ml-2 mb-0 mr-auto" justify="start">
-                      <h2 className="text-dark">{"Flight: "}</h2>
                       <h2 className="ml-2 text-info">{"UA" + flights.selected.flightId}</h2>
                     </FlexRow>
                     <h5 className=" ml-2 text-light mr-auto">
-                      {flights.selected.flightAirplaneTypeName || "Airplane not yet selected."}
+                      {flights.selected.flightAirplaneTypeName || "Airplane Type."}
                     </h5>
                   </FlexColumn>
 
-                  {/* Date & Route (together) */}
-                  <FlexRow className="col-12 col-md-7 row">
-                    {/* Date & Time */}
-                    <FlexColumn className="col-5">
-                      <h4 className="text-dark">{departureTime.split("|")[1]}</h4>
-                      <h5 className="text-dark">{departureTime.split("|")[0]}</h5 >
-                    </FlexColumn>
-
-                    {/* Origin To Destination */}
-                    <FlexColumn className="col-7">
-                      <FlexRow>
+                  {/* Date & Time */}
+                  <FlexColumn className="col-6 col-sm-4">
+                    <h4 className="text-dark">{departureTime.split("|")[1]}</h4>
+                    <h5 className="text-dark">{departureTime.split("|")[0]}</h5 >
+                  </FlexColumn>
+                      
+                  {/* Origin To Destination */}
+                  <div className="col-12 col-sm-4">
+                    <div className="row">
+                      <FlexRow className="col-6 col-sm-12 p-0">
+                        <h5 className="text-dark mr-2">Duration:</h5>
+                        <h5 className="text-info">{flightHours + "h " + flightMinutes + "m"}</h5>
+                      </FlexRow>
+                      <FlexRow className="col-6 col-sm-12 p-0">
                         <h3 className="text-warning">{flights.selected.flightRouteOriginIataId}</h3>
                         <h3 className="text-dark ml-1 mr-1">{"➜"}</h3>
                         <h3 className="text-warning">{flights.selected.flightRouteDestinationIataId}</h3>
                       </FlexRow>
-                      <h5>{flightHours + "h " + flightMinutes + "m"}</h5>
-                    </FlexColumn>
-                  </FlexRow>
+                    </div>
+                  </div>
                   
                 </FlexRow>
               </div>

@@ -29,6 +29,9 @@ export const defaultFlightsReducerState = {
   search: {
     filters: {
       activeCount: 0,
+      destination: "",
+      flightType: "One-Way",
+      origin: ""
     },
     originToDestination: [],
     destinationToOrigin: [],

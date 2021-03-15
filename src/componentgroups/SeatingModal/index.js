@@ -1,13 +1,11 @@
 // Libraries
-import React, { useEffect } from "react";
+import React from "react";
 import Store from "../../reducers/Store";
 
 // Components
 import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
-
-const ESCAPE_KEY = 27;
 
 const SeatingModal = (props) => {
 
@@ -16,20 +14,6 @@ const SeatingModal = (props) => {
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || 2;
 
-  // Escape Key Listener
-  useEffect(() => {
-    const handleKeyPress = event => {  
-      const { keyCode } = event;
-      if (keyCode === ESCAPE_KEY) {
-        event.preventDefault();  
-        props.onClose();
-      }
-    }
-  
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  });
-
   const handleRenderSeatingTable = () => {
     console.log("handleRenderSeatingTable called");
 
@@ -37,11 +21,11 @@ const SeatingModal = (props) => {
 
     const firstClassColumns = 4;
     const firstClassRows = 8;
-    const businessClassColumns = 4;
+    // const businessClassColumns = 4;
     const businessClassRows = 4;
-    const economyClassColumns = 8;
+    // const economyClassColumns = 8;
     const economyClassRows = 100;
-    const occupiedSeats = {"1,1": true, "2,1": true, "4,1": true};
+    const occupiedSeats = { "1,1": true, "2,1": true, "4,1": true };
 
     // const seatingTable = {
     //   firstClassColumns: 4,
@@ -77,9 +61,9 @@ const SeatingModal = (props) => {
     // };
 
     let firstClassItems = [];
-    let businessClassItems = [];
-    let economyClassItems = [];
-    let columnItems = [];
+    // let businessClassItems = [];
+    // let economyClassItems = [];
+    // let columnItems = [];
     const totalRows = firstClassRows + businessClassRows + economyClassRows;
     console.log(totalRows);
     for(var i = 0; i < totalRows; i++) {

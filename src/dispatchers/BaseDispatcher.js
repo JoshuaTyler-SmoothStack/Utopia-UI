@@ -277,5 +277,12 @@ class BaseDispatcher {
       payload: itemsPerPage,
     });
   }
+
+  static onSetFilter(filterName, filterValue) {
+    Store.reduce({
+      type: this.getConstantsParent().selectFilter,
+      payload: { [filterName]: filterValue }
+    });
+  }
 }
 export default BaseDispatcher;

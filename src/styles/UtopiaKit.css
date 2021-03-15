@@ -129,7 +129,7 @@ Text Styling
   4.5px 4.5px 0px var(--vTeal), 
   6px 6px 0px var(--vTurqouise), 
   7.5px 7.5px 0px var(--vBlue), 
-  9px 9px 15px var(--vDropShadow);
+  9px 9px 6px var(--vDropShadow);
 }
 
 .kit-text-shadow-xsm {
@@ -138,7 +138,7 @@ Text Styling
   3px 3px 0px var(--vTeal), 
   4px 4px 0px var(--vTurqouise), 
   5px 5px 0px var(--vBlue), 
-  6px 6px 15px var(--vDropShadow);
+  6px 6px 2px var(--vDropShadow);
 }
 
 /*====================
