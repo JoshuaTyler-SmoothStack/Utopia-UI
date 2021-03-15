@@ -15,23 +15,16 @@ import FlexRow from '../../components/FlexRow';
 import './style.css';
 
 const ForgotPasswordPage = (props) => {
-
+  
+  const { authentication } = Store.getState();
   const [email, setEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [validateEmail, setValidateEmail] = useState(true)
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false)
-  const [redirect, setRedirect] = useState(false);
-
-  const { authentication } = Store.getState();
-
 
   const history = useHistory();
   if (localStorage.getItem("JWT")) {
     history.push("/home")
   }
-
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -45,11 +38,7 @@ const ForgotPasswordPage = (props) => {
       return setValidateEmail(false)
     }
 
-    setLoading(true)
-    AuthenticationDispatcher.onForgotPassword(email)
-
-
-
+    AuthenticationDispatcher.onForgotPassword(email);
   }
 
   return (

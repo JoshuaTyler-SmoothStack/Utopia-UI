@@ -1,8 +1,7 @@
 // Libraries
-import React, { useEffect, useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
 import { Redirect } from 'react-router';
-// import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 import Store from '../../reducers/Store';
 
@@ -28,22 +27,24 @@ const UserProfilePage = (props) => {
   const [validatePhone, setValidatePhone] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("JWT"));
+  const isLoggedIn = localStorage.getItem("JWT");
 
   useEffect((e) => {
-    UsersDispatcher.onRequestThenCallback(
-      "/" + authentication.userId,
-      httpError => {
-        // handle error getting user here
-      }, httpResponseBody => {
-        UsersDispatcher.onSelectItem(httpResponseBody);
-        setFirstName(httpResponseBody.userFirstName);
-        setLastName(httpResponseBody.userLastName);
-        setEmail(httpResponseBody.userEmail);
-        setPhone(httpResponseBody.userPhone)
-        AuthenticationDispatcher.onLoginWithToken(Store.getState().users.edit.results.userToken);
-      });
-  }, [users.edit.resultsStatus === "SUCCESS"]);
+    if(users.edit.resultsStatus === "SUCCESS") {
+      UsersDispatcher.onRequestThenCallback(
+        "/" + authentication.userId,
+        httpError => {
+          // handle error getting user here
+        }, httpResponseBody => {
+          UsersDispatcher.onSelectItem(httpResponseBody);
+          setFirstName(httpResponseBody.userFirstName);
+          setLastName(httpResponseBody.userLastName);
+          setEmail(httpResponseBody.userEmail);
+          setPhone(httpResponseBody.userPhone);
+          AuthenticationDispatcher.onLoginWithToken(Store.getState().users.edit.results.userToken);
+        });
+    }
+  }, [authentication, users]);
 
   const deleteAccount = () => {
     AuthenticationDispatcher.onDeleteAccount(users.selected.userId);
@@ -54,6 +55,38 @@ const UserProfilePage = (props) => {
     }, 3500);
 
   }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    handleValidate(email, phone);
+    setSubmitted(true)
+    if (!firstName || !lastName || !validateEmail ||
+      !validatePhone) {
+      return;
+    }
+
+    const newUser = {
+      userFirstName: firstName,
+      userLastName: lastName,
+      userEmail: email,
+      userPhone: phone,
+    }
+    setIsActive_EditModal(false);
+
+
+    UsersDispatcher.onEdit(
+      `/${users.selected.userId}`,
+      newUser
+    );
+  };
+
+  function handleValidate(currentEmail, currentPhone,) {
+    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
+    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
+
+    setValidateEmail(regexEmailValidation.test(currentEmail));
+    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
+  };
 
   return (
     <div className="container-fluid kit-bg-white" style={{ height: "100vh", width: "100vw" }}>
@@ -222,14 +255,17 @@ const UserProfilePage = (props) => {
                 }}
               />
               <div className="d-flex justify-content-between">
-                <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">Update</button>
-                <a className="btn btn-secondary" onClick={(e) => setIsActive_EditModal(false)}> Cancel</a>
-
+                <button 
+                  className="btn btn-success text-white kit-text-shadow-thin"
+                  onClick={() => handleSubmit()}
+                >
+                  Update
+                </button>
+                <button className="btn btn-secondary" onClick={(e) => setIsActive_EditModal(false)}> Cancel</button>
               </div>
             </form>
 
           </Modal>
-
         }
 
 
@@ -273,49 +309,7 @@ const UserProfilePage = (props) => {
 
       </div>
     </div>
-  )
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    handleValidate(email, phone);
-    setSubmitted(true)
-    if (!firstName || !lastName || !validateEmail ||
-      !validatePhone) {
-      return;
-    }
-
-    const newUser = {
-      userFirstName: firstName,
-      userLastName: lastName,
-      userEmail: email,
-      userPhone: phone,
-    }
-    setIsActive_EditModal(false);
-
-
-    UsersDispatcher.onEdit(
-      `/${users.selected.userId}`,
-      newUser
-    )
-
-
-
-    //   axios.put(`http://localhost:8080/users/${authentication.userId}`, newUser)
-    //     .then(data => {
-    //       console.log(data)
-    //     }, error => {
-    //       console.log(error)
-    //     })
-  }
-
-  function handleValidate(currentEmail, currentPhone,) {
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
-    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
-
-    setValidateEmail(regexEmailValidation.test(currentEmail));
-    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
-  }
-
+  );
 }
 
 export default UserProfilePage;

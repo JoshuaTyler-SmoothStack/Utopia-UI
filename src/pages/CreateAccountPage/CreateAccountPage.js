@@ -28,7 +28,7 @@ const CreateAccountPage = (props) => {
   const [redirect, setRedirect] = useState(false);
   const [status, setStatus] = useState("DEFAULT");
 
-  const [jwk, setjwk] = useState(localStorage.getItem("JWT"))
+  const jwk = localStorage.getItem("JWT");
 
 
   function handleSubmit(e) {
