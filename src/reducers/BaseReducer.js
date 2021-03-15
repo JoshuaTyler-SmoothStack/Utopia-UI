@@ -149,6 +149,17 @@ class BaseReducer {
   
       // Search Results Filtering
       // =====================================
+      case this.constantsParent.selectFilter:
+        return {
+          search: {
+            ...state.search,
+            filters: {
+              ...state.search.filters,
+              ...action.payload
+            }
+          }
+        };
+
       case this.constantsParent.selectItemsPage:
         return {
           search: {

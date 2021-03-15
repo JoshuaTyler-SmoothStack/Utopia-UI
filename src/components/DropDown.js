@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState }  from 'react';
+import React, { useCallback, useEffect, useRef, useState }  from 'react';
 import FocusLock from './FocusLock';
 
 const ESCAPE_KEY = 27;
@@ -17,43 +17,41 @@ const DropDown = (props) => {
   const [isDropDownActive, setDropDownActive] = useState(isActive || false);
   const rootNode = useRef(null);
 
-  const handleSelect = (option) => {
-    if(props.onSelect && option) props.onSelect(option);
+  const handleSelect = useCallback((value) => {
+    if(props.onSelect && value) props.onSelect(value);
     setDropDownActive(false);
-  };
+  }, [props]);
 
   // Escape Key Listener
   useEffect(() => {
-    const handleKeyPress = event => {  
+    const handleKeyPress = (event) => {  
       const { keyCode } = event;
       if (keyCode === ESCAPE_KEY) {
         event.preventDefault();  
         handleSelect(null);
       }
-    }
+    };
  
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  });
+  }, [handleSelect]);
 
   // MouseDown & TouchDown Outside Element Listener
   useEffect(() => {
-    const handleClick = event => {  
+    const handleClick = (event) => {  
       const { target } = event;
-      if(rootNode.current) {
-        if (!rootNode.current.contains(target)) {
-          handleSelect(null);
-        }
+      if(rootNode.current && !rootNode.current.contains(target)) {
+        handleSelect(null);
       }
-    }
+    };
 
     window.addEventListener('mousedown', handleClick);
     window.addEventListener('touchdown', handleClick);
     return () => {
       window.removeEventListener('mousedown', handleClick);
       window.removeEventListener('touchdown', handleClick);
-    }
-  }, [rootNode]);
+    };
+  }, [rootNode, handleSelect]);
 
   let optionsRender = [];
   if(options) {
@@ -81,7 +79,9 @@ const DropDown = (props) => {
       </button></li>;
     }
   } else {
-    optionsRender = <div>{"No options available."}</div>
+    optionsRender = options === "PENDING" 
+      ? <div className="spinner-border"/>
+      : <div>{"No options available."}</div>
   }
 
   return ( 
@@ -91,7 +91,7 @@ const DropDown = (props) => {
       style={props.style}
       ref={rootNode}
     >
-      <FocusLock isLocked={isDropDownActive}>
+      <FocusLock props={{isLocked: !isDropDownActive}}>
         <button 
           className={"btn w-100 " + (props.buttonClassName || "")}
           style={{textAlign:"left"}}

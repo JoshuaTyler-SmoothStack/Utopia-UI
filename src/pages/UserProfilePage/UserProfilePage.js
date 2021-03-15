@@ -1,9 +1,8 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import axios from 'axios';
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+// import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 import Store from '../../reducers/Store';
 
@@ -12,13 +11,13 @@ import NavBar from '../../componentgroups/NavBar';
 import FlexColumn from '../../components/FlexColumn';
 
 import FlexRow from '../../components/FlexRow';
-import InputText from '../../components/InputText';
 import Modal from '../../components/Modal';
 
 const UserProfilePage = (props) => {
 
   const { authentication, users } = Store.getState();
   const [isActive_DeleteModal, setIsActive_DeleteModal] = useState(false);
+
   const [isActive_EditModal, setIsActive_EditModal] = useState(false)
   const [redirect, setRedirect] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -55,7 +54,6 @@ const UserProfilePage = (props) => {
     }, 3500);
 
   }
-
 
   return (
     <div className="container-fluid kit-bg-white" style={{ height: "100vh", width: "100vw" }}>

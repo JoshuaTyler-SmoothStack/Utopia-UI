@@ -41,13 +41,11 @@ class App extends Component {
 
     // Window Resize throttling
     this.handleResize = _.throttle(this.handleResize.bind(this), 100);
-
-
-
   }
 
   render() {
-    const isActive_LoginModal = this.state.authentication.isActive_LoginUI
+    const { authentication } = this.state;
+    const isActive_LoginModal = authentication.isActive_LoginUI;
 
     return (
       <main>
@@ -57,53 +55,62 @@ class App extends Component {
 
             {/* API Debug Page */}
             <Route path="/debug">
-              <APIDebugPage />
+              <APIDebugPage/>
             </Route>
 
             {/* Boot Page */}
             <Route exact path="/">
-              <BootPage />
+              <BootPage/>
             </Route>
 
             {/* Landing Page */}
             <Route path="/home">
-              <LandingPage />
+              <LandingPage/>
             </Route>
 
             {/* Orchestration Page */}
             <Route path="/orchestration">
-              <OrchestrationPage />
+              <OrchestrationPage/>
             </Route>
 
             {/* Create Account Page */}
             <Route path="/createaccount">
-              <CreateAccountPage />
+              <CreateAccountPage/>
             </Route>
 
             {/* Flight Search Page */}
             <Route path="/flights">
-              <FlightSearchPage />
+              <FlightSearchPage/>
             </Route>
 
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
-              <ForgotPasswordPage />
+              {authentication.userId
+                ? <ForgotPasswordPage/>
+                : <LandingPage/>
+              }
             </Route>
 
             {/* Password Recovery Page */}
             <Route path="/password-recovery/**">
-              <PasswordRecoveryPage />
+              {authentication.userId
+                ? <PasswordRecoveryPage/>
+                : <LandingPage/>
+              }
             </Route>
 
             {/* Profile Page */}
             <Route path="/profile">
-              <UserProfilePage />
+            {authentication.userId
+                ? <UserProfilePage/>
+                : <LandingPage/>
+              }
             </Route>
 
           </Switch>
 
           {/* Login Modal - zIndex 2 */}
-          {isActive_LoginModal && <LoginModal />}
+          {isActive_LoginModal && <LoginModal/>}
         </Router>
       </main>
     );
@@ -117,7 +124,6 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-
     console.log(this.state);
   }
 
@@ -133,7 +139,7 @@ class App extends Component {
     if (window.innerWidth >= 1400) newSize = "xx_large";
 
     if (breakPoint !== newSize) {
-      // console.log(newSize);
+      console.log(newSize);
       this.setState({ breakPoint: newSize });
     }
   }

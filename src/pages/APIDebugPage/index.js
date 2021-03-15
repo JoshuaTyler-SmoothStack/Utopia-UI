@@ -25,6 +25,7 @@ class APIDebugPage extends Component {
     return (
       <div className="container-fluid">
         <div className="row">
+          
           {/* Navbar */}
           <NavBar className="col-12" hideSearchBar={true}/>
 

@@ -1,9 +1,11 @@
 // Libraries
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 // Components
 import FlexColumn from "./FlexColumn";
 import FocusLock from "./FocusLock";
+
+const ESCAPE_KEY = 27;
 
 const Modal = (props) => {
 
@@ -13,8 +15,19 @@ const Modal = (props) => {
   const disableFocusLock = props.disableFocusLock || false;
   const zIndex = props.zIndex || 2;
 
+  // Escape Key Listener
+  useEffect(() => {
+    const handleKeyPress = (event) => {  
+      const { keyCode } = event;
+      if (keyCode === ESCAPE_KEY) props.onClose();
+    };
+ 
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [props]);
+
   return (
-    <FocusLock isLocked={!disableFocusLock}>
+    <FocusLock props={{isLocked: !disableFocusLock}}>
       <FlexColumn
         align={align}
         className={
@@ -23,7 +36,7 @@ const Modal = (props) => {
           (props.className || "")
         }
         style={{
-          position: "absolute",
+          position: "fixed",
           height: "100vh",
           width: "100vw",
           top: "0",
