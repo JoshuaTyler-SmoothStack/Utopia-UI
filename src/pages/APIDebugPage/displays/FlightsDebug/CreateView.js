@@ -49,7 +49,7 @@ const CreateView = (props) => {
       flightRouteId : flightRouteId,
       flightDepartureTime : formattedDate,
       flightDuration : flightDuration,
-      status: "INACTIVE"
+      flightStatus: "INACTIVE"
     };
 
     //Date format: "2021-03-09 18:45:00"

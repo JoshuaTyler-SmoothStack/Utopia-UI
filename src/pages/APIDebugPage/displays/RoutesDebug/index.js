@@ -1,5 +1,5 @@
 // Libraries
-import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
+import RoutesDispatcher from "../../../../dispatchers/RoutesDispatcher";
 import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
@@ -17,27 +17,27 @@ import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
 import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
-class AirportsDebug extends Component {
+class RoutesDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
       searchTerms: "",
       currentSort: "up",
-      sortedItem: ""
+      sortedItem: "routeId"
     };
   }
 
   render() { 
-    const { orchestration, airports } = Store.getState();
+    const { orchestration, routes } = Store.getState();
     const { searchTerms } = this.state;
-    const isCreatePromptActive = airports.create.isActive;
-    const isDeletePromptActive = airports.delete.isActive;
-    const isEditPromptActive = airports.edit.isActive;
-    const isMSActive = orchestration.services.includes("airport-service");
-    const airportsMSStatus = airports.status;
-    const searchError = airports.search.error;
-    const searchFilters = airports.search.filters;
-    const searchResults = airports.search.results;
+    const isCreatePromptActive = routes.create.isActive;
+    const isDeletePromptActive = routes.delete.isActive;
+    const isEditPromptActive = routes.edit.isActive;
+    const isMSActive = orchestration.services.includes("route-service");
+    const routesMSStatus = routes.status;
+    const searchError = routes.search.error;
+    const searchFilters = routes.search.filters;
+    const searchResults = routes.search.results;
 
     return ( 
       <div className={"row" + (this.props.className || "")} style={this.props.style}>
@@ -47,11 +47,11 @@ class AirportsDebug extends Component {
           <div className="row mt-1">
             {/* MS Orchestration Indicators */}
             <OrchestrationHeader className="col-12 col-md-6"
-              name="Airport MS"
-              status={airportsMSStatus === "INACTIVE" ? "PENDING" : airportsMSStatus}
+              name="Route MS"
+              status={routesMSStatus === "INACTIVE" ? "PENDING" : routesMSStatus}
               style={{maxWidth:"30rem"}}
-              onTriggerError={() => AirportsDispatcher.onError()}
-              onTriggerFakeAPICall={() => AirportsDispatcher.onFakeAPICall(searchResults)}
+              onTriggerError={() => RoutesDispatcher.onError()}
+              onTriggerFakeAPICall={() => RoutesDispatcher.onFakeAPICall(searchResults)}
             />
 
             {/* Search Bar */}
@@ -62,7 +62,7 @@ class AirportsDebug extends Component {
                   aria-label="Search" 
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
-                  placeholder="IATA ID, City"
+                  placeholder="IATA ID"
                   type="search" 
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchTerms: e.target.value})}
@@ -70,7 +70,7 @@ class AirportsDebug extends Component {
                 <button 
                   className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
                   type="submit"
-                  onClick={() => AirportsDispatcher.onSearchAndFilter("/search", searchTerms)}
+                  onClick={() => RoutesDispatcher.onSearchAndFilter("/search", searchTerms)}
                 >
                   search
                 </button>
@@ -81,7 +81,7 @@ class AirportsDebug extends Component {
 
         {/* Search Sorting & Filtering */}
         <div className={"col-12 bg-light " +
-          ((airportsMSStatus === "INACTIVE" || airportsMSStatus === "ERROR" ||
+          ((routesMSStatus === "INACTIVE" || routesMSStatus === "ERROR" ||
            isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
           "kit-opacity-50 kit-no-user kit-pointer-none")}
         >
@@ -102,26 +102,26 @@ class AirportsDebug extends Component {
             <FlexColumn className="col-4 col-md-3 text-center">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
-                selection={airports.search.resultsPerPage}
+                selection={routes.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => AirportsDispatcher.onSelectItemsPerPage(e)}
+                onSelect={(e) => RoutesDispatcher.onSelectResultsPerPage(e)}
               />
             </FlexColumn>
 
             <FlexColumn className="col-6 col-md-3 text-center">
               <ItemsIndexReadout
-                currentPage={airports.search.resultsPage}
-                itemsPerPage={airports.search.resultsPerPage}
-                itemsTotal={airports.search.results.length}
+                currentPage={routes.search.resultsPage}
+                itemsPerPage={routes.search.resultsPerPage}
+                itemsTotal={routes.search.results.length}
               />
             </FlexColumn>
 
             <FlexColumn className="col-8 mt-2 col-md-3 text-center">
               <Pagination
-                currentPage={airports.search.resultsPage}
-                totalPages={Math.ceil(airports.search.results.length / Math.max(airports.search.resultsPerPage, 1))}
-                onSelectPage={(e) => AirportsDispatcher.onSelectItemsPage(e)}
+                currentPage={routes.search.resultsPage}
+                totalPages={Math.ceil(routes.search.results.length / Math.max(routes.search.resultsPerPage, 1))}
+                onSelectPage={(e) => RoutesDispatcher.onSelectResultsPage(e)}
               />
             </FlexColumn>
           </div>
@@ -132,42 +132,42 @@ class AirportsDebug extends Component {
         <div className="col-12" style={{overflow: "auto"}}>
 
         {/* Error State */}
-        {airportsMSStatus === "ERROR" &&
+        {routesMSStatus === "ERROR" &&
           <FlexColumn className="h-100">
             <ErrorMessage className="h1" soundAlert={true}>
-              {isMSActive ? airports.error : "No Airport MS connection."}
+              {isMSActive ? routes.error : "No Route MS connection."}
             </ErrorMessage>
             <button className="btn btn-light m-3"
-              onClick={() => AirportsDispatcher.onCancel()}
+              onClick={() => RoutesDispatcher.onCancel()}
             >
               Back
             </button>
           </FlexColumn>}
 
           {/* Inactive State */}
-          {airportsMSStatus === "INACTIVE" &&
+          {routesMSStatus === "INACTIVE" &&
           <FlexColumn style={{minHeight:"10rem"}}>
           <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
             name="Establishing Connection . . ." status={"PENDING"}/>
           </FlexColumn>}
 
           {/* Pending State */}
-          {(airportsMSStatus === "PENDING" || airportsMSStatus === "INACTIVE") &&
+          {(routesMSStatus === "PENDING" || routesMSStatus === "INACTIVE") &&
           <FlexColumn style={{minHeight:"10rem"}}>
             <div className="spinner-border"/>
           </FlexColumn>}
 
           {/* Success State */}
-          {(airportsMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
-          this.handleRenderAirportsList(searchResults)}
+          {(routesMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
+          this.handleRenderRoutesList(searchResults)}
 
-          {(airportsMSStatus === "SUCCESS" && isCreatePromptActive) && 
+          {(routesMSStatus === "SUCCESS" && isCreatePromptActive) && 
           <CreateView/>}
 
-          {(airportsMSStatus === "SUCCESS" && isDeletePromptActive) && 
+          {(routesMSStatus === "SUCCESS" && isDeletePromptActive) && 
           <DeleteView/>}
 
-          {(airportsMSStatus === "SUCCESS" && isEditPromptActive) && 
+          {(routesMSStatus === "SUCCESS" && isEditPromptActive) && 
           <EditView/>}
         </div>
       </div>
@@ -175,9 +175,9 @@ class AirportsDebug extends Component {
   }
 
   componentDidMount() {
-    AirportsDispatcher.onCancel();
+    RoutesDispatcher.onCancel();
     OrchestrationDispatcher.onFindActiveServices();
-    AirportsDispatcher.onRequest();
+    RoutesDispatcher.onRequest();
   }
 
   onSortChange = (e) => {
@@ -193,42 +193,46 @@ class AirportsDebug extends Component {
 		});
 	};
 
-  handleRenderAirportsList = (airportsList) => {
-    const { airports } = Store.getState();
-    const resultsDisplayed = Number(airports.search.resultsPerPage);
-    const resultsStart = airports.search.resultsPerPage * (airports.search.resultsPage - 1);
+  handleRenderRoutesList = (routesList) => {
+    const { routes } = Store.getState();
+    const resultsDisplayed = Number(routes.search.resultsPerPage);
+    const resultsStart = routes.search.resultsPerPage * (routes.search.resultsPage - 1);
 
-    let airportsTable = [];
-    if(this.state.sortedItem === "airportIataId")
-    airportsList.sort((a, b) => {
-      return this.state.currentSort === 'up' ? a.airportIataId.localeCompare(b.airportIataId) : b.airportIataId.localeCompare(a.airportIataId);
+    let routesTable = [];
+    if(this.state.sortedItem === "routeId")
+    routesList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.routeId-b.routeId : b.routeId-a.routeId;
     });
-    else if(this.state.sortedItem === "airportCityName")
-    airportsList.sort((a, b) => {
-      return this.state.currentSort === 'up' ? a.airportCityName.localeCompare(b.airportCityName) : b.airportCityName.localeCompare(a.airportCityName);
+    else if(this.state.sortedItem === "routeOriginIataId")
+    routesList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.routeOriginIataId.localeCompare(b.routeOriginIataId) : b.routeOriginIataId.localeCompare(a.routeOriginIataId);
+    });
+    else if(this.state.sortedItem === "routeDestinationIataId")
+    routesList.sort((a, b) => {
+      return this.state.currentSort === 'up' ? a.routeDestinationIataId.localeCompare(b.routeDestinationIataId) : b.routeDestinationIataId.localeCompare(a.routeDestinationIataId);
     });
 
-    if (!airportsList.length) airportsList = [airportsList];
-    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airportsList.length); i++) {
-      const airportIataId = airportsList[i].airportIataId;
-      if (!airportIataId) continue;
+    if (!routesList.length) routesList = [routesList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < routesList.length); i++) {
+      const routeId = routesList[i].routeId;
+      if (!routeId) continue;
 
       const index = Number(i) + 1;
-      airportsTable.push(
+      routesTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
-          <td>{airportIataId}</td>
-          <td>{airportsList[i].airportCityName}</td>
-
+          <td>{routeId}</td>
+          <td>{routesList[i].routeOriginIataId}</td>
+          <td>{routesList[i].routeDestinationIataId}</td>
           {/* Edit */}
           <td><button className="btn btn-info"
-            onClick={() => AirportsDispatcher.onPromptEdit("/"+airportIataId)}>
+            onClick={() => RoutesDispatcher.onPromptEdit("/"+routeId)}>
             Edit
           </button></td>
 
           {/* Delete */}
           <td><button className="btn btn-primary"
-            onClick={() => AirportsDispatcher.onPromptDelete("/"+airportIataId)}>
+            onClick={() => RoutesDispatcher.onPromptDelete("/"+routeId)}>
             Delete
           </button></td>
         </tr>
@@ -241,12 +245,13 @@ class AirportsDebug extends Component {
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">IATA ID<button className="btn text-white" value="airportIataId" onClick={this.onSortChange}>⇅</button></th>
-              <th scope="col">City<button className="btn text-white" value="airportCityName" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Route ID<button className="btn text-white" value="routeId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Origin Iata ID<button className="btn text-white" value="routeOriginIataId" onClick={this.onSortChange}>⇅</button></th>
+              <th scope="col">Destination Iata ID<button className="btn text-white" value="routeDestinationIataId" onClick={this.onSortChange}>⇅</button></th>
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button className="btn btn-success text-white kit-text-shadow-thin" style={{ whiteSpace: "nowrap" }}
-                    onClick={() => AirportsDispatcher.onPromptCreate()}>
+                    onClick={() => RoutesDispatcher.onPromptCreate()}>
                     + Create New
                   </button>
                 </FlexRow>
@@ -254,7 +259,7 @@ class AirportsDebug extends Component {
             </tr>
           </thead>
           <tbody>
-            {airportsTable}
+            {routesTable}
             <tr><td colSpan="5"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
@@ -262,4 +267,4 @@ class AirportsDebug extends Component {
     );
   }
 }
-export default AirportsDebug;
+export default RoutesDebug;

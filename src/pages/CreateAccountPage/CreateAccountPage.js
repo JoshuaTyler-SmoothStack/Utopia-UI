@@ -28,6 +28,9 @@ const CreateAccountPage = (props) => {
   const [redirect, setRedirect] = useState(false);
   const [status, setStatus] = useState("DEFAULT");
 
+  const [jwk, setjwk] = useState(localStorage.getItem("JWT"))
+
+
   function handleSubmit(e) {
     e.preventDefault();
     handleValidate(email, phone, password, confirmPassword);
@@ -36,7 +39,7 @@ const CreateAccountPage = (props) => {
     if (!firstName || !lastName || !validateEmail ||
       !validatePhone || !validatePassword || !passwordMatch) {
       return;
-    }
+    };
 
     const newUser = {
       userFirstName: firstName,
@@ -72,6 +75,7 @@ const CreateAccountPage = (props) => {
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
       {redirect && <Redirect to="/home" />}
+      {jwk && <Redirect to="/profile" />}
 
       <div className="row">
         {/* Navbar */}

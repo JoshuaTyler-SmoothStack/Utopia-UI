@@ -1,5 +1,5 @@
 // Libraries
-import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
+import RoutesDispatcher from "../../../../dispatchers/RoutesDispatcher";
 import Store from "../../../../reducers/Store";
 
 // Components
@@ -8,11 +8,13 @@ import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
 const DeleteView = () => {
-  const { flights } = Store.getState();
+  const { routes } = Store.getState();
 
-  const resultsStatus = flights.delete.resultsStatus;
-  const selectedFlight = flights.selected;
-  const status = flights.delete.status;
+  const resultsStatus = routes.delete.resultsStatus;
+  const selectedRoute = routes.selected;
+  const status = routes.delete.status;
+
+  console.log(selectedRoute);
 
   return(
     <FlexColumn>
@@ -22,7 +24,7 @@ const DeleteView = () => {
           <ChangeOperationReadout 
             className="m-1" 
             style={{minHeight: "4rem"}} 
-            name="Flight" 
+            name="Route" 
             result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
             status={resultsStatus}
           />
@@ -34,8 +36,8 @@ const DeleteView = () => {
           <FlexRow>
             <button className="btn btn-light m-3"
               onClick={() => {
-                FlightsDispatcher.onCancel();
-                FlightsDispatcher.onRequest();
+                RoutesDispatcher.onCancel();
+                RoutesDispatcher.onRequest();
               }}
             >
               Close
@@ -46,16 +48,20 @@ const DeleteView = () => {
 
       {status !== "PENDING" &&
         <FlexColumn>
-          {/* Flight */}
+          {/* Route */}
           <FlexColumn>
             <FlexRow>
               <div className="mt-3">
-                <label className="form-label">Flight ID</label>
-                <input type="text" readOnly className="form-control" value={selectedFlight.flightId}/>
+                <label className="form-label">Route ID</label>
+                <input type="text" readOnly className="form-control" value={selectedRoute.routeId}/>
               </div>
               <div className="mt-3 ml-3">
-                <label className="form-label">Airplane ID</label>
-                <input type="text" readOnly className="form-control" value={selectedFlight.flightAirplaneId}/>
+                <label className="form-label">Origin Iata ID</label>
+                <input type="text" readOnly className="form-control" value={selectedRoute.routeOriginIataId}/>
+              </div>
+              <div className="mt-3 ml-3">
+                <label className="form-label">Destination Iata ID</label>
+                <input type="text" readOnly className="form-control" value={selectedRoute.routeDestinationIataId}/>
               </div>
             </FlexRow>
           </FlexColumn>
@@ -64,12 +70,12 @@ const DeleteView = () => {
           {/* Buttons */}
           <FlexRow>
             <button className="btn btn-light m-3"
-              onClick={() => FlightsDispatcher.onCancel()}
+              onClick={() => RoutesDispatcher.onCancel()}
             >
               Cancel
             </button>
             <button className="btn btn-primary m-3"
-              onClick={() => FlightsDispatcher.onDelete("/" + selectedFlight.flightId)}
+              onClick={() => RoutesDispatcher.onDelete("/" + selectedRoute.routeId)}
             >
               Confirm Delete (cannot be undone)
             </button>
