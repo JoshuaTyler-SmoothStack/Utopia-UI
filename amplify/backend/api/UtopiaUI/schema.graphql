@@ -1,0 +1,6 @@
+type Airport @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  iata_id: String!
+  name: String!
+  cityname: String!
+}
