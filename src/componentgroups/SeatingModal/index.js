@@ -65,7 +65,6 @@ const SeatingModal = (props) => {
     // let economyClassItems = [];
     // let columnItems = [];
     const totalRows = firstClassRows + businessClassRows + economyClassRows;
-    console.log(totalRows);
     for(var i = 0; i < totalRows; i++) {
       let rowItemsTop = [];
       let rowItemsBottom = [];
@@ -80,13 +79,13 @@ const SeatingModal = (props) => {
           if(occupiedSeats[i+","+ii]) {
             if(ii < firstClassColumns * 0.5) {
               rowItemsTop.push(
-                <button className="btn btn-dark mt-1 mb-1 ml-2 mr-2">
+                <button className="btn btn-dark btn-sm mt-1 mb-1 ml-2 mr-2">
                   {(i+1)+alphabet[ii]}
                 </button>
               );
             } else {
               rowItemsBottom.push(
-                <button className="btn btn-dark mt-1 mb-1 ml-2 mr-2">
+                <button className="btn btn-dark btn-sm mt-1 mb-1 ml-2 mr-2">
                   {(i+1)+alphabet[ii]}
                 </button>
               );
@@ -98,13 +97,13 @@ const SeatingModal = (props) => {
           else {
             if(ii < firstClassColumns * 0.5) {
               rowItemsTop.push(
-                <button className="btn btn-success mt-1 mb-1 ml-2 mr-2">
+                <button className="btn btn-success btn-sm mt-1 mb-1 ml-2 mr-2">
                   {(i+1)+alphabet[ii]}
                 </button>
               );
             } else {
               rowItemsBottom.push(
-                <button className="btn btn-success mt-1 mb-1 ml-2 mr-2">
+                <button className="btn btn-success btn-sm mt-1 mb-1 ml-2 mr-2">
                   {(i+1)+alphabet[ii]}
                 </button>
               );
@@ -192,7 +191,7 @@ const SeatingModal = (props) => {
     >
       <div className="container-fluid">
         <div className="row">
-          <div className="col-12 col-md-9 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow">
+          <div className={(props.className || "")} style={props.style}>
             <div className="row">
               
               {/* Close Button */}

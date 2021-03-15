@@ -36,10 +36,7 @@ const FlightSearch = (props) => {
 
     for(var i in airports.search.results) {
       const airport = airports.search.results[i];
-      const airportAsString = JSON.stringify(airport)
-      .toLowerCase()
-      .replace("aiportiataid", "")
-      .replace("airportcityname", "");
+      const airportAsString = (airport.airportIataId + airport.airportCityName).toLowerCase();
 
       if(airportAsString.includes(inputText)) {
         const formattedAirport = airport.airportIataId + ": " + airport.airportCityName;
@@ -49,7 +46,6 @@ const FlightSearch = (props) => {
     }
     if(type === "origin") setOriginRecommendations(matchingAirports);
     if(type === "destination") setDestinationRecommendations(matchingAirports);
-    console.log(matchingAirports);
     return matchingAirports;
   };
 
