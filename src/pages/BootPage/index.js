@@ -34,17 +34,16 @@ class StartupPage extends Component {
           height: "100vh",
           width: "100vw",
         }}
+        wrap="no-wrap"
         onClick={() => this.handleLoadingProgressCheck()}
       >
         {/* Utopia Header */}
-        <div 
+        <h1 
           className="kit-cursive kit-color-cream kit-text-shadow mt-auto"
-          style={{
-            fontSize: "12rem"
-          }}
+          style={{fontSize: "12rem"}}
         >
           {"Utopia"}
-        </div>
+        </h1>
 
         {/* Spinning Earth & Hot Air Balloon */}
         <img

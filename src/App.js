@@ -6,6 +6,8 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
+import Store from "./reducers/Store";
+import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
 
 // Components
 import LoginModal from "./componentgroups/LoginModal";
@@ -15,6 +17,7 @@ import APIDebugPage from "./pages/APIDebugPage";
 import BootPage from "./pages/BootPage";
 import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
+import FlightSearchPage from "./pages/FlightSearchPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import OrchestrationPage from "./pages/OrchestrationPage";
 import PasswordRecoveryPage from './pages/PasswordRecoveryPage/PasswordRecoveryPage'
@@ -23,26 +26,27 @@ import UserProfilePage from './pages/UserProfilePage/UserProfilePage'
 // Styles
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
-import Store from "./reducers/Store";
-
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.handleResize = _.throttle(this.handleResize.bind(this), 100);
-    this.state = { 
-      ...Store.getCombineDefaultReducerStates(),
+    // State Management
+    Store.initialize(() => this.state, (e) => this.setState(e));
+    this.state = {
+      ...Store.getCombinedDefaultReducerStates(),
       breakPoint: "xx_small",
       isAppStateMounted: false,
     };
-    Store.setState = (e) => this.setState(e);
-    Store.getState = () => this.state;
+
+    // Window Resize throttling
+    this.handleResize = _.throttle(this.handleResize.bind(this), 100);
   }
 
   render() {
-    const isActive_LoginModal = this.state.authentication.isActive_LoginUI
-    
+    const { authentication } = this.state;
+    const isActive_LoginModal = authentication.isActive_LoginUI;
+
     return (
       <main>
         {/* Pages */}
@@ -51,40 +55,56 @@ class App extends Component {
 
             {/* API Debug Page */}
             <Route path="/debug">
-              <APIDebugPage />
+              <APIDebugPage/>
             </Route>
 
             {/* Boot Page */}
             <Route exact path="/">
-              <BootPage />
+              <BootPage/>
             </Route>
 
             {/* Landing Page */}
             <Route path="/home">
-              <LandingPage />
+              <LandingPage/>
             </Route>
 
             {/* Orchestration Page */}
             <Route path="/orchestration">
-              <OrchestrationPage />
+              <OrchestrationPage/>
             </Route>
 
             {/* Create Account Page */}
             <Route path="/createaccount">
-              <CreateAccountPage />
+              <CreateAccountPage/>
+            </Route>
+
+            {/* Flight Search Page */}
+            <Route path="/flights">
+              <FlightSearchPage/>
             </Route>
 
             {/* Forgot Password Page */}
             <Route path="/forgotpassword">
-              <ForgotPasswordPage />
+              {authentication.userId
+                ? <ForgotPasswordPage/>
+                : <LandingPage/>
+              }
             </Route>
 
+            {/* Password Recovery Page */}
             <Route path="/password-recovery/**">
-              <PasswordRecoveryPage />
+              {authentication.userId
+                ? <PasswordRecoveryPage/>
+                : <LandingPage/>
+              }
             </Route>
 
+            {/* Profile Page */}
             <Route path="/profile">
-              <UserProfilePage />
+            {authentication.userId
+                ? <UserProfilePage/>
+                : <LandingPage/>
+              }
             </Route>
 
           </Switch>
@@ -97,29 +117,30 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({isAppStateMounted: true});
+    AuthenticationDispatcher.onLoginWithToken();
+    this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener("resize", () => this.handleResize());
   }
 
   componentDidUpdate() {
-    // console.log(this.state);
+    console.log(this.state);
   }
 
   handleResize = () => {
     const { breakPoint } = this.state;
 
     let newSize = "xx_small";
-    if(window.innerWidth > 375) newSize = "x_small";
-    if(window.innerWidth >= 576) newSize = "small";
-    if(window.innerWidth >= 768) newSize = "medium";
-    if(window.innerWidth >= 992) newSize = "large";
-    if(window.innerWidth >= 1200) newSize = "x_large";
-    if(window.innerWidth >= 1400) newSize = "xx_large";
+    if (window.innerWidth > 375) newSize = "x_small";
+    if (window.innerWidth >= 576) newSize = "small";
+    if (window.innerWidth >= 768) newSize = "medium";
+    if (window.innerWidth >= 992) newSize = "large";
+    if (window.innerWidth >= 1200) newSize = "x_large";
+    if (window.innerWidth >= 1400) newSize = "xx_large";
 
-    if(breakPoint !== newSize) {
+    if (breakPoint !== newSize) {
       console.log(newSize);
-      this.setState({breakPoint: newSize});
+      this.setState({ breakPoint: newSize });
     }
   }
 }

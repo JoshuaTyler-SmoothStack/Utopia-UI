@@ -9,25 +9,12 @@ import StatusIndicator from '../../../components/StatusIndicator';
 import FlexRow from '../../../components/FlexRow';
 
 const OrchestrationDashboard = (props) => {
-  const { orchestration } = Store.getState();
-  
-  const contentNegotiation = orchestration
-    ? orchestration.contentNegotiation
-    : "JSON";
-
   const location = "http://localhost:8080";
-
-  const isActive = orchestration 
-    ? orchestration.ready
-    : false;
-
-  const services = orchestration
-  ? orchestration.services
-  : {list: [], status: "UNKNOWN"};
-
-  const status = orchestration
-    ? orchestration.status
-    : "INACTIVE";
+  
+  const { orchestration } = Store.getState();
+  const contentNegotiation = orchestration.contentNegotiation || "JSON";
+  const isActive = orchestration.ready || false;
+  const status = orchestration.status || "INACTIVE";
 
   return ( 
     <FlexRow
@@ -86,9 +73,9 @@ const OrchestrationDashboard = (props) => {
         <button
           className={"btn btn-info"}
           type={"column"}
-          onClick={() => OrchestrationDispatcher.onServices()}
+          onClick={() => OrchestrationDispatcher.onFindActiveServices()}
         >
-          {services.status === "PENDING" 
+          {status === "PENDING" 
             ? <div className="spinner-border"/>
             : "findActiveServices()"
           }

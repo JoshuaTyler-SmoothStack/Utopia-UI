@@ -5,9 +5,10 @@ import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
-import Orchestration from '../../../Orchestration';
+import ErrorMessage from '../../../components/ErrorMessage';
 import FlexRow from '../../../components/FlexRow';
 import FlexColumn from '../../../components/FlexColumn';
+// import Orchestration from '../../../Orchestration';
 
 class BookingsDashboard extends Component {
   constructor(props) {
@@ -22,14 +23,8 @@ class BookingsDashboard extends Component {
 
   render() {
     const { bookings } = Store.getState();
-
-    const searchResults = bookings
-    ? bookings.searchResults
-    : [];
-
-    const status = bookings
-    ? bookings.status
-    : "INACTIVE";
+    const searchResults = bookings.search.results;
+    const status = bookings.status;
 
     return (
     <div style={{height:" 100%", width: "100%"}}>
@@ -38,26 +33,20 @@ class BookingsDashboard extends Component {
         justify={"start"}
         style={{height:" 100%", overflow: "hidden"}}
       >
-        {/* findAllUsers() */}
+        {/* Fake API Call */}
         <button
           className={"btn btn-info rounded m-1"}
-          onClick={() => this.findAllUsers()}
+          onClick={() => BookingsDispatcher.onFakeAPICall()}
         >
-          {status === "PENDING" 
-            ? <div className="spinner-border text-light"/>
-            : "findAllBookings()"
-          }
+          {"fakeAPICall()"}
         </button>
 
-        {/* triggerError() */}
+        {/* Find All */}
         <button
-          className={"btn btn-info rounded m-1"}
-          onClick={() => this.triggerError()}
+          className={"btn btn-info rounded"}
+          onClick={() => this.findAllBookings()}
         >
-          {status === "PENDING" 
-            ? <div className="spinner-border text-light"/>
-            : "triggerError()"
-          }
+          {"findAllBookings(10)"}
         </button>
       </FlexRow>
 
@@ -71,66 +60,81 @@ class BookingsDashboard extends Component {
             width: window.innerWidth * 0.9,
             top: (window.innerHeight - (window.innerHeight * 0.75)) * 0.5,
             left: (window.innerWidth - (window.innerWidth * 0.9)) * 0.5,
-            overflow: "hidden"
+            overflow: "auto",
+            zIndex: "1"
           }}
           onClose={() => this.setState({isActive_PopContent: false})}
         >
-          {this.handleRenderUserList(searchResults)}
+          {status === "PENDING" &&
+            <div className="spinner-border text-light"/>
+          }
+
+          {status === "ERROR" &&
+            <ErrorMessage soundAlert={true}>
+              Error
+            </ErrorMessage>
+          }
+
+          {status === "SUCCESS" && 
+            this.handleRenderBookingsList(searchResults)
+          }
         </PopContent>
       }
     </div>);
   }
 
-  findAllUsers = () => {
-    BookingsDispatcher.onFindAll();
+  findAllBookings = () => {
+    BookingsDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 
-  triggerError = () => {
-    Orchestration.createRequest("POST", "/bookings",
-      onError => {
-        console.log(onError);
-    }, onSuccess => {
-      console.log(onSuccess);
-    });
-  }
+  handleRenderBookingsList = (bookingsList) => {
+    const { bookings } = Store.getState();
+    const isReferenceIDsActive = true;
+    const resultsDisplayed = Number(bookings.search.resultsPerPage);
+    const resultsStart = bookings.search.resultsPerPage * (bookings.search.resultsPage - 1);
 
-  handleRenderUserList = (bookingsList) => {
     let bookingsTable = [];
-    for(var i in bookingsList) {
+    if(!bookingsList.length) bookingsList = [bookingsList];
+    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < bookingsList.length); i++) {
+      const bookingId = bookingsList[i].bookingId;
+      if(!bookingId) continue;
+
       const index = Number(i) + 1;
       bookingsTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
-          <td>{bookingsList[i].id}</td>
-          <td>{bookingsList[i].isActive}</td>
-          <td>{bookingsList[i].confirmationCode}</td>
+          <td>{bookingId}</td>
+          <td>{bookingsList[i].bookingStatus}</td>
+          <td>{bookingsList[i].bookingConfirmationCode}</td>
+          {isReferenceIDsActive && <td>{bookingsList[i].bookingFlightId || "Error"}</td>}
+          {isReferenceIDsActive && <td>{bookingsList[i].bookingPassengerId || "NR"}</td>}
+          {isReferenceIDsActive && <td>{bookingsList[i].bookingUserId || "Guest"}</td>}
         </tr>
       );
     }
 
     return (
-      <FlexColumn
-        justify={"start"}
-        style={{height: "99%", width: "99%"}}
-      >
-        <table className="table kit-border-shadow">
+      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
+        <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
               <th scope="col">Status</th>
               <th scope="col">Confirmation Code</th>
+              {isReferenceIDsActive && <th scope="col">Flight ID</th>}
+              {isReferenceIDsActive && <th scope="col">Passenger ID</th>}
+              {isReferenceIDsActive && <th scope="col">User ID</th>}
             </tr>
           </thead>
           <tbody>
             {bookingsTable}
+            <tr><td colSpan="5"></td>{/* Space at end of table for aesthetic */}</tr>
           </tbody>
         </table>
       </FlexColumn>
     );
-  };
-
-  
+  }
 }
 export default BookingsDashboard;

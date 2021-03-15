@@ -3,6 +3,7 @@ import React from "react";
 import FlexRow from "../../components/FlexRow";
 
 // Components
+import StatusAsyncIndicator from "../../components/StatusAsyncIndicator";
 import StatusIndicator from "../../components/StatusIndicator";
 
 const ServiceDisplay = (props) => {
@@ -19,9 +20,7 @@ const ServiceDisplay = (props) => {
   const _isActive = isActive || false;
   const _location = location || "UNKOWN";
   const _name = name || "UNKOWN";
-  const _status = _isActive 
-    ? "ACTIVE" 
-    : "INACTIVE";
+  const _status = props.status || "INACTIVE";
 
   return (
     <FlexRow 
@@ -50,7 +49,10 @@ const ServiceDisplay = (props) => {
         </FlexRow>
 
         {/* Status Indicator */}
-        <StatusIndicator className="ml-auto mr-2" status={_status} />
+        <StatusAsyncIndicator className="ml-auto mr-2" status={_status} />
+
+        {/* Status Indicator */}
+        <StatusIndicator className="ml-2 mr-2" status={isActive ? "SUCCESS" : "INACTIVE"} />
 
         {/* URI Path Text */}
         <FlexRow 

@@ -1,18 +1,18 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../componentgroups/NavBar';
+import Store from '../../reducers/Store';
 import { Redirect } from 'react-router'
 import UsersDispatcher from '../../dispatchers/UsersDispatcher'
 
 // Components
-
-import axios from 'axios';
-
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
-
-import './style.css';
 import FlexRow from '../../components/FlexRow';
+import { useHistory } from 'react-router-dom';
+
+// Styles
+import './style.css';
 
 
 
@@ -29,6 +29,11 @@ const PasswordRecoveryPage = (props) => {
   const [loading, setLoading] = useState(true);
   const [verifyToken, setVerifyToken] = useState(false);
 
+  const { authentication } = Store.getState();
+  const history = useHistory();
+  if (authentication.status === "SUCCESS") {
+    history.push("/home");
+  }
 
   let search = window.location.search;
   let params = new URLSearchParams(search);
@@ -76,7 +81,6 @@ const PasswordRecoveryPage = (props) => {
       password: password
     })
       .then(data => {
-        console.log(data)
         setLoading(false)
         setPasswordChanged(true);
         setTimeout(() => setRedirect(true), 3700)

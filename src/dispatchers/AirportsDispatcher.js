@@ -1,64 +1,8 @@
+import BaseDispatcher from "./BaseDispatcher";
 import constants from "../resources/constants.json"
-import Orchestration from "../Orchestration";
-import Store from "../reducers/Store";
 
-class AirportsDispatcher {
-
-  static onFakeAPICall() {
-    Store.reduce({ type: constants.airports.request });
-    setTimeout(() => {
-      Store.reduce({ type: constants.airports.response });
-    }, 1500);
-  }
-
-  static onFindAll() {
-   Store.reduce({type: constants.airports.request});
-
-   Orchestration.createRequest(
-    constants.httpRequest.get,
-    "/airports", 
-    httpError => {
-     Store.reduce({
-        type: constants.airports.error,
-        payload: httpError
-      });
-    }, 
-    httpResponseBody => {
-     Store.reduce({
-        type: constants.airports.response,
-        payload: httpResponseBody
-      });
-    });
-  }
-
-  static onPostAirplane(payload) {
-    Store.reduce({
-      type: constants.orchestration.airports,
-      payload: payload
-    });
-
-    Orchestration.createRequestWithBody(
-      constants.httpRequest.post, 
-      "/airports", 
-      payload,
-      httpError => {
-        Store.reduce({
-          type: constants.orchestration.airports,
-          payload: {
-            list: [],
-            status: "ERROR"
-          }
-        });
-      }, 
-      httpResponseBody => {
-        Store.reduce({
-          type: constants.orchestration.airports,
-          payload: {
-            list: httpResponseBody,
-            status: "REGISTERED"
-          }
-        });
-    });
-  }
+class AirportsDispatcher extends BaseDispatcher {
+  static apiPath = constants.airports.apiPath;
+  static constantsParent = constants.airports;
 }
 export default AirportsDispatcher;

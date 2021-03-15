@@ -5,13 +5,16 @@ import React, { Component } from "react";
 import AirplanesDebug from "./displays/AirplanesDebug";
 import AirportsDebug from "./displays/AirportsDebug";
 import BookingsDebug from "./displays/BookingsDebug";
+import PassengersDebug from "./displays/PassengersDebug";
+import FlightsDebug from "./displays/FlightsDebug";
+import RoutesDebug from "./displays/RoutesDebug";
 import LocalSidebar from "./LocalSidebar";
 import NavBar from "../../componentgroups/NavBar";
-import OrchestrationDispathcer from "../../dispatchers/OrchestrationDispatcher";
 
 class APIDebugPage extends Component {
   constructor(props) {
     super(props);
+    this.navbar = React.createRef()
     this.state = {
       activeDisplay: "BOOKINGS",
     };
@@ -20,33 +23,35 @@ class APIDebugPage extends Component {
   render() {
     const { activeDisplay } = this.state;
     return (
-      <div className="container-fluid overflow-hidden p-0" style={{height:"100vh", width:"100vw"}}>
-        
-        {/* Navbar */}
+      <div className="container-fluid">
         <div className="row">
-          <NavBar className="col" hideSearchBar={true}/>
-        </div>
+          
+          {/* Navbar */}
+          <NavBar className="col-12" hideSearchBar={true}/>
 
-        {/* Content */}
-        <div className="row m-0">
           {/* Siderbar */}
           <LocalSidebar
-            style={{height:"100vh"}}
+            className={"col-4 col-md-2 p-0"} 
+            style={{position:"absolute", zIndex:"1", top:"4rem"}}
             activeDisplay={activeDisplay} 
             onSelectDisplay={(e) => this.setState({activeDisplay: e})}
+            onToggle={(e) => this.setState({isActive_Sidebar: e})}
           />
-          
-          {/* Debug Displays */}
-          {activeDisplay === "AIRPLANES" && <AirplanesDebug className="col-12 col-md-10 m-0 ml-auto p-0"/>}
-          {activeDisplay === "AIRPORTS" && <AirportsDebug className="col-12 col-md-10 m-0 ml-auto p-0"/>}
-          {activeDisplay === "BOOKINGS" && <BookingsDebug className="col-12 col-md-10 m-0 ml-auto p-0"/>}
+
+          {/* Content */}
+          <div className="col-0 col-md-2 bg-dark"/>
+          <div className="col-12 col-md-10">
+            {/* Debug Displays */}
+            {activeDisplay === "AIRPLANES" && <AirplanesDebug/>}
+            {activeDisplay === "AIRPORTS" && <AirportsDebug/>}
+            {activeDisplay === "BOOKINGS" && <BookingsDebug/>}
+            {activeDisplay === "PASSENGERS" && <PassengersDebug/>}
+            {activeDisplay === "FLIGHTS" && <FlightsDebug/>}
+            {activeDisplay === "ROUTES" && <RoutesDebug/>}
+          </div>
         </div>
       </div>
     );
-  }
-
-  componentDidMount() {
-    OrchestrationDispathcer.onServices();
   }
 }
 export default APIDebugPage;

@@ -5,7 +5,10 @@ import Store from '../../../reducers/Store';
 
 // Components
 import PopContent from '../../../components/PopContent';
+import ErrorMessage from '../../../components/ErrorMessage';
 import FlexRow from '../../../components/FlexRow';
+import FlexColumn from '../../../components/FlexColumn';
+// import Orchestration from '../../../Orchestration';
 
 class AirplanesDashboard extends Component {
   constructor(props) {
@@ -20,29 +23,30 @@ class AirplanesDashboard extends Component {
 
   render() {
     const { airplanes } = Store.getState();
-
-    const searchResults = airplanes
-    ? airplanes.searchResults
-    : [];
-
-    const status = airplanes
-    ? airplanes.status
-    : "INACTIVE";
+    const searchResults = airplanes.search.results;
+    const status = airplanes.status;
 
     return (
-    <div>
+    <div style={{height:" 100%", width: "100%"}}>
       <FlexRow
-        className={"kit-gradient-lightgrey90 rounded kit-border-shadow"}
-        style={{overflow:"hidden"}}
+        className={"kit-gradient-lightgrey90 rounded kit-border-shadow p-2"}
+        justify={"start"}
+        style={{height:" 100%", overflow: "hidden"}}
       >
+        {/* Fake API Call */}
         <button
-          className={"btn btn-light rounded"}
+          className={"btn btn-info rounded m-1"}
+          onClick={() => AirplanesDispatcher.onFakeAPICall()}
+        >
+          {"fakeAPICall()"}
+        </button>
+
+        {/* Find All */}
+        <button
+          className={"btn btn-info rounded m-1"}
           onClick={() => this.findAllAirplanes()}
         >
-          {status === "PENDING" 
-            ? <div className="spinner-border text-light"/>
-            : "findAllAirplanes()"
-          }
+          {"findAllAirplanes(10)"}
         </button>
       </FlexRow>
 
@@ -56,49 +60,72 @@ class AirplanesDashboard extends Component {
             width: window.innerWidth * 0.9,
             top: (window.innerHeight - (window.innerHeight * 0.75)) * 0.5,
             left: (window.innerWidth - (window.innerWidth * 0.9)) * 0.5,
-            overflow: "hidden"
+            overflow: "auto",
+            zIndex: "1"
           }}
           onClose={() => this.setState({isActive_PopContent: false})}
         >
-          {this.handleRenderAirplaneList(searchResults)}
+          {status === "PENDING" &&
+            <div className="spinner-border text-light"/>
+          }
+
+          {status === "ERROR" &&
+            <ErrorMessage soundAlert={true}>
+              Error
+            </ErrorMessage>
+          }
+
+          {status === "SUCCESS" && 
+            this.handleRenderAirplanesList(searchResults)
+          }
         </PopContent>
       }
     </div>);
   }
 
   findAllAirplanes = () => {
-    AirplanesDispatcher.onFindAll();
+    AirplanesDispatcher.onRequest();
     this.setState({isActive_PopContent: true});
   }
 
-  handleRenderAirplaneList = (airplanesList) => {
+  handleRenderAirplanesList = (airplanesList) => {
+    const { airplanes } = Store.getState();
+    const resultsDisplayed = Number(airplanes.search.resultsPerPage);
+    const resultsStart = airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1);
+
     let airplanesTable = [];
-    for(var i in airplanesList) {
+    if (!airplanesList.length) airplanesList = [airplanesList];
+    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < airplanesList.length); i++) {
+      const airplaneId = airplanesList[i].airplaneId;
+      if (!airplaneId) continue;
+
       const index = Number(i) + 1;
       airplanesTable.push(
         <tr key={index}>
           <th scrop="row">{index}</th>
-          <td>{airplanesList[i].iataId}</td>
-          <td>{airplanesList[i].city}</td>
+          <td>{airplaneId}</td>
+          <td>{airplanesList[i].airplaneTypeId}</td>
         </tr>
       );
     }
 
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">IATA Code</th>
-            <th scope="col">City</th>
-          </tr>
-        </thead>
-        <tbody>
-          {airplanesTable}
-        </tbody>
-      </table>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
+        <table className="table kit-border-shadow m-3">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">ID</th>
+              <th scope="col">Type ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {airplanesTable}
+            <tr><td colSpan="3"></td>{/* Space at end of table for aesthetic */}</tr>
+          </tbody>
+        </table>
+      </FlexColumn>
     );
-  };
-
+  }
 }
 export default AirplanesDashboard;

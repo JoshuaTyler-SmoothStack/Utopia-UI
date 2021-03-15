@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom';
 // Components
 import FlexColumn from "../../components/FlexColumn";
 
-const LocalPageButtonsPopContent = (props) => {
+const LocalPageButtons = (props) => {
   const buttonClassName = "btn btn-secondary m-1";
   const buttonStyle = {width: "12rem"};
 
   return (
     <FlexColumn
       align={"start"}
-      className={"h-100"}
+      className={"h-100 pl-1 pr-1 " + (props.className || "")}
       justify={"around"}
-      style={{width: "100%"}}
+      style={props.style}
     >
       {/* Boot Page */}
       <Link to={"/"}>
@@ -34,6 +34,13 @@ const LocalPageButtonsPopContent = (props) => {
       <Link to={"/debug"}>
         <button className={buttonClassName} style={buttonStyle}>
           {"Debug MS Page"}
+        </button>
+      </Link> 
+
+      {/* Flight Search Page */}
+      <Link to={"/flights"}>
+        <button className={buttonClassName} style={buttonStyle}>
+          {"Flight Search Page"}
         </button>
       </Link> 
 
@@ -60,4 +67,4 @@ const LocalPageButtonsPopContent = (props) => {
     </FlexColumn>
   );
 };
-export default LocalPageButtonsPopContent;
+export default LocalPageButtons;

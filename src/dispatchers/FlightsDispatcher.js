@@ -1,114 +1,53 @@
+import BaseDispatcher from "./BaseDispatcher";
 import constants from "../resources/constants.json"
-import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
+import Orchestration from "../Orchestration";
 
-class FlightsDispatcher {
-  static onFindAll() {
-   Store.reduce({type: constants.flights.request});
+class FlightsDispatcher extends BaseDispatcher {
+  static apiPath = constants.flights.apiPath;
+  static constantsParent = constants.flights;
 
-   setTimeout(() => {
-
-    Orchestration.createRequest(
-      constants.httpRequest.get,
-      "flights",
-      httpError => {
-       Store.reduce({
-          type: constants.flights.error,
-          payload: httpError
-        });
-      }, 
-      httpResponseBody => {
-       Store.reduce({
-          type: constants.flights.response,
-          payload: httpResponseBody
-        });
-    });
-  }, 500);
-  }
-
-  static onSearchOneWayFlights(payload) {
-    let paramOrig = "?orig=" + payload.origin;
-    let paramDest = "&dest=" + payload.destination;
-    let paramDate = "&date=" + payload.date;
-    let paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
-    Store.reduce({type: constants.flights.request});
-  
-     Orchestration.createRequest(
-      constants.httpRequest.get,
-      "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
-      httpError => {
-       Store.reduce({
-          type: constants.flights.error,
-          payload: httpError
-        });
-      }, 
-      httpResponseBody => {
-       Store.reduce({
-          type: constants.flights.response,
-          payload : httpResponseBody
-        });
-    });
-   
-  }
-
-  static onSearchRoundTripFlights(payload) {
+  static onSearchAndFilter(httpPath, searchTermsString, filtersObject) {
+    filtersObject = {
+      "flightRouteDestinationIataId": filtersObject.destination.split(":")[0],
+      "flightRouteOriginIataId": filtersObject.origin.split(":")[0],
+    };
     
-    let paramOrig = "?orig=" + payload.origin;
-    let paramDest = "&dest=" + payload.destination;
-    let paramDate = "&date=" + payload.date;
-    let paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
-    Store.reduce({type: constants.flights.request});
-  
-     Orchestration.createRequest(
-      constants.httpRequest.get,
-      "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
-      httpError => {
-       Store.reduce({
-          type: constants.flights.error,
-          payload: httpError
-        });
-      }, 
-      httpResponseBody => {
-      console.log("UPPER HERE -> ", httpResponseBody);
-       Store.reduce({
-          type: constants.flights.response,
-          payload : httpResponseBody
-        });
-    });
-
-
-   //Return Flights
-    var dayAfter = new Date(payload.date)
-    dayAfter.setDate(dayAfter.getDate() + 1);
-    paramOrig = "?orig=" + payload.destination;
-    paramDest = "&dest=" + payload.origin;
-    if(payload.dateReturn === "")
-      paramDate = "&date=" + dayAfter.toISOString().split('T')[0];
-    else{
-      paramDate = "&date=" + payload.dateReturn;
+    const activeFilters = {};
+    if(searchTermsString) activeFilters.searchTerms = searchTermsString;
+    if(filtersObject) {
+      for(const key in filtersObject) {
+        if(filtersObject[key] !== null && filtersObject[key] !== undefined) {
+          activeFilters[key] = filtersObject[key];
+        }
+      }
     }
 
-    paramTravelers = "&travelers=" + (parseInt(payload.adultSelect) + parseInt(payload.childrenSelect) + parseInt(payload.seniorSelect));
-    Store.reduce({type: constants.flights.requestReturn});
-
-     Orchestration.createRequest(
-      constants.httpRequest.get,
-      "flights/search" + paramOrig + paramDest + paramDate + paramTravelers,
-      httpError => {
-       Store.reduce({
-          type: constants.flights.error,
-          payload: httpError
-        });
-      }, 
-      httpResponseBody => {
-        console.log("HERE -> ", httpResponseBody);
+    Store.reduce({ type: this.getConstantsParent().request });
+    Orchestration.createRequestWithBody(
+      constants.httpRequest.post,
+      this.getApiPath() + httpPath,
+      activeFilters,
+      (httpError) => {
         Store.reduce({
-          type: constants.flights.returnFlightResponse,
-          payload : httpResponseBody
+          type: this.getConstantsParent().error,
+          payload: httpError,
         });
-    });
-  
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          Store.reduce({
+            type: this.getConstantsParent().error,
+            payload: httpResponseBody.error,
+          });
+        } else {
+          Store.reduce({
+            type: this.getConstantsParent().response,
+            payload: httpResponseBody,
+          });
+        }
+      }
+    );
   }
-
 }
 export default FlightsDispatcher;

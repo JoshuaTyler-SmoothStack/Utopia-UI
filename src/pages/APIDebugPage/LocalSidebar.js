@@ -1,27 +1,32 @@
 import React, { useState } from "react";
+import Store from "../../reducers/Store";
 import FlexColumn from "../../components/FlexColumn";
 
 const LocalSidebar = (props) => {
   // @PROP: activeDisplay - string
   // @PROP: onSelectDisplay - f()
 
-  
   const activeDisplay = props.activeDisplay || "";
   
-  const isMediumSize = window.innerWidth >= 576;
+  const isMobileSize = Store.getState().breakPoint.includes("small");
   const [isSidebarActive, setSidebarActive] = useState(props.isActive || false);
   const sidebarItemClassName = "btn btn-dark text-white mt-2";
   const sidebarItemSelectedClassName = "btn btn-light text-white mt-2";
-  
+
+  const setSiderbarState = (isActive) => {
+    setSidebarActive(isActive);
+    if(props.onToggle) {
+      props.onToggle(isActive);
+    }
+  };
+
   return (
-    <nav className={"navbar align-items-start p-0 kit-border-shadow " + (props.className || "")}
-      style={props.style}
-    >
+    <nav className={(props.className || "")} style={props.style}>
       {/* Popout Button - Inactive Nav */}
-      {(!isSidebarActive && !isMediumSize) &&
+      {(!isSidebarActive && isMobileSize) &&
         <FlexColumn style={{position: "absolute", zIndex:"2"}}>
           <button className="btn btn-sm btn-info"
-            onClick={() => setSidebarActive(true)}
+            onClick={() => setSiderbarState(true)}
           >
             {"▼"}
           </button>
@@ -29,22 +34,20 @@ const LocalSidebar = (props) => {
       }
 
       {/* Nav Items */}
-      {(isSidebarActive || isMediumSize) &&
+      {(isSidebarActive || !isMobileSize) &&
         <div>
           {/* Popout Button - Active Nav */}
-          {(isSidebarActive && !isMediumSize) &&
-            <FlexColumn style={{position: "absolute", zIndex:"2"}}>
+          {(isSidebarActive && isMobileSize) &&
+            <FlexColumn style={{position: "absolute", zIndex:"2", top:"0"}}>
               <button className="btn btn-sm btn-info"
-                onClick={() => setSidebarActive(false)}
+                onClick={() => setSiderbarState(false)}
               >
                 {"▲"}
               </button>
             </FlexColumn>
           }
 
-          <ul className="h-100 navbar-nav bg-secondary kit-no-user"
-            style={{position: "absolute", width:"16.67vw", zIndex:"1"}}
-          >
+          <ul className="navbar-nav rounded-bottom p-0 bg-dark overflow-hidden kit-border-shadow kit-no-user">
             {/* Airplanes */}
             <li 
               className={activeDisplay === "AIRPLANES" 

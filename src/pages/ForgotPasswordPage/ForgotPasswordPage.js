@@ -1,15 +1,18 @@
 // Libraries
 import React, { useState } from 'react';
-import axios from 'axios';
-import NavBar from '../../componentgroups/NavBar';
-import './style.css';
-import UsersDispatcher from '../../dispatchers/UsersDispatcher'
-
-import LogoGif from '../../components/LogoGif';
 import { Redirect } from 'react-router';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import { useHistory } from 'react-router-dom';
+import Store from '../../reducers/Store';
 
+// Components
+import NavBar from '../../componentgroups/NavBar';
+import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
+
+// Styles
+import './style.css';
 
 const ForgotPasswordPage = (props) => {
 
@@ -20,6 +23,15 @@ const ForgotPasswordPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false)
   const [redirect, setRedirect] = useState(false);
+
+  const { authentication } = Store.getState();
+
+
+  const history = useHistory();
+  if (localStorage.getItem("JWT")) {
+    history.push("/home")
+  }
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -34,17 +46,9 @@ const ForgotPasswordPage = (props) => {
     }
 
     setLoading(true)
-    UsersDispatcher.forgotPassword({ email: email })
-      .then(data => {
-        console.log(data)
-        setSuccess(true)
-        setLoading(false)
-        setTimeout(() => setRedirect(true), 3400)
-      }, error => {
-        setLoading(false)
-        setSubmitted(false)
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
-      })
+    AuthenticationDispatcher.onForgotPassword(email)
+
+
 
   }
 
@@ -54,14 +58,14 @@ const ForgotPasswordPage = (props) => {
       <NavBar />
 
       <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
-        {!success && !loading &&
+        {(authentication.forgotPasswordStatus === "INACTIVE" || authentication.forgotPasswordStatus === "ERROR") &&
           <div className="col-md-12 col-md-12-local">
             <div className="card fp-card-local">
               <h2 className="fp-forgotPassordHeader">Forgot Password</h2>
               <div className="errorContainer">
-                {errorMessage &&
+                {authentication.forgotPasswordStatus === "ERROR" &&
                   <div id="header" className="alert alert-warning text-white" role="alert">
-                    <strong>Error! </strong> {errorMessage}
+                    <strong>{authentication.error} </strong>
                   </div>
                 }
 
@@ -87,7 +91,8 @@ const ForgotPasswordPage = (props) => {
           </div>
         }
 
-        {loading &&
+
+        {authentication.forgotPasswordStatus === "PENDING" &&
           <div className="col-md-12 col-md-12-local">
             <FlexRow className="fp-card-local p-0">
               <LogoGif className="m-auto" style={{ width: "75%" }} />
@@ -95,16 +100,13 @@ const ForgotPasswordPage = (props) => {
           </div>
         }
 
-        {!loading && success &&
+        {authentication.forgotPasswordStatus === "SUCCESS" &&
           <div className="col-md-12 col-md-12-local">
             <div className="card fp-card-local" >
               <p className='sent-success-msg'>Email sent</p>
             </div>
+            <Redirect to="/home" />
           </div>
-        }
-
-        {redirect &&
-          <Redirect to="/home" />
         }
 
       </FlexColumn>

@@ -1,86 +1,102 @@
-import constants from "../resources/constants.json"
+import BaseReducer from "./BaseReducer";
 
-const AuthenticationReducer = (action) => {
-  const authentication = constants.authentication;
-  switch(action.type) {
+class AuthenticationReducer extends BaseReducer {
 
-    case authentication.cancel:
-      return {isActive_LoginUI: false};
-
-    case authentication.createAccountRequest:
-      return {status: "PENDING"};
-
-    case authentication.createAccountError:
-      return {
-        error: action.payload,
-        status: "ERROR",
-        userId: "UNKNOWN"
-      };
-
-    case authentication.createAccountSuccess:
-      console.log("UserMS - Login payload: ", action.payload);
-      return {
-        status: "ACTIVE",
-        userId: action.payload.id
-      };
-
-    case authentication.error:
-      return {
-        errpr: action.payload || "[ERROR]: 404 - Not Found!",
-        status: "ERROR"
-      };
-
-    case authentication.forgotPasswordRequest:
-      return {status: "PENDING"};
-
-    case authentication.forgotPasswordError:
-      return {
-        status: "ERROR",
-        error: "Did not work ERROR"
-      };
-
-    case authentication.forgotPasswordSuccess:
-      return {status: "SUCCESS"};
-
-    case authentication.prompt:
-      return {
-        error: "",
-        isActive_LoginUI: true,
-        status: "INACTIVE",
-      };
-
-    case authentication.loginRequest:
-      return {status: "PENDING"};
-
-    case authentication.loginError:
-      return {
-        error: action.payload,
-        status: "ERROR",
-        userId: "UNKNOWN"
-      };
-
-    case authentication.loginSuccess:
-      console.log("UserMS - Login payload: ", action.payload);
-      return {
-        status: "ACTIVE",
-        userId: action.payload 
-        ? action.payload.id
-        : "UNKNOWN"
-      };
-
-    case authentication.logout:
-      return defaultAuthenticationState;
-
-    default:
-      console.error("Invalid action.type!", action);
+  static getDefaultReducerState() {
+    return defaultAuthenticationState;
   }
-};
+
+  static reduce(action, state) {
+    switch (action.type) {
+
+      case this.constantsParent.cancel:
+        return { isActive_LoginUI: false };
+
+      case this.constantsParent.error:
+        return {
+          error: action.payload || "[ERROR]: 404 - Not Found!",
+          status: "ERROR",
+          userId: "UNKNOWN"
+        };
+
+      case this.constantsParent.errorLogin:
+        return {
+          error: "Invalid email or password.",
+          status: "ERROR",
+          userId: "UNKNOWN"
+        };
+
+      case this.constantsParent.errorForgotPassword:
+        return {
+          forgotPasswordStatus: "ERROR",
+          error: action.payload
+        }
+
+      // Prompts
+      // =====================================
+      case this.constantsParent.promptLogin:
+        return {
+          error: "",
+          isActive_LoginUI: true,
+        };
+
+      // Requests
+      // =====================================
+      case this.constantsParent.requestCreateAccount:
+        return { status: "PENDING" };
+
+      case this.constantsParent.requestForgotPassword:
+        return { forgotPasswordStatus: "PENDING" };
+
+      case this.constantsParent.requestLogin:
+        return {
+          status: "PENDING",
+          userLogin: action.payload
+        };
+
+
+      // Responses
+      // =====================================
+      case this.constantsParent.responseCreateAccount:
+        return {
+          status: "SUCCESS",
+          userId: action.payload.userId
+        };
+
+      case this.constantsParent.responseLogin:
+        console.log(action.payload);
+        return {
+          isActive_LoginUI: false,
+          status: "SUCCESS",
+          userId: action.payload.userId,
+          userRole: action.payload.userRole,
+          userToken: action.payload.userToken
+        };
+
+      case this.constantsParent.responseForgotPassword:
+        return {
+          forgotPasswordStatus: "SUCCESS",
+        }
+
+      // Reset
+      // =====================================
+      case this.constantsParent.reset:
+        return defaultAuthenticationState;
+
+      default:
+        console.error("Invalid action.type!", action);
+    }
+  }
+}
 export default AuthenticationReducer;
 
 export const defaultAuthenticationState = {
   error: "",
   isActive_LoginUI: false,
-  forgotPasswordStatus: "",
   status: "INACTIVE",
-  userId: "UNKNOWN"
+  userId: "",
+  userRole: "",
+  userToken: "",
+  forgotPasswordStatus: "INACTIVE",
+
 };

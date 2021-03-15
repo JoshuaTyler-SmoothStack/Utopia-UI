@@ -1,22 +1,22 @@
 // Libraries
+import _ from 'lodash';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 // Components
 import App from './App'
 
 // Tests
-import BookingsStateTests from "./tests/BookingsStateTests";
 import Store from './reducers/Store';
 
-// State Management Dispatcher & Reducer Tests
-const stateManagementTests = () => {  
+
+test("App State successfully mounts", () => {
   // Create App State
   render(<App/>);
   while(!Store.getState().isAppStateMounted){/* do nothing */};
-  
-  // Begin Testings
-  new BookingsStateTests().runAllTests();
-};
-stateManagementTests();
+  const _stateWithoutBreakpoint = _.omit(Store.getState(), "breakPoint");
+  expect(_stateWithoutBreakpoint).toEqual({
+    ...Store.getCombinedDefaultReducerStates(),
+    isAppStateMounted: true,
+  });
+});
