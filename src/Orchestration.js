@@ -1,5 +1,5 @@
 import Store from "./reducers/Store";
-import constants from "./resources/constants.json"
+import constants from "./resources/constants.json";
 
 class Orchestration {
 
@@ -9,39 +9,47 @@ class Orchestration {
 
     const { authentication } = Store.getState();
     const authorization = (authentication.userToken || authentication.userLogin);
-    
+
+    // Content Negotiation
     const contentNegotiation = {
       "Accept": "application/" + Orchestration.contentType,
-      "Content-Type": "application/" + Orchestration.contentType
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/" + Orchestration.contentType,
     };
 
+    // Headers
     const headers = (!requestHeaders.hasOwnProperty("Authorization") && authorization)
       ? {Authorization: authorization, ...contentNegotiation, ...requestHeaders}
       : {...contentNegotiation, ...requestHeaders};
 
-    const body = (requestType !== constants.httpRequest.get && requestType !== constants.httpRequest.delete)
+    // Body
+    const body = (requestType !== constants.httpRequest.get 
+      && requestType !== constants.httpRequest.delete)
       ? JSON.stringify(requestBody)
       : null;
 
-    const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
-    fetch("18.234.108.206" + formattedRequestPath, {
-      headers: headers,
-      body: body,
-      method: requestType
+    // Path
+    const formattedRequestPath = requestPath.startsWith("/")
+      ? requestPath 
+      : "/" + requestPath;
+
+    // Request
+    fetch("http://3.235.67.202:8080" + formattedRequestPath, {
+      headers,  
+      body,
+      method: requestType,
     })
-      .then((response) => {
-        if (Orchestration.contentType === "json") {
-          return response.clone().json().catch(() => response.text());
-        }
-        return response.text();
-      })
-      .then((data) => {
-        httpResponseBody(data);
-      })
-      .catch((err) => {
-        console.error("[ERROR]: " + err);
-        httpError(err);
-      });
+    .then((response) => {
+      return Orchestration.contentType === "json"
+        ? response.clone().json().catch(() => response.text())
+    })
+    .then((data) => {
+      httpResponseBody(data);
+    })
+    .catch((err) => {
+      console.error("[ERROR]: " + err);
+      httpError(err);
+    });
   }
 
   static createRequest(requestType, requestPath, httpError, httpResponseBody) {
