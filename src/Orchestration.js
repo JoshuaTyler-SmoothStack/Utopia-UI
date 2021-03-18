@@ -42,6 +42,7 @@ class Orchestration {
     .then((response) => {
       return Orchestration.contentType === "json"
         ? response.clone().json().catch(() => response.text())
+        : response.text();
     })
     .then((data) => {
       httpResponseBody(data);
