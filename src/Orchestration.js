@@ -34,7 +34,7 @@ class Orchestration {
       : "/" + requestPath;
 
     // Request
-    fetch("https://3.235.67.202:8080" + formattedRequestPath, {
+    fetch("https://3.235.67.202" + formattedRequestPath, {
       headers,
       body,
       method: requestType,
