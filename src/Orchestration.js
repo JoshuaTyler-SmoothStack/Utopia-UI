@@ -24,7 +24,7 @@ class Orchestration {
       : null;
 
     const formattedRequestPath = requestPath.startsWith("/") ? requestPath : "/" + requestPath;
-    fetch("http://localhost:8080" + formattedRequestPath, {
+    fetch("18.234.108.206" + formattedRequestPath, {
       headers: headers,
       body: body,
       method: requestType
