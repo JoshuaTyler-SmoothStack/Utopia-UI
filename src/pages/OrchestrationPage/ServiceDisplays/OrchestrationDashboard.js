@@ -9,7 +9,6 @@ import StatusIndicator from '../../../components/StatusIndicator';
 import FlexRow from '../../../components/FlexRow';
 
 const OrchestrationDashboard = (props) => {
-  const location = "http://localhost:8080";
   
   const { orchestration } = Store.getState();
   const contentNegotiation = orchestration.contentNegotiation || "JSON";
@@ -53,7 +52,6 @@ const OrchestrationDashboard = (props) => {
           className={"rounded kit-bg-smoke rounded kit-border-shadow mr-2"}
           style={{height: "2rem", width: "33%"}}
         >
-          {location}
         </FlexRow>
       </FlexRow>
 

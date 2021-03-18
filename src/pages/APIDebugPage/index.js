@@ -16,7 +16,7 @@ class APIDebugPage extends Component {
     super(props);
     this.navbar = React.createRef()
     this.state = {
-      activeDisplay: "BOOKINGS",
+      activeDisplay: "AIRPLANES",
     };
   }
 
