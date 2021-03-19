@@ -13,7 +13,6 @@ class Orchestration {
     // Content Negotiation
     const contentNegotiation = {
       "Accept": "application/" + Orchestration.contentType,
-      "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/" + Orchestration.contentType,
     };
 
