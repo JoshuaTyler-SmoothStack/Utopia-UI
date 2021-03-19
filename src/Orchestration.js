@@ -34,7 +34,7 @@ class Orchestration {
       : "/" + requestPath;
 
     // Request
-    fetch("https://3.235.67.202" + formattedRequestPath, {
+    fetch("https://htwl156n3e.execute-api.us-east-1.amazonaws.com/production" + formattedRequestPath, {
       headers,
       body,
       method: requestType,
