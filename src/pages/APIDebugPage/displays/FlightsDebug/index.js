@@ -28,13 +28,19 @@ class FlightsDebug extends Component {
   }
 
   render() {
-    const { orchestration, flights } = Store.getState();
+    const { flights } = Store.getState();
     const { searchTerms } = this.state;
+
+    // Microservice Status
+    const flightsMSHealth = flights.health;
+    const flightsMSStatus = flights.status;
+
+    // Modal Toggles
     const isCreatePromptActive = flights.create.isActive;
     const isDeletePromptActive = flights.delete.isActive;
     const isEditPromptActive = flights.edit.isActive;
-    const isMSActive = orchestration.services.includes("flight-service");
-    const flightsMSStatus = flights.status;
+
+    // Search Results vars
     const searchError = flights.search.error;
     const searchFilters = flights.search.filters;
     const searchResults = flights.search.results;
@@ -51,6 +57,7 @@ class FlightsDebug extends Component {
             <OrchestrationHeader
               className="col-12 col-md-6"
               name="Flight MS"
+              health={flightsMSHealth}
               status={
                 flightsMSStatus === "INACTIVE" ? "PENDING" : flightsMSStatus
               }
@@ -156,7 +163,9 @@ class FlightsDebug extends Component {
           {flightsMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {isMSActive ? flights.error : "No Flight MS connection."}
+                {flightsMSStatus === "HEALTHY"
+                  ? flights.error
+                  : "No Flight MS connection."}
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"
@@ -229,7 +238,7 @@ class FlightsDebug extends Component {
 
   handleRenderFlightsList = (flightsList) => {
     if (!flightsList.length) flightsList = [flightsList];
-    
+
     const { flights } = Store.getState();
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart =
@@ -237,22 +246,22 @@ class FlightsDebug extends Component {
 
     const flightsTable = [];
     const { currentSort, sortedItem } = this.state;
-    switch(sortedItem) {
+    switch (sortedItem) {
       case "flightDuration":
         flightsList.sort((a, b) => {
           return currentSort === "up"
             ? a.flightDuration - b.flightDuration
             : b.flightDuration - a.flightDuration;
         });
-      break;
+        break;
 
       case "flightDepartureTime":
-          flightsList.sort((a, b) => {
-            return currentSort === "up"
-              ? new Date(a.flightDepartureTime) - new Date(b.flightDepartureTime)
-              : new Date(b.flightDepartureTime) - new Date(a.flightDepartureTime);
-          });
-      break;
+        flightsList.sort((a, b) => {
+          return currentSort === "up"
+            ? new Date(a.flightDepartureTime) - new Date(b.flightDepartureTime)
+            : new Date(b.flightDepartureTime) - new Date(a.flightDepartureTime);
+        });
+        break;
 
       case "flightRouteId":
         flightsList.sort((a, b) => {
@@ -260,7 +269,7 @@ class FlightsDebug extends Component {
             ? a.flightRouteId - b.flightRouteId
             : b.flightRouteId - a.flightRouteId;
         });
-      break;
+        break;
 
       case "flightAirplaneId":
         flightsList.sort((a, b) => {
@@ -268,7 +277,7 @@ class FlightsDebug extends Component {
             ? a.flightAirplaneId - b.flightAirplaneId
             : b.flightAirplaneId - a.flightAirplaneId;
         });
-      break;
+        break;
 
       case "flightSeatingId":
         flightsList.sort((a, b) => {
@@ -276,7 +285,7 @@ class FlightsDebug extends Component {
             ? a.flightSeatingId - b.flightSeatingId
             : b.flightSeatingId - a.flightSeatingId;
         });
-      break;
+        break;
 
       case "flightStatus":
         flightsList.sort((a, b) => {
@@ -284,7 +293,7 @@ class FlightsDebug extends Component {
             ? a.flightStatus.localeCompare(b.flightStatus)
             : b.flightStatus.localeCompare(a.flightStatus);
         });
-      break;
+        break;
 
       default:
         flightsList.sort((a, b) => {
@@ -294,18 +303,27 @@ class FlightsDebug extends Component {
         });
     }
 
-    for (let i = resultsStart; i < resultsStart + resultsDisplayed && i < flightsList.length; i++) {
+    for (
+      let i = resultsStart;
+      i < resultsStart + resultsDisplayed && i < flightsList.length;
+      i++
+    ) {
       const flightId = flightsList[i].flightId;
       if (flightId) {
-        
-        const departureTime = moment(flightsList[i].flightDepartureTime).format("MMMM DD YYYY, h:mm:ss a");
-        
+        const departureTime = moment(flightsList[i].flightDepartureTime).format(
+          "MMMM DD YYYY, h:mm:ss a"
+        );
+
         const minutesPerDay = 3600;
         const minutesPerHour = 60;
-        const durationHours = Math.floor(flightsList[i].flightDuration / minutesPerDay);
-        const durationMinutes = Math.floor((flightsList[i].flightDuration % minutesPerDay) / minutesPerHour);
-        const duration = String(durationHours + "h " + durationMinutes + "m");
-  
+        const durationHours = Math.floor(
+          flightsList[i].flightDuration / minutesPerDay
+        );
+        const durationMinutes = Math.floor(
+          (flightsList[i].flightDuration % minutesPerDay) / minutesPerHour
+        );
+        const duration = String(`${durationHours}h ${durationMinutes}m`);
+
         const index = Number(i) + 1;
         flightsTable.push(
           <tr key={index}>

@@ -27,13 +27,19 @@ class RoutesDebug extends Component {
   }
 
   render() {
-    const { orchestration, routes } = Store.getState();
+    const { routes } = Store.getState();
     const { searchTerms } = this.state;
+
+    // Microservice Status
+    const routesMSHealth = routes.health;
+    const routesMSStatus = routes.status;
+
+    // Modal Toggles
     const isCreatePromptActive = routes.create.isActive;
     const isDeletePromptActive = routes.delete.isActive;
     const isEditPromptActive = routes.edit.isActive;
-    const isMSActive = orchestration.services.includes("route-service");
-    const routesMSStatus = routes.status;
+
+    // Search Results vars
     const searchError = routes.search.error;
     const searchFilters = routes.search.filters;
     const searchResults = routes.search.results;
@@ -50,6 +56,7 @@ class RoutesDebug extends Component {
             <OrchestrationHeader
               className="col-12 col-md-6"
               name="Route MS"
+              health={routesMSHealth}
               status={
                 routesMSStatus === "INACTIVE" ? "PENDING" : routesMSStatus
               }
@@ -155,7 +162,10 @@ class RoutesDebug extends Component {
           {routesMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {isMSActive ? routes.error : "No Route MS connection."}
+                {routesMSHealth === "HEALTHY"
+                  ? routes.error
+                  : "No Route MS connection."
+                }
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"

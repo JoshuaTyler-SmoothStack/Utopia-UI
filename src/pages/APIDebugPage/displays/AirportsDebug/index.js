@@ -27,13 +27,19 @@ class AirportsDebug extends Component {
   }
 
   render() {
-    const { orchestration, airports } = Store.getState();
+    const { airports } = Store.getState();
     const { searchTerms } = this.state;
+
+    // Microservice Status
+    const airportsMSHealth = airports.health;
+    const airportsMSStatus = airports.status;
+
+    // Modal Toggles
     const isCreatePromptActive = airports.create.isActive;
     const isDeletePromptActive = airports.delete.isActive;
     const isEditPromptActive = airports.edit.isActive;
-    const isMSActive = orchestration.services.includes("airport-service");
-    const airportsMSStatus = airports.status;
+
+    // Search Results vars
     const searchError = airports.search.error;
     const searchFilters = airports.search.filters;
     const searchResults = airports.search.results;
@@ -50,6 +56,7 @@ class AirportsDebug extends Component {
             <OrchestrationHeader
               className="col-12 col-md-6"
               name="Airport MS"
+              health={airportsMSHealth}
               status={
                 airportsMSStatus === "INACTIVE" ? "PENDING" : airportsMSStatus
               }
@@ -155,7 +162,7 @@ class AirportsDebug extends Component {
           {airportsMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {isMSActive ? airports.error : "No Airport MS connection."}
+                {airportsMSHealth === "HEALTHY" ? airports.error : "No Airport MS connection."}
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"

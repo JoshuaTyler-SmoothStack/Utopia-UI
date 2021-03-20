@@ -55,6 +55,7 @@ class AirplanesDebug extends Component {
             <OrchestrationHeader
               className="col-12 col-md-6"
               name="Airplane MS"
+              health={airplanesMSHealth}
               status={
                 airplanesMSStatus === "INACTIVE" ? "PENDING" : airplanesMSStatus
               }

@@ -1,5 +1,5 @@
 // Libraries
-import constants from "../resources/constants.json"
+import constants from "../resources/constants.json";
 
 // Reducers
 import AirplanesReducer from "./AirplanesReducer";
@@ -7,7 +7,6 @@ import AirportsReducer from "./AirportsReducer";
 import AuthenticationReducer from "./AuthenticationReducer";
 import BookingsReducer from "./BookingsReducer";
 import FlightsReducer from "./FlightsReducer";
-import OrchestrationReducer from "./OrchestrationReducer";
 import PassengersReducer from "./PassengersReducer";
 import PaymentsReducer from "./PaymentsReducer";
 import RoutesReducer from "./RoutesReducer";
@@ -27,11 +26,10 @@ class Store {
       AuthenticationReducer.initialize(constants.authentication),
       BookingsReducer.initialize(constants.bookings),
       FlightsReducer.initialize(constants.flights),
-      OrchestrationReducer.initialize(constants.orchestration),
       PassengersReducer.initialize(constants.passengers),
       PaymentsReducer.initialize(constants.payments),
       RoutesReducer.initialize(constants.routes),
-      UsersReducer.initialize(constants.users)
+      UsersReducer.initialize(constants.users),
     ];
   }
 
@@ -55,18 +53,17 @@ class Store {
       console.error("Cannot reduce action - invalid setState() method", action);
       return;
     }
-    
-    for(var i in this.reducers) {
-      const reducer = this.reducers[i];
-      if(!reducer.constantsParent) continue;
-      if(reducer.constantsParent.root === actionTypeRoot) {
+
+    for(const i in this.reducers) {
+      if(this.reducers[i].constantsParent.root === actionTypeRoot) {
+        const reducer = this.reducers[i];
         const reducerName = reducer.constantsParent.name;
-        this.setState((state) => ({
-          [reducerName]: {
-            ...state[reducerName],
-            ...reducer.reduce(action, state[reducerName])
-          }
-        }));
+          this.setState((state) => ({
+            [reducerName]: {
+              ...state[reducerName],
+              ...reducer.reduce(action, state[reducerName]),
+            },
+          }));
         break;
       }
     }
@@ -79,11 +76,10 @@ class Store {
       authentication: AuthenticationReducer.getDefaultReducerState(),
       bookings: BookingsReducer.getDefaultReducerState(),
       flights: FlightsReducer.getDefaultReducerState(),
-      orchestration: OrchestrationReducer.getDefaultReducerState(),
       passengers: PassengersReducer.getDefaultReducerState(),
       payments: PaymentsReducer.getDefaultReducerState(),
       routes: RoutesReducer.getDefaultReducerState(),
-      users: UsersReducer.getDefaultReducerState()
+      users: UsersReducer.getDefaultReducerState(),
     };
   }
 }

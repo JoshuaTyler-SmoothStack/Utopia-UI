@@ -35,10 +35,17 @@ class BookingsDebug extends Component {
   render() {
     const { bookings } = Store.getState();
     const { isReferenceIDsActive, searchText } = this.state;
+
+    // Microservice Status
+    const bookingsMSHealth = bookings.health;
+    const bookingsMSStatus = bookings.status;
+
+    // Modal Toggles
     const isCreatePromptActive = bookings.create.isActive;
     const isDeletePromptActive = bookings.delete.isActive;
     const isEditPromptActive = bookings.edit.isActive;
-    const bookingsMSStatus = bookings.status;
+
+    // Search Results vars
     const searchError = bookings.search.error;
     const searchFilters = bookings.search.filters;
     const searchResults = bookings.search.results;
@@ -55,6 +62,7 @@ class BookingsDebug extends Component {
             <OrchestrationHeader
               className="col-12 col-md-6"
               name="Booking MS"
+              health={bookingsMSHealth}
               status={
                 bookingsMSStatus === "INACTIVE" ? "PENDING" : bookingsMSStatus
               }
@@ -181,7 +189,7 @@ class BookingsDebug extends Component {
           {bookingsMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {bookings.error}
+                {bookingsMSHealth === "HEALTHY" ? bookings.error : "No BookingMS connection."}
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"
