@@ -1,6 +1,6 @@
 // Libraries
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import Store from "../../../../reducers/Store";
 
 // Components
@@ -15,7 +15,6 @@ import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
 import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
-import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 
 class BookingsDebug extends Component {
   constructor(props) {
@@ -29,11 +28,11 @@ class BookingsDebug extends Component {
         passengerId: 0,
         userId: 0,
         guestEmail: "",
-        guestPhone: ""
-      }
+        guestPhone: "",
+      },
     };
   }
-  render() { 
+  render() {
     const { bookings } = Store.getState();
     const { isReferenceIDsActive, searchText } = this.state;
     const isCreatePromptActive = bookings.create.isActive;
@@ -44,17 +43,22 @@ class BookingsDebug extends Component {
     const searchFilters = bookings.search.filters;
     const searchResults = bookings.search.results;
 
-    return ( 
-      <div className={"row" + (this.props.className || "")} style={this.props.style}>
-        
+    return (
+      <div
+        className={"row" + (this.props.className || "")}
+        style={this.props.style}
+      >
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
           <div className="row mt-1">
             {/* MS Orchestration Indicators */}
-            <OrchestrationHeader className="col-12 col-md-6"
+            <OrchestrationHeader
+              className="col-12 col-md-6"
               name="Booking MS"
-              status={bookingsMSStatus === "INACTIVE" ? "PENDING" : bookingsMSStatus}
-              style={{maxWidth:"30rem"}}
+              status={
+                bookingsMSStatus === "INACTIVE" ? "PENDING" : bookingsMSStatus
+              }
+              style={{ maxWidth: "30rem" }}
               onTriggerError={() => BookingsDispatcher.onError()}
               onTriggerFakeAPICall={() => BookingsDispatcher.onFakeAPICall()}
             />
@@ -63,19 +67,25 @@ class BookingsDebug extends Component {
             <div className="col-12 col-md-5">
               {/* Search */}
               <FlexRow className="mt-1" justify="end" wrap="no-wrap">
-                <input 
-                  aria-label="Search" 
-                  className={"form-control " + (searchError && " is-invalid kit-shake")}
+                <input
+                  aria-label="Search"
+                  className={
+                    "form-control " + (searchError && " is-invalid kit-shake")
+                  }
                   label={searchError}
                   placeholder="ID, status, confirmation, flight, passenger, user, guest"
-                  type="search" 
-                  style={{maxWidth:"15rem"}}
-                  onChange={(e) => this.setState({searchText: e.target.value})}
+                  type="search"
+                  style={{ maxWidth: "15rem" }}
+                  onChange={(e) =>
+                    this.setState({ searchText: e.target.value })
+                  }
                 />
-                <button 
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
+                <button
+                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
                   type="submit"
-                  onClick={() => BookingsDispatcher.onSearchAndFilter("/search", searchText)}
+                  onClick={() =>
+                    BookingsDispatcher.onSearchAndFilter("/search", searchText)
+                  }
                 >
                   search
                 </button>
@@ -85,35 +95,51 @@ class BookingsDebug extends Component {
         </div>
 
         {/* Search Sorting & Filtering */}
-        <div className={"col-12 bg-light " +
-          ((bookingsMSStatus === "INACTIVE" || bookingsMSStatus === "ERROR" ||
-           isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
-          "kit-opacity-50 kit-no-user kit-pointer-none")}
+        <div
+          className={
+            "col-12 bg-light " +
+            ((bookingsMSStatus === "INACTIVE" ||
+              bookingsMSStatus === "ERROR" ||
+              isCreatePromptActive ||
+              isDeletePromptActive ||
+              isEditPromptActive) &&
+              "kit-opacity-50 kit-no-user kit-pointer-none")
+          }
         >
-          
           {/* Filters */}
           <div className="row p-2 justify-content-center p-2">
-              
-              {/* Toggle Reference Data */}
-              <FlexRow className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1" wrap={"no-wrap"}>
-                <button className={"btn text-white " + (isReferenceIDsActive && "btn-success")}
-                  onClick={() => this.handleIncludeReferenceIDs(true)}
-                >
-                  Show IDs
-                </button>
-                <button className={"btn text-white " + (!isReferenceIDsActive && "btn-success")}
-                  onClick={() => this.handleIncludeReferenceIDs(false)}
-                >
-                  Hide
-                </button>
-              </FlexRow>
+            {/* Toggle Reference Data */}
+            <FlexRow
+              className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1"
+              wrap={"no-wrap"}
+            >
+              <button
+                className={
+                  "btn text-white " + (isReferenceIDsActive && "btn-success")
+                }
+                onClick={() => this.handleIncludeReferenceIDs(true)}
+              >
+                Show IDs
+              </button>
+              <button
+                className={
+                  "btn text-white " + (!isReferenceIDsActive && "btn-success")
+                }
+                onClick={() => this.handleIncludeReferenceIDs(false)}
+              >
+                Hide
+              </button>
+            </FlexRow>
 
-              {/* # of Filters Active */}
-              <div className="col-auto list-group ml-2">
-                <div className="list-group-item" style={{fontSize: "0.85rem", padding:"0.5rem"}}>
-                  {searchFilters.activeCount + " filters active"}
-                </div>
+            {/* # of Filters Active */}
+            <div className="col-auto list-group ml-2">
+              <div
+                className="list-group-item"
+                style={{ fontSize: "0.85rem", padding: "0.5rem" }}
+              >
+                {searchFilters.activeCount + " filters active"}
               </div>
+            </div>
           </div>
 
           {/* Resuts Count & Page Selection */}
@@ -139,55 +165,69 @@ class BookingsDebug extends Component {
             <FlexColumn className="col-8 mt-2 col-md-3 text-center">
               <Pagination
                 currentPage={bookings.search.resultsPage}
-                totalPages={Math.ceil(bookings.search.results.length / Math.max(bookings.search.resultsPerPage, 1))}
+                totalPages={Math.ceil(
+                  bookings.search.results.length /
+                    Math.max(bookings.search.resultsPerPage, 1)
+                )}
                 onSelectPage={(e) => BookingsDispatcher.onSelectItemsPage(e)}
               />
             </FlexColumn>
           </div>
         </div>
 
-
         {/* Body */}
-        <div className="col-12" style={{overflowY: "auto"}}>
-
-        {/* Error State */}
-        {bookingsMSStatus === "ERROR" &&
-          <FlexColumn className="h-100">
-            <ErrorMessage className="h1" soundAlert={true}>
-              {bookings.error}
-            </ErrorMessage>
-            <button className="btn btn-light m-3"
-              onClick={() => BookingsDispatcher.onCancel()}
-            >
-              Back
-            </button>
-          </FlexColumn>}
+        <div className="col-12" style={{ overflowY: "auto" }}>
+          {/* Error State */}
+          {bookingsMSStatus === "ERROR" && (
+            <FlexColumn className="h-100">
+              <ErrorMessage className="h1" soundAlert={true}>
+                {bookings.error}
+              </ErrorMessage>
+              <button
+                className="btn btn-light m-3"
+                onClick={() => BookingsDispatcher.onCancel()}
+              >
+                Back
+              </button>
+            </FlexColumn>
+          )}
 
           {/* Inactive State */}
-          {bookingsMSStatus === "INACTIVE" &&
-          <FlexColumn className="h-100">
-          <ChangeOperationReadout className="m-1" style={{minHeight: "4rem"}} 
-            name="Establishing Connection . . ." status={"PENDING"}/>
-          </FlexColumn>}
+          {bookingsMSStatus === "INACTIVE" && (
+            <FlexColumn className="h-100">
+              <ChangeOperationReadout
+                className="m-1"
+                style={{ minHeight: "4rem" }}
+                name="Establishing Connection . . ."
+                status={"PENDING"}
+              />
+            </FlexColumn>
+          )}
 
           {/* Pending State */}
-          {(bookingsMSStatus === "PENDING" || bookingsMSStatus === "INACTIVE") &&
-          <FlexColumn className="h-100">
-            <div className="spinner-border"/>
-          </FlexColumn>}
+          {(bookingsMSStatus === "PENDING" ||
+            bookingsMSStatus === "INACTIVE") && (
+            <FlexColumn className="h-100">
+              <div className="spinner-border" />
+            </FlexColumn>
+          )}
 
           {/* Success State */}
-          {(bookingsMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
-          this.handleRenderBookingsList(searchResults)}
+          {bookingsMSStatus === "SUCCESS" &&
+            !isCreatePromptActive &&
+            !isDeletePromptActive &&
+            !isEditPromptActive &&
+            this.handleRenderBookingsList(searchResults)}
 
-          {(bookingsMSStatus === "SUCCESS" && isCreatePromptActive) && 
-          <CreateView/>}
+          {bookingsMSStatus === "SUCCESS" && isCreatePromptActive && (
+            <CreateView />
+          )}
 
-          {(bookingsMSStatus === "SUCCESS" && isDeletePromptActive) && 
-          <DeleteView/>}
+          {bookingsMSStatus === "SUCCESS" && isDeletePromptActive && (
+            <DeleteView />
+          )}
 
-          {(bookingsMSStatus === "SUCCESS" && isEditPromptActive) && 
-          <EditView/>}
+          {bookingsMSStatus === "SUCCESS" && isEditPromptActive && <EditView />}
         </div>
       </div>
     );
@@ -195,54 +235,70 @@ class BookingsDebug extends Component {
 
   componentDidMount() {
     BookingsDispatcher.onCancel();
-    OrchestrationDispatcher.onFindActiveServices();
+    BookingsDispatcher.onHealth();
     BookingsDispatcher.onRequest();
   }
 
   handleIncludeReferenceIDs = (isActive) => {
-    this.setState({isReferenceIDsActive: isActive});
-  }
+    this.setState({ isReferenceIDsActive: isActive });
+  };
 
   handleRenderBookingsList = (bookingsList) => {
     const { bookings } = Store.getState();
     const { isReferenceIDsActive } = this.state;
     const resultsDisplayed = Number(bookings.search.resultsPerPage);
-    const resultsStart = bookings.search.resultsPerPage * (bookings.search.resultsPage - 1);
+    const resultsStart =
+      bookings.search.resultsPerPage * (bookings.search.resultsPage - 1);
 
-    let bookingsTable = [];
-    if(!bookingsList.length) bookingsList = [bookingsList];
-    for(var i = resultsStart; (i < resultsStart + resultsDisplayed && i < bookingsList.length); i++) {
+    const bookingsTable = [];
+    if (!bookingsList.length) bookingsList = [bookingsList];
+    for (let i = resultsStart; i < resultsStart + resultsDisplayed && i < bookingsList.length; i++) {
+      
       const bookingId = bookingsList[i].bookingId;
-      if(!bookingId) continue;
+      if (bookingId) {
+        const index = Number(i) + 1;
+        bookingsTable.push(
+          <tr key={index}>
+            <th scrop="row">{index}</th>
+            <td>{bookingId}</td>
+            <td>{bookingsList[i].bookingStatus}</td>
+            <td>{bookingsList[i].bookingConfirmationCode}</td>
+            {isReferenceIDsActive && (
+              <td>{bookingsList[i].bookingFlightId || "Error"}</td>
+            )}
+            {isReferenceIDsActive && (
+              <td>{bookingsList[i].bookingPassengerId || "NR"}</td>
+            )}
+            {isReferenceIDsActive && (
+              <td>{bookingsList[i].bookingUserId || "Guest"}</td>
+            )}
 
-      const index = Number(i) + 1;
-      bookingsTable.push(
-        <tr key={index}>
-          <th scrop="row">{index}</th>
-          <td>{bookingId}</td>
-          <td>{bookingsList[i].bookingStatus}</td>
-          <td>{bookingsList[i].bookingConfirmationCode}</td>
-          {isReferenceIDsActive && <td>{bookingsList[i].bookingFlightId || "Error"}</td>}
-          {isReferenceIDsActive && <td>{bookingsList[i].bookingPassengerId || "NR"}</td>}
-          {isReferenceIDsActive && <td>{bookingsList[i].bookingUserId || "Guest"}</td>}
-          
-          {/* Edit */}
-          <td><button className="btn btn-info"
-            onClick={() => BookingsDispatcher.onPromptEdit("/" + bookingId)}>
-              Edit
-          </button></td>
+            {/* Edit */}
+            <td>
+              <button
+                className="btn btn-info"
+                onClick={() => BookingsDispatcher.onPromptEdit("/" + bookingId)}
+              >
+                Edit
+              </button>
+            </td>
 
-          {/* Delete */}
-          <td><button className="btn btn-primary"
-            onClick={() => BookingsDispatcher.onPromptDelete("/" + bookingId)}>
-             Delete
-          </button></td>
-        </tr>
-      );
+            {/* Delete */}
+            <td>
+              <button
+                className="btn btn-primary"
+                onClick={() => BookingsDispatcher.onPromptDelete("/" + bookingId)}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        );
+      }
     }
 
     return (
-      <FlexColumn justify={"start"} style={{height: "99%", width: "99%"}}>
+      <FlexColumn justify={"start"} style={{ height: "99%", width: "99%" }}>
         <table className="table kit-border-shadow m-3">
           <thead className="thead-dark">
             <tr>
@@ -255,8 +311,11 @@ class BookingsDebug extends Component {
               {isReferenceIDsActive && <th scope="col">User ID</th>}
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button className="btn btn-success text-white kit-text-shadow-thin" style={{whiteSpace: "nowrap"}}
-                    onClick={() => BookingsDispatcher.onPromptCreate()}>
+                  <button
+                    className="btn btn-success text-white kit-text-shadow-thin"
+                    style={{ whiteSpace: "nowrap" }}
+                    onClick={() => BookingsDispatcher.onPromptCreate()}
+                  >
                     + Create New
                   </button>
                 </FlexRow>
@@ -265,11 +324,14 @@ class BookingsDebug extends Component {
           </thead>
           <tbody>
             {bookingsTable}
-            <tr><td colSpan="7"></td>{/* Space at end of table for aesthetic */}</tr>
+            <tr>
+              <td colSpan="7"></td>
+              {/* Space at end of table for aesthetic */}
+            </tr>
           </tbody>
         </table>
       </FlexColumn>
     );
-  }
+  };
 }
 export default BookingsDebug;

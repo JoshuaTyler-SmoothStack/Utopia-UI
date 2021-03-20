@@ -1,4 +1,4 @@
-class BaseReducer {  
+class BaseReducer {
   static constantsParent = null;
 
   static initialize(constantsParent) {
@@ -11,8 +11,8 @@ class BaseReducer {
   }
 
   static reduce(action, state) {
-    switch(action.type) {  
-      
+    switch (action.type) {
+
       // Cancel
       // =====================================
       case this.constantsParent.cancel:
@@ -23,30 +23,37 @@ class BaseReducer {
           error: "",
           search: {
             ...state.search,
-            resultsPage: 1
+            resultsPage: 1,
           },
-          status: "SUCCESS"
+          status: "SUCCESS",
         };
-  
+
       // Errors
       // =====================================
       case this.constantsParent.error:
         return {
           error: action.payload || "[ERROR]: 404 - Not Found!",
-          status: "ERROR"
+          status: "ERROR",
         };
-  
+
+      // Health
+      // =====================================
+      case this.constantsParent.health:
+        return {
+          health: action.payload || "UNHEALTHY",
+        };
+
       // Prompts
       // =====================================
       case this.constantsParent.promptCreate:
         return {
           create: {
             ...defaultReducerState.create,
-            isActive: true
+            isActive: true,
           },
           delete: defaultReducerState.delete,
           edit: defaultReducerState.edit,
-          status: "SUCCESS"
+          status: "SUCCESS",
         };
 
       case this.constantsParent.promptDelete:
@@ -54,11 +61,11 @@ class BaseReducer {
           create: defaultReducerState.create,
           delete: {
             ...defaultReducerState.delete,
-            isActive: true
+            isActive: true,
           },
           edit: defaultReducerState.edit,
           selected: action.payload,
-          status: "SUCCESS"
+          status: "SUCCESS",
         };
 
       case this.constantsParent.promptEdit:
@@ -67,18 +74,18 @@ class BaseReducer {
           delete: defaultReducerState.delete,
           edit: {
             ...defaultReducerState.edit,
-            isActive: true
+            isActive: true,
           },
           selected: action.payload,
-          status: "SUCCESS"
+          status: "SUCCESS",
         };
-  
+
       // Requests
       // =====================================
       case this.constantsParent.request:
         return {
           error: "",
-          status: "PENDING"
+          status: "PENDING",
         };
 
       case this.constantsParent.requestCreate:
@@ -86,8 +93,8 @@ class BaseReducer {
           create: {
             ...defaultReducerState.create,
             isActive: true,
-            status: "PENDING"
-          }
+            status: "PENDING",
+          },
         };
 
       case this.constantsParent.requestDelete:
@@ -95,7 +102,7 @@ class BaseReducer {
           delete: {
             ...defaultReducerState.delete,
             isActive: true,
-            status: "PENDING"
+            status: "PENDING",
           },
         };
 
@@ -104,10 +111,10 @@ class BaseReducer {
           edit: {
             ...defaultReducerState.edit,
             isActive: true,
-            status: "PENDING"
+            status: "PENDING",
           },
         };
-  
+
       // Responses
       // =====================================
       case this.constantsParent.response:
@@ -115,27 +122,27 @@ class BaseReducer {
           error: "",
           search: {
             ...state.search,
-            results: (action.payload || [])
+            results: action.payload || [],
           },
-          status: "SUCCESS"
-        }
+          status: "SUCCESS",
+        };
 
       case this.constantsParent.responseCreate:
         return {
           create: {
             ...state.create,
             results: action.payload.results,
-            resultsStatus: action.payload.resultsStatus
-          }
+            resultsStatus: action.payload.resultsStatus,
+          },
         };
-  
+
       case this.constantsParent.responseDelete:
         return {
           delete: {
             ...state.delete,
             results: action.payload.results,
-            resultsStatus: action.payload.resultsStatus
-          }
+            resultsStatus: action.payload.resultsStatus,
+          },
         };
 
       case this.constantsParent.responseEdit:
@@ -143,10 +150,10 @@ class BaseReducer {
           edit: {
             ...state.edit,
             results: action.payload.results,
-            resultsStatus: action.payload.resultsStatus
-          }
+            resultsStatus: action.payload.resultsStatus,
+          },
         };
-  
+
       // Search Results Filtering
       // =====================================
       case this.constantsParent.selectFilter:
@@ -155,44 +162,44 @@ class BaseReducer {
             ...state.search,
             filters: {
               ...state.search.filters,
-              ...action.payload
-            }
-          }
+              ...action.payload,
+            },
+          },
         };
 
       case this.constantsParent.selectItemsPage:
         return {
           search: {
             ...state.search,
-            resultsPage: action.payload
-          }
+            resultsPage: action.payload,
+          },
         };
-  
+
       case this.constantsParent.selectItemsPerPage:
         return {
           search: {
             ...state.search,
             resultsPage: 1,
-            resultsPerPage: action.payload
-          }
+            resultsPerPage: action.payload,
+          },
         };
-  
+
       // Select
       // =====================================
       case this.constantsParent.selectItem:
-        return {selected: action.payload};
-  
+        return { selected: action.payload };
+
       // Reset
       // =====================================
       case this.constantsParent.reset:
         return this.getDefaultReducerState();
-  
+
       default:
-        if(this.chainReduce) return this.chainReduce(action, state);
+        if (this.chainReduce) return this.chainReduce(action, state);
         else console.error("Invalid action.type!", action);
         return null;
     }
-  } 
+  }
 }
 export default BaseReducer;
 
@@ -200,19 +207,20 @@ export const defaultReducerState = {
   create: {
     isActive: false,
     results: {},
-    resultsStatus: "INACTIVE"
+    resultsStatus: "INACTIVE",
   },
   delete: {
     isActive: false,
     results: {},
-    resultsStatus: "INACTIVE"
+    resultsStatus: "INACTIVE",
   },
   edit: {
     isActive: false,
     results: {},
-    resultsStatus: "INACTIVE"
+    resultsStatus: "INACTIVE",
   },
   error: "",
+  health: "UNHEALTHY",
   selected: {},
   search: {
     filters: {
@@ -223,5 +231,5 @@ export const defaultReducerState = {
     resultsPerPage: 10,
     resultsTotal: 0,
   },
-  status: "INACTIVE"
+  status: "INACTIVE",
 };

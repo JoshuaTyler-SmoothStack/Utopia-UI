@@ -1,6 +1,5 @@
 // Libraries
 import PassengersDispatcher from "../../../../dispatchers/PassengersDispatcher";
-import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from 'react';
 import Store from "../../../../reducers/Store";
 
@@ -22,11 +21,11 @@ class PassengersDebug extends Component {
     super(props);
     this.state = {
       isPassengerInfoActive: false,
-      searchTerms: ""
+      searchTerms: "",
     };
   }
 
-  render() { 
+  render() {
     const { orchestration, passengers } = Store.getState();
     const { isPassengerInfoActive, searchTerms } = this.state;
     const isCreatePromptActive = passengers.create.isActive;
@@ -38,7 +37,7 @@ class PassengersDebug extends Component {
     const searchFilters = passengers.search.filters;
     const searchResults = passengers.search.results;
 
-    return ( 
+    return (
       <div className={"row" + (this.props.className || "")} style={this.props.style}>
         
         {/* Header */}
@@ -57,17 +56,17 @@ class PassengersDebug extends Component {
             <div className="col-12 col-md-5">
               {/* Search */}
               <FlexRow className="mt-1" justify="end" wrap="no-wrap">
-                <input 
-                  aria-label="Search" 
+                <input
+                  aria-label="Search"
                   className={"form-control " + (searchError && " is-invalid kit-shake")}
                   label={searchError}
                   placeholder="IDs, name, address, . . ."
-                  type="search" 
+                  type="search"
                   style={{maxWidth:"15rem"}}
                   onChange={(e) => this.setState({searchTerms: e.target.value})}
                 />
-                <button 
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin" 
+                <button
+                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
                   type="submit"
                   onClick={() => PassengersDispatcher.onSearchAndFilter("/search", searchTerms)}
                 >
@@ -81,14 +80,14 @@ class PassengersDebug extends Component {
         {/* Search Sorting & Filtering */}
         <div className={"col-12 bg-light " +
           ((passengersMSStatus === "INACTIVE" || passengersMSStatus === "ERROR" ||
-           isCreatePromptActive || isDeletePromptActive || isEditPromptActive) && 
+           isCreatePromptActive || isDeletePromptActive || isEditPromptActive) &&
           "kit-opacity-50 kit-no-user kit-pointer-none")}
         >
-          
+
           {/* Filters */}
           <div className="row p-2 justify-content-center p-2">
-              
-              {/* Toggle Reference Data */}
+            
+            {/* Toggle Reference Data */}
               <FlexRow className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1" wrap={"no-wrap"}>
                 <button className={"btn text-white " + (isPassengerInfoActive && "btn-success")}
                   onClick={() => this.handleIncludeReferenceIDs(true)}
@@ -174,13 +173,13 @@ class PassengersDebug extends Component {
           {(passengersMSStatus === "SUCCESS" && !isCreatePromptActive && !isDeletePromptActive && !isEditPromptActive) && 
           this.handleRenderPassengersList(searchResults)}
 
-          {(passengersMSStatus === "SUCCESS" && isCreatePromptActive) && 
+          {(passengersMSStatus === "SUCCESS" && isCreatePromptActive) &&
           <CreateView/>}
 
-          {(passengersMSStatus === "SUCCESS" && isDeletePromptActive) && 
+          {(passengersMSStatus === "SUCCESS" && isDeletePromptActive) &&
           <DeleteView/>}
 
-          {(passengersMSStatus === "SUCCESS" && isEditPromptActive) && 
+          {(passengersMSStatus === "SUCCESS" && isEditPromptActive) &&
           <EditView/>}
         </div>
       </div>
@@ -189,13 +188,13 @@ class PassengersDebug extends Component {
 
   componentDidMount() {
     PassengersDispatcher.onCancel();
-    OrchestrationDispatcher.onFindActiveServices();
+    PassengersDispatcher.onHealth();
     PassengersDispatcher.onRequest();
   }
 
   handleIncludeReferenceIDs = (isActive) => {
     this.setState({isPassengerInfoActive: isActive});
-  }
+  };
 
   handleRenderPassengersList = (passengersList) => {
     const { passengers } = Store.getState();
@@ -203,44 +202,45 @@ class PassengersDebug extends Component {
     const resultsDisplayed = Number(passengers.search.resultsPerPage);
     const resultsStart = passengers.search.resultsPerPage * (passengers.search.resultsPage - 1);
 
-    let passengersTable = [];
+    const passengersTable = [];
     if (!passengersList.length) passengersList = [passengersList];
-    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
+    for (let i = resultsStart; (i < resultsStart + resultsDisplayed && i < passengersList.length); i++) {
       const passengerId = passengersList[i].passengerId;
-      if (!passengerId) continue;
 
-      const index = Number(i) + 1;
-      passengersTable.push(
-        <tr key={index}>
-          <th scope="col">{index}</th>
-          <td>{passengersList[i].passengerId}</td>
-          <td>{passengersList[i].passengerBookingId}</td>
-          <td>{passengersList[i].passengerPassportId}</td>
-          {isPassengerInfoActive && <td>{passengersList[i].passengerFirstName}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].passengerLastName}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].passengerDateOfBirth}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].passengerSex}</td>}
-          {isPassengerInfoActive && <td>{passengersList[i].passengerAddress}</td>}
-          {isPassengerInfoActive && 
-          <td>
-            {passengersList[i].passengerIsVeteran 
-              ? <div className="h3 text-success" style={{fontFamily: "monospace"}}>✔</div> 
-              : <div className="h3 text-danger" style={{fontFamily: "monospace"}}>X</div>}
-          </td>}
+      if (passengerId) {
+        const index = Number(i) + 1;
+        passengersTable.push(
+          <tr key={index}>
+            <th scope="col">{index}</th>
+            <td>{passengersList[i].passengerId}</td>
+            <td>{passengersList[i].passengerBookingId}</td>
+            <td>{passengersList[i].passengerPassportId}</td>
+            {isPassengerInfoActive && <td>{passengersList[i].passengerFirstName}</td>}
+            {isPassengerInfoActive && <td>{passengersList[i].passengerLastName}</td>}
+            {isPassengerInfoActive && <td>{passengersList[i].passengerDateOfBirth}</td>}
+            {isPassengerInfoActive && <td>{passengersList[i].passengerSex}</td>}
+            {isPassengerInfoActive && <td>{passengersList[i].passengerAddress}</td>}
+            {isPassengerInfoActive &&
+            <td>
+              {passengersList[i].passengerIsVeteran 
+                ? <div className="h3 text-success" style={{fontFamily: "monospace"}}>✔</div> 
+                : <div className="h3 text-danger" style={{fontFamily: "monospace"}}>X</div>}
+            </td>}
 
-          {/* Edit */}
-          <td><button className="btn btn-info"
-            onClick={() => PassengersDispatcher.onPromptEdit("/"+passengerId)}>
-            Edit
-          </button></td>
+            {/* Edit */}
+            <td><button className="btn btn-info"
+              onClick={() => PassengersDispatcher.onPromptEdit("/"+passengerId)}>
+              Edit
+            </button></td>
 
-          {/* Delete */}
-          <td><button className="btn btn-primary"
-            onClick={() => PassengersDispatcher.onPromptDelete("/"+passengerId)}>
-            Delete
-          </button></td>
-        </tr>
-      );
+            {/* Delete */}
+            <td><button className="btn btn-primary"
+              onClick={() => PassengersDispatcher.onPromptDelete("/"+passengerId)}>
+              Delete
+            </button></td>
+          </tr>
+        );
+      }
     }
 
     return (
@@ -281,6 +281,6 @@ class PassengersDebug extends Component {
         </table>
       </FlexColumn>
     );
-  }
+  };
 }
 export default PassengersDebug;

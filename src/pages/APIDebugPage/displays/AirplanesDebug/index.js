@@ -1,6 +1,5 @@
 // Libraries
 import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
-import OrchestrationDispatcher from "../../../../dispatchers/OrchestrationDispatcher";
 import React, { Component } from "react";
 import Store from "../../../../reducers/Store";
 
@@ -26,13 +25,19 @@ class AirplanesDebug extends Component {
   }
 
   render() {
-    const { orchestration, airplanes } = Store.getState();
+    const { airplanes } = Store.getState();
     const { searchTerms } = this.state;
+
+    // Microservice Status
+    const airplanesMSHealth = airplanes.health;
+    const airplanesMSStatus = airplanes.status;
+
+    // Modal Toggles
     const isCreatePromptActive = airplanes.create.isActive;
     const isDeletePromptActive = airplanes.delete.isActive;
     const isEditPromptActive = airplanes.edit.isActive;
-    const isMSActive = orchestration.services.includes("airplane-service");
-    const airplanesMSStatus = airplanes.status;
+
+    // Search Results vars
     const searchError = airplanes.search.error;
     const searchFilters = airplanes.search.filters;
     const searchResults = airplanes.search.results;
@@ -45,6 +50,7 @@ class AirplanesDebug extends Component {
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
           <div className="row mt-1">
+            
             {/* MS Orchestration Indicators */}
             <OrchestrationHeader
               className="col-12 col-md-6"
@@ -157,7 +163,7 @@ class AirplanesDebug extends Component {
           {airplanesMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {isMSActive ? airplanes.error : "No Airplane MS connection."}
+                {airplanesMSHealth === "HEALTHY" ? airplanes.error : "No Airplane MS connection."}
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"
@@ -213,7 +219,7 @@ class AirplanesDebug extends Component {
 
   componentDidMount() {
     AirplanesDispatcher.onCancel();
-    OrchestrationDispatcher.onFindActiveServices();
+    AirplanesDispatcher.onHealth();
     AirplanesDispatcher.onRequest();
   }
 
