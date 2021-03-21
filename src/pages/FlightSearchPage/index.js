@@ -33,7 +33,7 @@ class FlightSearchPage extends Component {
           <NavBar className="col-12"  />
 
           {/* Search Flights Header */}
-          <FlightSearch 
+          <FlightSearch
             className="col-12 bg-white"
             isResultsPending={flights.status === "PENDING"}
             onSubmit={() => this.handleSubmit()}
@@ -48,7 +48,7 @@ class FlightSearchPage extends Component {
         </div>
 
         {/* Flight Modal */}
-        {isActive_FlightModal && 
+        {isActive_FlightModal &&
         <FlightModal
           className="col-12 col-sm-10 col-md-8 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow"
           zIndex="4"
@@ -60,7 +60,7 @@ class FlightSearchPage extends Component {
         />}
 
         {/* Seating Modal */}
-        {isActive_SeatingModal && 
+        {isActive_SeatingModal &&
         <SeatingModal
           className="col-12 col-sm-10 col-md-8 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow"
           zIndex="4"
@@ -84,7 +84,7 @@ class FlightSearchPage extends Component {
       const { flights } = Store.getState();
       FlightsDispatcher.onSelectItem(flights.search.results[flightIndex]);
     }
-  }
+  };
 
   handleRenderFlightsList = () => {
     const { flights } = Store.getState();
@@ -92,40 +92,40 @@ class FlightSearchPage extends Component {
     const resultsDisplayed = Number(flights.search.resultsPerPage);
     const resultsStart = flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
-    let flightsTable = [];
-    for (var i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
-      
+    const flightsTable = [];
+    for (let i = resultsStart; (i < resultsStart + resultsDisplayed && i < flightsList.length); i++) {
       const flightId = flightsList[i].flightId;
-      if (!flightId) continue;
-
-      const departureTime = moment(flightsList[i].flightDepartureTime).format('M/DD/YY | h:mm a');
-
-      const index = Number(i) + 1;
-      flightsTable.push(
-        <tr key={index} onClick={() => this.handleFlightModalToggle(true, (index - 1))}>
-          <th scope="row">{index}</th>
-          <td><h5 className="text-light">{flightId}</h5></td>
-          <td>
-            <h5 className="text-primary">{flightsList[i].flightRouteOriginIataId}</h5>
-            <div className="text-dark">{flightsList[i].flightRouteOriginCityName}</div>
-          </td>
-          <td>
-            <h5 className="text-primary">{flightsList[i].flightRouteDestinationIataId}</h5>
-            <div className="text-dark">{flightsList[i].flightRouteDestinationCityName}</div>
-          </td>
-          <td>
-            <h5 className="text-dark">{departureTime.split("|")[1]}</h5>
-            <div>{departureTime.split("|")[0]}</div>
-          </td>
-        </tr>
-      );
+      if (flightId) {
+        const departureTime = moment(flightsList[i].flightDepartureTime).format('M/DD/YY | h:mm a');
+        const index = Number(i) + 1;
+        flightsTable.push(
+          <tr key={index} onClick={() => this.handleFlightModalToggle(true, (index - 1))}>
+            <th scope="row">{index}</th>
+            <td>
+              <h5 className="text-info">{String(`UA${flightId}`)}</h5>
+            </td>
+            <td>
+              <h5 className="text-primary">{flightsList[i].flightRoute.routeOriginIataId}</h5>
+              <div className="text-dark">{flightsList[i].flightRoute.routeOriginCityName}</div>
+            </td>
+            <td>
+              <h5 className="text-primary">{flightsList[i].flightRoute.routeDestinationIataId}</h5>
+              <div className="text-dark">{flightsList[i].flightRoute.routeDestinationCityName}</div>
+            </td>
+            <td>
+              <h5 className="text-dark">{departureTime.split("|")[1]}</h5>
+              <div>{departureTime.split("|")[0]}</div>
+            </td>
+          </tr>
+        );
+      }
     }
 
     return (
-      <FlexColumn 
+      <FlexColumn
         className="bg-white rounded overflow-hidden" 
         style={{ width: "99%", overflowY: "scroll" }}
-        justify="start" 
+        justify="start"
       >
         <table className="table table-hover kit-border-shadow">
           <thead className="thead-dark">
@@ -144,11 +144,11 @@ class FlightSearchPage extends Component {
         </table>
       </FlexColumn>
     );
-  }
+  };
 
   handleSubmit = () => {
     const { flights } = Store.getState();
     FlightsDispatcher.onSearchAndFilter("/search", "", flights.search.filters);
-  }
+  };
 }
 export default FlightSearchPage;

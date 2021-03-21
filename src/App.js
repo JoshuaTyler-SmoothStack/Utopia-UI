@@ -32,12 +32,12 @@ const BREAKPOINT_XXLARGE = 1400;
 const RESIZE_MINIMUM_WAIT_TIME = 100;
 const PAGE_ADDRESSES_WHITELIST = [
   "/",
-  "/createaccount",
+  "/create-account",
   "/debug",
   "/home",
   "/flights",
   "/forgot-password",
-  "/password-recovery/**",
+  "/password-recovery/",
   "/profile",
 ];
 
@@ -70,6 +70,7 @@ class App extends Component {
         {/* Pages */}
         <Router>
           <Switch>
+            
             {/* 404 - No Path */}
             {!PAGE_ADDRESSES_WHITELIST.includes(currentPath) && (
               <PageNotFoundPage />
@@ -91,7 +92,7 @@ class App extends Component {
             </Route>
 
             {/* Create Account Page */}
-            <Route path="/createaccount">
+            <Route path="/create-account">
               <CreateAccountPage />
             </Route>
 
@@ -101,7 +102,7 @@ class App extends Component {
             </Route>
 
             {/* Forgot Password Page */}
-            <Route path="/forgotpassword">
+            <Route path="/forgot-password">
               {authentication.userId ? <ForgotPasswordPage /> : <LandingPage />}
             </Route>
 
@@ -121,6 +122,7 @@ class App extends Component {
 
           {/* Login Modal - zIndex 2 */}
           {ISACTIVE_LOGINUI && <LoginModal />}
+
         </Router>
       </main>
     );

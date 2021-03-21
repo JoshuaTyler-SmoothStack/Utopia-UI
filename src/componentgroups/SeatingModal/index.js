@@ -6,20 +6,32 @@ import Store from "../../reducers/Store";
 import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
+import AirplanesDispatcher from "../../dispatchers/AirplanesDispatcher";
+
+const ZINDEX_DEFAULT = 2;
 
 const SeatingModal = (props) => {
 
-  const { flights } = Store.getState();
+  const { airplanes, flights } = Store.getState();
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
-  const zIndex = props.zIndex || 2;
+  const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
   const handleRenderSeatingTable = () => {
-    // console.log("handleRenderSeatingTable called");
+    AirplanesDispatcher.onRequestThenCallback(String(`/${flights.selected.flightAirplane.airplaneId}`),
+      (onError) => {
+      // alert the user their request cannot be processed right now
+      console.log("get airplane failed");
+    }, (onSuccess) => {
+      console.log(onSuccess);
+    });
+
+    console.log("handleRenderSeatingTable called");
+    console.log(airplanes.selected);
 
     // const alphabet = [ "A", "B", "C", "D", "E", "F", "G", "H"];
 
-    // const firstClassColumns = 4;
+    // const firstClassColumns = airplanes.selected;
     // const firstClassRows = 3;
     // const businessClassColumns = 6;
     // const businessClassRows = 10;
@@ -27,39 +39,6 @@ const SeatingModal = (props) => {
     // const economyClassRows = 100;
     // const emergencyExitRows = [49, 50, 113];
     // const occupiedSeats = { "1,1": true, "2,1": true, "4,1": true };
-
-    // // const seatingTable = {
-    // //   firstClassColumns: 4,
-    // //   firstClassRows: 6,
-    // //   businessClassColumns: 6,
-    // //   businessClassRows: 10,
-    // //   economyClassColumns: 8,
-    // //   economyClassRows: 100,
-    // //   occupiedSeats: ["1,1", "2,1", "4,1"],
-
-    // //   // "1:1", "2:1", "3:1"
-    // //   // "1:2", "2:2", "3:2"
-
-    // //   // "1:3", "2:3", "3:3", "4:3",
-    // //   // "1:4", "2:4", "3:4", "4:4",
-    // //   // "1:4", "2:4", "3:4", "4:4",
-    // //   // "1:5", "2:5", "3:5", "4:5",
-    // //   // "1:6", "2:6", "3:6", "4:6",
-
-    // //   // "1:7", "2:7", "3:7", "4:7", "5:7", "6:7",
-    // //   // "1:8", "2:8", "3:8", "4:8", "5:7", "6:7",
-    // //   // "1:9", "2:9", "3:9", "4:9", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // //   // "1:6", "2:6", "3:6", "4:6", "5:7", "6:7",
-    // // };
 
     // let firstClassItems = [];
     // // let businessClassItems = [];
@@ -99,7 +78,8 @@ const SeatingModal = (props) => {
     //     <FlexRow>{economyClassItems}</FlexRow> */}
     //   </FlexRow>
     // );
-  }
+    return <div></div>;
+  };
 
   return (
     <Modal
@@ -128,8 +108,8 @@ const SeatingModal = (props) => {
                 >
                   <svg
                     className="kit-icon-light kit-svg-white"
-                    height="2rem" 
-                    width="2rem" 
+                    height="2rem"
+                    width="2rem"
                     viewBox="4 4 8 8"
                   >
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -156,7 +136,7 @@ const SeatingModal = (props) => {
 
               {/* Seating Chart */}
               <FlexRow className="col-12 mt-2">
-                {handleRenderSeatingTable()}
+                {() => handleRenderSeatingTable()}
               </FlexRow>
             </div>
           </div>

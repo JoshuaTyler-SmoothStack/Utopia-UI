@@ -11,6 +11,7 @@ import { Redirect } from "react-router";
 
 // Images
 import TropicalBeach from "../../images/TropicalBeach.jpg";
+import FlexColumn from "../../components/FlexColumn";
 
 class LandingPage extends Component {
   constructor(props) {
@@ -32,33 +33,32 @@ class LandingPage extends Component {
 
           {/* Body */}
           <div className="col-12">
-            <img alt="" src={TropicalBeach} style={{position:"absolute", right:"0", width:"100%", minWidth:"700px", opacity:"75%"}} />
+            <img alt="" src={TropicalBeach} style={{position:"absolute", right:"0", width:"100%", minWidth:"800px", opacity:"75%"}} />
             <div className="row">
               
               {/* Search Flights Header */}
               <FlexRow className="col-12 col-md-8 col-lg-6 p-3" justify="start">
-                <FlightSearch 
-                  className="bg-white p-2 rounded"
+                <FlightSearch
+                  className="bg-white w-100 p-2 rounded"
                   isResultsPending={redirectToFlightSearchPage}
                   onSubmit={() => this.handleSubmit()}
                 />
               </FlexRow>
 
               {/* Tropical Vacations Sign */}
-              <FlexRow 
-                className="col-10 col-md-4 mt-2 ml-auto mr-auto m-md-auto rounded kit-bg-blue kit-border-shadow"
-                style={{height: "15rem"}}
-              >
-                <h1 className="text-center kit-cursive text-white kit-text-shadow-sm">
-                  {"Tropical Vacations"}
-                </h1>
-                <h5 className="text-center text-white w-75">Limited time get-away fares as low $120!</h5>
-                <span className="text-white">*select flights only</span>
+              <FlexRow className="col-10 col-md-4 ml-auto mr-auto m-md-auto" style={{height: "15rem"}}>
+                <FlexColumn className="p-2 rounded kit-bg-blue kit-border-shadow">
+                  <h1 className="text-center kit-cursive text-white kit-text-shadow-sm">
+                    {"Tropical Vacations"}
+                  </h1>
+                  <h5 className="text-center text-white w-75">Limited time get-away fares as low $120!</h5>
+                  <span className="text-white">*select flights only</span>
+                </FlexColumn>
               </FlexRow>
 
             </div>
           </div> {/* Body-End */}
-          
+
           {/* Redirects */}
           {redirectToFlightSearchPage && <Redirect to={"/flights"}/>}
 
@@ -74,6 +74,6 @@ class LandingPage extends Component {
 
   handleSubmit = () => {
     this.setState({redirectToFlightSearchPage: true});
-  }
+  };
 }
 export default LandingPage;

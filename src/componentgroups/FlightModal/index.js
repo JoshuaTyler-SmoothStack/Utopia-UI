@@ -8,16 +8,20 @@ import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 
+const ZINDEX_DEFAULT = 2;
+const MINUTES_PER_DAY = 3600;
+const MINUTES_PER_HOUR = 60;
+
 const FlightModal = (props) => {
 
   const { flights } = Store.getState();
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
-  const zIndex = props.zIndex || 2;
+  const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
   const departureTime = moment(flights.selected.flightDepartureTime).format('M/DD/YY | h:mm a');
-  const flightHours = Math.floor(Math.max(flights.selected.flightDuration, 1) / 3600);
-  const flightMinutes = Math.floor(Math.max(flights.selected.flightDuration - (flightHours * 3600), 1) / 60);
+  const flightHours = Math.floor(Math.max(flights.selected.flightDuration, 1) / MINUTES_PER_DAY);
+  const flightMinutes = Math.floor(Math.max(flights.selected.flightDuration - (flightHours * MINUTES_PER_DAY), 1) / MINUTES_PER_HOUR);
 
   return (
     <Modal
@@ -46,8 +50,8 @@ const FlightModal = (props) => {
                 >
                   <svg
                     className="kit-icon-light kit-svg-white"
-                    height="2rem" 
-                    width="2rem" 
+                    height="2rem"
+                    width="2rem"
                     viewBox="4 4 8 8"
                   >
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -75,14 +79,14 @@ const FlightModal = (props) => {
                     <h5 className="text-dark">{departureTime.split("|")[0]}</h5 >
                   </FlexColumn>
                       
-                  {/* Origin To Destination */}
+                  {/* Duration & Origin To Destination */}
                   <div className="col-12 col-sm-4">
                     <div className="row">
-                      <FlexRow className="col-6 col-sm-12 p-0">
+                      <FlexRow className="col-6 col-sm-12 p-0 pr-sm-2">
                         <h5 className="text-dark mr-2">Duration:</h5>
-                        <h5 className="text-info">{flightHours + "h " + flightMinutes + "m"}</h5>
+                        <h5 className="text-info">{String(`${flightHours}h ${flightMinutes}m`)}</h5>
                       </FlexRow>
-                      <FlexRow className="col-6 col-sm-12 p-0">
+                      <FlexRow className="col-6 col-sm-12 p-0 pr-sm-2">
                         <h3 className="text-warning">{flights.selected.flightRouteOriginIataId}</h3>
                         <h3 className="text-dark ml-1 mr-1">{"➜"}</h3>
                         <h3 className="text-warning">{flights.selected.flightRouteDestinationIataId}</h3>
@@ -97,7 +101,7 @@ const FlightModal = (props) => {
               <FlexRow className="col-12 mt-2">
                 <FlexRow className="bg-white rounded" wrap="no-wrap">
 
-                  {/* First Class */}                  
+                  {/* First Class */}
                   <button className="btn btn-dark rounded m-2"
                     style={{minWidth:"7rem", maxWidth:"30%"}}
                     onClick={() => props.onSelectSeat(true)}
@@ -177,7 +181,7 @@ const FlightModal = (props) => {
 
               {/* Buttons */}
               <FlexRow className="col-12 p-2" justify="start">
-                
+
                 {/* Already Have Ticket */}
                 <button className="btn btn-info ml-2">
                   Already have a ticket?
