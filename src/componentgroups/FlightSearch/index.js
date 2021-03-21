@@ -19,15 +19,16 @@ const FlightSearch = (props) => {
   const [originRecommendations, setOriginRecommendations] = useState([]);
   const [isFocus_Destination, setIsFocus_Destination] = useState(false);
   const [isFocus_Origin, setIsFocus_Origin] = useState(false);
+  const isResultsPending = props.isPending || false;
 
   const isActive_OriginRecommendations = isFocus_Origin && originRecommendations.length > 0;
   const isActive_DestinationRecommendations = isFocus_Destination && destinationRecommendations.length > 0;
 
   const handleAirportRecommendations = (type, inputText) => {    
-    const { airports, flights } = Store.getState();
+    const { airports } = Store.getState();
 
     // Grab Airports if needed
-    if(!(airports.search.results.length > 0)) {
+    if(airports.search.results.length < 1) {
       AirportsDispatcher.onRequest();
     }
 
@@ -50,15 +51,15 @@ const FlightSearch = (props) => {
   };
 
   return (
-    <div {...props}>
+    <div className={props.className || ""} style={props.style}>
       
       {/* Title */}
-      <div className="h2 mt-3 mb-0">Search Flights</div>
+      <div className="h2 mt-1 mb-0">Search Flights</div>
       <hr className="w-100 mt-2"></hr>
 
         {/* Radio One-way/Round-Trip */}
         <div className="row">
-          <FlexRow className="col-6" justify="start" wrap="no-wrap">
+          <FlexRow className="col-12" justify="start" wrap="no-wrap">
             
             {/* One-Way */}
             <FlexRow 
@@ -124,8 +125,9 @@ const FlightSearch = (props) => {
 
         {/* Origin & Destination */}
         <div className="row mt-3">
+          
           {/* Origin */}
-          <div className="col-6" style={{height: "3.5rem"}}>
+          <div className="col-12 col-sm-6" style={{height: "3.5rem"}}>
             <InputText
               className="h-100 rounded kit-border-shadow mb-0"
               label={"Origin"}
@@ -151,7 +153,7 @@ const FlightSearch = (props) => {
           </div>
 
           {/* Destination */}
-          <div className="col-6" style={{height: "3.5rem"}}>
+          <div className="col-12 col-sm-6 mt-2 mt-sm-0" style={{height: "3.5rem"}}>
             <InputText
               className="h-100 rounded kit-border-shadow mb-0"
               label={"Destination"}
@@ -207,7 +209,7 @@ const FlightSearch = (props) => {
                 <input 
                   className="form-label mr-auto"
                   style={{height: "3.5rem", maxWidth:"99%"}}
-                  type="date" 
+                  type="datetime-local" 
                   onChange={(e) => FlightsDispatcher.onSetFilter("returnDateTime", e.target.value)}
                 />
               </FlexColumn>
@@ -219,49 +221,47 @@ const FlightSearch = (props) => {
         <div className="row mt-3 mb-3">
           
           {/* Results Info */}
-          <div className="col-8">
-            <div className="row">
+          <FlexRow className="col-8" justify="around">
               
-              {/* DropDown & Results (together) */}
-              <FlexRow className="col-12 col-md-6" justify="around" wrap="no-wrap">
-                
-                {/* DropDown */}
-                <DropDown
-                  buttonClassName="btn-secondary dropdown-toggle"
-                  selection={flights.search.resultsPerPage}
-                  options={["3", "10", "25", "50"]}
-                  optionsName="flights"
-                  onSelect={(e) => FlightsDispatcher.onSelectItemsPerPage(e)}
-                />
+              {/* DropDown */}
+              <DropDown
+                buttonClassName="btn-secondary dropdown-toggle"
+                className="mb-2"
+                selection={flights.search.resultsPerPage}
+                options={["3", "10", "25", "50"]}
+                optionsName="flights"
+                onSelect={(e) => FlightsDispatcher.onSelectItemsPerPage(e)}
+              />
 
-                {/* Results Readout */}
-                <ItemsIndexReadout
-                  className="ml-2"
-                  currentPage={flights.search.resultsPage}
-                  itemsPerPage={flights.search.resultsPerPage}
-                  itemsTotal={flights.search.results.length}
-                />
-              </FlexRow>
+              {/* Results Readout */}
+              <ItemsIndexReadout
+                className="mb-2"
+                currentPage={flights.search.resultsPage}
+                itemsPerPage={flights.search.resultsPerPage}
+                itemsTotal={flights.search.results.length}
+              />
 
               {/* Pagination (seperate) */}
               {flights.search.results.length > 1 &&
-              <FlexRow className="col-12 col-md-6 mt-2 mt-md-0">
                 <Pagination
-                  className="text-center"
-                  currentPage={flights.search.resultsPage}
-                  totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
-                  onSelectPage={(e) => FlightsDispatcher.onSelectItemsPage(e)}
-                />
-              </FlexRow>}
-            </div>
-          </div>
+                className="text-center mb-2"
+                currentPage={flights.search.resultsPage}
+                totalPages={Math.ceil(flights.search.results.length / Math.max(flights.search.resultsPerPage, 1))}
+                onSelectPage={(e) => FlightsDispatcher.onSelectItemsPage(e)}
+              />}
+          </FlexRow>
 
           {/* Search Button */}
           <div className="col-4 ml-auto">
-            <button className="btn btn-lg btn-success text-white kit-text-shadow-thin"
+            <button 
+              className="btn btn-lg btn-success text-white kit-text-shadow-thin"
+              style={{minWidth:"50%"}}
               onClick={() => props.onSubmit()}
             >
-              Search Flights
+              {isResultsPending
+                ?  <div className="spinner-border"/>
+                : "Search Flights"
+              }
             </button>
           </div>
         </div>

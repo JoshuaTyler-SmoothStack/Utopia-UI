@@ -99,7 +99,7 @@ const UserProfilePage = (props) => {
       <div className="row">
 
         {/* Navbar */}
-        <NavBar className="col-12" hideSearchBar={true} />
+        <NavBar className="col-12"  />
 
         {/* Content */}
         <FlexColumn className={"bg-white col-12"} justify="start">

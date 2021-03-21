@@ -15,6 +15,7 @@ import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
 import FlightSearchPage from "./pages/FlightSearchPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
+import PageNotFoundPage from "./pages/PageNotFoundPage";
 import PasswordRecoveryPage from "./pages/PasswordRecoveryPage/PasswordRecoveryPage";
 import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
 
@@ -22,15 +23,30 @@ import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
 import "./styles/UtopiaBootstrap.css";
 import "./styles/UtopiaKit.css";
 
+const BREAKPOINT_XSMALL = 375;
+const BREAKPOINT_SMALL = 576;
+const BREAKPOINT_MEDIUM = 768;
+const BREAKPOINT_LARGE = 992;
+const BREAKPOINT_XLARGE = 1200;
+const BREAKPOINT_XXLARGE = 1400;
+const RESIZE_MINIMUM_WAIT_TIME = 100;
+const PAGE_ADDRESSES_WHITELIST = [
+  "/",
+  "/createaccount",
+  "/debug",
+  "/home",
+  "/flights",
+  "/forgot-password",
+  "/password-recovery/**",
+  "/profile",
+];
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     // State Management
-    Store.initialize(
-      () => this.state,
-      (e) => this.setState(e)
-    );
+    Store.initialize(() => this.state, (e) => this.setState(e));
     this.state = {
       ...Store.getCombinedDefaultReducerStates(),
       breakPoint: "xx_small",
@@ -38,19 +54,27 @@ class App extends Component {
     };
 
     // Window Resize throttling
-    const minimumResizeMilliseconds = 100;
-    this.handleResize = _.throttle(this.handleResize.bind(this), minimumResizeMilliseconds);
+    this.handleResize = _.throttle(
+      this.handleResize.bind(this),
+      RESIZE_MINIMUM_WAIT_TIME
+    );
   }
 
   render() {
     const { authentication } = this.state;
-    const isActive_LoginModal = authentication.isActive_LoginUI;
+    const ISACTIVE_LOGINUI = authentication.isActive_LoginUI;
+    const currentPath = window.location.pathname;
 
     return (
       <main>
         {/* Pages */}
         <Router>
           <Switch>
+            {/* 404 - No Path */}
+            {!PAGE_ADDRESSES_WHITELIST.includes(currentPath) && (
+              <PageNotFoundPage />
+            )}
+
             {/* API Debug Page */}
             <Route path="/debug">
               <APIDebugPage />
@@ -83,11 +107,10 @@ class App extends Component {
 
             {/* Password Recovery Page */}
             <Route path="/password-recovery/**">
-              {authentication.userId ? (
-                <PasswordRecoveryPage />
-              ) : (
-                <LandingPage />
-              )}
+              {authentication.userId
+                ? <PasswordRecoveryPage />
+                : <LandingPage />
+              }
             </Route>
 
             {/* Profile Page */}
@@ -97,7 +120,7 @@ class App extends Component {
           </Switch>
 
           {/* Login Modal - zIndex 2 */}
-          {isActive_LoginModal && <LoginModal />}
+          {ISACTIVE_LOGINUI && <LoginModal />}
         </Router>
       </main>
     );
@@ -117,20 +140,13 @@ class App extends Component {
   handleResize = () => {
     const { breakPoint } = this.state;
 
-    const x_small = 375;
-    const small = 576;
-    const medium = 768;
-    const large = 992;
-    const x_large = 1200;
-    const xx_large = 1400;
-
     let newSize = "xx_small";
-    if (window.innerWidth > x_small) newSize = "x_small";
-    if (window.innerWidth >= small) newSize = "small";
-    if (window.innerWidth >= medium) newSize = "medium";
-    if (window.innerWidth >= large) newSize = "large";
-    if (window.innerWidth >= x_large) newSize = "x_large";
-    if (window.innerWidth >= xx_large) newSize = "xx_large";
+    if (window.innerWidth > BREAKPOINT_XSMALL) newSize = "x_small";
+    if (window.innerWidth >= BREAKPOINT_SMALL) newSize = "small";
+    if (window.innerWidth >= BREAKPOINT_MEDIUM) newSize = "medium";
+    if (window.innerWidth >= BREAKPOINT_LARGE) newSize = "large";
+    if (window.innerWidth >= BREAKPOINT_XLARGE) newSize = "x_large";
+    if (window.innerWidth >= BREAKPOINT_XXLARGE) newSize = "xx_large";
 
     if (breakPoint !== newSize) {
       console.log(newSize);

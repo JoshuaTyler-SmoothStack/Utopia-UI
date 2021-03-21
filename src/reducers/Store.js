@@ -33,6 +33,20 @@ class Store {
     ];
   }
 
+  static getCombinedDefaultReducerStates() {
+    return { 
+      airplanes: AirplanesReducer.getDefaultReducerState(),
+      airports: AirportsReducer.getDefaultReducerState(),
+      authentication: AuthenticationReducer.getDefaultReducerState(),
+      bookings: BookingsReducer.getDefaultReducerState(),
+      flights: FlightsReducer.getDefaultReducerState(),
+      passengers: PassengersReducer.getDefaultReducerState(),
+      payments: PaymentsReducer.getDefaultReducerState(),
+      routes: RoutesReducer.getDefaultReducerState(),
+      users: UsersReducer.getDefaultReducerState(),
+    };
+  }
+
   static reduce(action) {
 
     // Check action is valid
@@ -69,18 +83,8 @@ class Store {
     }
   }
 
-  static getCombinedDefaultReducerStates() {
-    return { 
-      airplanes: AirplanesReducer.getDefaultReducerState(),
-      airports: AirportsReducer.getDefaultReducerState(),
-      authentication: AuthenticationReducer.getDefaultReducerState(),
-      bookings: BookingsReducer.getDefaultReducerState(),
-      flights: FlightsReducer.getDefaultReducerState(),
-      passengers: PassengersReducer.getDefaultReducerState(),
-      payments: PaymentsReducer.getDefaultReducerState(),
-      routes: RoutesReducer.getDefaultReducerState(),
-      users: UsersReducer.getDefaultReducerState(),
-    };
+  static refreshState() {
+    this.setState((state) => ({refreshToggle: !state.refreshToggle}));
   }
 }
 export default Store;

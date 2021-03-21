@@ -56,13 +56,6 @@ const LocalPageButtons = (props) => {
         <button className={buttonClassName} style={buttonStyle}>
           {"Landing Page"}
         </button>
-      </Link>  
-
-      {/* Orchestration Page */}
-      <Link to={"/orchestration"}>
-        <button className={buttonClassName} style={buttonStyle}>
-          {"Orchestration Page"}
-        </button>
       </Link>    
     </FlexColumn>
   );

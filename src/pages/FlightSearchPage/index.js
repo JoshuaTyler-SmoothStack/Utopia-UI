@@ -30,11 +30,12 @@ class FlightSearchPage extends Component {
         <div className="row">
 
           {/* Navbar */}
-          <NavBar className="col-12" hideSearchBar={true} />
+          <NavBar className="col-12"  />
 
           {/* Search Flights Header */}
           <FlightSearch 
             className="col-12 bg-white"
+            isResultsPending={flights.status === "PENDING"}
             onSubmit={() => this.handleSubmit()}
           />
 
@@ -123,7 +124,7 @@ class FlightSearchPage extends Component {
     return (
       <FlexColumn 
         className="bg-white rounded overflow-hidden" 
-        style={{ height: "50vh", width: "99%", overflowY: "scroll" }}
+        style={{ width: "99%", overflowY: "scroll" }}
         justify="start" 
       >
         <table className="table table-hover kit-border-shadow">

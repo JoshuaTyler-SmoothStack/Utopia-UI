@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
+import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 
 // Images
 import gifEarthSpinning from "../../images/EarthWithHotAirBalloon.gif";
@@ -13,14 +14,6 @@ class StartupPage extends Component {
     this.state = {
       loadingText: "Tap anywhere to continue . . ."
     };
-  }
-
-  handleLoadingProgressCheck() {
-    // const { loadingProgress } = this.state;
-    // if(loadingProgress === 100) {
-    // 
-    // }
-    window.location.href = "/home";
   }
 
   render() {
@@ -89,6 +82,18 @@ class StartupPage extends Component {
         </FlexRow>
       </FlexColumn>
     );
+  }
+
+  componentDidMount() {
+    AirportsDispatcher.onRequest();
+  }
+
+  handleLoadingProgressCheck() {
+    // const { loadingProgress } = this.state;
+    // if(loadingProgress === 100) {
+    // 
+    // }
+    window.location.href = "/home";
   }
 }
 export default StartupPage;

@@ -76,7 +76,7 @@ const CreateAccountPage = (props) => {
 
       <div className="row">
         {/* Navbar */}
-        <NavBar className="col-12" hideSearchBar={true} />
+        <NavBar className="col-12"  />
 
         {/* Content */}
         <div className={"col-12 col-sm-10 col-md-8 col-lg-6 m-auto"}>
@@ -236,7 +236,7 @@ const CreateAccountPage = (props) => {
                   {/* Buttons */}
                   <FlexRow className="form-group mt-4" justify="around">
                     <Link to="/home">
-                      <buton className="btn btn-secondary">Cancel</buton>
+                      <button className="btn btn-secondary">Cancel</button>
                     </Link>
                     <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">
                       + Create Account

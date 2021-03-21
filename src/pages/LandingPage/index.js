@@ -2,12 +2,12 @@
 import React, { Component } from "react";
 import Store from "../../reducers/Store";
 import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
-import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
 import FlightSearch from "../../componentgroups/FlightSearch";
 import NavBar from "../../componentgroups/NavBar";
 import FlexRow from "../../components/FlexRow";
+import { Redirect } from "react-router";
 
 // Images
 import TropicalBeach from "../../images/TropicalBeach.jpg";
@@ -15,36 +15,53 @@ import TropicalBeach from "../../images/TropicalBeach.jpg";
 class LandingPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      redirectToFlightSearchPage: false,
+    };
   }
 
   render() {
+    const { redirectToFlightSearchPage } = this.state;
+
     return (
-      <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw",  overflowY: "hidden" }}>
+      <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth:"1400px",  overflowY: "hidden" }}>
         <div className="row">
 
           {/* Navbar */}
-          <NavBar className="col-12" hideSearchBar={true} />
+          <NavBar className="col-12"  />
 
-          {/* Search Flights Header */}
+          {/* Body */}
           <div className="col-12">
-            <img alt="" src={TropicalBeach} style={{position:"fixed", left:"0", opacity:"75%"}} />
-            <FlexRow className="row p-3" justify="start">
-              <FlightSearch 
-                className="bg-white col-8 rounded"
-                onSubmit={() => this.handleSubmit()}
-              />
-            </FlexRow>
-          </div>
+            <img alt="" src={TropicalBeach} style={{position:"absolute", right:"0", width:"100%", minWidth:"700px", opacity:"75%"}} />
+            <div className="row">
+              
+              {/* Search Flights Header */}
+              <FlexRow className="col-12 col-md-8 col-lg-6 p-3" justify="start">
+                <FlightSearch 
+                  className="bg-white p-2 rounded"
+                  isResultsPending={redirectToFlightSearchPage}
+                  onSubmit={() => this.handleSubmit()}
+                />
+              </FlexRow>
 
-          <FlexRow className="col-12 mt-3">
-            <div 
-              className="kit-cursive text-white kit-text-shadow"
-              style={{fontSize: "5rem"}}
-            >
-              {"Tropical Beach"}
+              {/* Tropical Vacations Sign */}
+              <FlexRow 
+                className="col-10 col-md-4 mt-2 ml-auto mr-auto m-md-auto rounded kit-bg-blue kit-border-shadow"
+                style={{height: "15rem"}}
+              >
+                <h1 className="text-center kit-cursive text-white kit-text-shadow-sm">
+                  {"Tropical Vacations"}
+                </h1>
+                <h5 className="text-center text-white w-75">Limited time get-away fares as low $120!</h5>
+                <span className="text-white">*select flights only</span>
+              </FlexRow>
+
             </div>
-          </FlexRow>
+          </div> {/* Body-End */}
+          
+          {/* Redirects */}
+          {redirectToFlightSearchPage && <Redirect to={"/flights"}/>}
+
         </div>
       </div>
     );
@@ -56,8 +73,7 @@ class LandingPage extends Component {
   }
 
   handleSubmit = () => {
-    const { flights } = Store.getState();
-    FlightsDispatcher.onSearchAndFilter("/search", "", flights.search.filters);
+    this.setState({redirectToFlightSearchPage: true});
   }
 }
 export default LandingPage;
