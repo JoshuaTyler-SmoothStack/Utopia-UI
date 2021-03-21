@@ -69,9 +69,9 @@ class Store {
     }
 
     for(const i in this.reducers) {
-      if(this.reducers[i].ConstantsParent.root === actionTypeRoot) {
+      if(this.reducers[i].constantsParent.root === actionTypeRoot) {
         const reducer = this.reducers[i];
-        const reducerName = reducer.ConstantsParent.name;
+        const reducerName = reducer.constantsParent.name;
           this.setState((state) => ({
             [reducerName]: {
               ...state[reducerName],
