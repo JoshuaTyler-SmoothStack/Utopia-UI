@@ -150,7 +150,7 @@ class RoutesDebug extends Component {
                   routes.search.results.length /
                     Math.max(routes.search.resultsPerPage, 1)
                 )}
-                onSelectPage={(e) => RoutesDispatcher.onSelectResultsPage(e)}
+                onSelectPage={(e) => RoutesDispatcher.onSelectItemsPage(e)}
               />
             </FlexColumn>
           </div>

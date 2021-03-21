@@ -21,9 +21,9 @@ const EditView = (props) => {
   const selectedMinutes = Math.floor(selectedFlight.flightDuration % 3600 / 60);
   const selectedDateTime = selectedFlight.flightDepartureTime.split('.')[0];
   
-  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplaneId);
+  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplane.airplaneId);
   const [flightSeatingId, setSeatingId] = useState(selectedFlight.flightSeatingId);
-  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRouteId);
+  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRoute.routeId);
   const [flightDepartureTime, setDateTime] = useState(selectedDateTime);
   const [hours, setHours] = useState(selectedHours);
   const [minutes, setMinutes] = useState(selectedMinutes);
@@ -35,14 +35,16 @@ const EditView = (props) => {
   const resultsStatus = flights.edit.resultsStatus;
   const status = flights.edit.status;
 
+  
+
   const flightAirplaneIdChanged = results
-    ? selectedFlight.flightAirplaneId !== results.flightAirplaneId
+    ? selectedFlight.flightAirplane.airplaneId !== results.flightAirplane.airplaneId
     : true;
   const flightSeatingIdChanged = results
     ? selectedFlight.flightSeatingId !== results.flightSeatingId
     : true;
   const flightRouteIdChanged = results
-    ? selectedFlight.flightRouteId !== results.flightRouteId
+    ? selectedFlight.flightRoute.routeId !== results.flightRoute.routeId
     : true;
   const flightDurationChanged = results
     ? selectedFlight.flightDuration !== results.flightDuration
@@ -101,7 +103,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Airplane ID" 
-          result={results ? results.flightAirplaneId : ". . ."}
+          result={results ? results.flightAirplane.airplaneId : ". . ."}
           status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -117,7 +119,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Route ID" 
-          result={results ? results.flightRouteId : ". . ."}
+          result={results ? results.flightRoute.routeId : ". . ."}
           status={flightRouteIdChanged ? resultsStatus : "DISABLED"} 
         />
 
