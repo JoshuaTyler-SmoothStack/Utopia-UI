@@ -104,7 +104,7 @@ class App extends Component {
 
             {/* Forgot Password Page */}
             <Route path={Constants.pagePaths.forgotPassword}>
-              {authentication.userId ? <ForgotPasswordPage /> : <LandingPage />}
+              <ForgotPasswordPage />
             </Route>
 
             {/* Password Recovery Page */}

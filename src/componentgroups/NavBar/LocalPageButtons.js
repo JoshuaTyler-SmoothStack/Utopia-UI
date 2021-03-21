@@ -46,7 +46,7 @@ const LocalPageButtons = (props) => {
       </Link>
 
       {/* Forgot Password Page */}
-      <Link to={Constants.pagePaths.forogotPassword}>
+      <Link to={Constants.pagePaths.forgotPassword}>
         <button className={buttonClassName} style={buttonStyle}>
           {"Forgot Password Page"}
         </button>
