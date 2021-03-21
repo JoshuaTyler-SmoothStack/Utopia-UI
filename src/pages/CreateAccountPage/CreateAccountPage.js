@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { REGEX_EMAIL, REGEX_PHONE, REGEX_PASSWORD_STRONG } from '../../resources/regex';
 
 // Components
 import ErrorMessage from '../../components/ErrorMessage';
@@ -62,13 +63,9 @@ const CreateAccountPage = (props) => {
   }
 
   function handleValidate(currentEmail, currentPhone, currentPassword, currentConfirmPassword) {
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
-    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
-    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
-
-    setValidateEmail(regexEmailValidation.test(currentEmail));
-    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
-    setValidatePassword(strongRegexPasswordValidation.test(currentPassword));
+    setValidateEmail(REGEX_EMAIL.test(currentEmail));
+    setValidatePhone(REGEX_PHONE.test(currentPhone));
+    setValidatePassword(REGEX_PASSWORD_STRONG.test(currentPassword));
     setPasswordMatch(password === currentConfirmPassword);
   }
 
