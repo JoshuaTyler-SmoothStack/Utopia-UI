@@ -105,12 +105,12 @@ class FlightSearchPage extends Component {
               <h5 className="text-info">{String(`UA${flightId}`)}</h5>
             </td>
             <td>
-              <h5 className="text-primary">{flightsList[i].flightRoute.routeOriginIataId}</h5>
-              <div className="text-dark">{flightsList[i].flightRoute.routeOriginCityName}</div>
+              <h5 className="text-primary">{flightsList[i].flightRoute.routeOrigin.airportIataId}</h5>
+              <div className="text-dark">{flightsList[i].flightRoute.routeOrigin.airportCityName}</div>
             </td>
             <td>
-              <h5 className="text-primary">{flightsList[i].flightRoute.routeDestinationIataId}</h5>
-              <div className="text-dark">{flightsList[i].flightRoute.routeDestinationCityName}</div>
+              <h5 className="text-primary">{flightsList[i].flightRoute.routeDestination.airportIataId}</h5>
+              <div className="text-dark">{flightsList[i].flightRoute.routeDestination.airportCityName}</div>
             </td>
             <td>
               <h5 className="text-dark">{departureTime.split("|")[1]}</h5>
@@ -123,7 +123,7 @@ class FlightSearchPage extends Component {
 
     return (
       <FlexColumn
-        className="bg-white rounded overflow-hidden" 
+        className="bg-white rounded overflow-hidden"
         style={{ width: "99%", overflowY: "scroll" }}
         justify="start"
       >

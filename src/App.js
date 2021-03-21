@@ -36,7 +36,7 @@ const PAGE_ADDRESSES_WHITELIST = [
   Constants.pagePaths.createAccount,
   Constants.pagePaths.debug,
   Constants.pagePaths.home,
-  Constants.pagePaths.flights,
+  Constants.pagePaths.flightSearch,
   Constants.pagePaths.forgotPassword,
   Constants.pagePaths.passwordRecovery,
   Constants.pagePaths.profile,
