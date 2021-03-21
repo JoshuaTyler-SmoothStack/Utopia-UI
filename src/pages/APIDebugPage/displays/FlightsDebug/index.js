@@ -266,16 +266,32 @@ class FlightsDebug extends Component {
       case "flightRouteId":
         flightsList.sort((a, b) => {
           return currentSort === "up"
-            ? a.flightRouteId - b.flightRouteId
-            : b.flightRouteId - a.flightRouteId;
+            ? a.flightRoute.routeId - b.flightRoute.routeId
+            : b.flightRoute.routeId - a.flightRoute.routeId;
+        });
+        break;
+
+      case "flightOrigin":
+        flightsList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.flightRoute.routeOrigin.airportCityName.localeCompare(b.flightRoute.routeOrigin.airportCityName)
+            : b.flightRoute.routeOrigin.airportCityName.localeCompare(a.flightRoute.routeOrigin.airportCityName)
+        });
+        break;
+
+      case "flightDestination":
+        flightsList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.flightRoute.routeDestination.airportCityName.localeCompare(b.flightRoute.routeDestination.airportCityName)
+            : b.flightRoute.routeDestination.airportCityName.localeCompare(a.flightRoute.routeDestination.airportCityName)
         });
         break;
 
       case "flightAirplaneId":
         flightsList.sort((a, b) => {
           return currentSort === "up"
-            ? a.flightAirplaneId - b.flightAirplaneId
-            : b.flightAirplaneId - a.flightAirplaneId;
+            ? a.flightAirplane.airplaneId - b.flightAirplane.airplaneId
+            : b.flightAirplane.airplaneId - a.flightAirplane.airplaneId;
         });
         break;
 
@@ -329,8 +345,10 @@ class FlightsDebug extends Component {
           <tr key={index}>
             <th scrop="row">{index}</th>
             <td>{flightId}</td>
-            <td>{flightsList[i].flightRouteId}</td>
-            <td>{flightsList[i].flightAirplaneId}</td>
+            <td>{flightsList[i].flightAirplane.airplaneId}</td>
+            <td>{flightsList[i].flightRoute.routeId}</td>
+            <td>{flightsList[i].flightRoute.routeOrigin.airportCityName}</td>
+            <td>{flightsList[i].flightRoute.routeDestination.airportCityName}</td>
             <td>{departureTime}</td>
             <td>{duration}</td>
             <td>{flightsList[i].flightSeatingId}</td>
@@ -377,16 +395,6 @@ class FlightsDebug extends Component {
                 </button>
               </th>
               <th scope="col">
-                Route ID
-                <button
-                  className="btn text-white"
-                  value="flightRouteId"
-                  onClick={this.onSortChange}
-                >
-                  ⇅
-                </button>
-              </th>
-              <th scope="col">
                 Airplane ID
                 <button
                   className="btn text-white"
@@ -397,7 +405,37 @@ class FlightsDebug extends Component {
                 </button>
               </th>
               <th scope="col">
-                {"Date & Time (UTC)"}
+                Route ID
+                <button
+                  className="btn text-white"
+                  value="flightRouteId"
+                  onClick={this.onSortChange}
+                >
+                  ⇅
+                </button>
+              </th>
+              <th scope="col">
+                Origin
+                <button
+                  className="btn text-white"
+                  value="flightOrigin"
+                  onClick={this.onSortChange}
+                >
+                  ⇅
+                </button>
+              </th>
+              <th scope="col">
+                Destination
+                <button
+                  className="btn text-white"
+                  value="flightDestination"
+                  onClick={this.onSortChange}
+                >
+                  ⇅
+                </button>
+              </th>
+              <th scope="col">
+                {"Departure (UTC)"}
                 <button
                   className="btn text-white"
                   value="flightDepartureTime"
