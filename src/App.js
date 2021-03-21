@@ -2,8 +2,9 @@
 import _ from "lodash";
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Store from "./reducers/Store";
 import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
+import Constants from "./resources/constants.json";
+import Store from "./reducers/Store";
 
 // Components
 import LoginModal from "./componentgroups/LoginModal";
@@ -31,14 +32,14 @@ const BREAKPOINT_XLARGE = 1200;
 const BREAKPOINT_XXLARGE = 1400;
 const RESIZE_MINIMUM_WAIT_TIME = 100;
 const PAGE_ADDRESSES_WHITELIST = [
-  "/",
-  "/create-account",
-  "/debug",
-  "/home",
-  "/flights",
-  "/forgot-password",
-  "/password-recovery/",
-  "/profile",
+  Constants.pagePaths.boot,
+  Constants.pagePaths.createAccount,
+  Constants.pagePaths.debug,
+  Constants.pagePaths.home,
+  Constants.pagePaths.flights,
+  Constants.pagePaths.forgotPassword,
+  Constants.pagePaths.passwordRecovery,
+  Constants.pagePaths.profile,
 ];
 
 class App extends Component {
@@ -77,37 +78,37 @@ class App extends Component {
             )}
 
             {/* API Debug Page */}
-            <Route path="/debug">
+            <Route path={Constants.pagePaths.debug}>
               <APIDebugPage />
             </Route>
 
             {/* Boot Page */}
-            <Route exact path="/">
+            <Route exact path={Constants.pagePaths.boot}>
               <BootPage />
             </Route>
 
             {/* Landing Page */}
-            <Route path="/home">
+            <Route path={Constants.pagePaths.home}>
               <LandingPage />
             </Route>
 
             {/* Create Account Page */}
-            <Route path="/create-account">
+            <Route path={Constants.pagePaths.createAccount}>
               <CreateAccountPage />
             </Route>
 
             {/* Flight Search Page */}
-            <Route path="/flights">
+            <Route path={Constants.pagePaths.flightSearch}>
               <FlightSearchPage />
             </Route>
 
             {/* Forgot Password Page */}
-            <Route path="/forgot-password">
+            <Route path={Constants.pagePaths.forgotPassword}>
               {authentication.userId ? <ForgotPasswordPage /> : <LandingPage />}
             </Route>
 
             {/* Password Recovery Page */}
-            <Route path="/password-recovery/**">
+            <Route path={Constants.pagePaths.passwordRecovery || String(`${Constants.pagePaths.passwordRecovery}/**`)}>
               {authentication.userId
                 ? <PasswordRecoveryPage />
                 : <LandingPage />
@@ -115,7 +116,7 @@ class App extends Component {
             </Route>
 
             {/* Profile Page */}
-            <Route path="/profile">
+            <Route path={Constants.pagePaths.profile}>
               {authentication.userId ? <UserProfilePage /> : <LandingPage />}
             </Route>
           </Switch>

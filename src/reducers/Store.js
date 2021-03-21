@@ -1,5 +1,5 @@
 // Libraries
-import constants from "../resources/constants.json";
+import Constants from "../resources/constants.json";
 
 // Reducers
 import AirplanesReducer from "./AirplanesReducer";
@@ -21,15 +21,15 @@ class Store {
     Store.getState = getState;
     Store.setState = setState;
     Store.reducers = [
-      AirplanesReducer.initialize(constants.airplanes),
-      AirportsReducer.initialize(constants.airports),
-      AuthenticationReducer.initialize(constants.authentication),
-      BookingsReducer.initialize(constants.bookings),
-      FlightsReducer.initialize(constants.flights),
-      PassengersReducer.initialize(constants.passengers),
-      PaymentsReducer.initialize(constants.payments),
-      RoutesReducer.initialize(constants.routes),
-      UsersReducer.initialize(constants.users),
+      AirplanesReducer.initialize(Constants.airplanes),
+      AirportsReducer.initialize(Constants.airports),
+      AuthenticationReducer.initialize(Constants.authentication),
+      BookingsReducer.initialize(Constants.bookings),
+      FlightsReducer.initialize(Constants.flights),
+      PassengersReducer.initialize(Constants.passengers),
+      PaymentsReducer.initialize(Constants.payments),
+      RoutesReducer.initialize(Constants.routes),
+      UsersReducer.initialize(Constants.users),
     ];
   }
 
@@ -69,9 +69,9 @@ class Store {
     }
 
     for(const i in this.reducers) {
-      if(this.reducers[i].constantsParent.root === actionTypeRoot) {
+      if(this.reducers[i].ConstantsParent.root === actionTypeRoot) {
         const reducer = this.reducers[i];
-        const reducerName = reducer.constantsParent.name;
+        const reducerName = reducer.ConstantsParent.name;
           this.setState((state) => ({
             [reducerName]: {
               ...state[reducerName],

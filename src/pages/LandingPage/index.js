@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import Store from "../../reducers/Store";
 import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
+import Constants from "../../resources/constants.json";
 
 // Components
 import FlightSearch from "../../componentgroups/FlightSearch";
@@ -60,7 +61,7 @@ class LandingPage extends Component {
           </div> {/* Body-End */}
 
           {/* Redirects */}
-          {redirectToFlightSearchPage && <Redirect to={"/flights"}/>}
+          {redirectToFlightSearchPage && <Redirect to={Constants.pagePaths.flightSearch}/>}
 
         </div>
       </div>

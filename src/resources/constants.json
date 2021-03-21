@@ -143,6 +143,16 @@
     "post": "POST",
     "put": "PUT"
   },
+  "pagePaths": {
+    "boot": "/",
+    "createAccount": "/create-account",
+    "debug": "/debug",
+    "home": "/home",
+    "flightSearch": "/flights",
+    "forgotPassword": "/forgot-password",
+    "passwordRecovery": "/password-recovery",
+    "profile": "/profile"
+  },
   "passengers": {
     "root": "PASSENGERS",
     "apiPath": "/passengers",
