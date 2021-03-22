@@ -71,11 +71,6 @@ class App extends Component {
         {/* Pages */}
         <Router>
           <Switch>
-            
-            {/* 404 - No Path */}
-            {!PAGE_ADDRESSES_WHITELIST.includes(currentPath) && (
-              <PageNotFoundPage />
-            )}
 
             {/* API Debug Page */}
             <Route path={Constants.pagePaths.debug}>
@@ -119,6 +114,12 @@ class App extends Component {
             <Route path={Constants.pagePaths.profile}>
               {authentication.userId ? <UserProfilePage /> : <LandingPage />}
             </Route>
+
+            {/* 404 - No Path */}
+            {!PAGE_ADDRESSES_WHITELIST.includes(currentPath) && (
+              <PageNotFoundPage />
+            )}
+
           </Switch>
 
           {/* Login Modal - zIndex 2 */}
