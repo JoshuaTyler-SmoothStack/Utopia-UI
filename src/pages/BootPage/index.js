@@ -44,7 +44,7 @@ class StartupPage extends Component {
           alt=""
           className="rounded-circle mt-3"
           style={{
-            width: "50%",
+            height: "50%",
             maxWidth: "500px",
           }}
         />
