@@ -1,18 +1,21 @@
 import BaseDispatcher from "./BaseDispatcher";
-import constants from "../resources/constants.json"
+import Constants from "../resources/constants.json";
 import Store from "../reducers/Store";
 import Orchestration from "../Orchestration";
 
 class FlightsDispatcher extends BaseDispatcher {
-  static apiPath = constants.flights.apiPath;
-  static constantsParent = constants.flights;
+  static apiPath = Constants.flights.apiPath;
+  static constantsParent = Constants.flights;
 
   static onSearchAndFilter(httpPath, searchTermsString, filtersObject) {
-    filtersObject = {
-      "flightRouteDestinationIataId": filtersObject.destination.split(":")[0],
-      "flightRouteOriginIataId": filtersObject.origin.split(":")[0],
-    };
-    
+    if(filtersObject.destination) {
+      filtersObject.destination = filtersObject.destination.split(":")[0];
+    }
+
+    if(filtersObject.origin) {
+      filtersObject.origin = filtersObject.origin.split(":")[0];
+    }
+
     const activeFilters = {};
     if(searchTermsString) activeFilters.searchTerms = searchTermsString;
     if(filtersObject) {
@@ -25,7 +28,7 @@ class FlightsDispatcher extends BaseDispatcher {
 
     Store.reduce({ type: this.getConstantsParent().request });
     Orchestration.createRequestWithBody(
-      constants.httpRequest.post,
+      Constants.httpRequest.post,
       this.getApiPath() + httpPath,
       activeFilters,
       (httpError) => {

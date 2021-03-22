@@ -7,74 +7,31 @@ import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const ALPHABET = [ "A", "B", "C", "D", "E", "F", "G", "H"];
 const ZINDEX_DEFAULT = 2;
 
 const SeatingModal = (props) => {
 
-  const { airplanes, flights } = Store.getState();
+  const { airplanes, breakPoint, flights } = Store.getState();
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
+  const [errorMessage, setErrorMessage] = useState("");
+  const [iActiveConfirmSeatSelection, setIsActiveConfirmSeatSelection] = useState(false);
   const [seatingTable, setSeatingTable] = useState(null);
-
-  const handleRenderSeatingTable = () => {
-    
-    console.log(airplanes.selected);
-
-    
-
-
-
-    // let firstClassItems = [];
-    // // let businessClassItems = [];
-    // // let economyClassItems = [];
-    // // let columnItems = [];
-    // const totalColumns = Math.max([firstClassColumns, businessClassColumns, economyClassColumns]); 
-    // const totalRows = firstClassRows + businessClassRows + economyClassRows;
-    // for(var i = 0; i < totalRows; i++) {
-    //   let rowItemsTop = [];
-    //   let rowItemsBottom = [];
-
-    //   for(var ii = 0; ii < totalColumns; ii++) {
-    //     let classColor = "btn-dark"
-
-    //     if(i < firstClassRows) {
-    //       if(ii > firstClassColumns) continue;
-    //       if(!occupiedSeats[i+","+ii]) classColor = "kit-bg-gold";
-    //     }
-    //     else if(i < (firstClassRows + businessClassRows)) {
-    //       if(ii > businessClassColumns) continue;
-    //       if(!occupiedSeats[i+","+ii]) classColor = "kit-bg-silver";
-    //     }
-    //     else {
-    //       if(ii > economyClassColumns) continue;
-    //       if(!occupiedSeats[i+","+ii]) classColor = "kit-bg-bronze";
-    //     }
-    //     console.log("seat: " + i+alphabet[ii]);
-        
-
-    //   }
-
-      
-    // return (
-    //   <FlexRow wrap="no-wrap">
-    //     <FlexRow wrap="no-wrap">{firstClassItems}</FlexRow>
-    //     {/* <FlexRow className="ml-3">{businessClassItems}</FlexRow>
-    //     <FlexRow>{economyClassItems}</FlexRow> */}
-    //   </FlexRow>
-    // );
-    return <div></div>;
-  };
+  const [seatSelection, setSeatSelection] = useState("");
+  const [selectingEmerencyExitRow, setSelectingEmerencyExitRow] = useState(false);
 
   const selectSeat = (seatPosition, isAvailable, isEmergencyExitRow) => {
+    setSeatSelection(seatPosition);
     if(!isAvailable) {
       KitUtils.soundAlert();
-      // showErrorMessage(String(`Seat: ${seatPosition} is occupied`));
+      setErrorMessage(String(`Seat: ${seatPosition} is occupied`));
     } else {
-      // setSelectingEmerencyExitRow(isEmergencyExitRow);
-      // setIsActiveConfirmSeatSelection(true);
+      setSelectingEmerencyExitRow(isEmergencyExitRow);
+      setIsActiveConfirmSeatSelection(true);
     }
   };
 
@@ -94,10 +51,11 @@ const SeatingModal = (props) => {
       const coachClassRows = coachClassCapacity / coachClassColumns;
       
       const emergencyExitRows = flights.selected.flightAirplane.airplaneType.airplaneTypeEmergencyExitRows.split("-");
-      const occupiedSeats = ["1,1", "2,1", "4,1"];
+      const occupiedSeats = ["1A", "11D", "35E"];
 
       const leftSeats = [];
       const rightSeats = [];
+
       // Loop Rows
       const totalRows = (firstClassRows + businessClassRows + coachClassRows);
       for(let rowIndex = 0; rowIndex < totalRows; rowIndex++) {
@@ -123,11 +81,12 @@ const SeatingModal = (props) => {
           let isEmergencyExitRow = false;
           const seatPosition = String(`${rowIndex+1}${ALPHABET[columnIndex]}`);
           let seatColor = defaultSeatColor;
+
           if(occupiedSeats.includes(seatPosition)) {
             seatColor = "btn-dark";
             isAvailable = false;
           }
-          else if(emergencyExitRows.includes(seatPosition)) {
+          else if(emergencyExitRows.includes(String(rowIndex))) {
             seatColor = "btn-primary";
             isEmergencyExitRow = true;
           }
@@ -136,7 +95,7 @@ const SeatingModal = (props) => {
           const selectedHalf = (columnIndex < (columnCount / 2)) ? rowLeftSide : rowRightSide;
           selectedHalf.push(
             <button key={String(`seat-${seatPosition}`)}
-              className={String(`btn m-1 btn-dark ${seatColor}`)}
+              className={String(`btn m-1 ${seatColor}`)}
               style={{minHeight:"2rem", minWidth:"2rem"}}
               onClick={() => selectSeat(seatPosition, isAvailable, isEmergencyExitRow)}
             >
@@ -161,11 +120,10 @@ const SeatingModal = (props) => {
       const seatingTable = (
         <FlexRow className="bg-white rounded" wrap="no-wrap">
           <FlexColumn justify="around" wrap="no-wrap">{leftSeats}</FlexColumn>
-          <div className="bg-success rounded m-1" style={{height:String(`${totalRows}px`), width:"5px"}}/>
+          <div className="bg-light rounded m-1" style={{height:String(`${totalRows * 3}rem`), width:"5px"}}/>
           <FlexColumn justify="around" wrap="no-wrap">{rightSeats}</FlexColumn>
         </FlexRow>
       );
-      console.log(seatingTable);
       setSeatingTable(seatingTable);
     }
   }, [airplanes, flights, seatingTable, setSeatingTable]);
@@ -208,25 +166,92 @@ const SeatingModal = (props) => {
 
               {/* Title */}
               <div className="col-12 bg-white rounded p-2 kit-border-shadow">
-                <FlexRow className="h-100" justify="start">
+                <FlexRow className="h-100" justify="start" wrap="no-wrap">
 
                   {/* Flight ID */}
                   <FlexColumn className="h-100 ml-2">
-                    <FlexRow className="mb-0 mr-auto" justify="start">
+                    <FlexRow className="mb-0 mr-auto" justify="start" wrap="no-wrap">
                       <h2 className="text-dark">{"Flight: "}</h2>
                       <h2 className="ml-2 text-info">{"UA" + flights.selected.flightId}</h2>
                     </FlexRow>
                     <h5 className="text-light mr-auto">
-                      {flights.selected.flightAirplaneTypeName || "Airplane not yet selected."}
+                      {flights.selected.flightAirplane.airplaneType.airplaneTypeName || "Airplane not yet selected."}
                     </h5>
                   </FlexColumn>
+
+                  {/* Select a Seat */}
+                  {!(breakPoint.includes("small")) &&
+                  <FlexColumn className="ml-4">
+                    <h4 className="text-center">Select a seat</h4>
+                  </FlexColumn>}
+
+                  {/* Keys */}
+                  <FlexRow className="ml-auto" justify="start" wrap="no-wrap">
+                    {/* First, Business, Economy */}
+                    <FlexColumn className="h-100" justify="start">
+                      <FlexRow className="w-100" justify="start" wrap="no-wrap">
+                        <div
+                          className="rounded kit-bg-gold kit-border-shadow-sm mr-1"
+                          style={{height:"1rem", width:"1rem"}}
+                        />
+                        <span>First</span>
+                      </FlexRow>
+                      <FlexRow className="w-100" justify="start" wrap="no-wrap">
+                        <div
+                          className="rounded kit-bg-silver kit-border-shadow-sm mr-1"
+                          style={{height:"1rem", width:"1rem"}}
+                        />
+                        <span>Business</span>
+                      </FlexRow>
+                      <FlexRow className="w-100" justify="start" wrap="no-wrap">
+                        <div
+                          className="rounded kit-bg-bronze kit-border-shadow-sm mr-1"
+                          style={{height:"1rem", width:"1rem"}}
+                        />
+                        <span>Economy</span>
+                      </FlexRow>
+                    </FlexColumn>
+
+                    {/* Emergency / Occupied */}
+                    <FlexColumn className="h-100 ml-3" justify="start">
+                      <FlexRow className="w-100" justify="start" wrap="no-wrap">
+                        <div
+                          className="rounded bg-primary kit-border-shadow-sm mr-1"
+                          style={{height:"1rem", width:"1rem"}}
+                        />
+                        <span>Emergency Exit</span>
+                      </FlexRow>
+                      <FlexRow className="w-100" justify="start" wrap="no-wrap">
+                        <div
+                          className="rounded bg-dark kit-border-shadow-sm mr-1"
+                          style={{height:"1rem", width:"1rem"}}
+                        />
+                        <span>Occupied</span>
+                      </FlexRow>
+                    </FlexColumn>
+                  </FlexRow>
                 </FlexRow>
               </div>
+
+              {/* Error Message */}
+              {errorMessage !== "" &&
+              <FlexRow className="bg-white rounded w-100">
+                <ErrorMessage className="h5 mt-2">
+                  {errorMessage}
+                </ErrorMessage>
+              </FlexRow>}
 
               {/* Seating Chart */}
               <FlexRow className="col-12 mt-2" style={{maxHeight:"50vh", overflowY: "scroll"}}>
                 {seatingTable}
               </FlexRow>
+
+              {/* Seat Selection Confirmation */}
+              {iActiveConfirmSeatSelection &&
+                <FlexColumn>
+                  
+                </FlexColumn>
+              }
             </div>
           </div>
         </div>

@@ -2,21 +2,25 @@
 import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
+import Constants from "../../resources/constants.json";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 import Store from "../../reducers/Store";
-
 
 // Components
 import InputText from "../../components/InputText";
 import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
+import Modal from "../../components/Modal";
 
 // Images
 import gifWorldBalloon from "../../images/EarthWithHotAirBalloon.gif";
 
+const ZINDEX_DEFAULT = 3;
+
 class LoginModal extends Component {
   constructor(props) {
     super(props);
+    // @PROP: onClose - f()
 
     this.state = {
       email: "",
@@ -28,26 +32,18 @@ class LoginModal extends Component {
 
   render() {
     const { authentication } = Store.getState();
+    const align = this.props.align || "center";
+    const background = this.props.background || "kit-bg-smoke-light";
+    const zIndex = this.props.zIndex || ZINDEX_DEFAULT;
     const warning = this.state.warning || authentication.error;
 
-
-
     return (
-      // zIndex: 6
-      <FlexColumn
-        className={
-          "kit-bg-smoke-light kit-no-user " +
-          (this.props.className || "")
-        }
-        style={{
-          position: "absolute",
-          height: "100vh",
-          width: "100vw",
-          top: "0",
-          left: "0",
-          zIndex: "6",
-          ...this.props.style
-        }}
+      <Modal
+        align={align}
+        background={background}
+        disableCloseButton={true}
+        zIndex={zIndex}
+        onClose={() => this.props.onClose}
       >
         <FlexColumn
           className="kit-gradient-smoke rounded kit-border-shadow"
@@ -61,15 +57,17 @@ class LoginModal extends Component {
             style={{ height: "5rem", width: "100%" }}
           >
             {/* Icon - Back  */}
-            <svg
-              className="ml-2 mr-auto kit-icon-light"
-              height={"66%"}
-              fill={"white"}
-              viewBox="0 0 16 16"
-              onClick={() => AuthenticationDispatcher.onCancel()}
-            >
-              <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
-            </svg>
+            <button className="btn btn-primary mr-auto">
+              <svg
+                className="ml-2 kit-icon-light"
+                height={"4rem"}
+                fill={"white"}
+                viewBox="0 0 16 16"
+                onClick={() => AuthenticationDispatcher.onCancel()}
+              >
+                <path fillRule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
+              </svg>
+            </button>
 
             {/* Utopia WorldBalloonGif */}
             <img src={gifWorldBalloon} alt=""
@@ -139,7 +137,7 @@ class LoginModal extends Component {
                     fontClass={"h4"}
                     style={{
                       height: "4rem",
-                      width: "66%"
+                      width: "66%",
                     }}
                     onChange={(e) => this.setState({ email: e })}
                   />
@@ -153,7 +151,7 @@ class LoginModal extends Component {
                     isHidden={true}
                     style={{
                       height: "4rem",
-                      width: "66%"
+                      width: "66%",
                     }}
                     onChange={(e) => this.setState({ password: e })}
                   />
@@ -166,7 +164,7 @@ class LoginModal extends Component {
                   style={{ height: "5rem", width: "100%" }}
                 >
                   {/* Create Account */}
-                  <Link to="/createaccount">
+                  <Link to={Constants.pagePaths.createAccount}>
                     <button className="btn btn-secondary"
                       onClick={() => AuthenticationDispatcher.onCancel()}
                     >
@@ -175,7 +173,7 @@ class LoginModal extends Component {
                   </Link>
 
                   {/* Reset Password */}
-                  <Link to="/forgotpassword">
+                  <Link to={Constants.pagePaths.forgotPassword}>
                     <button className="btn btn-secondary"
                       onClick={() => AuthenticationDispatcher.onCancel()}
                     >
@@ -196,14 +194,12 @@ class LoginModal extends Component {
               </FlexColumn>}
           </FlexColumn>
         </FlexColumn>
-      </FlexColumn >
+      </Modal>
     );
   }
 
   handleLogin = () => {
     const { email, password } = this.state;
-
-    console.log(email, password)
 
     if (this.validateEmail(email)) {
       AuthenticationDispatcher.onLogin(email, password);
@@ -216,13 +212,11 @@ class LoginModal extends Component {
           : "Email address cannot be empty."
       });
     }
-  }
+  };
 
   validateEmail = (email) => {
     const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
     return regexEmailValidation.test(email);
-
   };
 }
-
 export default LoginModal;

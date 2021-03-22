@@ -1,167 +1,183 @@
 import BaseDispatcher from "./BaseDispatcher";
-import constants from "../resources/constants.json"
+import Constants from "../resources/constants.json";
 import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
 
 class AuthenticationDispatcher extends BaseDispatcher {
-
-  static apiPath = constants.authentication.apiPath;
-  static constantsParent = constants.authentication;
+  static apiPath = Constants.authentication.apiPath;
+  static constantsParent = Constants.authentication;
 
   static onCancel() {
-    Store.reduce({ type: constants.authentication.cancel });
+    Store.reduce({ type: Constants.authentication.cancel });
   }
 
   static onForgotPassword(email) {
+    Store.reduce({ type: Constants.authentication.requestForgotPassword });
 
-    Store.reduce({ type: constants.authentication.requestForgotPassword });
-
-    const httpRequestBody = { email: email };
+    const httpRequestBody = { email };
 
     Orchestration.createRequestWithBody(
-      constants.httpRequest.post,
-      "/users/forgot-password",
+      Constants.httpRequest.post,
+      this.apiPath + "/forgot-password",
       httpRequestBody,
-      httpError => {
+      (httpError) => {
         Store.reduce({
-          type: constants.authentication.error,
-          payload: httpError
+          type: Constants.authentication.error,
+          payload: httpError,
         });
-      }, httpResponseBody => {
-        console.log(httpResponseBody)
+      },
+      (httpResponseBody) => {
         if (httpResponseBody.error) {
           Store.reduce({
-            type: constants.authentication.errorForgotPassword,
-            payload: httpResponseBody.error
+            type: Constants.authentication.errorForgotPassword,
+            payload: httpResponseBody.error,
           });
         } else {
           Store.reduce({
-            type: constants.authentication.responseForgotPassword,
-            payload: httpResponseBody
-
+            type: Constants.authentication.responseForgotPassword,
+            payload: httpResponseBody,
           });
         }
-      }
-    )
-  }
-
-  static onCreateAccount(email) {
-    Store.reduce({ type: constants.authentication.createAccountRequest });
-
-    const httpRequestBody = { email: email };
-
-    Orchestration.createRequestWithBody(
-      constants.httpRequest.post,
-      "/users/create",
-      httpRequestBody,
-      httpError => {
-        Store.reduce({ type: constants.authentication.createAccountError });
-      }, httpResponseBody => {
-        Store.reduce({ type: constants.authentication.createAccountSuccess });
       }
     );
   }
 
+  static onCreateAccount(firstName, lastName, email, phone, password) {
+    Store.reduce({ type: Constants.authentication.createAccountRequest });
+
+    const httpRequestBody = {
+      userFirstName: firstName,
+      userLastName: lastName,
+      userEmail: email,
+      userPhone: phone,
+      userPassword: password,
+    };
+
+    Orchestration.createRequestWithBody(
+      Constants.httpRequest.post,
+      this.apiPath,
+      httpRequestBody,
+      (httpError) => {
+        Store.reduce({
+          type: Constants.authentication.createAccountError,
+          payload: httpError,
+        });
+      },
+      (httpResponseBody) => {
+        if(httpResponseBody.error) {
+          Store.reduce({
+            type: Constants.authentication.createAccountError,
+            payload: httpResponseBody.error,
+          });
+        } else {
+          Store.reduce({type: Constants.authentication.createAccountSuccess});
+          AuthenticationDispatcher.onLogin(email, password);
+        }
+      }
+    );
+  }
 
   static onDeleteAccount(id) {
-
     Orchestration.createRequest(
-      constants.httpRequest.delete,
+      Constants.httpRequest.delete,
       this.apiPath + `/${id}`,
-      httpError => {
-        Store.reduce({ type: constants.authentication.error });
-      }, httpResponseBody => {
-        Store.reduce({ type: constants.authentication.reset });
+      (/*httpError*/) => {
+        Store.reduce({ type: Constants.authentication.error });
+      },
+      (/*httpResponseBody*/) => {
+        Store.reduce({ type: Constants.authentication.reset });
       }
-    )
+    );
     this.onLogout();
-
   }
 
   static onLogin(email, password) {
     const encodedLogin = "Basic " + window.btoa(email + ":" + password);
-    const authorization = { "Authorization": encodedLogin };
+    const authorization = { Authorization: encodedLogin };
 
     Store.reduce({
-      type: constants.authentication.requestLogin,
-      payload: encodedLogin
+      type: Constants.authentication.requestLogin,
+      payload: encodedLogin,
     });
 
     Orchestration.createRequestWithHeader(
-      constants.httpRequest.get,
+      Constants.httpRequest.get,
       this.apiPath + "/login",
       authorization,
-      httpError => {
+      (httpError) => {
         console.log("ERROR -> ", httpError);
         Store.reduce({
-          type: constants.authentication.error,
-          payload: httpError
+          type: Constants.authentication.error,
+          payload: httpError,
         });
-      }, httpResponseBody => {
-        console.log(httpResponseBody)
+      },
+      (httpResponseBody) => {
+        console.log(httpResponseBody);
         if (httpResponseBody.error) {
           Store.reduce({
-            type: constants.authentication.errorLogin,
-            payload: httpResponseBody.error
+            type: Constants.authentication.errorLogin,
+            payload: httpResponseBody.error,
           });
         } else {
           Store.reduce({
-            type: constants.authentication.responseLogin,
+            type: Constants.authentication.responseLogin,
             payload: {
               userId: httpResponseBody.userId,
               userRole: httpResponseBody.userRole,
               userToken: httpResponseBody.userToken,
-            }
+            },
           });
-          localStorage.setItem("JWT", httpResponseBody.userToken)
+          localStorage.setItem("JSON_WEB_TOKEN", httpResponseBody.userToken);
         }
-      });
+      }
+    );
   }
 
   static onLoginWithToken(overrideToken) {
-    const webToken = overrideToken || localStorage.getItem("JWT");
+    const webToken = overrideToken || localStorage.getItem("JSON_WEB_TOKEN");
     if (webToken) {
-      const authorization = { "Authorization": 'Bearer ' + webToken };
+      const authorization = { Authorization: "Bearer " + webToken };
       Orchestration.createRequestWithHeader(
-        constants.httpRequest.get,
+        Constants.httpRequest.get,
         this.apiPath + "/login",
         authorization,
-        httpError => {
+        (httpError) => {
           console.log("ERROR -> ", httpError);
           Store.reduce({
-            type: constants.authentication.error,
-            payload: httpError
+            type: Constants.authentication.error,
+            payload: httpError,
           });
-        }, httpResponseBody => {
+        },
+        (httpResponseBody) => {
           if (httpResponseBody.error) {
             Store.reduce({
-              type: constants.authentication.error,
-              payload: httpResponseBody.error
+              type: Constants.authentication.error,
+              payload: httpResponseBody.error,
             });
           } else {
             Store.reduce({
-              type: constants.authentication.responseLogin,
+              type: Constants.authentication.responseLogin,
               payload: {
                 userId: httpResponseBody.userId,
                 userRole: httpResponseBody.userRole,
                 userToken: httpResponseBody.userToken,
-              }
-
+              },
             });
-            localStorage.setItem("JWT", httpResponseBody.userToken)
+            localStorage.setItem("JSON_WEB_TOKEN", httpResponseBody.userToken);
           }
-        });
+        }
+      );
     }
   }
 
   static onLogout() {
-    localStorage.removeItem('JWT');
-    Store.reduce({ type: constants.authentication.reset });
+    localStorage.removeItem("JSON_WEB_TOKEN");
+    Store.reduce({ type: Constants.authentication.reset });
     // TODO clear Auth
   }
 
   static onPromptLogin() {
-    Store.reduce({ type: constants.authentication.promptLogin });
+    Store.reduce({ type: Constants.authentication.promptLogin });
   }
 }
 export default AuthenticationDispatcher;

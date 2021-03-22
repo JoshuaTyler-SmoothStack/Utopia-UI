@@ -88,9 +88,7 @@ class FlightsDebug extends Component {
                 <button
                   className="btn btn-success ml-2 text-white kit-text-shadow-thin"
                   type="submit"
-                  onClick={() =>
-                    FlightsDispatcher.onSearchAndFilter("/search", searchTerms)
-                  }
+                  onClick={() =>FlightsDispatcher.onSearchAndFilter("/search", searchTerms, searchFilters)}
                 >
                   search
                 </button>

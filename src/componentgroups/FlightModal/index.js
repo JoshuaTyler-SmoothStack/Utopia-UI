@@ -69,7 +69,7 @@ const FlightModal = (props) => {
                       <h2 className="ml-2 text-info">{"UA" + flights.selected.flightId}</h2>
                     </FlexRow>
                     <h5 className=" ml-2 text-light mr-auto">
-                      {flights.selected.flightAirplaneTypeName || "Airplane Type."}
+                      {flights.selected.flightAirplane.airplaneType.airplaneTypeName || "Airplane Type."}
                     </h5>
                   </FlexColumn>
 
@@ -87,9 +87,9 @@ const FlightModal = (props) => {
                         <h5 className="text-info">{String(`${flightHours}h ${flightMinutes}m`)}</h5>
                       </FlexRow>
                       <FlexRow className="col-6 col-sm-12 p-0 pr-sm-2">
-                        <h3 className="text-warning">{flights.selected.flightRouteOriginIataId}</h3>
+                        <h3 className="text-warning">{flights.selected.flightRoute.routeOrigin.airportIataId}</h3>
                         <h3 className="text-dark ml-1 mr-1">{"➜"}</h3>
-                        <h3 className="text-warning">{flights.selected.flightRouteDestinationIataId}</h3>
+                        <h3 className="text-warning">{flights.selected.flightRoute.routeDestination.airportIataId}</h3>
                       </FlexRow>
                     </div>
                   </div>
@@ -111,7 +111,7 @@ const FlightModal = (props) => {
                       <h5>First</h5>
 
                       {/* Sofa Svg */}
-                      <svg 
+                      <svg
                         className="kit-svg-gold"
                         height="2rem"
                         width="2rem"
@@ -185,11 +185,6 @@ const FlightModal = (props) => {
                 {/* Already Have Ticket */}
                 <button className="btn btn-info ml-2">
                   Already have a ticket?
-                </button>
-
-                {/* Wut */}
-                <button className="btn btn-success text-white ml-2">
-                  wut
                 </button>
               </FlexRow>
 

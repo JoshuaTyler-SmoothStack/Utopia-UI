@@ -27,7 +27,7 @@ const UserProfilePage = (props) => {
   const [validatePhone, setValidatePhone] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
   const [isSubmitted, setSubmitted] = useState(false);
-  const isLoggedIn = localStorage.getItem("JWT");
+  const isLoggedIn = localStorage.getItem("JSON_WEB_TOKEN");
 
   useEffect((e) => {
     if(users.edit.resultsStatus === "SUCCESS") {

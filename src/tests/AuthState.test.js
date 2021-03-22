@@ -44,7 +44,7 @@ test("onLogin ERROR invalid email/password to authenticate a user",
     }, 100);
   });
 
-test("onLoginWithToken validates if JWT stored in localStorage",
+test("onLoginWithToken validates if JSON_WEB_TOKEN stored in localStorage",
   () => {
     AuthenticationDispatcher.onLoginWithToken();
     setTimeout(() => {
@@ -53,7 +53,7 @@ test("onLoginWithToken validates if JWT stored in localStorage",
     }, 100);
   });
 
-test("onLoginWithToken ERROR while validating JWT stored in localStorage",
+test("onLoginWithToken ERROR while validating JSON_WEB_TOKEN stored in localStorage",
   () => {
     AuthenticationDispatcher.onLoginWithToken();
     setTimeout(() => {
@@ -62,7 +62,7 @@ test("onLoginWithToken ERROR while validating JWT stored in localStorage",
     }, 100);
   });
 
-test("onLogout, successfully log out user and remove JWT from localStorage",
+test("onLogout, successfully log out user and remove JSON_WEB_TOKEN from localStorage",
   () => {
     AuthenticationDispatcher.onLogout();
     setTimeout(() => {

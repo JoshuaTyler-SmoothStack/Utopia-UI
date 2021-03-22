@@ -50,7 +50,7 @@ class FlightSearchPage extends Component {
         {/* Flight Modal */}
         {isActive_FlightModal &&
         <FlightModal
-          className="col-12 col-sm-10 col-md-8 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow"
+          className="col-12 col-sm-10 col-md-8 col-lg-7 bg-primary p-2 m-auto rounded kit-border-shadow"
           zIndex="4"
           onSelectSeat={() => {
             this.setState({isActive_SeatingModal: true});
@@ -62,7 +62,7 @@ class FlightSearchPage extends Component {
         {/* Seating Modal */}
         {isActive_SeatingModal &&
         <SeatingModal
-          className="col-12 col-sm-10 col-md-8 col-lg-6 bg-primary p-2 m-auto rounded kit-border-shadow"
+          className="col-12 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
           zIndex="4"
           onClose={() => {
             this.setState({isActive_SeatingModal: false});

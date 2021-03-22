@@ -22,7 +22,7 @@ const ForgotPasswordPage = (props) => {
   const [validateEmail, setValidateEmail] = useState(true)
 
   const history = useHistory();
-  if (localStorage.getItem("JWT")) {
+  if (localStorage.getItem("JSON_WEB_TOKEN")) {
     history.push("/home")
   }
 

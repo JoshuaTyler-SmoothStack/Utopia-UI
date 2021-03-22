@@ -1,9 +1,11 @@
 // Libraries
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import { REGEX_EMAIL, REGEX_PHONE, REGEX_PASSWORD_STRONG } from '../../resources/regex';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import Store from '../../reducers/Store';
+import Constants from "../../resources/constants.json";
 
 // Components
 import ErrorMessage from '../../components/ErrorMessage';
@@ -14,52 +16,33 @@ import NavBar from '../../componentgroups/NavBar';
 
 const CreateAccountPage = (props) => {
 
+  const { authentication } = Store.getState();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitted, setSubmitted] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
-  const [validatePassword, setValidatePassword] = useState(false)
-  const [validatePhone, setValidatePhone] = useState(false)
-  const [validateEmail, setValidateEmail] = useState(false)
-  const [redirect, setRedirect] = useState(false);
-  const [status, setStatus] = useState("DEFAULT");
+  const [validatePassword, setValidatePassword] = useState(false);
+  const [validatePhone, setValidatePhone] = useState(false);
+  const [validateEmail, setValidateEmail] = useState(false);
 
-  const jwk = localStorage.getItem("JWT");
+  const JSON_WEB_TOKEN = localStorage.getItem("JSON_WEB_TOKEN");
 
 
   function handleSubmit(e) {
     e.preventDefault();
     handleValidate(email, phone, password, confirmPassword);
-    setSubmitted(true)
+    setSubmitted(true);
 
     if (!firstName || !lastName || !validateEmail ||
       !validatePhone || !validatePassword || !passwordMatch) {
       return;
-    };
-
-    const newUser = {
-      userFirstName: firstName,
-      userLastName: lastName,
-      userEmail: email,
-      userPhone: phone,
-      userPassword: password
     }
 
-    setStatus("PENDING")
-    axios.post("http://localhost:8080/users", newUser)
-      .then(data => {
-        console.log(data.status)
-        setStatus("SUCCESS")
-        setTimeout(() => setRedirect(true), 3400)
-      }, error => {
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
-        setStatus("ERROR")
-      });
+    AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
   }
 
   function handleValidate(currentEmail, currentPhone, currentPassword, currentConfirmPassword) {
@@ -71,8 +54,8 @@ const CreateAccountPage = (props) => {
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
-      {redirect && <Redirect to="/home" />}
-      {jwk && <Redirect to="/profile" />}
+      {(authentication.status === "SUCCESS" && !authentication.userId) && <Redirect to={Constants.pagePaths.home} />}
+      {JSON_WEB_TOKEN && <Redirect to={Constants.pagePaths.profile} />}
 
       <div className="row">
         {/* Navbar */}
@@ -92,13 +75,13 @@ const CreateAccountPage = (props) => {
             <div className="card-body">
 
               {/* Error */}
-              {status === "ERROR" && <ErrorMessage>{errorMessage}</ErrorMessage>}
+              {authentication.status === "ERROR" && <ErrorMessage>{authentication.error}</ErrorMessage>}
 
               {/* Pending */}
-              {status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
+              {authentication.status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
 
               {/* Success */}
-              {status === "SUCCESS" &&
+              {(authentication.status === "SUCCESS" && isSubmitted) &&
                 <FlexColumn>
                   <h3 className="text-success kit-text-shadow-thin">
                     Account Created!
@@ -111,7 +94,7 @@ const CreateAccountPage = (props) => {
               }
 
               {/* Default */}
-              {status === "DEFAULT" &&
+              {authentication.status === "INACTIVE" &&
                 <form name="form" onSubmit={(e) => handleSubmit(e)}>
 
                   {/* Firstname */}
@@ -121,7 +104,7 @@ const CreateAccountPage = (props) => {
                   }
                   <input type="text"
                     className={"form-control mb-2 " +
-                      (isSubmitted ? !firstName ? "is-invalid" : "is-valid" : "")
+                      (isSubmitted ? (firstName ? "is-valid" : "is-invalid") : "")
                     }
                     name="firstName"
                     value={firstName}
@@ -135,7 +118,7 @@ const CreateAccountPage = (props) => {
                   }
                   <input type="text"
                     className={"form-control mb-2 " +
-                      (isSubmitted ? !lastName ? "is-invalid" : "is-valid" : "")
+                      (isSubmitted ? (lastName ? "is-valid" : "is-invalid") : "")
                     }
                     name="lastName"
                     value={lastName}
@@ -235,7 +218,7 @@ const CreateAccountPage = (props) => {
 
                   {/* Buttons */}
                   <FlexRow className="form-group mt-4" justify="around">
-                    <Link to="/home">
+                    <Link to={Constants.pagePaths.home}>
                       <button className="btn btn-secondary">Cancel</button>
                     </Link>
                     <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">
@@ -249,5 +232,5 @@ const CreateAccountPage = (props) => {
       </div>
     </div>
   );
-}
+};
 export default CreateAccountPage;

@@ -23,6 +23,7 @@ class InputText extends React.Component {
     this.state = {
       isActive: props.isActive || false,
       isHover: false,
+      lastPassedValue: null,
       value: props.value || "",
     };
   }
@@ -127,16 +128,17 @@ class InputText extends React.Component {
       <div
         className={
           "p-1 d-flex flex-row justify-content-center align-items-center " +
-          (error ? "inputInvalid " : "") + 
-          className
+          (error ? "inputInvalid " : "") + className
         }
         style={{
-          ...style, 
+          ...style,
           cursor: "text",
           overflow: "hidden",
-          transition: "0.2s ease all"
+          transition: "0.2s ease all",
         }}
+        tabIndex={"0"}
         onClick={() => this.handleOnFocus()}
+        onFocus={() => this.handleOnFocus()}
         onMouseEnter={() => this.setState({ isHover: true })}
         onMouseLeave={() => this.setState({ isHover: false })}
       >
@@ -148,11 +150,14 @@ class InputText extends React.Component {
 
   componentDidUpdate() {
     const { onSetFocus, value } = this.props;
-    const { isActive } = this.state;
+    const { isActive, lastPassedValue } = this.state;
     const textInputRef = this.textInputRef.current;
     
-    if(value !== this.state.value) {
-      this.setState({value: value});
+    if(value !== lastPassedValue) {
+      this.setState({
+        lastPassedValue: value,
+        value: value,
+      });
     }
     
     if (onSetFocus) {
