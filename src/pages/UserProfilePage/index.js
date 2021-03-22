@@ -27,7 +27,7 @@ class UserProfilePage extends Component {
 
   render() {
     const { users } = Store.getState();
-    const { redirectToHomem, isEditModalTrue, isDeleteModalTrue } = this.state;
+    const { redirectToHome, isEditModalTrue, isDeleteModalTrue } = this.state;
 
     return (
       <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth: "1400px", overflowY: "hidden" }}>

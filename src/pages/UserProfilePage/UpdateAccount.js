@@ -15,6 +15,7 @@ const UpdateUserProfile = (props) => {
 
 
   const { users } = Store.getState();
+  console.log(users.selected);
   const [firstName, setFirstName] = useState(users.selected.userFirstName);
   const [lastName, setLastName] = useState(users.selected.userLastName);
   const [email, setEmail] = useState(users.selected.userEmail);

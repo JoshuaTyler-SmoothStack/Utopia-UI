@@ -1,18 +1,19 @@
 // Libraries
+import { useHistory } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import NavBar from '../../componentgroups/NavBar';
 import Store from '../../reducers/Store';
-import { Redirect } from 'react-router'
-import UsersDispatcher from '../../dispatchers/UsersDispatcher'
+import { Redirect } from 'react-router';
+import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 
 // Components
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
-import { useHistory } from 'react-router-dom';
 
 // Styles
 import './style.css';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 
 
@@ -35,65 +36,62 @@ const PasswordRecoveryPage = (props) => {
     history.push("/home");
   }
 
-  let search = window.location.search;
-  let params = new URLSearchParams(search);
-  let recoveryCode = params.get('reset');
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  const recoveryCode = params.get('reset');
 
   useEffect((e) => {
 
-    UsersDispatcher.verifyPasswordRecoveryToken({ recoveryCode: recoveryCode })
-      .then((res) => {
-        setLoading(false)
-        setVerifyToken(true)
-      })
-      .catch((err) => {
-        setLoading(false)
-        setTimeout(() => setRedirect(true), 3400)
-      })
-  })
+    AuthenticationDispatcher.onRequestThenCallback(
+      "/recover" + recoveryCode,
+      (httpError) => {
+        setLoading(false);
+        setTimeout(() => setRedirect(true), 3400);
+      },
+      (httpResponseBody) => {
+        setLoading(false);
+        setVerifyToken(true);
+      }
+    );
+  });
 
 
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true)
+    setSubmitted(true);
 
     if (!password || !confirmPassword) {
-      return
+      return;
     }
     const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
     if (!strongRegexPasswordValidation.test(password)) {
-      return setValidatePassword(false)
+      return setValidatePassword(false);
     }
 
     if (password !== confirmPassword) {
-      setPasswordMatch(false)
-      return
+      setPasswordMatch(false);
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     setValidatePassword(true);
     setPasswordMatch(true);
-    setLoading(true)
+    setLoading(true);
 
-    UsersDispatcher.changePassword({
-      recoveryCode: recoveryCode,
-      password: password
-    })
+    UsersDispatcher.changePassword({recoveryCode, password})
       .then(data => {
-        setLoading(false)
+        setLoading(false);
         setPasswordChanged(true);
-        setTimeout(() => setRedirect(true), 3700)
+        setTimeout(() => setRedirect(true), 3700);
       }, error => {
-        setLoading(false)
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
+        setLoading(false);
+        setErrorMessage(error.response ? error.response.data : "Unexpected error occured");
       }
-      )
-  }
+    );
+  };
 
   return (
-
-
     <div>
       <NavBar />
 
@@ -163,8 +161,6 @@ const PasswordRecoveryPage = (props) => {
 
       </FlexColumn>
     </div>
-
-  )
-}
-
+  );
+};
 export default PasswordRecoveryPage;
