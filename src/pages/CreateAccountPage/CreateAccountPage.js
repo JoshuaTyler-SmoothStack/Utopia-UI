@@ -14,6 +14,10 @@ import FlexRow from '../../components/FlexRow';
 import LogoGif from '../../components/LogoGif';
 import NavBar from '../../componentgroups/NavBar';
 
+const STYLE_INPUTTEXT = "form-control mb-2 ";
+const STYLE_INVALID = "is-invalid";
+const STYLE_VALID = "is-valid";
+
 const CreateAccountPage = (props) => {
 
   const { authentication } = Store.getState();
@@ -103,8 +107,8 @@ const CreateAccountPage = (props) => {
                     : <label>First Name</label>
                   }
                   <input type="text"
-                    className={"form-control mb-2 " +
-                      (isSubmitted ? (firstName ? "is-valid" : "is-invalid") : "")
+                    className={STYLE_INPUTTEXT +
+                      (isSubmitted ? (firstName ? STYLE_VALID : STYLE_INVALID) : "")
                     }
                     name="firstName"
                     value={firstName}
@@ -117,8 +121,8 @@ const CreateAccountPage = (props) => {
                     : <label>Last Name</label>
                   }
                   <input type="text"
-                    className={"form-control mb-2 " +
-                      (isSubmitted ? (lastName ? "is-valid" : "is-invalid") : "")
+                    className={STYLE_INPUTTEXT +
+                      (isSubmitted ? (lastName ? STYLE_VALID : STYLE_INVALID) : "")
                     }
                     name="lastName"
                     value={lastName}
@@ -135,10 +139,10 @@ const CreateAccountPage = (props) => {
                     : <label>Email</label>
                   }
                   <input type="text"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (email
-                        ? !validateEmail ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !validateEmail ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="email"
                     value={email}
@@ -158,10 +162,10 @@ const CreateAccountPage = (props) => {
                     : <label>Phone</label>
                   }
                   <input type="phone"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (phone
-                        ? !validatePhone ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !validatePhone ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="phone" value={phone}
                     onChange={(e) => {
@@ -180,10 +184,10 @@ const CreateAccountPage = (props) => {
                     : <label>Password</label>
                   }
                   <input type="password"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (password
-                        ? !validatePassword ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !validatePassword ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="password"
                     value={password}
@@ -203,10 +207,10 @@ const CreateAccountPage = (props) => {
                     : <label>Confirm Password</label>
                   }
                   <input type="password"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (confirmPassword
-                        ? !passwordMatch ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !passwordMatch ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="confirmPassword"
                     value={confirmPassword}
