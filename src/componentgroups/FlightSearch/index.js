@@ -153,7 +153,10 @@ const FlightSearch = (props) => {
       {/* Origin & Destination */}
       <div className="row mt-3">
         {/* Origin */}
-        <div className="col-12 col-sm-6" style={{ height: "3.5rem" }}>
+        <div
+          className="col-12 col-sm-6"
+          style={{ height: "3.5rem", maxWidth:"30rem" }}
+        >
           <InputText
             className="h-100 rounded kit-border-shadow mb-0"
             label={"Origin"}
@@ -186,7 +189,7 @@ const FlightSearch = (props) => {
         {/* Destination */}
         <div
           className="col-12 col-sm-6 mt-2 mt-sm-0"
-          style={{ height: "3.5rem" }}
+          style={{ height: "3.5rem", maxWidth:"30rem" }}
         >
           <InputText
             className="h-100 rounded kit-border-shadow mb-0"

@@ -133,6 +133,7 @@ class App extends Component {
     AuthenticationDispatcher.onLoginWithToken();
     this.setState({ isAppStateMounted: true });
     this.handleResize();
+    window.addEventListener('locationchange', () => Store.refreshState());
     window.addEventListener("resize", () => this.handleResize());
   }
 

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 // Components
 import NavBar from "../../componentgroups/NavBar";
 import FlexRow from "../../components/FlexRow";
-import Store from "../../reducers/Store";
 
 class PageNotFoundPage extends Component {
   constructor(props) {
@@ -38,9 +37,7 @@ class PageNotFoundPage extends Component {
               {/* Button */}
               <FlexRow justify="end">
                 <Link to="/home">
-                  <button className="btn btn-success text-white kit-text-shadow-thin"
-                    onClick={() => Store.refreshState()}
-                  >
+                  <button className="btn btn-success text-white kit-text-shadow-thin">
                     Home
                   </button>
                 </Link>

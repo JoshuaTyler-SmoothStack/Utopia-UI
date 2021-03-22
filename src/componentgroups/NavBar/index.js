@@ -22,7 +22,7 @@ class NavBar extends Component {
 
     // Authentication vars
     const { authentication } = Store.getState();
-    const isUserLoggedIn = authentication.userId !== "";
+    const isUserLoggedIn = authentication.userId;
     const props = this.props;
     return (
       <nav

@@ -112,7 +112,7 @@ class UserProfilePage extends Component {
   }
 
   componentDidMount() {
-    const { authentication, flights, users } = Store.getState();
+    const { authentication, users } = Store.getState();
     if(!users.selected.userId) {
       UsersDispatcher.onRequestThenCallback(
         "/" + authentication.userId,

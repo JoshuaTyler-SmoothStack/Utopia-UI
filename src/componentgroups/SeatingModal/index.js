@@ -36,6 +36,7 @@ const SeatingModal = (props) => {
       KitUtils.soundAlert();
       setErrorMessage(String(`Seat: ${seatPosition} is occupied`));
     } else {
+      setErrorMessage("");
       setSelectingEmerencyExitRow(isEmergencyExitRow);
       setIsActiveConfirmSeatSelection(true);
     }
@@ -252,8 +253,8 @@ const SeatingModal = (props) => {
 
               {/* Error Message */}
               {errorMessage !== "" &&
-              <FlexRow className="bg-white rounded w-100">
-                <ErrorMessage className="h5 mt-2">
+              <FlexRow className="bg-white rounded w-100 p-2">
+                <ErrorMessage className="h5 text-center">
                   {errorMessage}
                 </ErrorMessage>
               </FlexRow>}

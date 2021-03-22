@@ -9,11 +9,11 @@ class FlightsDispatcher extends BaseDispatcher {
 
   static onSearchAndFilter(httpPath, searchTermsString, filtersObject) {
     if(filtersObject.destination) {
-      filtersObject.destination = filtersObject.destination.split(":")[0];
+      filtersObject.flightRouteDestinationIataId = filtersObject.destination.split(":")[0];
     }
 
     if(filtersObject.origin) {
-      filtersObject.origin = filtersObject.origin.split(":")[0];
+      filtersObject.flightRouteOriginIataId = filtersObject.origin.split(":")[0];
     }
 
     const activeFilters = {};
