@@ -1,9 +1,11 @@
 // Libraries
-import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
+import Constants from "../../resources/constants.json";
 import Store from "../../reducers/Store";
+import moment from "moment";
 
 // Components
+import { Redirect } from "react-router";
 import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
@@ -22,6 +24,8 @@ const FlightModal = (props) => {
   const departureTime = moment(flights.selected.flightDepartureTime).format('M/DD/YY | h:mm a');
   const flightHours = Math.floor(Math.max(flights.selected.flightDuration, 1) / MINUTES_PER_DAY);
   const flightMinutes = Math.floor(Math.max(flights.selected.flightDuration - (flightHours * MINUTES_PER_DAY), 1) / MINUTES_PER_HOUR);
+
+  const [isRedirectingToBooking, setIsRedirectingToBooking] = useState(false);
 
   return (
     <Modal
@@ -183,7 +187,9 @@ const FlightModal = (props) => {
               <FlexRow className="col-12 p-2" justify="start">
 
                 {/* Already Have Ticket */}
-                <button className="btn btn-info ml-2">
+                <button className="btn btn-info ml-2"
+                  onClick={() => setIsRedirectingToBooking(true)}
+                >
                   Already have a ticket?
                 </button>
               </FlexRow>
@@ -192,6 +198,10 @@ const FlightModal = (props) => {
           </div>
         </div>
       </div>
+
+      {/* Redirects */}
+      {isRedirectingToBooking && <Redirect to={Constants.pagePaths.bookings}/>}
+
     </Modal>
   );
 };

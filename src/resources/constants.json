@@ -145,7 +145,8 @@
   },
   "pagePaths": {
     "boot": "/",
-    "bookingNew": "/booking-new",
+    "bookings": "/bookings",
+    "bookingsCreate": "/booking-create",
     "createAccount": "/create-account",
     "debug": "/debug",
     "home": "/home",
