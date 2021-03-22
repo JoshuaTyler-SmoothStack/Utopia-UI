@@ -65,8 +65,8 @@ const CreateView = (props) => {
             className="m-1" 
             style={{minHeight: "4rem"}} 
             name="Flight"
-            result={"Created Flight with Airplane ID: " + results.flightAirplaneId + 
-            " and RouteId: " + results.flightRouteId + "."}
+            result={"Created Flight with Airplane ID: " + results.flightAirplane.airplaneId + 
+            " and RouteId: " + results.flightRoute.routeId + "."}
             status={resultsStatus || "DISABLED"}
           />
           

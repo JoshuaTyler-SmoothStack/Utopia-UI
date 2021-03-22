@@ -37,22 +37,22 @@ const EditView = (props) => {
 
   
 
-  const flightAirplaneIdChanged = results
+  const flightAirplaneIdChanged = results.flightId
     ? selectedFlight.flightAirplane.airplaneId !== results.flightAirplane.airplaneId
     : true;
-  const flightSeatingIdChanged = results
+  const flightSeatingIdChanged = results.flightId
     ? selectedFlight.flightSeatingId !== results.flightSeatingId
     : true;
-  const flightRouteIdChanged = results
+  const flightRouteIdChanged = results.flightId
     ? selectedFlight.flightRoute.routeId !== results.flightRoute.routeId
     : true;
-  const flightDurationChanged = results
+  const flightDurationChanged = results.flightId
     ? selectedFlight.flightDuration !== results.flightDuration
     : true;
-  const flightDepartureTimeChanged = results
+  const flightDepartureTimeChanged = results.flightId
     ? selectedFlight.flightDepartureTime !== results.flightDepartureTime
     : true;
-  const flightStatusChanged = results
+  const flightStatusChanged = results.flightId
     ? selectedFlight.flightStatus !== results.flightStatus
     : true;
 
@@ -101,7 +101,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Airplane ID" 
-          result={results ? results.flightAirplane.airplaneId : ". . ."}
+          result={results.flightId ? results.flightAirplane.airplaneId : ". . ."}
           status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -109,7 +109,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Seating ID" 
-          result={results ? results.flightSeatingId : ". . ."}
+          result={results.flightId ? results.flightSeatingId : ". . ."}
           status={flightSeatingIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -117,7 +117,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Route ID" 
-          result={results ? results.flightRoute.routeId : ". . ."}
+          result={results.flightId ? results.flightRoute.routeId : ". . ."}
           status={flightRouteIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -125,7 +125,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Duration" 
-          result={results ? results.flightDuration : ". . ."}
+          result={results.flightId ? results.flightDuration : ". . ."}
           status={flightDurationChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -133,7 +133,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Departure" 
-          result={results ? results.flightDepartureTime : ". . ."}
+          result={results.flightId ? results.flightDepartureTime : ". . ."}
           status={flightDepartureTimeChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -141,7 +141,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Status" 
-          result={results ? results.flightStatus : ". . ."}
+          result={results.flightId ? results.flightStatus : ". . ."}
           status={flightStatusChanged ? resultsStatus : "DISABLED"} 
         />
 
