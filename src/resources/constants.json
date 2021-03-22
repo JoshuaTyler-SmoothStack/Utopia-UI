@@ -60,6 +60,7 @@
     "apiPath": "/auth",
     "cancel": "AUTHENTICATION_CANCEL",
     "create": "AUTHENTICATION_CREATE",
+    "errorCreateAccount": "AUTHENTICATION_ERROR_CREATE",
     "error": "AUTHENTICATION_ERROR",
     "errorLogin": "AUTHENTICATION_ERROR_LOGIN",
     "errorForgotPassword": "AUTHENTICATION_ERROR_FORGOT_PASSWORD",

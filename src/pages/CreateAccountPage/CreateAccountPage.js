@@ -57,7 +57,7 @@ const CreateAccountPage = (props) => {
     setPasswordMatch(password === currentConfirmPassword);
   };
 
-  if(authentication.status === "SUCCESS" && authentication.userId) {
+  if (authentication.status === "SUCCESS" && authentication.userId) {
     setTimeout(() => {
       setRedirectToHome(true);
     }, 3400);
@@ -65,12 +65,12 @@ const CreateAccountPage = (props) => {
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
-      {(redirectToHome) && <Redirect to={Constants.pagePaths.home}/>}
+      {(redirectToHome) && <Redirect to={Constants.pagePaths.home} />}
       {JSON_WEB_TOKEN && <Redirect to={Constants.pagePaths.profile} />}
 
       <div className="row">
         {/* Navbar */}
-        <NavBar className="col-12"  />
+        <NavBar className="col-12" />
 
         {/* Content */}
         <div className={"col-12 col-sm-10 col-md-8 col-lg-6 m-auto"}>
@@ -105,7 +105,7 @@ const CreateAccountPage = (props) => {
               }
 
               {/* Default */}
-              {authentication.status === "INACTIVE" &&
+              {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
                 <form name="form" onSubmit={(e) => handleSubmit(e)}>
 
                   {/* Firstname */}
