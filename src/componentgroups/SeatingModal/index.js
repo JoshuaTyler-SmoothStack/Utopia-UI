@@ -1,8 +1,8 @@
 // Libraries
 import React, { useEffect, useState } from "react";
+import Constants from "../../resources/constants.json";
 import Store from "../../reducers/Store";
 import BookingsDispatcher from "../../dispatchers/BookingsDispatcher";
-import Constants from "../../resources/constants.json";
 
 // Components
 import { Redirect } from "react-router";
@@ -328,7 +328,7 @@ const SeatingModal = (props) => {
       </div>
 
       {/* Redirects */}
-      {isRedirectingToBooking && <Redirect to={Constants.pagePaths.bookingNew}/>}
+      {isRedirectingToBooking && <Redirect to={Constants.pagePaths.bookingsCreate}/>}
 
     </Modal>
   );

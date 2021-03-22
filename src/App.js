@@ -12,6 +12,7 @@ import LoginModal from "./componentgroups/LoginModal";
 // Pages
 import APIDebugPage from "./pages/APIDebugPage";
 import BootPage from "./pages/BootPage";
+import BookingsCreatePage from "./pages/BookingsCreatePage";
 import CreateAccountPage from "./pages/CreateAccountPage/CreateAccountPage";
 import LandingPage from "./pages/LandingPage";
 import FlightSearchPage from "./pages/FlightSearchPage";
@@ -74,56 +75,61 @@ class App extends Component {
 
             {/* API Debug Page */}
             <Route path={Constants.pagePaths.debug}>
-              <APIDebugPage />
+              <APIDebugPage/>
             </Route>
 
             {/* Boot Page */}
             <Route exact path={Constants.pagePaths.boot}>
-              <BootPage />
+              <BootPage/>
             </Route>
 
-            {/* Landing Page */}
-            <Route path={Constants.pagePaths.home}>
-              <LandingPage />
+            {/* Booking Create Page */}
+            <Route path={Constants.pagePaths.bookingsCreate}>
+              <BookingsCreatePage/>
             </Route>
 
             {/* Create Account Page */}
             <Route path={Constants.pagePaths.createAccount}>
-              <CreateAccountPage />
+              <CreateAccountPage/>
             </Route>
 
             {/* Flight Search Page */}
             <Route path={Constants.pagePaths.flightSearch}>
-              <FlightSearchPage />
+              <FlightSearchPage/>
             </Route>
 
             {/* Forgot Password Page */}
             <Route path={Constants.pagePaths.forgotPassword}>
-              <ForgotPasswordPage />
+              <ForgotPasswordPage/>
+            </Route>
+
+            {/* Landing Page */}
+            <Route path={Constants.pagePaths.home}>
+              <LandingPage/>
             </Route>
 
             {/* Password Recovery Page */}
             <Route path={Constants.pagePaths.passwordRecovery || String(`${Constants.pagePaths.passwordRecovery}/**`)}>
               {authentication.userId
-                ? <PasswordRecoveryPage />
-                : <LandingPage />
+                ? <PasswordRecoveryPage/>
+                : <LandingPage/>
               }
             </Route>
 
             {/* Profile Page */}
             <Route path={Constants.pagePaths.profile}>
-              {authentication.userId ? <UserProfilePage /> : <LandingPage />}
+              {authentication.userId ? <UserProfilePage/> : <LandingPage/>}
             </Route>
 
             {/* 404 - No Path */}
             {!PAGE_ADDRESSES_WHITELIST.includes(currentPath) && (
-              <PageNotFoundPage />
+              <PageNotFoundPage/>
             )}
 
           </Switch>
 
           {/* Login Modal - zIndex 2 */}
-          {ISACTIVE_LOGINUI && <LoginModal />}
+          {ISACTIVE_LOGINUI && <LoginModal/>}
 
         </Router>
       </main>

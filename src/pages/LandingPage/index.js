@@ -1,8 +1,9 @@
 // Libraries
 import React, { Component } from "react";
 import Store from "../../reducers/Store";
-import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 import Constants from "../../resources/constants.json";
+import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
+import FlightsDispatcher from "../../dispatchers/FlightsDispatcher";
 
 // Components
 import FlightSearch from "../../componentgroups/FlightSearch";
@@ -74,6 +75,8 @@ class LandingPage extends Component {
   }
 
   handleSubmit = () => {
+    const { flights } = Store.getState();
+    FlightsDispatcher.onSearchAndFilter("/search", "", flights.search.filters);
     this.setState({redirectToFlightSearchPage: true});
   };
 }

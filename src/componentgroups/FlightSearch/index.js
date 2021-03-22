@@ -23,7 +23,7 @@ const FlightSearch = (props) => {
   const [isFocusDestination, setIsFocusDestination] = useState(false);
   const [isFocusOrigin, setIsFocusOrigin] = useState(false);
   const [isRecommendationsMounted, setIsRecommendationsMounted] = useState(false);
-  const isResultsPending = props.isPending || false;
+  const isResultsPending = props.isPending || flights.status === "PENDING" || false;
 
   const isActiveOriginRecommendations =
     isFocusOrigin && originRecommendations.length > 0;
