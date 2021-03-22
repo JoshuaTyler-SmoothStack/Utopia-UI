@@ -145,6 +145,7 @@
   },
   "pagePaths": {
     "boot": "/",
+    "bookingNew": "/booking-new",
     "createAccount": "/create-account",
     "debug": "/debug",
     "home": "/home",

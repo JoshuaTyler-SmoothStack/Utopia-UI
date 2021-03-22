@@ -1,15 +1,19 @@
 // Libraries
 import React, { useEffect, useState } from "react";
 import Store from "../../reducers/Store";
+import BookingsDispatcher from "../../dispatchers/BookingsDispatcher";
+import Constants from "../../resources/constants.json";
 
 // Components
-import Modal from "../../components/Modal";
+import { Redirect } from "react-router";
+import ErrorMessage from "../../components/ErrorMessage";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 import KitUtils from "../../kitutils/KitUtils_v1.0.0";
-import ErrorMessage from "../../components/ErrorMessage";
+import Modal from "../../components/Modal";
 
 const ALPHABET = [ "A", "B", "C", "D", "E", "F", "G", "H"];
+const EMERGENCY_EXIT_ROW_MESSAGE = "Passengers seated in the emergency exit row are on the front lines of an emergency evacuation. It's important that they are able to articulate directions to other passengers. This is also one of the reasons flight attendants ask passengers seated in the emergency exit row to give a verbal yes.";
 const ZINDEX_DEFAULT = 2;
 
 const SeatingModal = (props) => {
@@ -20,11 +24,13 @@ const SeatingModal = (props) => {
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
   const [errorMessage, setErrorMessage] = useState("");
   const [iActiveConfirmSeatSelection, setIsActiveConfirmSeatSelection] = useState(false);
+  const [isEmergencyExitRowAgreement, setIsEmergencyExitRowAgreement] = useState(false);
   const [seatingTable, setSeatingTable] = useState(null);
   const [seatSelection, setSeatSelection] = useState("");
   const [selectingEmerencyExitRow, setSelectingEmerencyExitRow] = useState(false);
+  const [isRedirectingToBooking, setIsRedirectingToBooking] = useState(false);
 
-  const selectSeat = (seatPosition, isAvailable, isEmergencyExitRow) => {
+  const handleSelectSeat = (seatPosition, isAvailable, isEmergencyExitRow) => {
     setSeatSelection(seatPosition);
     if(!isAvailable) {
       KitUtils.soundAlert();
@@ -33,6 +39,17 @@ const SeatingModal = (props) => {
       setSelectingEmerencyExitRow(isEmergencyExitRow);
       setIsActiveConfirmSeatSelection(true);
     }
+  };
+
+  const handleConfirmSeat = () => {
+    if(selectingEmerencyExitRow && !isEmergencyExitRowAgreement) {
+      setErrorMessage("You must agree to the terms to purchase a seat in an Emergency Exit Row.");
+      return;
+    }
+
+    BookingsDispatcher.onSetFilter("bookingFlightId", flights.selected.flightId);
+    BookingsDispatcher.onSetFilter("bookingPassengerSeat", seatSelection);
+    setIsRedirectingToBooking(true);
   };
 
   useEffect(() => {
@@ -97,7 +114,7 @@ const SeatingModal = (props) => {
             <button key={String(`seat-${seatPosition}`)}
               className={String(`btn m-1 ${seatColor}`)}
               style={{minHeight:"2rem", minWidth:"2rem"}}
-              onClick={() => selectSeat(seatPosition, isAvailable, isEmergencyExitRow)}
+              onClick={() => handleSelectSeat(seatPosition, isAvailable, isEmergencyExitRow)}
             >
               {seatPosition}
             </button>
@@ -242,20 +259,76 @@ const SeatingModal = (props) => {
               </FlexRow>}
 
               {/* Seating Chart */}
-              <FlexRow className="col-12 mt-2" style={{maxHeight:"50vh", overflowY: "scroll"}}>
+              {!iActiveConfirmSeatSelection &&
+              <FlexRow className="col-12 mt-2" style={{maxHeight:"50vh", overflowY: "auto"}}>
                 {seatingTable}
-              </FlexRow>
+              </FlexRow>}
 
               {/* Seat Selection Confirmation */}
               {iActiveConfirmSeatSelection &&
-                <FlexColumn>
-                  
-                </FlexColumn>
-              }
+              <FlexColumn className="col-12 mt-2" style={{maxHeight:"50vh", overflowY: "auto"}}>
+                
+                {/* Seat Selection */}
+                <FlexRow className="bg-white rounded p-2 mb-2">
+                  <h5 className="text-light">{"You have selected seat:"}</h5>
+                  <h5 className="ml-1">{seatSelection}</h5>
+                </FlexRow>
+
+                {/* Emergency Exit Row */}
+                {selectingEmerencyExitRow &&
+                  <div>
+                    {/* Text */}
+                    <FlexColumn className="bg-white rounded p-2 mb-2">
+                      <h5 className="text-danger">You have selected an Emergency Exit Row</h5>
+                      <span>{EMERGENCY_EXIT_ROW_MESSAGE}</span>
+                    </FlexColumn>
+
+                    {/* Checkbox */}
+                    <FlexRow className="bg-white rounded p-2" wrap="no-wrap">
+                      <FlexRow justify="start" style={{width:"2rem"}}>
+                        <input
+                          className="form-check-input ml-1"
+                          style={{height:"1.5rem", width:"1.5rem"}}
+                          type="checkbox"
+                          checked={isEmergencyExitRowAgreement}
+                          onChange={() => setIsEmergencyExitRowAgreement(!isEmergencyExitRowAgreement)}
+                        />
+                      </FlexRow>
+                      <span className="ml-1">I am able and willing to assist in emergency evactuation duties.</span>
+                    </FlexRow>
+                  </div>
+                }
+
+                {/* Buttons */}
+                <FlexRow className="w-75 p-2" justify="around">
+                  {/* Cancel */}
+                  <button className="btn btn-dark"
+                    onClick={() => setIsActiveConfirmSeatSelection(false)}
+                  >
+                    Cancel
+                  </button>
+
+                  {/* Confirm */}
+                  <button
+                    className={
+                      "btn btn-success text-white kit-text-shadow-thin" +
+                      ((selectingEmerencyExitRow && !isEmergencyExitRowAgreement) && " disabled")
+                    }
+                    onClick={() => handleConfirmSeat()}
+                  >
+                    Confirm
+                  </button>
+                </FlexRow>
+
+              </FlexColumn>}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Redirects */}
+      {isRedirectingToBooking && <Redirect to={Constants.pagePaths.bookingNew}/>}
+
     </Modal>
   );
 };

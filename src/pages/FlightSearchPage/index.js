@@ -50,7 +50,7 @@ class FlightSearchPage extends Component {
         {/* Flight Modal */}
         {isActive_FlightModal &&
         <FlightModal
-          className="col-12 col-sm-10 col-md-8 col-lg-7 bg-primary p-2 m-auto rounded kit-border-shadow"
+          className="col-12 col-sm-10 col-md-9 col-lg-8 bg-primary p-2 m-auto rounded kit-border-shadow"
           zIndex="4"
           onSelectSeat={() => {
             this.setState({isActive_SeatingModal: true});

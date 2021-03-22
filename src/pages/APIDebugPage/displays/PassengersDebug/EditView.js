@@ -323,7 +323,7 @@ const EditView = (props) => {
           <FlexRow className="mt-3 w-100">
             {/* Veteran Status */}
             <FlexColumn>
-              <input 
+              <input
                 className="form-check-input"
                 style={{height:"1.5rem", width:"1.5rem"}}
                 type="checkbox" 
