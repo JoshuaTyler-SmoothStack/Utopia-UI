@@ -10,8 +10,8 @@ class BaseDispatcher {
     if (this.apiPath === null)
       console.error(
         "Attempting to utilize an unset API Path. " +
-          "The Dispatcher will not know how to process this. " +
-          "Check the Dispatcher setup being utilized."
+        "The Dispatcher will not know how to process this. " +
+        "Check the Dispatcher setup being utilized."
       );
     return this.apiPath;
   }
@@ -20,8 +20,8 @@ class BaseDispatcher {
     if (!this.constantsParent === null)
       console.error(
         "Attempting to utilize an unset ConstantsParent. " +
-          "The Reducer will not know how to process this. " +
-          "Check the Dispatcher setup being utilized."
+        "The Reducer will not know how to process this. " +
+        "Check the Dispatcher setup being utilized."
       );
     return this.constantsParent;
   }
@@ -99,7 +99,7 @@ class BaseDispatcher {
           Store.reduce({
             type: this.getConstantsParent().responseEdit,
             payload: {
-              results: httpResponseBody,
+              results: httpResponseBody.error,
               resultsStatus: "ERROR",
             },
           });
@@ -262,19 +262,19 @@ class BaseDispatcher {
 
   static onHealth() {
     this.onRequestThenCallback(
-    "/health",
-    (/*onError*/) => {
-      Store.reduce({
-        type: this.getConstantsParent().health,
-        payload: "UNHEALTHY",
+      "/health",
+      (/*onError*/) => {
+        Store.reduce({
+          type: this.getConstantsParent().health,
+          payload: "UNHEALTHY",
+        });
+      },
+      (/*onSuccess*/) => {
+        Store.reduce({
+          type: this.getConstantsParent().health,
+          payload: "HEALTHY",
+        });
       });
-    },
-    (/*onSuccess*/) => {
-      Store.reduce({
-        type: this.getConstantsParent().health,
-        payload: "HEALTHY",
-      });
-    });
   }
 }
 export default BaseDispatcher;

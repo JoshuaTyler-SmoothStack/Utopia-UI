@@ -59,18 +59,18 @@ class AuthenticationDispatcher extends BaseDispatcher {
       httpRequestBody,
       (httpError) => {
         Store.reduce({
-          type: Constants.authentication.createAccountError,
+          type: Constants.authentication.errorCreateAccount,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
-        if(httpResponseBody.error) {
+        if (httpResponseBody.error) {
           Store.reduce({
-            type: Constants.authentication.createAccountError,
+            type: Constants.authentication.errorCreateAccount,
             payload: httpResponseBody.error,
           });
         } else {
-          Store.reduce({type: Constants.authentication.createAccountSuccess});
+          Store.reduce({ type: Constants.authentication.createAccountSuccess });
           AuthenticationDispatcher.onLogin(email, password);
         }
       }
@@ -111,10 +111,11 @@ class AuthenticationDispatcher extends BaseDispatcher {
         });
       },
       (httpResponseBody) => {
-        if (httpResponseBody.error) {
+        if (httpResponseBody.error || !httpResponseBody.userId) {
+
           Store.reduce({
             type: Constants.authentication.errorLogin,
-            payload: httpResponseBody.error,
+            payload: httpResponseBody.error || "Invalid username or password",
           });
         } else {
           Store.reduce({
