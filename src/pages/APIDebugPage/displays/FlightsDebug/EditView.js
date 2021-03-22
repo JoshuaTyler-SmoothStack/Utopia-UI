@@ -73,7 +73,6 @@ const EditView = (props) => {
   const handleSubmit = () => {
     if(!handleValidate()) return;
     const flightDuration = (hours * 3600) + (minutes * 60) ;
-    console.log(flightDepartureTime);
     var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
@@ -86,7 +85,6 @@ const EditView = (props) => {
       flightStatus: flightStatus
     };
 
-    console.log(newFlight);
     if(!_.isEqual(selectedFlight, newFlight)) {
       FlightsDispatcher.onEdit(null, newFlight);
     } else {

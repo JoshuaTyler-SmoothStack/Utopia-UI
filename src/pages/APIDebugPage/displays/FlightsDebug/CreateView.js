@@ -40,7 +40,6 @@ const CreateView = (props) => {
     if(!handleValidate()) return;
 
     const flightDuration = (hours * 3600) + (minutes * 60) ;
-    console.log(flightDepartureTime);
     var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
@@ -53,7 +52,6 @@ const CreateView = (props) => {
     };
 
     //Date format: "2021-03-09 18:45:00"
-    console.log(newFlight);
 
     FlightsDispatcher.onCreate(null, newFlight);
   };

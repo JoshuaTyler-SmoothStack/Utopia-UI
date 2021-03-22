@@ -51,7 +51,6 @@ const EditView = (props) => {
       routeDestinationIataId: routeDestinationIataId,
     };
 
-    console.log(newRoute);
     if(!_.isEqual(selectedRoute, newRoute)) {
       RoutesDispatcher.onEdit(null, newRoute);
     } else {

@@ -239,7 +239,7 @@
   },
   "users": {
     "root": "USERS",
-    "apiPath": "/users",
+    "apiPath": "/auth",
     "cancel": "USERS_CANCEL",
     "create": "USERS_CREATE",
     "delete": "USERS_DELETE",

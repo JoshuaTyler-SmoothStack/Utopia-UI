@@ -22,14 +22,14 @@ class Orchestration {
       : {...contentNegotiation, ...requestHeaders};
 
     // Body
-    const body = (requestType !== constants.httpRequest.get 
+    const body = (requestType !== constants.httpRequest.get
       && requestType !== constants.httpRequest.delete)
       ? JSON.stringify(requestBody)
       : null;
 
     // Path
     const formattedRequestPath = requestPath.startsWith("/")
-      ? requestPath 
+      ? requestPath
       : "/" + requestPath;
 
     // Request

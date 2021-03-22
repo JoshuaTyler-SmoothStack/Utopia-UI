@@ -29,14 +29,14 @@ const CreateAccountPage = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitted, setSubmitted] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [redirectToHome, setRedirectToHome] = useState(false);
   const [validatePassword, setValidatePassword] = useState(false);
   const [validatePhone, setValidatePhone] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
 
   const JSON_WEB_TOKEN = localStorage.getItem("JSON_WEB_TOKEN");
 
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     handleValidate(email, phone, password, confirmPassword);
     setSubmitted(true);
@@ -47,18 +47,25 @@ const CreateAccountPage = (props) => {
     }
 
     AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
-  }
+  };
 
-  function handleValidate(currentEmail, currentPhone, currentPassword, currentConfirmPassword) {
-    setValidateEmail(REGEX_EMAIL.test(currentEmail));
+  const handleValidate = (currentEmail, currentPhone, currentPassword, currentConfirmPassword) => {
+    const result = REGEX_EMAIL.test(currentEmail);
+    setValidateEmail(result);
     setValidatePhone(REGEX_PHONE.test(currentPhone));
     setValidatePassword(REGEX_PASSWORD_STRONG.test(currentPassword));
     setPasswordMatch(password === currentConfirmPassword);
+  };
+
+  if(authentication.status === "SUCCESS" && authentication.userId) {
+    setTimeout(() => {
+      setRedirectToHome(true);
+    }, 3400);
   }
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
-      {(authentication.status === "SUCCESS" && !authentication.userId) && <Redirect to={Constants.pagePaths.home} />}
+      {(redirectToHome) && <Redirect to={Constants.pagePaths.home}/>}
       {JSON_WEB_TOKEN && <Redirect to={Constants.pagePaths.profile} />}
 
       <div className="row">
@@ -147,8 +154,8 @@ const CreateAccountPage = (props) => {
                     name="email"
                     value={email}
                     onChange={(e) => {
-                      setEmail(e.target.value);
                       handleValidate(e.target.value, phone, password, confirmPassword);
+                      setEmail(e.target.value);
                     }}
                   />
 
@@ -169,8 +176,8 @@ const CreateAccountPage = (props) => {
                       )}
                     name="phone" value={phone}
                     onChange={(e) => {
-                      setPhone(e.target.value);
                       handleValidate(email, e.target.value, password, confirmPassword);
+                      setPhone(e.target.value);
                     }}
                   />
 
@@ -192,8 +199,8 @@ const CreateAccountPage = (props) => {
                     name="password"
                     value={password}
                     onChange={(e) => {
-                      setPassword(e.target.value);
                       handleValidate(email, phone, e.target.value, confirmPassword);
+                      setPassword(e.target.value);
                     }}
                   />
 
@@ -215,8 +222,8 @@ const CreateAccountPage = (props) => {
                     name="confirmPassword"
                     value={confirmPassword}
                     onChange={(e) => {
-                      setConfirmPassword(e.target.value);
                       handleValidate(email, phone, password, e.target.value);
+                      setConfirmPassword(e.target.value);
                     }}
                   />
 

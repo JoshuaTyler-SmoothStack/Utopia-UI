@@ -14,8 +14,6 @@ const DeleteView = () => {
   const selectedRoute = routes.selected;
   const status = routes.delete.status;
 
-  console.log(selectedRoute);
-
   return(
     <FlexColumn>
       {status === "PENDING" && 

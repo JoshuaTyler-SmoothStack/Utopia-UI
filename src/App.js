@@ -18,7 +18,7 @@ import FlightSearchPage from "./pages/FlightSearchPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
 import PageNotFoundPage from "./pages/PageNotFoundPage";
 import PasswordRecoveryPage from "./pages/PasswordRecoveryPage/PasswordRecoveryPage";
-import UserProfilePage from "./pages/UserProfilePage/UserProfilePage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 // Styles
 import "./styles/UtopiaBootstrap.css";

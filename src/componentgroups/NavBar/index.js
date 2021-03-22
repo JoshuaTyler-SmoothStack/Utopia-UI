@@ -35,7 +35,7 @@ class NavBar extends Component {
             <button
               className="btn btn-primary h-100 p-0 kit-icon-light"
               onClick={() => this.setState({isActive_PagesPopContent: !isActive_PagesPopContent})}
-              onBlur={() => setTimeout(() => this.setState({isActive_PagesPopContent: false}), 100)}
+              onBlur={() => setTimeout(() => this.setState({isActive_PagesPopContent: false}), 250)}
             >
               <svg className="kit-svg-cream" height={"100%"} viewBox="0 0 16 16">
                 <path fillRule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
@@ -60,7 +60,7 @@ class NavBar extends Component {
             <button
               className="btn btn-primary h-100 p-1 kit-icon-light"
               onClick={() => this.setState({isActive_UserPopContent: !isActive_UserPopContent})}
-              onBlur={() => setTimeout(() => this.setState({isActive_UserPopContent: false}), 100)}
+              onBlur={() => setTimeout(() => this.setState({isActive_UserPopContent: false}), 250)}
             >
               <svg
                 className={"kit-icon-light " + (isUserLoggedIn ? "kit-svg-green" : "kit-svg-cream")}

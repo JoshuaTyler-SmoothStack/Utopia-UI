@@ -92,7 +92,7 @@ class AuthenticationDispatcher extends BaseDispatcher {
   }
 
   static onLogin(email, password) {
-    const encodedLogin = "Basic " + window.btoa(email + ":" + password);
+    const encodedLogin = "Basic " + window.btoa(String(`${email}:${password}`));
     const authorization = { Authorization: encodedLogin };
 
     Store.reduce({
@@ -105,14 +105,12 @@ class AuthenticationDispatcher extends BaseDispatcher {
       this.apiPath + "/login",
       authorization,
       (httpError) => {
-        console.log("ERROR -> ", httpError);
         Store.reduce({
           type: Constants.authentication.error,
           payload: httpError,
         });
       },
       (httpResponseBody) => {
-        console.log(httpResponseBody);
         if (httpResponseBody.error) {
           Store.reduce({
             type: Constants.authentication.errorLogin,
@@ -142,7 +140,6 @@ class AuthenticationDispatcher extends BaseDispatcher {
         this.apiPath + "/login",
         authorization,
         (httpError) => {
-          console.log("ERROR -> ", httpError);
           Store.reduce({
             type: Constants.authentication.error,
             payload: httpError,
