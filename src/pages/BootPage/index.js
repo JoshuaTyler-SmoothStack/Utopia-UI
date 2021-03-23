@@ -85,7 +85,7 @@ class StartupPage extends Component {
   }
 
   componentDidMount() {
-    AirportsDispatcher.onRequest();
+    // AirportsDispatcher.onRequest();
   }
 
   handleLoadingProgressCheck() {

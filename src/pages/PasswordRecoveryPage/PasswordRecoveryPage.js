@@ -1,19 +1,19 @@
 // Libraries
 import { useHistory } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../componentgroups/NavBar';
 import Store from '../../reducers/Store';
-import { Redirect } from 'react-router';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 
 // Components
+import { Redirect } from 'react-router';
+import NavBar from '../../componentgroups/NavBar';
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
 
 // Styles
 import './style.css';
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 
 
@@ -41,9 +41,8 @@ const PasswordRecoveryPage = (props) => {
   const recoveryCode = params.get('reset');
 
   useEffect((e) => {
-
     AuthenticationDispatcher.onRequestThenCallback(
-      "/recover" + recoveryCode,
+      "forgot-password/recover/" + recoveryCode,
       (httpError) => {
         setLoading(false);
         setTimeout(() => setRedirect(true), 3400);
@@ -53,7 +52,7 @@ const PasswordRecoveryPage = (props) => {
         setVerifyToken(true);
       }
     );
-  });
+  }, []);
 
 
 

@@ -131,7 +131,7 @@ class RoutesDebug extends Component {
                 selection={routes.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => RoutesDispatcher.onSelectResultsPerPage(e)}
+                onSelect={(e) => RoutesDispatcher.onSelectItemsPerPage(e)}
               />
             </FlexColumn>
 

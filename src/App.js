@@ -137,7 +137,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    AuthenticationDispatcher.onLoginWithToken();
+    // AuthenticationDispatcher.onLoginWithToken();
     this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener('locationchange', () => Store.refreshState());
@@ -145,7 +145,7 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
+    // console.log(this.state);
   }
 
   handleResize = () => {
@@ -160,7 +160,7 @@ class App extends Component {
     if (window.innerWidth >= BREAKPOINT_XXLARGE) newSize = "xx_large";
 
     if (breakPoint !== newSize) {
-      console.log(newSize);
+      // console.log(newSize);
       this.setState({ breakPoint: newSize });
     }
   };

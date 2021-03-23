@@ -139,22 +139,22 @@ test("onPromptEdit() sets the edit view active, sets the create and delete views
   }, 100);
 });
 
-// onSelectResultsPage_expectCorrectPageValue()
-test("onSelectResultsPage(pageValue) sets the search.resultsPage to the passed value.", 
+// onSelectItemsPage_expectCorrectPageValue()
+test("onSelectItemsPage(pageValue) sets the search.resultsPage to the passed value.", 
 () => { 
   const pageValue = 789;
-  RoutesDispatcher.onSelectResultsPage(pageValue);
+  RoutesDispatcher.onSelectItemsPage(pageValue);
   setTimeout(() => {
     const { routes } = Store.getState();
     expect(routes.search.resultsPage).toBe(pageValue);
   }, 100);
 });
 
-// onSelectResultsPerPage_expectCorrectPageValue()
-test("onSelectResultsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
+// onSelectItemsPerPage_expectCorrectPageValue()
+test("onSelectItemsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
 () => { 
   const perPageValue = 75;
-  RoutesDispatcher.onSelectResultsPerPage(perPageValue);
+  RoutesDispatcher.onSelectItemsPerPage(perPageValue);
   setTimeout(() => {
     const { routes } = Store.getState();
     expect(routes.search.resultsPerPage).toBe(perPageValue);
