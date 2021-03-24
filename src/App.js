@@ -104,9 +104,10 @@ class App extends Component {
             </Route>
 
             {/* Profile Page */}
+            {authentication.userId &&
             <Route exact path={Constants.pagePaths.profile}>
               <UserProfilePage />
-            </Route>
+            </Route>}
 
             {/* 404 - No Path */}
             <Route path={"/pagenotfound"}>
@@ -134,7 +135,7 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    //console.log(this.state);
+    console.log(this.state);
   }
 
   handleResize = () => {

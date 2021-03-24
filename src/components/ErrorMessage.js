@@ -13,7 +13,7 @@ const ErrorMessage = (props) => {
   const message = props.message || "Error";
 
   return (
-    <div className={"text-danger " + (props.className || "")}>
+    <div className={(props.className || "text-danger")} style={props.style}>
       {children || message}
     </div>
   );

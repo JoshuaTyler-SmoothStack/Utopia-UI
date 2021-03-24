@@ -1,18 +1,19 @@
 // Libraries
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import { useHistory } from 'react-router-dom';
+import Constants from "../../resources/constants.json";
 import Store from '../../reducers/Store';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 // Components
 import NavBar from '../../componentgroups/NavBar';
-import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
 
 // Styles
 import './style.css';
+import ErrorMessage from '../../components/ErrorMessage';
 
 const ForgotPasswordPage = (props) => {
 
@@ -26,95 +27,125 @@ const ForgotPasswordPage = (props) => {
 
   const history = useHistory();
   if (localStorage.getItem("JSON_WEB_TOKEN")) {
-    history.push("/home")
+    console.log("I AM IN STORAGE");
+    history.push("/home");
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    setSubmitted(true)
+    setSubmitted(true);
+    setErrorMessage("");
     if (!email) {
+      setErrorMessage("An email is required.");
       return;
     }
-    const regexEmailValidation = new RegExp(/[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g)
+    const regexEmailValidation = new RegExp(/[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g);
 
     if (!regexEmailValidation.test(email)) {
-      return setValidateEmail(false)
+      return setValidateEmail(false);
     }
 
     setLoading(true);
     AuthenticationDispatcher.forgotPassword({ userEmail: email })
       .then(data => {
-        setIsSuccess(true);
-        setTimeout(() => { setRedirect(true) }, 3400);
         setLoading(false);
-        console.log(data)
-      }, error => { setErrorMessage(error.response ? error.response.data.error : "Unexpected error occured") });
+        setIsSuccess(true);
+        setTimeout(() => setRedirect(true), 3400);
+        console.log(data);
+      }, error => {
+        setLoading(false);
+        setErrorMessage(
+          error.response
+            ? error.response.data.error
+            : "Unexpected error occured"
+        );
+    });
   }
 
   return (
-    <div>
+    <div className="container-fluid kit-bg-blue" style={{minHeight:"100vh"}}>
+      <div class="row">
+        
+        {/* Navbar */}
+        <NavBar className="col-12"/>
 
-      <NavBar />
+        {/* Body */}
+        <div className="col-12">
+          <div className="row">
 
-      <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
+            {/* Card */}
+            <div className="col-12 col-md-8 col-lg-6 card p-2 mt-3 ml-auto mr-auto">
 
-        <div className="col-md-12 col-md-12-local">
-          <div className="card fp-card-local">
-            <h2 className="fp-forgotPassordHeader">Forgot Password</h2>
-            <div className="errorContainer">
-              {errorMessage &&
-                <div id="header" className="alert alert-warning text-white" role="alert">
-                  <strong>Error! </strong> {errorMessage}
+              {/* Header */}
+              <h2 className="card-title">Forgot Password</h2>
+              <hr className="w-100 mt-0"></hr>
+
+                {/* Body */}
+                <div className="card-body">
+
+                  {/* Error */}
+                  {errorMessage &&
+                  <ErrorMessage className="bg-warning p-2 text-white rounded">
+                    {errorMessage}
+                  </ErrorMessage>
+                  }
+
+                  {/* Pending */}
+                  {loading &&
+                    <FlexColumn>
+                      <h3 className="text-dark kit-text-shadow-thin">
+                        Sending email . . .
+                      </h3>
+                      <FlexRow>
+                        <div className="spinner-border ml-2" />
+                      </FlexRow>
+                    </FlexColumn>
+                  }
+
+                  {/* Success */}
+                  {isSuccess &&
+                    <FlexColumn>
+                      <h3 className="text-success kit-text-shadow-thin">
+                        Email Sent!
+                      </h3>
+                      <FlexRow>
+                        <h5>Redirecting . . .</h5>
+                        <div className="spinner-border ml-2" />
+                      </FlexRow>
+                    </FlexColumn>
+                  }
+
+                  {/* Default */}
+                  {(!isSuccess && !loading) &&
+                  <form name="form" onSubmit={(e) => handleSubmit(e)}>
+                    <label htmlFor="email">Email address{submitted && !email &&
+                      <span className="required"> is required</span>
+                    } {submitted && email && !validateEmail &&
+                      <span className="required"> invalid email format </span>}
+                    </label>
+                    <input type="text" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+
+                    <div className="form-group">
+                      <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit"> Reset Password </button>
+                    </div>
+                    <div className="form-group">
+                      <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
+                    </div>
+                  </form>}
                 </div>
-              }
+
+              </div> {/* Card End */}
 
             </div>
-            {!isSuccess &&
-              <form name="form" onSubmit={(e) => handleSubmit(e)}>
+          </div> {/* Body End */}
 
-                <label htmlFor="email">Email address{submitted && !email &&
-                  <span className="required"> is required</span>
-                } {submitted && email && !validateEmail &&
-                  <span className="required"> invalid email format </span>}
-                </label>
-                <input type="text" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-
-                <div className="form-group">
-                  <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit"> Reset Password </button>
-                </div>
-                <div className="form-group">
-                  <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
-                </div>
-              </form>
-            }
-          </div>
-        </div>
-
-
-        {loading &&
-          <div className="col-md-12 col-md-12-local">
-            <FlexRow className="fp-card-local p-0">
-              <div className="spinner-border ml-2" />
-            </FlexRow>
-          </div>
+        {/* Redirects */}
+        {(isSuccess && redirect) &&
+          <Redirect to={Constants.pagePaths.home} />
         }
 
-        {isSuccess &&
-          <div className="col-md-12 col-md-12-local">
-            <div className="card fp-card-local" >
-              <p className='sent-success-msg'>Email sent</p>
-              <p className='sent-success-msg'>Redirecting... </p>
-            </div>
-            <Redirect to="/home" />
-          </div>
-        }
-
-        {(isSuccess || redirect) &&
-          <Redirect to="/home" />
-        }
-
-      </FlexColumn>
-    </div >
+      </div>
+    </div>
   );
-}
+};
 export default ForgotPasswordPage;

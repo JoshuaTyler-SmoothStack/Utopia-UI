@@ -25,23 +25,26 @@ const UserProfilePage = (props) => {
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [isEditModalTrue, setIsEditModalTrue] = useState(false);
   const [isDeleteModalTrue, setIsDeleteModalTrue] = useState(false);
-  const [userFirstName, setUserFirstName] = useState('')
-  const [userLastName, setUserLastName] = useState('')
-  const [userPhone, setUserPhone] = useState('')
-  const [userEmail, setUserEmail] = useState('')
-
+  const [userFirstName, setUserFirstName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [isProfileUpdating, setIsProfileUpdating] = useState(true);
 
   useEffect((e) => {
-    AuthenticationDispatcher.getUserById(authentication.userId)
+    if(isProfileUpdating) {
+      setIsProfileUpdating(false);
+      AuthenticationDispatcher.getUserById(authentication.userId)
       .then(res => {
         setUserFirstName(res.data.userFirstName);
         setUserLastName(res.data.userLastName);
         setUserEmail(res.data.userEmail);
         setUserPhone(res.data.userPhone);
       }, error => {
-        console.log("error: " + error.response)
-      })
-  }, [authentication.selected.userId])
+        console.log("error: " + error.response);
+      });
+    }
+  }, [authentication.userId, isProfileUpdating, setIsProfileUpdating]);
 
     return (
       <div className="container-fluid" style={{ minHeight: "100vh" }}>
@@ -51,57 +54,58 @@ const UserProfilePage = (props) => {
           <NavBar className="col-12" />
 
           {/* Pending */}
-          {!authentication.selected && <div className="spinner-border" />}
+          {!authentication.userId && <div className="spinner-border" />}
 
           {/* Body */}
-          {authentication.selected &&
+          {authentication.userId &&
           <div className="col-12">
             <div className="row">
 
-              {/* Search Flights Header */}
+              {/* User Information */}
               <FlexRow className="col-12 col-md-8 col-lg-6 p-3" justify="start">
                 <div className="row">
+                  
                   {/* Firstname */}
-                  <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ width: "30rem" }}>
+                  <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ maxWidth: "20rem" }}>
                     <h5 className="mr-auto">First Name</h5>
                     <input
                       className={STYLE_INPUTTEXT}
                       readOnly
-                      value={authentication.selected.userFirstName}
+                      value={userFirstName}
+                    />
+                  </FlexColumn>
+
+                  {/* Lastname */}
+                  <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ maxWidth: "20rem" }}>
+                    <h5 className="mr-auto">Last Name</h5>
+                    <input
+                      className={STYLE_INPUTTEXT}
+                      readOnly
+                      value={userLastName}
+                    />
+                  </FlexColumn>
+
+                  {/* Email */}
+                  <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ maxWidth: "20rem" }}>
+                    <h5 className="mr-auto">Email</h5>
+                    <input
+                      className={STYLE_INPUTTEXT}
+                      readOnly
+                      value={userEmail}
+                    />
+                  </FlexColumn>
+
+                  {/* Phone */}
+                  <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ maxWidth: "20rem" }}>
+                    <h5 className="mr-auto">Phone</h5>
+                    <input
+                      className={STYLE_INPUTTEXT}
+                      readOnly
+                      value={userPhone}
                     />
                   </FlexColumn>
                 </div>
               </FlexRow>
-
-              {/* Lastname */}
-              <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ width: "30rem" }}>
-                <h5 className="mr-auto">Last Name</h5>
-                <input
-                  className={STYLE_INPUTTEXT}
-                  readOnly
-                  value={userLastName}
-                />
-              </FlexColumn>
-
-              {/* Email */}
-              <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ width: "30rem" }}>
-                <h5 className="mr-auto">Email</h5>
-                <input
-                  className={STYLE_INPUTTEXT}
-                  readOnly
-                  value={userEmail}
-                />
-              </FlexColumn>
-
-              {/* Phone */}
-              <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ width: "30rem" }}>
-                <h5 className="mr-auto">Phone</h5>
-                <input
-                  className={STYLE_INPUTTEXT}
-                  readOnly
-                  value={userPhone}
-                />
-              </FlexColumn>
 
               {/* User Miles */}
               <FlexRow className="col-10 col-md-4 ml-auto mr-auto m-md-auto" style={{ height: "15rem" }}>
@@ -112,23 +116,26 @@ const UserProfilePage = (props) => {
                   <h5 className="text-center text-white w-75">You've got XXX miles!</h5>
                 </FlexColumn>
                 <FlexRow >
-                  <button className="btn btn-info w-100 p-2 mb-1" onClick={(e) => setIsEditModalTrue(true)}> edit account</button>
-                  <button className="btn btn-primary w-100 p-2 mb-1" onClick={(e) => setIsDeleteModalTrue(true)}> delete account</button>
+                  <button className="btn btn-info w-100 p-2 mb-1" onClick={() => setIsEditModalTrue(true)}> Edit account</button>
+                  <button className="btn btn-primary w-100 p-2 mb-1" onClick={() => setIsDeleteModalTrue(true)}> Delete account</button>
                 </FlexRow>
               </FlexRow>
             </div>
           </div>} {/* Body-End */}
 
           {/*Modals*/}
-          {isEditModalTrue && 
+          {isEditModalTrue &&
             <EditUserProfile
               className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
               disableCloseButton={true}
-              onClose={() => setIsEditModalTrue(false)} 
+              onClose={() => {
+                setIsEditModalTrue(false);
+                setIsProfileUpdating(true);
+              }}
             />
           }
 
-          {isDeleteModalTrue && 
+          {isDeleteModalTrue &&
             <DeleteProfile
               className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
               disableCloseButton={true}

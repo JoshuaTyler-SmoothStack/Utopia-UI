@@ -29,7 +29,7 @@ class AuthenticationReducer extends BaseReducer {
         return {
           error: "Invalid email or password.",
           status: "ERROR",
-          userId: "UNKNOWN",
+          userId: "",
         };
 
       case this.constantsParent.errorForgotPassword:
