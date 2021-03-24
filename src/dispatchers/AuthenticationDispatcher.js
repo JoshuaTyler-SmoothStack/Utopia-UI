@@ -185,6 +185,10 @@ class AuthenticationDispatcher extends BaseDispatcher {
     return axios.get(`https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/${userId}`)
   }
 
+  static deleteAccount(userId) {
+    return axios.delete(`https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/${userId}`)
+  }
+
   static onLogout() {
     localStorage.removeItem("JSON_WEB_TOKEN");
     Store.reduce({ type: Constants.authentication.reset });

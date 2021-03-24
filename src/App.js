@@ -115,7 +115,7 @@ class App extends Component {
 
             {/* Profile Page */}
             <Route path={Constants.pagePaths.profile}>
-              {authentication.userId ? <UserProfilePage /> : <LandingPage />}
+              <UserProfilePage />
             </Route>
 
             {/* 404 - No Path */}
@@ -134,7 +134,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // AuthenticationDispatcher.onLoginWithToken();
+    AuthenticationDispatcher.onLoginWithToken();
     this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener('locationchange', () => Store.refreshState());

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Store from '../../reducers/Store';
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
-
+import axios from 'axios';
 // Components
 import { Redirect } from 'react-router';
 import NavBar from '../../componentgroups/NavBar';
@@ -35,20 +35,6 @@ const PasswordRecoveryPage = (props) => {
   const params = new URLSearchParams(search);
   const recoveryCode = params.get('reset');
   console.log(recoveryCode)
-
-  useEffect((e) => {
-    AuthenticationDispatcher.verifyUserToken({ recoveryCode: recoveryCode })
-      .then(data => {
-        console.log("ok " + data)
-        setLoading(false);
-      }, error => {
-        console.log("error: " + error.response)
-        console.log("error: " + recoveryCode)
-        setLoading(false);
-        setVerifyToken(true);
-        setTimeout(() => setRedirect(true), 3400)
-      })
-  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();

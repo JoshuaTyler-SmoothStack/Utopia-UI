@@ -5,6 +5,7 @@ import Store from "../../reducers/Store";
 import UsersDispatcher from "../../dispatchers/UsersDispatcher";
 import Constants from "../../resources/constants.json";
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import { useHistory } from 'react-router-dom';
 // Components
 import NavBar from "../../componentgroups/NavBar";
 import FlexRow from "../../components/FlexRow";
@@ -24,7 +25,14 @@ const UserProfilePage = (props) => {
   const [userPhone, setUserPhone] = useState('')
   const [userEmail, setUserEmail] = useState('')
 
-  const { authentication } = Store.getState();
+
+  const history = useHistory();
+  console.log(localStorage.getItem("JSON_WEB_TOKEN"))
+  if (!localStorage.getItem("JSON_WEB_TOKEN")) {
+    history.push("/home")
+  }
+
+  const { authentication, users } = Store.getState();
 
   useEffect((e) => {
     AuthenticationDispatcher.getUserById(authentication.userId)
@@ -36,7 +44,9 @@ const UserProfilePage = (props) => {
       }, error => {
         console.log("error: " + error.response)
       })
-  }, [isEditModalTrue])
+  }, [users.selected.userId])
+
+  console.log(isEditModalTrue)
 
 
   return (
@@ -47,7 +57,7 @@ const UserProfilePage = (props) => {
         <NavBar className="col-12" />
 
         {/* Pending */}
-        {<div className="spinner-border" />}
+        {/* {<div className="spinner-border" />} */}
 
         {/* Body */}
         {
