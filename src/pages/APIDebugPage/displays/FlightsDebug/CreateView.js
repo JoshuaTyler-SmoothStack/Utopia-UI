@@ -25,6 +25,8 @@ const CreateView = (props) => {
   const resultsPending = resultsStatus === "PENDING";
   const status = flights.create.status;
 
+  const dateTimeNow = moment().utc().format("YYYY-MM-DDTHH:mm");
+
   const handleValidate = () => {
     setIsSubmitted(true);
     if(!flightAirplaneId) return false;
@@ -150,6 +152,8 @@ const CreateView = (props) => {
                 <input 
                   className={"form-control"}
                   type="datetime-local"
+                  defaultValue={dateTimeNow}
+                  min={dateTimeNow}
                   onChange={(e) => setDateTime(e.target.value)}
                 />
               </div>
