@@ -7,9 +7,9 @@ import KitUtils from "../../kitutils/KitUtils_v1.0.0";
 import Store from "../../reducers/Store";
 
 // Components
-import InputText from "../../components/InputText";
 import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
+import InputText from "../../components/InputText";
 import Modal from "../../components/Modal";
 
 // Images
@@ -27,7 +27,6 @@ class LoginModal extends Component {
       password: "",
       warning: "",
     };
-
   }
 
   render() {
@@ -148,7 +147,7 @@ class LoginModal extends Component {
                     label={"Password"}
                     labelClassName={"text-info"}
                     fontClass={"h4"}
-                    isHidden={true}
+                    isPassword={true}
                     style={{
                       height: "4rem",
                       width: "66%",

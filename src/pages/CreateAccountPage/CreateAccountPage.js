@@ -30,30 +30,23 @@ const CreateAccountPage = (props) => {
   const [isSubmitted, setSubmitted] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const [validatePassword, setValidatePassword] = useState(false);
-  const [validatePhone, setValidatePhone] = useState(false);
-  const [validateEmail, setValidateEmail] = useState(false);
+  const [validPassword, setValidPassword] = useState(false);
+  const [validPhone, setValidPhone] = useState(false);
+  const [validEmail, setValidEmail] = useState(false);
 
   const JSON_WEB_TOKEN = localStorage.getItem("JSON_WEB_TOKEN");
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    handleValidate(email, phone, password, confirmPassword);
-    setSubmitted(true);
-
-    if (!firstName || !lastName || !validateEmail ||
-      !validatePhone || !validatePassword || !passwordMatch) {
-      return;
-    }
 
     AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
   };
 
   const handleValidate = (currentEmail, currentPhone, currentPassword, currentConfirmPassword) => {
-    const result = REGEX_EMAIL.test(currentEmail);
-    setValidateEmail(result);
-    setValidatePhone(REGEX_PHONE.test(currentPhone));
-    setValidatePassword(REGEX_PASSWORD_STRONG.test(currentPassword));
+    console.log(REGEX_EMAIL.test(currentEmail), REGEX_PHONE.test(currentPhone), REGEX_PASSWORD_STRONG.test(currentPassword));
+
+    setValidEmail(REGEX_EMAIL.test(currentEmail));
+    setValidPhone(REGEX_PHONE.test(currentPhone));
+    setValidPassword(REGEX_PASSWORD_STRONG.test(currentPassword));
     setPasswordMatch(password === currentConfirmPassword);
   };
 
@@ -140,7 +133,7 @@ const CreateAccountPage = (props) => {
                   {isSubmitted
                     ? !email
                       ? <label className="text-danger kit-shake">Email *</label>
-                      : !validateEmail
+                      : !validEmail
                         ? <label className="text-danger kit-shake">Invalid Email *</label>
                         : <label>Email</label>
                     : <label>Email</label>
@@ -148,7 +141,7 @@ const CreateAccountPage = (props) => {
                   <input type="text"
                     className={STYLE_INPUTTEXT +
                       (email
-                        ? !validateEmail ? STYLE_INVALID : STYLE_VALID
+                        ? !validEmail ? STYLE_INVALID : STYLE_VALID
                         : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="email"
@@ -163,7 +156,7 @@ const CreateAccountPage = (props) => {
                   {isSubmitted
                     ? !phone
                       ? <label className="text-danger kit-shake">Phone *</label>
-                      : !validatePhone
+                      : !validPhone
                         ? <label className="text-danger kit-shake">Invalid Phone *</label>
                         : <label>Phone</label>
                     : <label>Phone</label>
@@ -171,7 +164,7 @@ const CreateAccountPage = (props) => {
                   <input type="phone"
                     className={STYLE_INPUTTEXT +
                       (phone
-                        ? !validatePhone ? STYLE_INVALID : STYLE_VALID
+                        ? !validPhone ? STYLE_INVALID : STYLE_VALID
                         : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="phone" value={phone}
@@ -185,7 +178,7 @@ const CreateAccountPage = (props) => {
                   {isSubmitted
                     ? !password
                       ? <label className="text-danger kit-shake">Password *</label>
-                      : !validatePassword
+                      : !validPassword
                         ? <label className="text-danger kit-shake">{"Minimun: 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special e.g. (!@#$%^&*)"}</label>
                         : <label>Password</label>
                     : <label>Password</label>
@@ -193,7 +186,7 @@ const CreateAccountPage = (props) => {
                   <input type="password"
                     className={STYLE_INPUTTEXT +
                       (password
-                        ? !validatePassword ? STYLE_INVALID : STYLE_VALID
+                        ? !validPassword ? STYLE_INVALID : STYLE_VALID
                         : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="password"

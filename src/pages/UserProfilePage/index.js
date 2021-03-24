@@ -6,6 +6,10 @@ import UsersDispatcher from "../../dispatchers/UsersDispatcher";
 import Constants from "../../resources/constants.json";
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import { useHistory } from 'react-router-dom';
+import React, { Component } from "react";
+import Store from "../../reducers/Store";
+import UsersDispatcher from "../../dispatchers/UsersDispatcher";
+
 // Components
 import NavBar from "../../componentgroups/NavBar";
 import FlexRow from "../../components/FlexRow";
@@ -46,8 +50,6 @@ const UserProfilePage = (props) => {
       })
   }, [users.selected.userId])
 
-  console.log(isEditModalTrue)
-
 
   return (
     <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth: "1400px", overflowY: "hidden" }}>
@@ -76,6 +78,40 @@ const UserProfilePage = (props) => {
                       value={userFirstName}
                     />
                   </FlexColumn>
+    
+  render() {
+    const { users } = Store.getState();
+    const { isEditModalTrue, isDeleteModalTrue } = this.state;
+
+    return (
+      <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth: "1400px", overflowY: "hidden" }}>
+        <div className="row">
+
+          {/* Navbar */}
+          <NavBar className="col-12" />
+
+          {/* Pending */}
+          {!users.selected && <div className="spinner-border" />}
+
+          {/* Body */}
+          {users.selected &&
+            <div className="col-12">
+              <div className="row">
+
+                {/* Search Flights Header */}
+                <FlexRow className="col-12 col-md-8 col-lg-6 p-3" justify="start">
+                  <div className="row">
+                    {/* Firstname */}
+                    <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ width: "30rem" }}>
+                      <h5 className="mr-auto">First Name</h5>
+                      <input
+                        className={STYLE_INPUTTEXT}
+                        readOnly
+                        value={users.selected.userFirstName}
+                      />
+                    </FlexColumn>
+                  </div>
+                </FlexRow>
 
                   {/* Lastname */}
                   <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ width: "30rem" }}>
@@ -106,6 +142,19 @@ const UserProfilePage = (props) => {
                       value={userPhone}
                     />
                   </FlexColumn>
+      
+          {/*Modals*/}
+          {isEditModalTrue && <EditUserProfile
+            className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
+            disableCloseButton={true}
+            onClose={() => {
+              this.setState({ isEditModalTrue: false });
+              UsersDispatcher.onSelectItem(
+                users.edit.results.userId
+                  ? users.edit.results
+                  : users.selected
+              );
+            }
 
                 </div>
               </FlexRow>
@@ -144,8 +193,6 @@ const UserProfilePage = (props) => {
           disableCloseButton={true}
           onClose={() => setIsDeleteModalTrue(false)} />
         }
-
-
       </div>
     </div >
   );

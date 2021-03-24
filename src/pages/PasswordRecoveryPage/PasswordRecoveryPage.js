@@ -34,7 +34,22 @@ const PasswordRecoveryPage = (props) => {
   const search = window.location.search;
   const params = new URLSearchParams(search);
   const recoveryCode = params.get('reset');
-  console.log(recoveryCode)
+
+  useEffect(() => {
+    if(!loading && !verifyToken) {
+      AuthenticationDispatcher.onRequestThenCallback(
+        "forgot-password/recover/" + recoveryCode,
+        (httpError) => {
+          setLoading(false);
+          setTimeout(() => setRedirect(true), 3400);
+        },
+        (httpResponseBody) => {
+          setLoading(false);
+          setVerifyToken(true);
+        }
+      );
+    }
+  }, [recoveryCode, loading, verifyToken, setLoading, setVerifyToken, setRedirect]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

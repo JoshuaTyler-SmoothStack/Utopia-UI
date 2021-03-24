@@ -9,7 +9,6 @@ class UsersDispatcher extends BaseDispatcher {
   static constantsParent = Constants.users;
 
   static onEdit(httpPath, httpBody) {
-    console.log("SENT -> ", httpBody);
     Store.reduce({ type: this.getConstantsParent().requestEdit });
     Orchestration.createRequestWithBody(
       Constants.httpRequest.put,
@@ -33,8 +32,7 @@ class UsersDispatcher extends BaseDispatcher {
               resultsStatus: "SUCCESS",
             },
           });
-          console.log("HERE -> ", httpResponseBody);
-          AuthenticationDispatcher.onLoginWithToken(httpResponseBody.userToken)
+          AuthenticationDispatcher.onLoginWithToken(httpResponseBody.userToken);
         }
       }
     );

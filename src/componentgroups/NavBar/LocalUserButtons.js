@@ -37,7 +37,7 @@ const LocalUserButtons = (props) => {
         </div>
       }
 
-      {!authentication.userToken &&
+      {!authentication.userId &&
         <div>
           {/* Login */}
           <button className={buttonClassName} style={buttonStyle}

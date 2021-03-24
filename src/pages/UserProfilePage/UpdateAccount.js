@@ -51,7 +51,6 @@ const UpdateUserProfile = (props) => {
     setValidatePhone(regexPhoneNumberValidation.test(userPhone));
   }
 
-
   function handleSubmit(e) {
     e.preventDefault();
     if (!userFirstName || !userLastName || !userEmail ||
