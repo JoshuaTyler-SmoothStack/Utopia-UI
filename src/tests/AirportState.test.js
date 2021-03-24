@@ -139,22 +139,22 @@ test("onPromptEdit() sets the edit view active, sets the create and delete views
   }, 100);
 });
 
-// onSelectResultsPage_expectCorrectPageValue()
-test("onSelectResultsPage(pageValue) sets the search.resultsPage to the passed value.", 
+// onSelectItemsPage_expectCorrectPageValue()
+test("onSelectItemsPage(pageValue) sets the search.resultsPage to the passed value.", 
 () => { 
   const pageValue = 789;
-  AirportsDispatcher.onSelectResultsPage(pageValue);
+  AirportsDispatcher.onSelectItemsPage(pageValue);
   setTimeout(() => {
     const { airports } = Store.getState();
     expect(airports.search.resultsPage).toBe(pageValue);
   }, 100);
 });
 
-// onSelectResultsPerPage_expectCorrectPageValue()
-test("onSelectResultsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
+// onSelectItemsPerPage_expectCorrectPageValue()
+test("onSelectItemsPerPage(perPageValue) sets the search.resultsPerPage to the passed value.", 
 () => { 
   const perPageValue = 75;
-  AirportsDispatcher.onSelectResultsPerPage(perPageValue);
+  AirportsDispatcher.onSelectItemsPerPage(perPageValue);
   setTimeout(() => {
     const { airports } = Store.getState();
     expect(airports.search.resultsPerPage).toBe(perPageValue);

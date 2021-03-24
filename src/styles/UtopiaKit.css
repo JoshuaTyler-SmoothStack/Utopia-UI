@@ -61,9 +61,6 @@ Text Styling
 .kit-svg-blue {
   fill: var(--vBlue);
 }
-.kit-svg-bronze {
-  fill: #D2691E;
-}
 .kit-svg-cream {
   fill: var(--vCream);
 }
@@ -73,17 +70,11 @@ Text Styling
 .kit-svg-green {
   fill: var(--vGreen);
 }
-.kit-svg-gold {
-  fill: #FFD700;
-}
 .kit-svg-lightgrey {
   fill: var(--vLightGrey);
 }
 .kit-svg-red {
   fill: var(--vRed);
-}
-.kit-svg-silver {
-  fill: #C0C0C0;
 }
 .kit-svg-teal {
   fill: var(--vTeal);
@@ -96,6 +87,16 @@ Text Styling
 }
 .kit-svg-white {
   fill: white;
+}
+
+.kit-svg-gold {
+  fill: #FFD700;
+}
+.kit-svg-silver {
+  fill: #C0C0C0;
+}
+.kit-svg-bronze {
+  fill: #D2691E;
 }
 
 .kit-text-align-center {
@@ -185,6 +186,17 @@ Backgrounds
 
 .kit-bg-yellow {background-color: var(--vYellow);}
 .kit-bg-yellow-hover:hover {background-color: var(--vYellow);}
+
+.kit-bg-gold {
+  background-color: #FFD700;
+}
+.kit-bg-silver {
+  background-color: #C0C0C0;
+}
+.kit-bg-bronze {
+  color: white;
+  background-color: #D2691E;
+}
 
 .kit-bg-blur {
   filter: blur(8px);

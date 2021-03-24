@@ -16,21 +16,27 @@ class AuthenticationReducer extends BaseReducer {
         return {
           error: action.payload || "[ERROR]: 404 - Not Found!",
           status: "ERROR",
-          userId: "UNKNOWN"
+          userId: "UNKNOWN",
+        };
+
+      case this.constantsParent.errorCreateAccount:
+        return {
+          error: action.payload || "Invalid User Account",
+          status: "ERROR",
         };
 
       case this.constantsParent.errorLogin:
         return {
           error: "Invalid email or password.",
           status: "ERROR",
-          userId: "UNKNOWN"
+          userId: "UNKNOWN",
         };
 
       case this.constantsParent.errorForgotPassword:
         return {
           forgotPasswordStatus: "ERROR",
-          error: action.payload
-        }
+          error: action.payload,
+        };
 
       // Prompts
       // =====================================
@@ -51,7 +57,7 @@ class AuthenticationReducer extends BaseReducer {
       case this.constantsParent.requestLogin:
         return {
           status: "PENDING",
-          userLogin: action.payload
+          userLogin: action.payload,
         };
 
 
@@ -60,23 +66,22 @@ class AuthenticationReducer extends BaseReducer {
       case this.constantsParent.responseCreateAccount:
         return {
           status: "SUCCESS",
-          userId: action.payload.userId
+          userId: action.payload.userId,
         };
 
       case this.constantsParent.responseLogin:
-        console.log(action.payload);
         return {
           isActive_LoginUI: false,
           status: "SUCCESS",
           userId: action.payload.userId,
           userRole: action.payload.userRole,
-          userToken: action.payload.userToken
+          userToken: action.payload.userToken,
         };
 
       case this.constantsParent.responseForgotPassword:
         return {
           forgotPasswordStatus: "SUCCESS",
-        }
+        };
 
       // Reset
       // =====================================
@@ -98,5 +103,4 @@ export const defaultAuthenticationState = {
   userRole: "",
   userToken: "",
   forgotPasswordStatus: "INACTIVE",
-
 };

@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
+import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 
 // Images
 import gifEarthSpinning from "../../images/EarthWithHotAirBalloon.gif";
@@ -13,14 +14,6 @@ class StartupPage extends Component {
     this.state = {
       loadingText: "Tap anywhere to continue . . ."
     };
-  }
-
-  handleLoadingProgressCheck() {
-    // const { loadingProgress } = this.state;
-    // if(loadingProgress === 100) {
-    // 
-    // }
-    window.location.href = "/home";
   }
 
   render() {
@@ -38,9 +31,9 @@ class StartupPage extends Component {
         onClick={() => this.handleLoadingProgressCheck()}
       >
         {/* Utopia Header */}
-        <h1 
+        <h1
           className="kit-cursive kit-color-cream kit-text-shadow mt-auto"
-          style={{fontSize: "12rem"}}
+          style={{fontSize: "7rem"}}
         >
           {"Utopia"}
         </h1>
@@ -51,8 +44,8 @@ class StartupPage extends Component {
           alt=""
           className="rounded-circle mt-3"
           style={{
-            width: "50%",
-            maxWidth: "500px",
+            height: "20rem",
+            width: "20rem",
           }}
         />
 
@@ -60,8 +53,7 @@ class StartupPage extends Component {
         <div
           className="kit-border-shadow rounded border-shadow mt-5"
           style={{
-            height: "2.5%",
-            maxHeight: "100px",
+            height: "2rem",
             width: "66%",
             maxWidth: "700px",
             overflow: "hidden",
@@ -74,7 +66,7 @@ class StartupPage extends Component {
         </div>
 
         {/* Loading Text */}
-        <div className="h3 kit-color-cream kit-text-shadow-light mt-3 mb-auto">
+        <div className="h5 kit-color-cream kit-text-shadow-light mt-3 mb-auto">
           {loadingText}
         </div>
 
@@ -82,13 +74,25 @@ class StartupPage extends Component {
         <FlexRow>
           <a 
             href="https://github.com/JoshuaTyler-SmoothStack/Utopia-UI" 
-            className="h5 kit-link mb-2"
+            className="h5 kit-link kit-text-shadow-thin mb-2"
           >
             {"©2021 Utopia Airlines"}
           </a>
         </FlexRow>
       </FlexColumn>
     );
+  }
+
+  componentDidMount() {
+    // AirportsDispatcher.onRequest();
+  }
+
+  handleLoadingProgressCheck() {
+    // const { loadingProgress } = this.state;
+    // if(loadingProgress === 100) {
+    // 
+    // }
+    window.location.href = "/home";
   }
 }
 export default StartupPage;

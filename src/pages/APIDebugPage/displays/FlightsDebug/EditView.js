@@ -21,9 +21,9 @@ const EditView = (props) => {
   const selectedMinutes = Math.floor(selectedFlight.flightDuration % 3600 / 60);
   const selectedDateTime = selectedFlight.flightDepartureTime.split('.')[0];
   
-  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplaneId);
+  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplane.airplaneId);
   const [flightSeatingId, setSeatingId] = useState(selectedFlight.flightSeatingId);
-  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRouteId);
+  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRoute.routeId);
   const [flightDepartureTime, setDateTime] = useState(selectedDateTime);
   const [hours, setHours] = useState(selectedHours);
   const [minutes, setMinutes] = useState(selectedMinutes);
@@ -35,22 +35,24 @@ const EditView = (props) => {
   const resultsStatus = flights.edit.resultsStatus;
   const status = flights.edit.status;
 
-  const flightAirplaneIdChanged = results
-    ? selectedFlight.flightAirplaneId !== results.flightAirplaneId
+  
+
+  const flightAirplaneIdChanged = results.flightId
+    ? selectedFlight.flightAirplane.airplaneId !== results.flightAirplane.airplaneId
     : true;
-  const flightSeatingIdChanged = results
+  const flightSeatingIdChanged = results.flightId
     ? selectedFlight.flightSeatingId !== results.flightSeatingId
     : true;
-  const flightRouteIdChanged = results
-    ? selectedFlight.flightRouteId !== results.flightRouteId
+  const flightRouteIdChanged = results.flightId
+    ? selectedFlight.flightRoute.routeId !== results.flightRoute.routeId
     : true;
-  const flightDurationChanged = results
+  const flightDurationChanged = results.flightId
     ? selectedFlight.flightDuration !== results.flightDuration
     : true;
-  const flightDepartureTimeChanged = results
+  const flightDepartureTimeChanged = results.flightId
     ? selectedFlight.flightDepartureTime !== results.flightDepartureTime
     : true;
-  const flightStatusChanged = results
+  const flightStatusChanged = results.flightId
     ? selectedFlight.flightStatus !== results.flightStatus
     : true;
 
@@ -71,7 +73,6 @@ const EditView = (props) => {
   const handleSubmit = () => {
     if(!handleValidate()) return;
     const flightDuration = (hours * 3600) + (minutes * 60) ;
-    console.log(flightDepartureTime);
     var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
@@ -84,7 +85,6 @@ const EditView = (props) => {
       flightStatus: flightStatus
     };
 
-    console.log(newFlight);
     if(!_.isEqual(selectedFlight, newFlight)) {
       FlightsDispatcher.onEdit(null, newFlight);
     } else {
@@ -101,7 +101,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Airplane ID" 
-          result={results ? results.flightAirplaneId : ". . ."}
+          result={results.flightId ? results.flightAirplane.airplaneId : ". . ."}
           status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -109,7 +109,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Seating ID" 
-          result={results ? results.flightSeatingId : ". . ."}
+          result={results.flightId ? results.flightSeatingId : ". . ."}
           status={flightSeatingIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -117,7 +117,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Route ID" 
-          result={results ? results.flightRouteId : ". . ."}
+          result={results.flightId ? results.flightRoute.routeId : ". . ."}
           status={flightRouteIdChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -125,7 +125,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Duration" 
-          result={results ? results.flightDuration : ". . ."}
+          result={results.flightId ? results.flightDuration : ". . ."}
           status={flightDurationChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -133,7 +133,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Departure" 
-          result={results ? results.flightDepartureTime : ". . ."}
+          result={results.flightId ? results.flightDepartureTime : ". . ."}
           status={flightDepartureTimeChanged ? resultsStatus : "DISABLED"} 
         />
 
@@ -141,7 +141,7 @@ const EditView = (props) => {
           className="m-1" 
           style={{minHeight: "4rem"}} 
           name="Status" 
-          result={results ? results.flightStatus : ". . ."}
+          result={results.flightId ? results.flightStatus : ". . ."}
           status={flightStatusChanged ? resultsStatus : "DISABLED"} 
         />
 

@@ -15,14 +15,17 @@ import FlexRow from '../../components/FlexRow';
 import './style.css';
 
 const ForgotPasswordPage = (props) => {
-  
-  const { authentication } = Store.getState();
+
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [validateEmail, setValidateEmail] = useState(true)
+  const [validateEmail, setValidateEmail] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const history = useHistory();
-  if (localStorage.getItem("JWT")) {
+  if (localStorage.getItem("JSON_WEB_TOKEN")) {
     history.push("/home")
   }
 
@@ -38,7 +41,14 @@ const ForgotPasswordPage = (props) => {
       return setValidateEmail(false)
     }
 
-    AuthenticationDispatcher.onForgotPassword(email);
+    setLoading(true);
+    AuthenticationDispatcher.forgotPassword({ userEmail: email })
+      .then(data => {
+        setIsSuccess(true);
+        setTimeout(() => { setRedirect(true) }, 3400);
+        setLoading(false);
+        console.log(data)
+      }, error => { setErrorMessage(error.response ? error.response.data.error : "Unexpected error occured") });
   }
 
   return (
@@ -47,19 +57,19 @@ const ForgotPasswordPage = (props) => {
       <NavBar />
 
       <FlexColumn className={"kit-bg-blue"} style={{ position: "absolute", height: "100vh", width: "100vw" }}>
-        {(authentication.forgotPasswordStatus === "INACTIVE" || authentication.forgotPasswordStatus === "ERROR") &&
-          <div className="col-md-12 col-md-12-local">
-            <div className="card fp-card-local">
-              <h2 className="fp-forgotPassordHeader">Forgot Password</h2>
-              <div className="errorContainer">
-                {authentication.forgotPasswordStatus === "ERROR" &&
-                  <div id="header" className="alert alert-warning text-white" role="alert">
-                    <strong>{authentication.error} </strong>
-                  </div>
-                }
 
-              </div>
+        <div className="col-md-12 col-md-12-local">
+          <div className="card fp-card-local">
+            <h2 className="fp-forgotPassordHeader">Forgot Password</h2>
+            <div className="errorContainer">
+              {errorMessage &&
+                <div id="header" className="alert alert-warning text-white" role="alert">
+                  <strong>Error! </strong> {errorMessage}
+                </div>
+              }
 
+            </div>
+            {!isSuccess &&
               <form name="form" onSubmit={(e) => handleSubmit(e)}>
 
                 <label htmlFor="email">Email address{submitted && !email &&
@@ -76,26 +86,31 @@ const ForgotPasswordPage = (props) => {
                   <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
                 </div>
               </form>
-            </div>
+            }
           </div>
-        }
+        </div>
 
 
-        {authentication.forgotPasswordStatus === "PENDING" &&
+        {loading &&
           <div className="col-md-12 col-md-12-local">
             <FlexRow className="fp-card-local p-0">
-              <LogoGif className="m-auto" style={{ width: "75%" }} />
+              <div className="spinner-border ml-2" />
             </FlexRow>
           </div>
         }
 
-        {authentication.forgotPasswordStatus === "SUCCESS" &&
+        {isSuccess &&
           <div className="col-md-12 col-md-12-local">
             <div className="card fp-card-local" >
               <p className='sent-success-msg'>Email sent</p>
+              <p className='sent-success-msg'>Redirecting... </p>
             </div>
             <Redirect to="/home" />
           </div>
+        }
+
+        {(isSuccess || redirect) &&
+          <Redirect to="/home" />
         }
 
       </FlexColumn>

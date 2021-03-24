@@ -1,8 +1,11 @@
 // Libraries
-import axios from 'axios';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { REGEX_EMAIL, REGEX_PHONE, REGEX_PASSWORD_STRONG } from '../../resources/regex';
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import Store from '../../reducers/Store';
+import Constants from "../../resources/constants.json";
 
 // Components
 import ErrorMessage from '../../components/ErrorMessage';
@@ -11,75 +14,63 @@ import FlexRow from '../../components/FlexRow';
 import LogoGif from '../../components/LogoGif';
 import NavBar from '../../componentgroups/NavBar';
 
+const STYLE_INPUTTEXT = "form-control mb-2 ";
+const STYLE_INVALID = "is-invalid";
+const STYLE_VALID = "is-valid";
+
 const CreateAccountPage = (props) => {
 
+  const { authentication } = Store.getState();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitted, setSubmitted] = useState(false);
   const [passwordMatch, setPasswordMatch] = useState(false);
-  const [validatePassword, setValidatePassword] = useState(false)
-  const [validatePhone, setValidatePhone] = useState(false)
-  const [validateEmail, setValidateEmail] = useState(false)
-  const [redirect, setRedirect] = useState(false);
-  const [status, setStatus] = useState("DEFAULT");
+  const [redirectToHome, setRedirectToHome] = useState(false);
+  const [validatePassword, setValidatePassword] = useState(false);
+  const [validatePhone, setValidatePhone] = useState(false);
+  const [validateEmail, setValidateEmail] = useState(false);
 
-  const jwk = localStorage.getItem("JWT");
+  const JSON_WEB_TOKEN = localStorage.getItem("JSON_WEB_TOKEN");
 
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     handleValidate(email, phone, password, confirmPassword);
-    setSubmitted(true)
+    setSubmitted(true);
 
     if (!firstName || !lastName || !validateEmail ||
       !validatePhone || !validatePassword || !passwordMatch) {
       return;
-    };
-
-    const newUser = {
-      userFirstName: firstName,
-      userLastName: lastName,
-      userEmail: email,
-      userPhone: phone,
-      userPassword: password
     }
 
-    setStatus("PENDING")
-    axios.post("http://localhost:8080/users", newUser)
-      .then(data => {
-        console.log(data.status)
-        setStatus("SUCCESS")
-        setTimeout(() => setRedirect(true), 3400)
-      }, error => {
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
-        setStatus("ERROR")
-      });
-  }
+    AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
+  };
 
-  function handleValidate(currentEmail, currentPhone, currentPassword, currentConfirmPassword) {
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
-    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
-    const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
-
-    setValidateEmail(regexEmailValidation.test(currentEmail));
-    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
-    setValidatePassword(strongRegexPasswordValidation.test(currentPassword));
+  const handleValidate = (currentEmail, currentPhone, currentPassword, currentConfirmPassword) => {
+    const result = REGEX_EMAIL.test(currentEmail);
+    setValidateEmail(result);
+    setValidatePhone(REGEX_PHONE.test(currentPhone));
+    setValidatePassword(REGEX_PASSWORD_STRONG.test(currentPassword));
     setPasswordMatch(password === currentConfirmPassword);
+  };
+
+  if (authentication.status === "SUCCESS" && authentication.userId) {
+    setTimeout(() => {
+      setRedirectToHome(true);
+    }, 3400);
   }
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
-      {redirect && <Redirect to="/home" />}
-      {jwk && <Redirect to="/profile" />}
+      {(redirectToHome) && <Redirect to={Constants.pagePaths.home} />}
+      {JSON_WEB_TOKEN && <Redirect to={Constants.pagePaths.profile} />}
 
       <div className="row">
         {/* Navbar */}
-        <NavBar className="col-12" hideSearchBar={true} />
+        <NavBar className="col-12" />
 
         {/* Content */}
         <div className={"col-12 col-sm-10 col-md-8 col-lg-6 m-auto"}>
@@ -95,13 +86,13 @@ const CreateAccountPage = (props) => {
             <div className="card-body">
 
               {/* Error */}
-              {status === "ERROR" && <ErrorMessage>{errorMessage}</ErrorMessage>}
+              {authentication.status === "ERROR" && <ErrorMessage>{authentication.error}</ErrorMessage>}
 
               {/* Pending */}
-              {status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
+              {authentication.status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
 
               {/* Success */}
-              {status === "SUCCESS" &&
+              {(authentication.status === "SUCCESS" && isSubmitted) &&
                 <FlexColumn>
                   <h3 className="text-success kit-text-shadow-thin">
                     Account Created!
@@ -114,7 +105,7 @@ const CreateAccountPage = (props) => {
               }
 
               {/* Default */}
-              {status === "DEFAULT" &&
+              {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
                 <form name="form" onSubmit={(e) => handleSubmit(e)}>
 
                   {/* Firstname */}
@@ -123,8 +114,8 @@ const CreateAccountPage = (props) => {
                     : <label>First Name</label>
                   }
                   <input type="text"
-                    className={"form-control mb-2 " +
-                      (isSubmitted ? !firstName ? "is-invalid" : "is-valid" : "")
+                    className={STYLE_INPUTTEXT +
+                      (isSubmitted ? (firstName ? STYLE_VALID : STYLE_INVALID) : "")
                     }
                     name="firstName"
                     value={firstName}
@@ -137,8 +128,8 @@ const CreateAccountPage = (props) => {
                     : <label>Last Name</label>
                   }
                   <input type="text"
-                    className={"form-control mb-2 " +
-                      (isSubmitted ? !lastName ? "is-invalid" : "is-valid" : "")
+                    className={STYLE_INPUTTEXT +
+                      (isSubmitted ? (lastName ? STYLE_VALID : STYLE_INVALID) : "")
                     }
                     name="lastName"
                     value={lastName}
@@ -155,16 +146,16 @@ const CreateAccountPage = (props) => {
                     : <label>Email</label>
                   }
                   <input type="text"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (email
-                        ? !validateEmail ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !validateEmail ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="email"
                     value={email}
                     onChange={(e) => {
-                      setEmail(e.target.value);
                       handleValidate(e.target.value, phone, password, confirmPassword);
+                      setEmail(e.target.value);
                     }}
                   />
 
@@ -178,15 +169,15 @@ const CreateAccountPage = (props) => {
                     : <label>Phone</label>
                   }
                   <input type="phone"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (phone
-                        ? !validatePhone ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !validatePhone ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="phone" value={phone}
                     onChange={(e) => {
-                      setPhone(e.target.value);
                       handleValidate(email, e.target.value, password, confirmPassword);
+                      setPhone(e.target.value);
                     }}
                   />
 
@@ -200,16 +191,16 @@ const CreateAccountPage = (props) => {
                     : <label>Password</label>
                   }
                   <input type="password"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (password
-                        ? !validatePassword ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !validatePassword ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="password"
                     value={password}
                     onChange={(e) => {
-                      setPassword(e.target.value);
                       handleValidate(email, phone, e.target.value, confirmPassword);
+                      setPassword(e.target.value);
                     }}
                   />
 
@@ -223,23 +214,23 @@ const CreateAccountPage = (props) => {
                     : <label>Confirm Password</label>
                   }
                   <input type="password"
-                    className={"form-control mb-2 " +
+                    className={STYLE_INPUTTEXT +
                       (confirmPassword
-                        ? !passwordMatch ? "is-invalid" : "is-valid"
-                        : isSubmitted ? "is-invalid" : ""
+                        ? !passwordMatch ? STYLE_INVALID : STYLE_VALID
+                        : isSubmitted ? STYLE_INVALID : ""
                       )}
                     name="confirmPassword"
                     value={confirmPassword}
                     onChange={(e) => {
-                      setConfirmPassword(e.target.value);
                       handleValidate(email, phone, password, e.target.value);
+                      setConfirmPassword(e.target.value);
                     }}
                   />
 
                   {/* Buttons */}
                   <FlexRow className="form-group mt-4" justify="around">
-                    <Link to="/home">
-                      <buton className="btn btn-secondary">Cancel</buton>
+                    <Link to={Constants.pagePaths.home}>
+                      <button className="btn btn-secondary">Cancel</button>
                     </Link>
                     <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">
                       + Create Account
@@ -252,5 +243,5 @@ const CreateAccountPage = (props) => {
       </div>
     </div>
   );
-}
+};
 export default CreateAccountPage;

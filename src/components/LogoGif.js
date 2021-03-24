@@ -1,5 +1,5 @@
 import React from 'react';
-import EarthGif from '../images/EarthWithHotAirBalloon.gif'
+import EarthGif from '../images/EarthWithHotAirBalloon.gif';
 
 const LogoGif = (props) => {
   return (

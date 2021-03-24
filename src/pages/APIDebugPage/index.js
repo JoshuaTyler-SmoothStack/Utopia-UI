@@ -27,7 +27,7 @@ class APIDebugPage extends Component {
         <div className="row">
           
           {/* Navbar */}
-          <NavBar className="col-12" hideSearchBar={true}/>
+          <NavBar className="col-12" />
 
           {/* Siderbar */}
           <LocalSidebar

@@ -1,20 +1,19 @@
 // Libraries
+import { useHistory } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../componentgroups/NavBar';
 import Store from '../../reducers/Store';
-import { Redirect } from 'react-router'
-import UsersDispatcher from '../../dispatchers/UsersDispatcher'
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 
 // Components
+import { Redirect } from 'react-router';
+import NavBar from '../../componentgroups/NavBar';
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
-import { useHistory } from 'react-router-dom';
 
 // Styles
 import './style.css';
-
-
 
 const PasswordRecoveryPage = (props) => {
 
@@ -26,74 +25,66 @@ const PasswordRecoveryPage = (props) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [validatePassword, setValidatePassword] = useState(true);
   const [passwordChanged, setPasswordChanged] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [verifyToken, setVerifyToken] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [verifyToken, setVerifyToken] = useState(true);
 
-  const { authentication } = Store.getState();
   const history = useHistory();
-  if (authentication.status === "SUCCESS") {
-    history.push("/home");
-  }
 
-  let search = window.location.search;
-  let params = new URLSearchParams(search);
-  let recoveryCode = params.get('reset');
+
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+  const recoveryCode = params.get('reset');
+  console.log(recoveryCode)
 
   useEffect((e) => {
-
-    UsersDispatcher.verifyPasswordRecoveryToken({ recoveryCode: recoveryCode })
-      .then((res) => {
-        setLoading(false)
-        setVerifyToken(true)
-      })
-      .catch((err) => {
-        setLoading(false)
+    AuthenticationDispatcher.verifyUserToken({ recoveryCode: recoveryCode })
+      .then(data => {
+        console.log("ok " + data)
+        setLoading(false);
+      }, error => {
+        console.log("error: " + error.response)
+        console.log("error: " + recoveryCode)
+        setLoading(false);
+        setVerifyToken(true);
         setTimeout(() => setRedirect(true), 3400)
       })
-  })
+  }, [])
 
-
-
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true)
+    setSubmitted(true);
 
     if (!password || !confirmPassword) {
-      return
+      return;
     }
     const strongRegexPasswordValidation = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
     if (!strongRegexPasswordValidation.test(password)) {
-      return setValidatePassword(false)
+      return setValidatePassword(false);
     }
 
     if (password !== confirmPassword) {
-      setPasswordMatch(false)
-      return
+      setPasswordMatch(false);
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     setValidatePassword(true);
     setPasswordMatch(true);
-    setLoading(true)
+    setLoading(true);
 
-    UsersDispatcher.changePassword({
-      recoveryCode: recoveryCode,
-      password: password
-    })
+    AuthenticationDispatcher.changePassword({ recoveryCode, password })
       .then(data => {
-        setLoading(false)
+        setLoading(false);
         setPasswordChanged(true);
-        setTimeout(() => setRedirect(true), 3700)
+        setTimeout(() => setRedirect(true), 3700);
       }, error => {
-        setLoading(false)
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured")
+        setLoading(false);
+        setErrorMessage(error.response ? error.response.data.error : "Unexpected error occured");
       }
-      )
-  }
+      );
+  };
 
   return (
-
-
     <div>
       <NavBar />
 
@@ -157,14 +148,12 @@ const PasswordRecoveryPage = (props) => {
         }
 
 
-        {!verifyToken && !loading &&
+        {!verifyToken &&
           <h4 className="error-expired-link">Expired or unavailable link. Please request a new one. Redirecting...</h4>
         }
 
       </FlexColumn>
     </div>
-
-  )
-}
-
+  );
+};
 export default PasswordRecoveryPage;

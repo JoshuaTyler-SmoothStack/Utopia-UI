@@ -40,7 +40,6 @@ const CreateView = (props) => {
     if(!handleValidate()) return;
 
     const flightDuration = (hours * 3600) + (minutes * 60) ;
-    console.log(flightDepartureTime);
     var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
@@ -53,7 +52,6 @@ const CreateView = (props) => {
     };
 
     //Date format: "2021-03-09 18:45:00"
-    console.log(newFlight);
 
     FlightsDispatcher.onCreate(null, newFlight);
   };
@@ -67,8 +65,8 @@ const CreateView = (props) => {
             className="m-1" 
             style={{minHeight: "4rem"}} 
             name="Flight"
-            result={"Created Flight with Airplane ID: " + results.flightAirplaneId + 
-            " and RouteId: " + results.flightRouteId + "."}
+            result={"Created Flight with Airplane ID: " + results.flightAirplane.airplaneId + 
+            " and RouteId: " + results.flightRoute.routeId + "."}
             status={resultsStatus || "DISABLED"}
           />
           
