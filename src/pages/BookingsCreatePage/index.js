@@ -4,23 +4,36 @@ import Store from "../../reducers/Store";
 import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 
 // Components
-import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
 import NavBar from "../../componentgroups/NavBar";
 import StageDislay from "../../components/StageDisplay";
-import InputText from "../../components/InputText";
+import Stage1 from "./Stage1";
+import Stage2 from "./Stage2";
+import Stage3 from "./Stage3";
+import Stage4 from "./Stage4";
+import Stage5 from "./Stage5";
 
 class BookingsCreatePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentStage: 0,
+      currentStage: 1,
+      firstName: "",
+      lastName: "",
+      email: "",
+      passportId: "",
+      dateOfBirth: "",
+      sex: "",
+      address: "",
+      isAgreement: false,
+      isVeteran: false,
     };
   }
 
   render() {
     const { breakPoint } = Store.getState();
-    const { currentStage } = this.state;
+    const { currentStage, firstName, lastName, email, passportId,
+      dateOfBirth, sex, address, isAgreement, isVeteran } = this.state;
 
     return (
       <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth:"1400px",  overflowY: "hidden" }}>
@@ -34,100 +47,90 @@ class BookingsCreatePage extends Component {
             <div className="row">
               
               {/* Header */}
-              <FlexRow className="col-12 p-3">
-                <StageDislay
-                  className="col-10 bg-info rounded"
-                  disableStageNameNumber={true}
-                  stageSelected={currentStage}
-                  stageCount={5}
-                  stageNames={["Login/Guest", "Passneger Info", "Regulations", "Payment", "Complete"]}
-                  stageNamesClassName={"text-white kit-text-shadow-thin"}
-                  stageClassName={"bg-light rounded"}
-                  stageSelectedClassName={"bg-primary rounded"}
-                  stageStyle={{height:"1rem"}}
-                />
-              </FlexRow>
+              <div className="col-12">
+                <FlexRow className="row w-100 p-3">
+                  <StageDislay
+                    className="w-100 bg-info rounded"
+                    style={{maxWidth: "1000px"}}
+                    disableStageNameNumber={true}
+                    disableInactiveStageNames={breakPoint.includes("small")}
+                    stage={currentStage}
+                    stageCount={5}
+                    stageNames={["Login/Guest", "Passneger Info", "Regulations", "Payment", "Complete"]}
+                    stageNamesClassName={"text-white text-center kit-text-shadow-thin"}
+                    stageClassName={"bg-light rounded"}
+                    stageSelectedClassName={"bg-primary rounded"}
+                    stageOnClick={(stageNumber) => this.setState({currentStage: stageNumber})}
+                  />
+                </FlexRow>
+              </div>
 
               {/* Body */}
-              <FlexRow className="col-12">
-                {/* Stage 1 */}
-                {currentStage === 0 &&
-                  <div className="row">
-                    {/* User Login */}
-                    <FlexColumn className="col-12 col-sm-5">
-                      <h5>Login to an account</h5>
-                      <button className="btn btn-primary">
-                        Already a user?
-                      </button>
-                    </FlexColumn>
-
-                    {/* Divider */}
-                    {breakPoint.includes("small")
-                      ? <hr className="w-100 mt-2"></hr>
-                      : <div className="bg-light rounded h-100" style={{minHeight:"20rem", width:"0.5rem"}}/>
-                    }
-
-                    {/* Guest Information */}
-                    <FlexColumn className="col-5">
-                      <h5>Create Booking as a guest</h5>
-
-                      {/* First Name */}
-                      <InputText
-                        className="rounded kit-border-shadow m-3"
-                        label={"First Name"}
-                        labelClassName={"text-info"}
-                        fontClass={"h4"}
-                        isHidden={true}
-                        style={{
-                          height: "4rem",
-                          width: "100%",
-                        }}
-                        onChange={(e) => this.setState({ firstName: e })}
-                      />
-
-                      {/* Last Name */}
-                      <InputText
-                        className="rounded kit-border-shadow m-3"
-                        label={"Last Name"}
-                        labelClassName={"text-info"}
-                        fontClass={"h4"}
-                        isHidden={true}
-                        style={{
-                          height: "4rem",
-                          width: "100%",
-                        }}
-                        onChange={(e) => this.setState({ lastName: e })}
-                      />
-
-                      {/* Email */}
-                      <InputText
-                        className="rounded kit-border-shadow m-3"
-                        label={"Email"}
-                        labelClassName={"text-info"}
-                        fontClass={"h4"}
-                        isHidden={true}
-                        style={{
-                          height: "4rem",
-                          width: "100%",
-                        }}
-                        onChange={(e) => this.setState({ emailName: e })}
-                      />
-                    </FlexColumn>
-                  </div>
+              <div className="col-12">
+                <FlexRow className="row w-100">
+                {/* Login or provide guest info - Stage 1 */}
+                {currentStage === 1 &&
+                  <Stage1 className="col-12 col-sm-10 col-md-8"
+                    breakPoint={breakPoint}
+                    firstName={firstName}
+                    lastName={lastName}
+                    email={email}
+                    onFirstName={(value) => this.setState({firstName: value})}
+                    onLastName={(value) => this.setState({lastName: value})}
+                    onEmail={(value) => this.setState({email: value})}
+                  />
                 }
 
-                {/* Verify User */}
-                {/* Create Passenger */}
-                {/* Agree to Terms */}
+                {/* Stage 2 - Create Passenger */}
+                {currentStage === 2 &&
+                  <Stage2 className="col-12 col-sm-10 col-md-8"
+                    address={address}
+                    dateOfBirth={dateOfBirth}
+                    isVeteran={isVeteran}
+                    passportId={passportId}
+                    sex={sex}
+                    onAddress={(value) => this.setState({address: value})}
+                    onDateOfBirth={(value) => this.setState({dateOfBirth: value})}
+                    onIsVeteran={(value) => this.setState({isVeteran: value})}
+                    onPassportId={(value) => this.setState({passportId: value})}
+                    onSex={(value) => this.setState({sex: value})}
+                  />
+                }
+
+                {/* Stage 3 - Agree to Terms */}
+                {currentStage === 3 &&
+                  <Stage3 className="col-12 col-sm-10 col-md-8"
+                    isAgreement={isAgreement}
+                    onIsAgreement={(value) => this.setState({isAgreement: value})}
+                  />
+                }
+
                 {/* Pay for Booking */}
+                {currentStage === 4 &&
+                  <Stage4/>
+                }
+
                 {/* Confirm Success & Redirect to Bookings Page */}
+                {currentStage === 5 &&
+                  <Stage5/>
+                }
 
+                {/* Previous & Next Buttons */}
+                <FlexRow className="col-12 col-md-6 mt-3 bg-light rounded p-2" justify="around">
+                  <button className={("btn btn-dark ") + (currentStage === 1 && "disabled")}
+                    onClick={() => this.setState({currentStage: Math.max(currentStage-1, 1)})}
+                  >
+                    Previous
+                  </button>
 
-
-                {/* Create Booking as guest */}
-
-              </FlexRow>
-
+                  <button className={("btn btn-dark ") + (currentStage === 5 && "disabled")}
+                    onClick={() => this.setState({currentStage: Math.min(currentStage+1, 5)})}
+                  >
+                    Next
+                  </button>
+                </FlexRow>
+                </FlexRow>
+              </div>
             </div>
           </div> {/* Body-End */}
 
