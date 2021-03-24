@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Store from '../../reducers/Store';
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
-
+import axios from 'axios';
 // Components
 import { Redirect } from 'react-router';
 import NavBar from '../../componentgroups/NavBar';
@@ -14,8 +14,6 @@ import FlexRow from '../../components/FlexRow';
 
 // Styles
 import './style.css';
-
-
 
 const PasswordRecoveryPage = (props) => {
 
@@ -27,14 +25,11 @@ const PasswordRecoveryPage = (props) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [validatePassword, setValidatePassword] = useState(true);
   const [passwordChanged, setPasswordChanged] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [verifyToken, setVerifyToken] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [verifyToken, setVerifyToken] = useState(true);
 
-  const { authentication } = Store.getState();
   const history = useHistory();
-  if (authentication.status === "SUCCESS") {
-    history.push("/home");
-  }
+
 
   const search = window.location.search;
   const params = new URLSearchParams(search);
@@ -55,8 +50,6 @@ const PasswordRecoveryPage = (props) => {
       );
     }
   }, [recoveryCode, loading, verifyToken, setLoading, setVerifyToken, setRedirect]);
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -80,16 +73,16 @@ const PasswordRecoveryPage = (props) => {
     setPasswordMatch(true);
     setLoading(true);
 
-    UsersDispatcher.changePassword({recoveryCode, password})
+    AuthenticationDispatcher.changePassword({ recoveryCode, password })
       .then(data => {
         setLoading(false);
         setPasswordChanged(true);
         setTimeout(() => setRedirect(true), 3700);
       }, error => {
         setLoading(false);
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured");
+        setErrorMessage(error.response ? error.response.data.error : "Unexpected error occured");
       }
-    );
+      );
   };
 
   return (
@@ -156,7 +149,7 @@ const PasswordRecoveryPage = (props) => {
         }
 
 
-        {!verifyToken && !loading &&
+        {!verifyToken &&
           <h4 className="error-expired-link">Expired or unavailable link. Please request a new one. Redirecting...</h4>
         }
 

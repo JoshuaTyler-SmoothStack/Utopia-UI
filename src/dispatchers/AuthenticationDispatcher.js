@@ -2,6 +2,7 @@ import BaseDispatcher from "./BaseDispatcher";
 import Constants from "../resources/constants.json";
 import Orchestration from "../Orchestration";
 import Store from "../reducers/Store";
+import axios from 'axios';
 
 class AuthenticationDispatcher extends BaseDispatcher {
   static apiPath = Constants.authentication.apiPath;
@@ -166,6 +167,26 @@ class AuthenticationDispatcher extends BaseDispatcher {
         }
       );
     }
+  }
+
+  static forgotPassword(data) {
+    return axios.post("https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/forgot-password", data)
+  }
+
+  static verifyUserToken(data) {
+    return axios.post("https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/forgot-password/verify-token", data)
+  }
+
+  static changePassword(data) {
+    return axios.post("https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/forgot-password/recover", data)
+  }
+
+  static getUserById(userId) {
+    return axios.get(`https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/${userId}`)
+  }
+
+  static deleteAccount(userId) {
+    return axios.delete(`https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/${userId}`)
   }
 
   static onLogout() {

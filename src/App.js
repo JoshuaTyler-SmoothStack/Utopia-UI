@@ -70,7 +70,7 @@ class App extends Component {
 
             {/* Boot Page */}
             <Route exact path={Constants.pagePaths.boot}>
-              <BootPage/>
+              <BootPage />
             </Route>
 
             {/* Booking Create Page */}
@@ -99,16 +99,13 @@ class App extends Component {
             </Route>
 
             {/* Password Recovery Page */}
-            <Route path={Constants.pagePaths.passwordRecovery || String(`${Constants.pagePaths.passwordRecovery}/**`)}>
-              {authentication.userId
-                ? <PasswordRecoveryPage/>
-                : <LandingPage/>
-              }
+            <Route path={Constants.pagePaths.passwordRecovery}>
+              <PasswordRecoveryPage />
             </Route>
 
             {/* Profile Page */}
             <Route exact path={Constants.pagePaths.profile}>
-              {authentication.userId ? <UserProfilePage/> : <LandingPage/>}
+              <UserProfilePage />
             </Route>
 
             {/* 404 - No Path */}
@@ -120,7 +117,7 @@ class App extends Component {
           </Switch>
 
           {/* Login Modal - zIndex 2 */}
-          {ISACTIVE_LOGINUI && <LoginModal/>}
+          {ISACTIVE_LOGINUI && <LoginModal />}
 
         </Router>
       </main>
@@ -137,7 +134,7 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
+    //console.log(this.state);
   }
 
   handleResize = () => {
