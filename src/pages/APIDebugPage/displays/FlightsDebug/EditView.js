@@ -35,7 +35,7 @@ const EditView = (props) => {
   const resultsStatus = flights.edit.resultsStatus;
   const status = flights.edit.status;
 
-  
+  const dateTimeNow = moment().utc().format("YYYY-MM-DDTHH:mm");
 
   const flightAirplaneIdChanged = results.flightId
     ? selectedFlight.flightAirplane.airplaneId !== results.flightAirplane.airplaneId
@@ -236,6 +236,7 @@ const EditView = (props) => {
                   className={"form-control"}
                   defaultValue={moment(selectedDateTime).format('YYYY-MM-DDTHH:mm').toString()}
                   type="datetime-local"
+                  min={dateTimeNow}
                   onChange={(e) => setDateTime(e.target.value)}
                 />
               </div>
