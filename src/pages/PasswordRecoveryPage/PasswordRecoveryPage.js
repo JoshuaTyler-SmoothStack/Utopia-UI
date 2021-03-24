@@ -28,9 +28,6 @@ const PasswordRecoveryPage = (props) => {
   const [loading, setLoading] = useState(false);
   const [verifyToken, setVerifyToken] = useState(true);
 
-  const history = useHistory();
-
-
   const search = window.location.search;
   const params = new URLSearchParams(search);
   const recoveryCode = params.get('reset');

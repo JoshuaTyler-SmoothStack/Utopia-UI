@@ -28,7 +28,7 @@ const ForgotPasswordPage = (props) => {
   const history = useHistory();
   if (localStorage.getItem("JSON_WEB_TOKEN")) {
     console.log("I AM IN STORAGE");
-    history.push("/home");
+    history.push(Constants.pagePaths.home);
   }
 
   function handleSubmit(e) {

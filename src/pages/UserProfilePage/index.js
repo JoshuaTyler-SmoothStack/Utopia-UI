@@ -19,7 +19,7 @@ const UserProfilePage = (props) => {
   const { authentication } = Store.getState();
   const history = useHistory();
   if (!localStorage.getItem("JSON_WEB_TOKEN")) {
-    history.push("/home")
+    history.push(Constants.pagePaths.home);
   }
 
   const [redirectToHome, setRedirectToHome] = useState(false);
