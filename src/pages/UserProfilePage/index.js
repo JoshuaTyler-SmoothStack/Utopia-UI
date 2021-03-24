@@ -16,13 +16,12 @@ const STYLE_INPUTTEXT = "form-control mb-2 ";
 
 const UserProfilePage = (props) => {
 
-  const { authentication } = Store.getState();
+  const { authentication, users } = Store.getState();
   const history = useHistory();
   if (!localStorage.getItem("JSON_WEB_TOKEN")) {
     history.push(Constants.pagePaths.home);
   }
 
-  const [redirectToHome, setRedirectToHome] = useState(false);
   const [isEditModalTrue, setIsEditModalTrue] = useState(false);
   const [isDeleteModalTrue, setIsDeleteModalTrue] = useState(false);
   const [userFirstName, setUserFirstName] = useState('');
@@ -32,39 +31,38 @@ const UserProfilePage = (props) => {
   const [isProfileUpdating, setIsProfileUpdating] = useState(true);
 
   useEffect((e) => {
-    if(isProfileUpdating) {
-      setIsProfileUpdating(false);
+    if (isProfileUpdating && users.status !== "PENDING") {
       AuthenticationDispatcher.getUserById(authentication.userId)
-      .then(res => {
-        setUserFirstName(res.data.userFirstName);
-        setUserLastName(res.data.userLastName);
-        setUserEmail(res.data.userEmail);
-        setUserPhone(res.data.userPhone);
-      }, error => {
-        console.log("error: " + error.response);
-      });
+        .then(res => {
+          setUserFirstName(res.data.userFirstName);
+          setUserLastName(res.data.userLastName);
+          setUserEmail(res.data.userEmail);
+          setUserPhone(res.data.userPhone);
+        }, error => {
+          console.log("error: " + error.response);
+        });
     }
-  }, [authentication.userId, isProfileUpdating, setIsProfileUpdating]);
+  }, [isProfileUpdating, users]);
 
-    return (
-      <div className="container-fluid" style={{ minHeight: "100vh" }}>
-        <div className="row">
+  return (
+    <div className="container-fluid" style={{ minHeight: "100vh" }}>
+      <div className="row">
 
-          {/* Navbar */}
-          <NavBar className="col-12" />
+        {/* Navbar */}
+        <NavBar className="col-12" />
 
-          {/* Pending */}
-          {!authentication.userId && <div className="spinner-border" />}
+        {/* Pending */}
+        {!authentication.userId && <div className="spinner-border" />}
 
-          {/* Body */}
-          {authentication.userId &&
+        {/* Body */}
+        {authentication.userId &&
           <div className="col-12">
             <div className="row">
 
               {/* User Information */}
               <FlexRow className="col-12 col-md-8 col-lg-6 p-3" justify="start">
                 <div className="row">
-                  
+
                   {/* Firstname */}
                   <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ maxWidth: "20rem" }}>
                     <h5 className="mr-auto">First Name</h5>
@@ -123,25 +121,34 @@ const UserProfilePage = (props) => {
             </div>
           </div>} {/* Body-End */}
 
-          {/*Modals*/}
-          {isEditModalTrue &&
-            <EditUserProfile
-              className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
-              disableCloseButton={true}
-              onClose={() => {
-                setIsEditModalTrue(false);
-                setIsProfileUpdating(true);
-              }}
-            />
-          }
+        {/*Modals*/}
+        {isEditModalTrue &&
+          <EditUserProfile
+            className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
+            disableCloseButton={true}
+            userFirstName={userFirstName}
+            userLastName={userLastName}
+            userEmail={userEmail}
+            userPhone={userPhone}
+            onUserFirstName={(value) => setUserFirstName(value)}
+            onUserLastName={(value) => setUserLastName(value)}
+            onUserEmail={(value) => setUserEmail(value)}
+            onUserPhone={(value) => setUserPhone(value)}
+            onClose={() => {
+              setIsEditModalTrue(false);
+              setIsProfileUpdating(true);
+            }}
 
-          {isDeleteModalTrue &&
-            <DeleteProfile
-              className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
-              disableCloseButton={true}
-              onClose={() => setIsDeleteModalTrue(false)}
-            />
-          }
+          />
+        }
+
+        {isDeleteModalTrue &&
+          <DeleteProfile
+            className="col-11 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
+            disableCloseButton={true}
+            onClose={() => setIsDeleteModalTrue(false)}
+          />
+        }
       </div>
     </div>
   );

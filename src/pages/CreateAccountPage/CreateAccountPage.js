@@ -38,23 +38,24 @@ const CreateAccountPage = (props) => {
 
   const handleSubmit = (e) => {
 
+    setSubmitted(true);
     AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
   };
 
   const handleValidate = (currentEmail, currentPhone, currentPassword, currentConfirmPassword) => {
     console.log(REGEX_EMAIL.test(currentEmail), REGEX_PHONE.test(currentPhone), REGEX_PASSWORD_STRONG.test(currentPassword));
-
     setValidEmail(REGEX_EMAIL.test(currentEmail));
     setValidPhone(REGEX_PHONE.test(currentPhone));
     setValidPassword(REGEX_PASSWORD_STRONG.test(currentPassword));
     setPasswordMatch(password === currentConfirmPassword);
   };
 
-  if (authentication.status === "SUCCESS" && authentication.userId) {
-    setTimeout(() => {
-      setRedirectToHome(true);
-    }, 3400);
-  }
+  // if (authentication.status === "SUCCESS" && authentication.userId) {
+  //   setTimeout(() => {
+  //     setRedirectToHome(true);
+  //   }, 3400);
+  // }
+  console.log(REGEX_EMAIL.test(email), REGEX_PHONE.test(phone), REGEX_PASSWORD_STRONG.test(password));
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
