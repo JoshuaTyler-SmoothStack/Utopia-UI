@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Store from "../../reducers/Store";
 
 // Components
@@ -8,6 +8,8 @@ import FlexRow from "../../components/FlexRow";
 import InputText from "../../components/InputText";
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
+
 
 const ZINDEX_DEFAULT = 2;
 
@@ -15,44 +17,58 @@ const UpdateUserProfile = (props) => {
 
 
   const { users } = Store.getState();
-  console.log(users.selected);
-  const [firstName, setFirstName] = useState(users.selected.userFirstName);
-  const [lastName, setLastName] = useState(users.selected.userLastName);
-  const [email, setEmail] = useState(users.selected.userEmail);
-  const [phone, setPhone] = useState(users.selected.userPhone);
+
+  const [userFirstName, setUserFirstName] = useState('')
+  const [userLastName, setUserLastName] = useState('')
+  const [userPhone, setUserPhone] = useState('')
+  const [userEmail, setUserEmail] = useState('')
   const [validatePhone, setValidatePhone] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
-  // const [isSubmitted, setSubmitted] = useState(false);
+
+  const { authentication } = Store.getState();
+
+  useEffect((e) => {
+    AuthenticationDispatcher.getUserById(authentication.userId)
+      .then(res => {
+        setUserFirstName(res.data.userFirstName);
+        setUserLastName(res.data.userLastName);
+        setUserEmail(res.data.userEmail);
+        setUserPhone(res.data.userPhone);
+        authentication.userId = res.data.userId;
+      }, error => {
+        console.log("error: " + error.response)
+      })
+  }, [])
 
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
-  function handleValidate(currentEmail, currentPhone,) {
+  const handleValidate = (currentEmail, currentPhone) => {
     const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
     const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
-    setValidateEmail(regexEmailValidation.test(currentEmail));
-    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
+    setValidateEmail(regexEmailValidation.test(userEmail));
+    setValidatePhone(regexPhoneNumberValidation.test(userPhone));
   }
 
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!firstName || !lastName || !email ||
-      !phone) {
+    if (!userFirstName || !userLastName || !userEmail ||
+      !userPhone) {
       return;
     }
 
     const newUser = {
-      userFirstName: firstName,
-      userLastName: lastName,
-      userEmail: email,
-      userPhone: phone,
+      userFirstName: userFirstName,
+      userLastName: userLastName,
+      userEmail: userEmail,
+      userPhone: userPhone,
     }
     console.log(newUser)
 
     UsersDispatcher.onEdit(
-      `/${users.selected.userId}`, newUser
+      `/${authentication.userId}`, newUser
     );
     props.onClose();
 
@@ -114,8 +130,8 @@ const UpdateUserProfile = (props) => {
                       height: "4rem",
                       width: "66%",
                     }}
-                    value={firstName}
-                    onChange={(e) => setFirstName(e)}
+                    value={userFirstName}
+                    onChange={(e) => setUserFirstName(e)}
                   />
                   <InputText
                     className="col-12 col-md-6 rounded kit-border-shadow m-3 "
@@ -126,8 +142,8 @@ const UpdateUserProfile = (props) => {
                       height: "4rem",
                       width: "66%",
                     }}
-                    value={lastName}
-                    onChange={(e) => { setLastName(e); console.log(e) }}
+                    value={userLastName}
+                    onChange={(e) => { setUserLastName(e) }}
                   />
                   <InputText
                     className="col-12 col-md-6 rounded kit-border-shadow m-3"
@@ -139,8 +155,8 @@ const UpdateUserProfile = (props) => {
                       height: "4rem",
                       width: "66%",
                     }}
-                    value={email}
-                    onChange={(e) => setEmail(e)}
+                    value={userEmail}
+                    onChange={(e) => setUserEmail(e)}
                   />
                   <InputText
                     className="col-12 col-md-6 rounded kit-border-shadow m-3"
@@ -152,8 +168,8 @@ const UpdateUserProfile = (props) => {
                       height: "4rem",
                       width: "66%",
                     }}
-                    value={phone}
-                    onChange={(e) => setPhone(e)}
+                    value={userPhone}
+                    onChange={(e) => setUserPhone(e)}
                   />
                 </div>
               </FlexRow>

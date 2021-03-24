@@ -15,8 +15,6 @@ import FlexRow from '../../components/FlexRow';
 // Styles
 import './style.css';
 
-
-
 const PasswordRecoveryPage = (props) => {
 
   const [submitted, setSubmitted] = useState(false);
@@ -27,34 +25,30 @@ const PasswordRecoveryPage = (props) => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [validatePassword, setValidatePassword] = useState(true);
   const [passwordChanged, setPasswordChanged] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [verifyToken, setVerifyToken] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [verifyToken, setVerifyToken] = useState(true);
 
-  const { authentication } = Store.getState();
   const history = useHistory();
-  if (authentication.status === "SUCCESS") {
-    history.push("/home");
-  }
+
 
   const search = window.location.search;
   const params = new URLSearchParams(search);
   const recoveryCode = params.get('reset');
+  console.log(recoveryCode)
 
   useEffect((e) => {
-    AuthenticationDispatcher.onRequestThenCallback(
-      "forgot-password/recover/" + recoveryCode,
-      (httpError) => {
+    AuthenticationDispatcher.verifyUserToken({ recoveryCode: recoveryCode })
+      .then(data => {
+        console.log("ok " + data)
         setLoading(false);
-        setTimeout(() => setRedirect(true), 3400);
-      },
-      (httpResponseBody) => {
+      }, error => {
+        console.log("error: " + error.response)
+        console.log("error: " + recoveryCode)
         setLoading(false);
         setVerifyToken(true);
-      }
-    );
-  }, []);
-
-
+        setTimeout(() => setRedirect(true), 3400)
+      })
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -78,16 +72,16 @@ const PasswordRecoveryPage = (props) => {
     setPasswordMatch(true);
     setLoading(true);
 
-    UsersDispatcher.changePassword({recoveryCode, password})
+    AuthenticationDispatcher.changePassword({ recoveryCode, password })
       .then(data => {
         setLoading(false);
         setPasswordChanged(true);
         setTimeout(() => setRedirect(true), 3700);
       }, error => {
         setLoading(false);
-        setErrorMessage(error.response ? error.response.data : "Unexpected error occured");
+        setErrorMessage(error.response ? error.response.data.error : "Unexpected error occured");
       }
-    );
+      );
   };
 
   return (
@@ -154,7 +148,7 @@ const PasswordRecoveryPage = (props) => {
         }
 
 
-        {!verifyToken && !loading &&
+        {!verifyToken &&
           <h4 className="error-expired-link">Expired or unavailable link. Please request a new one. Redirecting...</h4>
         }
 
