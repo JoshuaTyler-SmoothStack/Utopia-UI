@@ -33,7 +33,7 @@ const PasswordRecoveryPage = (props) => {
   const recoveryCode = params.get('reset');
 
   useEffect(() => {
-    if(!loading && !verifyToken) {
+    if (!loading && !verifyToken) {
       AuthenticationDispatcher.onRequestThenCallback(
         "forgot-password/recover/" + recoveryCode,
         (httpError) => {
@@ -128,11 +128,13 @@ const PasswordRecoveryPage = (props) => {
         }
 
         {passwordChanged && !loading &&
-          <div className="col-md-12 col-md-12-local successfull-registration-container">
-            <div className="card fp-card-local successfull-registration">
-              <p>Password successfully changed! </p> <p>Redirecting...</p>
-            </div>
-          </div>
+          <FlexColumn>
+            <h3 className="text-success kit-text-shadow-thin">
+              Password Successfully changed!
+                    </h3>
+            <h5>Redirecting . . .</h5>
+            <div className="spinner-border ml-2" />
+          </FlexColumn>
         }
 
         {redirect && <Redirect to="/home" />}

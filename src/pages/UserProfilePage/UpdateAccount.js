@@ -7,6 +7,7 @@ import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import InputText from "../../components/InputText";
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
+import FlexColumn from '../../components/FlexColumn';
 
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
@@ -15,37 +16,22 @@ const ZINDEX_DEFAULT = 2;
 
 const UpdateUserProfile = (props) => {
 
-
-  const { users } = Store.getState();
-
-  const [userFirstName, setUserFirstName] = useState('')
-  const [userLastName, setUserLastName] = useState('')
-  const [userPhone, setUserPhone] = useState('')
-  const [userEmail, setUserEmail] = useState('')
+  const userFirstName = props.userFirstName || "";
+  const userLastName = props.userLastName || "";
+  const userPhone = props.userPhone || "";
+  const userEmail = props.userEmail || "";
   const [validatePhone, setValidatePhone] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
 
-  const { authentication } = Store.getState();
+  const { authentication, users } = Store.getState();
 
-  useEffect((e) => {
-    AuthenticationDispatcher.getUserById(authentication.userId)
-      .then(res => {
-        setUserFirstName(res.data.userFirstName);
-        setUserLastName(res.data.userLastName);
-        setUserEmail(res.data.userEmail);
-        setUserPhone(res.data.userPhone);
-        authentication.userId = res.data.userId;
-      }, error => {
-        console.log("error: " + error.response)
-      })
-  }, [])
 
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
   const handleValidate = (currentEmail, currentPhone) => {
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
+    const regexEmailValidation = new RegExp("^(.+)@(.+)$");
     const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
     setValidateEmail(regexEmailValidation.test(userEmail));
     setValidatePhone(regexPhoneNumberValidation.test(userPhone));
@@ -118,59 +104,76 @@ const UpdateUserProfile = (props) => {
 
               {/* Body */}
               <FlexRow className="col-12 mt-2">
-                <div className="row bg-white rounded d-flex justify-content-center" wrap="no-wrap">
-                  <InputText
-                    className="col-12 col-md-6 rounded kit-border-shadow m-3"
 
-                    label={"First Name"}
-                    labelClassName={"text-warning"}
-                    fontClass={"h4"}
-                    style={{
-                      height: "4rem",
-                      width: "66%",
-                    }}
-                    value={userFirstName}
-                    onChange={(e) => setUserFirstName(e)}
-                  />
-                  <InputText
-                    className="col-12 col-md-6 rounded kit-border-shadow m-3 "
-                    label={"Last Name"}
-                    labelClassName={"text-warning"}
-                    fontClass={"h4"}
-                    style={{
-                      height: "4rem",
-                      width: "66%",
-                    }}
-                    value={userLastName}
-                    onChange={(e) => { setUserLastName(e) }}
-                  />
-                  <InputText
-                    className="col-12 col-md-6 rounded kit-border-shadow m-3"
-                    label={"Email"}
-                    labelClassName={"text-warning"}
-                    // error={(isSubmitted && validateEmail) ? "Invalid email address" : ""}
-                    fontClass={"h4"}
-                    style={{
-                      height: "4rem",
-                      width: "66%",
-                    }}
-                    value={userEmail}
-                    onChange={(e) => setUserEmail(e)}
-                  />
-                  <InputText
-                    className="col-12 col-md-6 rounded kit-border-shadow m-3"
-                    label={"Phone"}
-                    labelClassName={"text-warning"}
-                    fontClass={"h4"}
-                    // error={(isSubmitted && validatePhone) ? "Invalid phone number" : ""}
-                    style={{
-                      height: "4rem",
-                      width: "66%",
-                    }}
-                    value={userPhone}
-                    onChange={(e) => setUserPhone(e)}
-                  />
-                </div>
+
+                {/* Pending */}
+                {users.status === "PENDING" &&
+                  <FlexColumn>
+                    <h3 className="text-dark kit-text-shadow-thin">
+                      Updating Profile . . .
+                      </h3>
+                    <FlexRow>
+                      <div className="spinner-border ml-2" />
+                    </FlexRow>
+                  </FlexColumn>
+                }
+
+                {users.status !== "PENDING" &&
+                  <div className="row bg-white rounded d-flex justify-content-center" wrap="no-wrap">
+
+                    <InputText
+                      className="col-12 col-md-6 rounded kit-border-shadow m-3"
+
+                      label={"First Name"}
+                      labelClassName={"text-warning"}
+                      fontClass={"h4"}
+                      style={{
+                        height: "4rem",
+                        width: "66%",
+                      }}
+                      value={userFirstName}
+                      onChange={(e) => props.onUserFirstName(e)}
+                    />
+                    <InputText
+                      className="col-12 col-md-6 rounded kit-border-shadow m-3 "
+                      label={"Last Name"}
+                      labelClassName={"text-warning"}
+                      fontClass={"h4"}
+                      style={{
+                        height: "4rem",
+                        width: "66%",
+                      }}
+                      value={userLastName}
+                      onChange={(e) => props.onUserLastName(e)}
+                    />
+                    <InputText
+                      className="col-12 col-md-6 rounded kit-border-shadow m-3"
+                      label={"Email"}
+                      labelClassName={"text-warning"}
+                      // error={(isSubmitted && validateEmail) ? "Invalid email address" : ""}
+                      fontClass={"h4"}
+                      style={{
+                        height: "4rem",
+                        width: "66%",
+                      }}
+                      value={userEmail}
+                      onChange={(e) => props.onUserEmail(e)}
+                    />
+                    <InputText
+                      className="col-12 col-md-6 rounded kit-border-shadow m-3"
+                      label={"Phone"}
+                      labelClassName={"text-warning"}
+                      fontClass={"h4"}
+                      // error={(isSubmitted && validatePhone) ? "Invalid phone number" : ""}
+                      style={{
+                        height: "4rem",
+                        width: "66%",
+                      }}
+                      value={userPhone}
+                      onChange={(e) => props.onUserPhone(e)}
+                    />
+                  </div>
+                }
               </FlexRow>
 
               {/* Buttons */}
