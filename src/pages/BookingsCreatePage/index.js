@@ -31,10 +31,16 @@ class BookingsCreatePage extends Component {
   }
 
   render() {
-    const { breakPoint } = Store.getState();
+    const { authentication, breakPoint } = Store.getState();
     const { currentStage, firstName, lastName, email, passportId,
       dateOfBirth, sex, address, isAgreement, isVeteran } = this.state;
 
+    const stageSelected = authentication.userId ? currentStage - 1 : currentStage;
+    const stageCount = authentication.userId ? 4 : 5;
+    const stageNames = authentication.userId
+      ? ["Passneger Info", "Regulations", "Payment", "Complete"]
+      : ["Login/Guest", "Passneger Info", "Regulations", "Payment", "Complete"];
+      
     return (
       <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth:"1400px",  overflowY: "hidden" }}>
         <div className="row">
@@ -54,13 +60,17 @@ class BookingsCreatePage extends Component {
                     style={{maxWidth: "1000px"}}
                     disableStageNameNumber={true}
                     disableInactiveStageNames={breakPoint.includes("small")}
-                    stage={currentStage}
-                    stageCount={5}
-                    stageNames={["Login/Guest", "Passneger Info", "Regulations", "Payment", "Complete"]}
+                    stage={stageSelected}
+                    stageCount={stageCount}
+                    stageNames={stageNames}
                     stageNamesClassName={"text-white text-center kit-text-shadow-thin"}
                     stageClassName={"bg-light rounded"}
                     stageSelectedClassName={"bg-primary rounded"}
-                    stageOnClick={(stageNumber) => this.setState({currentStage: stageNumber})}
+                    stageOnClick={(stageNumber) => this.setState({
+                      currentStage: authentication.userId
+                        ? stageNumber + 1
+                        : stageNumber,
+                    })}
                   />
                 </FlexRow>
               </div>

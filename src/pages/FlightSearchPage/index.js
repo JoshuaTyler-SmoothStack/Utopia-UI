@@ -26,7 +26,7 @@ class FlightSearchPage extends Component {
     const { isActive_FlightModal, isActive_SeatingModal } = this.state;
 
     return (
-      <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw",  overflowY: "hidden" }}>
+      <div className="container-fluid kit-bg-blue" style={{minHeight: "100vh"}}>
         <div className="row">
 
           {/* Navbar */}
@@ -123,8 +123,8 @@ class FlightSearchPage extends Component {
 
     return (
       <FlexColumn
-        className="bg-white rounded overflow-hidden"
-        style={{ width: "99%", overflowY: "scroll" }}
+        className="bg-white rounded"
+        style={{ width: "99%", overflowX: "scroll" }}
         justify="start"
       >
         <table className="table table-hover kit-border-shadow">

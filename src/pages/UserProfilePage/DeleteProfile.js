@@ -1,12 +1,14 @@
 // Libraries
 import React, { useState } from "react";
 import Store from "../../reducers/Store";
+import Constants from "../../resources/constants.json";
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 // Components
+import { Redirect } from "react-router";
 import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 
-import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 
 const ZINDEX_DEFAULT = 2;
@@ -28,7 +30,7 @@ const DeleteProfile = (props) => {
     setTimeout(() => {
       setRedirect(true);
     }, 3500);
-  }
+  };
 
   return (
     <Modal
@@ -103,6 +105,10 @@ const DeleteProfile = (props) => {
           </div>
         </div>
       </div>
+
+      {/* Redirects */}
+      {redirect && <Redirect to={Constants.pagePaths.home}/>}
+
     </Modal>
   );
 };

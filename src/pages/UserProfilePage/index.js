@@ -1,9 +1,7 @@
 // Libraries
 import React, { Component } from "react";
-import { Redirect } from "react-router";
 import Store from "../../reducers/Store";
 import UsersDispatcher from "../../dispatchers/UsersDispatcher";
-import Constants from "../../resources/constants.json";
 
 // Components
 import NavBar from "../../componentgroups/NavBar";
@@ -27,7 +25,7 @@ class UserProfilePage extends Component {
 
   render() {
     const { users } = Store.getState();
-    const { redirectToHome, isEditModalTrue, isDeleteModalTrue } = this.state;
+    const { isEditModalTrue, isDeleteModalTrue } = this.state;
 
     return (
       <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth: "1400px", overflowY: "hidden" }}>
@@ -117,7 +115,7 @@ class UserProfilePage extends Component {
                 users.edit.results.userId
                   ? users.edit.results
                   : users.selected
-              )
+              );
             }
 
 
@@ -147,10 +145,6 @@ class UserProfilePage extends Component {
         }
       );
     }
-
-    // if(!flights.search.results.length === 3) {
-
-    // }
   }
 }
 export default UserProfilePage;

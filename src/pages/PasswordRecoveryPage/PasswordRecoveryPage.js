@@ -40,19 +40,21 @@ const PasswordRecoveryPage = (props) => {
   const params = new URLSearchParams(search);
   const recoveryCode = params.get('reset');
 
-  useEffect((e) => {
-    AuthenticationDispatcher.onRequestThenCallback(
-      "forgot-password/recover/" + recoveryCode,
-      (httpError) => {
-        setLoading(false);
-        setTimeout(() => setRedirect(true), 3400);
-      },
-      (httpResponseBody) => {
-        setLoading(false);
-        setVerifyToken(true);
-      }
-    );
-  }, []);
+  useEffect(() => {
+    if(!loading && !verifyToken) {
+      AuthenticationDispatcher.onRequestThenCallback(
+        "forgot-password/recover/" + recoveryCode,
+        (httpError) => {
+          setLoading(false);
+          setTimeout(() => setRedirect(true), 3400);
+        },
+        (httpResponseBody) => {
+          setLoading(false);
+          setVerifyToken(true);
+        }
+      );
+    }
+  }, [recoveryCode, loading, verifyToken, setLoading, setVerifyToken, setRedirect]);
 
 
 

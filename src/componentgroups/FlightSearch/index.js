@@ -17,6 +17,7 @@ const FLIGHT_TYPE_ONEWAY = "One-Way";
 const FLIGHT_TYPE_ROUNDTRIP = "Round-Trip";
 
 const FlightSearch = (props) => {
+  
   const { airports, flights } = Store.getState();
   const [destinationRecommendations, setDestinationRecommendations] = useState([]);
   const [originRecommendations, setOriginRecommendations] = useState([]);
@@ -24,6 +25,8 @@ const FlightSearch = (props) => {
   const [isFocusOrigin, setIsFocusOrigin] = useState(false);
   const [isRecommendationsMounted, setIsRecommendationsMounted] = useState(false);
   const isResultsPending = props.isPending || flights.status === "PENDING" || false;
+
+  const dateNow = "2021-03-26T00:00";
 
   const isActiveOriginRecommendations =
     isFocusOrigin && originRecommendations.length > 0;
@@ -233,10 +236,12 @@ const FlightSearch = (props) => {
               <input
                 className="form-label mr-auto"
                 style={{ height: "3.5rem", maxWidth: "99%" }}
+                defaultValue={flights.search.filters.departureTimeAfter || dateNow}
+                min={dateNow}
                 type="datetime-local"
                 onChange={(e) =>
                   FlightsDispatcher.onSetFilter(
-                    "departureDateTime",
+                    "departureTimeAfter",
                     e.target.value
                   )
                 }
@@ -252,10 +257,12 @@ const FlightSearch = (props) => {
                 <input
                   className="form-label mr-auto"
                   style={{ height: "3.5rem", maxWidth: "99%" }}
+                  defaultValue={flights.search.filters.departureTimeBefore || dateNow}
+                  min={dateNow}
                   type="datetime-local"
                   onChange={(e) =>
                     FlightsDispatcher.onSetFilter(
-                      "returnDateTime",
+                      "departureTimeBefore",
                       e.target.value
                     )
                   }

@@ -8,12 +8,22 @@ class FlightsDispatcher extends BaseDispatcher {
   static constantsParent = Constants.flights;
 
   static onSearchAndFilter(httpPath, searchTermsString, filtersObject) {
+    Store.reduce({ type: this.getConstantsParent().request });
+
     if(filtersObject.destination) {
       filtersObject.flightRouteDestinationIataId = filtersObject.destination.split(":")[0];
     }
 
     if(filtersObject.origin) {
       filtersObject.flightRouteOriginIataId = filtersObject.origin.split(":")[0];
+    }
+
+    if(filtersObject.departureTimeBefore) {
+      filtersObject.flightDepartureTimeBefore = filtersObject.departureTimeBefore.replace("T", " ") + ":00";
+    }
+
+    if(filtersObject.departureTimeAfter) {
+      filtersObject.flightDepartureTimeAfter = filtersObject.departureTimeAfter.replace("T", " ") + ":00";
     }
 
     const activeFilters = {};
@@ -26,7 +36,7 @@ class FlightsDispatcher extends BaseDispatcher {
       }
     }
 
-    Store.reduce({ type: this.getConstantsParent().request });
+    console.log(activeFilters);
     Orchestration.createRequestWithBody(
       Constants.httpRequest.post,
       this.getApiPath() + httpPath,

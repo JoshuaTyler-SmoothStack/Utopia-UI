@@ -20,20 +20,20 @@ const UpdateUserProfile = (props) => {
   const [lastName, setLastName] = useState(users.selected.userLastName);
   const [email, setEmail] = useState(users.selected.userEmail);
   const [phone, setPhone] = useState(users.selected.userPhone);
-  const [validatePhone, setValidatePhone] = useState(false);
-  const [validateEmail, setValidateEmail] = useState(false);
+  // const [validatePhone, setValidatePhone] = useState(false);
+  // const [validateEmail, setValidateEmail] = useState(false);
   // const [isSubmitted, setSubmitted] = useState(false);
 
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
-  function handleValidate(currentEmail, currentPhone,) {
-    const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
-    const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
-    setValidateEmail(regexEmailValidation.test(currentEmail));
-    setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
-  }
+  // function handleValidate(currentEmail, currentPhone,) {
+  //   const regexEmailValidation = new RegExp(/[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,15}/g);
+  //   const regexPhoneNumberValidation = new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$");
+  //   setValidateEmail(regexEmailValidation.test(currentEmail));
+  //   setValidatePhone(regexPhoneNumberValidation.test(currentPhone));
+  // }
 
 
   function handleSubmit(e) {
