@@ -263,13 +263,17 @@ const EditView = (props) => {
                 <input 
                   className={"form-control " +  (isSubmitted ? hours < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={selectedHours || 0}
-                  type="number" 
+                  type="number"
+                  placeholder="Hours"
+                  min="1"
                   onInput={(e) => setHours(e.target.value)}
                 />
                 <input 
                   className={"form-control " +  (isSubmitted ? minutes < 0 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={selectedMinutes}
+                  placeholder="Minutes"
                   type="number"
+                  min="1"
                   max = "60" 
                   onInput={(e) => setMinutes(e.target.value)}
                 />
