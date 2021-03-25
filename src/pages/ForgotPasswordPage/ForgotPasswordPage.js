@@ -23,7 +23,6 @@ const ForgotPasswordPage = (props) => {
 
   const history = useHistory();
   if (localStorage.getItem("JSON_WEB_TOKEN")) {
-    console.log("I AM IN STORAGE");
     history.push(Constants.pagePaths.home);
   }
 
@@ -38,6 +37,8 @@ const ForgotPasswordPage = (props) => {
     const regexEmailValidation = new RegExp(/[a-z0-9A-Z._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}/g);
 
     if (!regexEmailValidation.test(email)) {
+      setErrorMessage("");
+      setErrorMessage("Invalid Email format");
       return setValidateEmail(false);
     }
 
@@ -55,15 +56,15 @@ const ForgotPasswordPage = (props) => {
             ? error.response.data.error
             : "Unexpected error occured"
         );
-    });
+      });
   }
 
   return (
-    <div className="container-fluid kit-bg-blue" style={{minHeight:"100vh"}}>
+    <div className="container-fluid kit-bg-blue" style={{ minHeight: "100vh" }}>
       <div class="row">
-        
+
         {/* Navbar */}
-        <NavBar className="col-12"/>
+        <NavBar className="col-12" />
 
         {/* Body */}
         <div className="col-12">
@@ -73,51 +74,48 @@ const ForgotPasswordPage = (props) => {
             <div className="col-12 col-md-8 col-lg-6 card p-2 mt-3 ml-auto mr-auto">
 
               {/* Header */}
-              <h2 className="card-title">Forgot Password</h2>
+              <h2 className="card-title d-flex justify-content-center">Forgot Password</h2>
               <hr className="w-100 mt-0"></hr>
 
-                {/* Body */}
-                <div className="card-body">
+              {/* Body */}
+              <div className="card-body">
 
-                  {/* Error */}
-                  {errorMessage &&
+                {/* Error */}
+                {errorMessage &&
                   <ErrorMessage className="bg-warning mb-3 p-2 text-white rounded">
                     {errorMessage}
                   </ErrorMessage>
-                  }
+                }
 
-                  {/* Pending */}
-                  {loading &&
-                    <FlexColumn>
-                      <h3 className="text-dark kit-text-shadow-thin">
-                        Sending email . . .
+                {/* Pending */}
+                {loading &&
+                  <FlexColumn>
+                    <h3 className="text-dark kit-text-shadow-thin">
+                      Sending email . . .
                       </h3>
-                      <FlexRow>
-                        <div className="spinner-border ml-2" />
-                      </FlexRow>
-                    </FlexColumn>
-                  }
+                    <FlexRow>
+                      <div className="spinner-border ml-2" />
+                    </FlexRow>
+                  </FlexColumn>
+                }
 
-                  {/* Success */}
-                  {isSuccess &&
-                    <FlexColumn>
-                      <h3 className="text-success kit-text-shadow-thin">
-                        Email Sent!
+                {/* Success */}
+                {isSuccess &&
+                  <FlexColumn>
+                    <h3 className="text-success kit-text-shadow-thin">
+                      Email Sent!
                       </h3>
-                      <FlexRow>
-                        <h5>Redirecting . . .</h5>
-                        <div className="spinner-border ml-2" />
-                      </FlexRow>
-                    </FlexColumn>
-                  }
+                    <FlexRow>
+                      <h5>Redirecting . . .</h5>
+                      <div className="spinner-border ml-2" />
+                    </FlexRow>
+                  </FlexColumn>
+                }
 
-                  {/* Default */}
-                  {(!isSuccess && !loading) &&
+                {/* Default */}
+                {(!isSuccess && !loading) &&
                   <form name="form">
-                    <label className="h5 text-dark" htmlFor="email">Email address{submitted && !email &&
-                      <span className="required"> is required</span>
-                    } {submitted && email && !validateEmail &&
-                      <span className="required"> invalid email format </span>}
+                    <label className="h5 text-dark" htmlFor="email">Email address
                     </label>
                     <input type="text" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
@@ -138,12 +136,12 @@ const ForgotPasswordPage = (props) => {
                       </button>
                     </FlexRow>
                   </form>}
-                </div>
+              </div>
 
-              </div> {/* Card End */}
+            </div> {/* Card End */}
 
-            </div>
-          </div> {/* Body End */}
+          </div>
+        </div> {/* Body End */}
 
         {/* Redirects */}
         {(isSuccess && redirect) &&

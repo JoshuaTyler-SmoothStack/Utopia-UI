@@ -1,6 +1,6 @@
 // Libraries
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Constants from "../../resources/constants.json";
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
@@ -36,6 +36,11 @@ const PasswordRecoveryPage = (props) => {
   const params = new URLSearchParams(search);
   const recoveryCode = params.get('reset');
 
+  const history = useHistory();
+  if (localStorage.getItem("JSON_WEB_TOKEN")) {
+    history.push(Constants.pagePaths.home);
+  }
+
   useEffect(() => {
     if (!loading && !verifyToken) {
       AuthenticationDispatcher.onRequestThenCallback(
@@ -55,10 +60,10 @@ const PasswordRecoveryPage = (props) => {
   // Password
   const validateAndSetPassword = (value) => {
     setPassword(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Password cannot be empty.");
       setValidPassword("FALSE");
-    } else if(value < 8) {
+    } else if (value < 8) {
       setErrorMessage(
         "Password must be 8 characters minimum" +
         "and contain at least 1 uppercase, lowercase, " +
@@ -74,7 +79,7 @@ const PasswordRecoveryPage = (props) => {
   // Confirm Password
   const validateAndSetConfirmPassword = (value) => {
     setConfirmPassword(value);
-    if(value !== password) {
+    if (value !== password) {
       setErrorMessage("Passwords do not match.");
       setValidConfirmPassword("FALSE");
     } else {
@@ -101,7 +106,7 @@ const PasswordRecoveryPage = (props) => {
           setLoading(false);
           setErrorMessage(error.response ? error.response.data.error : "Unexpected error occured");
         }
-      );
+        );
     }
   };
 
@@ -119,7 +124,7 @@ const PasswordRecoveryPage = (props) => {
           <div className="card p-2 mt-3 ml-auto mr-auto">
 
             {/* Header */}
-            <h2 className="card-title">Change Password</h2>
+            <h2 className="card-title d-flex justify-content-center">Change Password</h2>
             <hr className="w-100 mt-0"></hr>
 
             {/* Body */}
@@ -150,38 +155,38 @@ const PasswordRecoveryPage = (props) => {
 
               {/* Default */}
               {!success &&
-              <form name="form">
+                <form name="form">
 
-                {/* Password */}
-                <div className="mr-auto">
-                  <label className="form-label">Password</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validPassword === "TRUE" && STYLE_VALID) + " " +
-                      (validPassword === "FALSE" && STYLE_INVALID)
-                    }
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => validateAndSetPassword(e.target.value)}
-                  />
-                </div>
+                  {/* Password */}
+                  <div className="mr-auto">
+                    <label className="form-label">Password</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validPassword === "TRUE" && STYLE_VALID) + " " +
+                        (validPassword === "FALSE" && STYLE_INVALID)
+                      }
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => validateAndSetPassword(e.target.value)}
+                    />
+                  </div>
 
-                {/* Confirm Password */}
-                <div className="mr-auto">
-                  <label className="form-label">Confirm Password</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validConfirmPassword === "TRUE" && STYLE_VALID) + " " +
-                      (validConfirmPassword === "FALSE" && STYLE_INVALID)
-                    }
-                    type={showPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => validateAndSetConfirmPassword(e.target.value)}
-                  />
-                </div>
-              </form>}
+                  {/* Confirm Password */}
+                  <div className="mr-auto">
+                    <label className="form-label">Confirm Password</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validConfirmPassword === "TRUE" && STYLE_VALID) + " " +
+                        (validConfirmPassword === "FALSE" && STYLE_INVALID)
+                      }
+                      type={showPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => validateAndSetConfirmPassword(e.target.value)}
+                    />
+                  </div>
+                </form>}
 
               {/* Buttons */}
               <FlexRow className="mt-4" justify="around">
@@ -193,10 +198,10 @@ const PasswordRecoveryPage = (props) => {
 
                 {/* Submit */}
                 {!success &&
-                <button className="btn btn-success text-white kit-text-shadow-thin"
-                  onClick={(e) => handleSubmit(e)}
-                >
-                  + Save Password
+                  <button className="btn btn-success text-white kit-text-shadow-thin"
+                    onClick={(e) => handleSubmit(e)}
+                  >
+                    + Save Password
                 </button>}
               </FlexRow>
             </div>

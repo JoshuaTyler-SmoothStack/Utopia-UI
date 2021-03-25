@@ -60,11 +60,12 @@ const UserProfilePage = (props) => {
             <div className="row">
 
               {/* User Information */}
-              <FlexRow className="col-12 col-md-8 col-lg-6 p-3" justify="start">
-                <div className="row">
+              <FlexRow className="col-12 col-md-8 p-3" >
+                <div className="row w-100">
 
                   {/* Firstname */}
-                  <FlexColumn className="col-12 col-sm-6 mb-3" justify="start" style={{ maxWidth: "20rem" }}>
+                  <FlexColumn className="col-12 col-sm-6 mb-3"
+                    style={{ maxWidth: "20rem" }}>
                     <h5 className="mr-auto">First Name</h5>
                     <input
                       className={STYLE_INPUTTEXT}
@@ -106,7 +107,7 @@ const UserProfilePage = (props) => {
               </FlexRow>
 
               {/* User Miles */}
-              <FlexRow className="col-10 col-md-4 ml-auto mr-auto m-md-auto" style={{ height: "15rem" }}>
+              <FlexRow className="col-10 col-md-4 mr-auto m-md-auto" style={{ height: "15rem" }}>
                 <FlexColumn className="p-2 rounded kit-bg-blue kit-border-shadow">
                   <h1 className="text-center kit-cursive text-white kit-text-shadow-sm">
                     {"User Miles"}

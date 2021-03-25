@@ -10,7 +10,6 @@ import Constants from "../../resources/constants.json";
 import ErrorMessage from '../../components/ErrorMessage';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
-import LogoGif from '../../components/LogoGif';
 import NavBar from '../../componentgroups/NavBar';
 
 const STYLE_INPUTTEXT = "form-control mb-2 ";
@@ -40,10 +39,10 @@ const CreateAccountPage = (props) => {
   // First Name
   const validateAndSetFirstName = (value) => {
     setFirstName(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("First name cannot be empty.");
       setValidFirstName("FALSE");
-    } else if(value.length > 100) {
+    } else if (value.length > 100) {
       setErrorMessage("First name cannot be longer than 100 characters.");
       setValidFirstName("FALSE");
     } else {
@@ -55,10 +54,10 @@ const CreateAccountPage = (props) => {
   // Last Name
   const validateAndSetLastName = (value) => {
     setLastName(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Last name cannot be empty.");
       setValidLastName("FALSE");
-    } else if(value.length > 100) {
+    } else if (value.length > 100) {
       setErrorMessage("Last name cannot be longer than 100 characters.");
       setValidLastName("FALSE");
     } else {
@@ -70,10 +69,10 @@ const CreateAccountPage = (props) => {
   // Email
   const validateAndSetEmail = (value) => {
     setEmail(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Email cannot be empty.");
       setValidEmail("FALSE");
-    } else if(!new RegExp("^(.+)@(.+)$").test(value)) {
+    } else if (!new RegExp("^(.+)@(.+)$").test(value)) {
       setErrorMessage("Invalid Email Address.");
       setValidEmail("FALSE");
     } else {
@@ -85,10 +84,10 @@ const CreateAccountPage = (props) => {
   // Phone
   const validateAndSetPhone = (value) => {
     setPhone(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Phone cannot be empty.");
       setValidPhone("FALSE");
-    } else if(!new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)) {
+    } else if (!new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)) {
       setErrorMessage("Invalid Phone Number.");
       setValidPhone("FALSE");
     } else {
@@ -100,10 +99,10 @@ const CreateAccountPage = (props) => {
   // Password
   const validateAndSetPassword = (value) => {
     setPassword(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Password cannot be empty.");
       setValidPassword("FALSE");
-    } else if(value < 8) {
+    } else if (value < 8) {
       setErrorMessage(
         "Password must be 8 characters minimum" +
         "and contain at least 1 uppercase, lowercase, " +
@@ -119,7 +118,7 @@ const CreateAccountPage = (props) => {
   // Confirm Password
   const validateAndSetConfirmPassword = (value) => {
     setConfirmPassword(value);
-    if(value !== password) {
+    if (value !== password) {
       setErrorMessage("Passwords do not match.");
       setValidConfirmPassword("FALSE");
     } else {
@@ -136,23 +135,23 @@ const CreateAccountPage = (props) => {
     validateAndSetPhone(phone);
     validateAndSetPassword(password);
     validateAndSetConfirmPassword(confirmPassword);
-    if(validFirstName === "TRUE" &&
-       validLastName === "TRUE" &&
-       validEmail  === "TRUE" &&
-       validPhone  === "TRUE" &&
-       validPassword === "TRUE") {
+    if (validFirstName === "TRUE" &&
+      validLastName === "TRUE" &&
+      validEmail === "TRUE" &&
+      validPhone === "TRUE" &&
+      validPassword === "TRUE") {
       AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
     }
   };
 
-  if(authentication.userId && !redirectToHome) {
+  if (authentication.userId && !redirectToHome) {
     setTimeout(() => {
       setRedirectToHome(true);
     }, 3000);
   }
 
   return (
-    <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
+    <div className="container-fluid kit-bg-blue" style={{ minHeight: "100vh" }}>
       <div className="row">
 
         {/* Navbar */}
@@ -178,9 +177,6 @@ const CreateAccountPage = (props) => {
                 </ErrorMessage>
               }
 
-              {/* Pending */}
-              {authentication.status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
-
               {/* Success */}
               {authentication.userId &&
                 <FlexColumn>
@@ -196,99 +192,99 @@ const CreateAccountPage = (props) => {
 
               {/* Default */}
               {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
-              <form name="form">
+                <form name="form">
 
-                {/* First Name */}
-                <div className="mr-auto">
-                  <label className="form-label">First Name</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validFirstName === "TRUE" && STYLE_VALID) + " " +
-                      (validFirstName === "FALSE" && STYLE_INVALID)
-                    }
-                    type="text"
-                    value={firstName}
-                    onChange={(e) => validateAndSetFirstName(e.target.value)}
-                  />
-                </div>
+                  {/* First Name */}
+                  <div className="mr-auto">
+                    <label className="form-label">First Name</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validFirstName === "TRUE" && STYLE_VALID) + " " +
+                        (validFirstName === "FALSE" && STYLE_INVALID)
+                      }
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => validateAndSetFirstName(e.target.value)}
+                    />
+                  </div>
 
-                {/* Last Name */}
-                <div className="mr-auto">
-                  <label className="form-label">Last Name</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validLastName === "TRUE" && STYLE_VALID) + " " +
-                      (validLastName === "FALSE" && STYLE_INVALID)
-                    }
-                    type="text"
-                    value={lastName}
-                    onChange={(e) => validateAndSetLastName(e.target.value)}
-                  />
-                </div>
+                  {/* Last Name */}
+                  <div className="mr-auto">
+                    <label className="form-label">Last Name</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validLastName === "TRUE" && STYLE_VALID) + " " +
+                        (validLastName === "FALSE" && STYLE_INVALID)
+                      }
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => validateAndSetLastName(e.target.value)}
+                    />
+                  </div>
 
-                {/* Email */}
-                <div className="mr-auto">
-                  <label className="form-label">Email</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validEmail === "TRUE" && STYLE_VALID) + " " +
-                      (validEmail === "FALSE" && STYLE_INVALID)
-                    }
-                    type="email"
-                    value={email}
-                    onChange={(e) => validateAndSetEmail(e.target.value)}
-                  />
-                </div>
+                  {/* Email */}
+                  <div className="mr-auto">
+                    <label className="form-label">Email</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validEmail === "TRUE" && STYLE_VALID) + " " +
+                        (validEmail === "FALSE" && STYLE_INVALID)
+                      }
+                      type="email"
+                      value={email}
+                      onChange={(e) => validateAndSetEmail(e.target.value)}
+                    />
+                  </div>
 
-                {/* Phone */}
-                <div className="mr-auto">
-                  <label className="form-label">Phone</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validPhone === "TRUE" && STYLE_VALID) + " " +
-                      (validPhone === "FALSE" && STYLE_INVALID)
-                    }
-                    type="tel"
-                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                    value={phone}
-                    onChange={(e) => validateAndSetPhone(e.target.value)}
-                  />
-                </div>
+                  {/* Phone */}
+                  <div className="mr-auto">
+                    <label className="form-label">Phone</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validPhone === "TRUE" && STYLE_VALID) + " " +
+                        (validPhone === "FALSE" && STYLE_INVALID)
+                      }
+                      type="tel"
+                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      value={phone}
+                      onChange={(e) => validateAndSetPhone(e.target.value)}
+                    />
+                  </div>
 
-                {/* Password */}
-                <div className="mr-auto">
-                  <label className="form-label">Password</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validPassword === "TRUE" && STYLE_VALID) + " " +
-                      (validPassword === "FALSE" && STYLE_INVALID)
-                    }
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => validateAndSetPassword(e.target.value)}
-                  />
-                </div>
+                  {/* Password */}
+                  <div className="mr-auto">
+                    <label className="form-label">Password</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validPassword === "TRUE" && STYLE_VALID) + " " +
+                        (validPassword === "FALSE" && STYLE_INVALID)
+                      }
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => validateAndSetPassword(e.target.value)}
+                    />
+                  </div>
 
-                {/* Confirm Password */}
-                <div className="mr-auto">
-                  <label className="form-label">Confirm Password</label>
-                  <input
-                    className={
-                      STYLE_INPUTTEXT +
-                      (validConfirmPassword === "TRUE" && STYLE_VALID) + " " +
-                      (validConfirmPassword === "FALSE" && STYLE_INVALID)
-                    }
-                    type={showPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => validateAndSetConfirmPassword(e.target.value)}
-                  />
-                </div>
-              </form>}
+                  {/* Confirm Password */}
+                  <div className="mr-auto">
+                    <label className="form-label">Confirm Password</label>
+                    <input
+                      className={
+                        STYLE_INPUTTEXT +
+                        (validConfirmPassword === "TRUE" && STYLE_VALID) + " " +
+                        (validConfirmPassword === "FALSE" && STYLE_INVALID)
+                      }
+                      type={showPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => validateAndSetConfirmPassword(e.target.value)}
+                    />
+                  </div>
+                </form>}
 
               {/* Buttons */}
               <FlexRow className="mt-4" justify="around">
@@ -300,10 +296,10 @@ const CreateAccountPage = (props) => {
 
                 {/* Submit */}
                 {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
-                <button className="btn btn-success text-white kit-text-shadow-thin"
-                  onClick={() => handleSubmit()}
-                >
-                  + Create Account
+                  <button className="btn btn-success text-white kit-text-shadow-thin"
+                    onClick={() => handleSubmit()}
+                  >
+                    + Create Account
                 </button>}
               </FlexRow>
             </div>
