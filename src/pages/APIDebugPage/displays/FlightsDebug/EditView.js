@@ -61,12 +61,12 @@ const EditView = (props) => {
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!flightAirplaneId) return false;
-    if(!flightSeatingId) return false;
-    if(!flightRouteId) return false;
+    if(flightAirplaneId <= 0) return false;
+    if(flightSeatingId <= 0) return false;
+    if(flightRouteId <= 0) return false;
     if(!flightDepartureTime) return false;
-    if(!hours) return false;
-    if(!minutes) return false;
+    if(hours <= 0) return false;
+    if(minutes < 0) return false;
     return true;
   };
 
@@ -91,6 +91,20 @@ const EditView = (props) => {
       FlightsDispatcher.onEditFake(newFlight);
     }
   };
+
+  const handleRevert = () => {
+      const origFlight = {
+        flightId: selectedFlight.flightId,
+        flightAirplaneId : selectedFlight.flightAirplane.airplaneId,
+        flightSeatingId : selectedFlight.flightSeatingId,
+        flightRouteId : selectedFlight.flightRoute.routeId,
+        flightDepartureTime : selectedFlight.flightDepartureTime,
+        flightDuration : selectedFlight.flightDuration,
+        flightStatus: selectedFlight.flightStatus
+      };
+      FlightsDispatcher.onEdit(null, origFlight);
+      setIsReverted(true);
+  } 
 
   return (
     <FlexColumn>
@@ -167,10 +181,7 @@ const EditView = (props) => {
               <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
                 onClick={resultsPending 
                   ? () => KitUtils.soundSuccess() 
-                  : () => {
-                    FlightsDispatcher.onEdit(null, selectedFlight);
-                    setIsReverted(true);
-                  }
+                  : () => handleRevert()
                 }
               >
                 {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
@@ -198,8 +209,9 @@ const EditView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Airplane ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !flightAirplaneId ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? flightAirplaneId < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={flightAirplaneId}
+                  min="1"
                   placeholder="Number"
                   type="number" 
                   onInput={(e) => setAirplaneId(e.target.value)}
@@ -209,11 +221,12 @@ const EditView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Seating ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !flightSeatingId ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? flightSeatingId < 1? "is-invalid" : "is-valid" : "")} 
                   defaultValue={flightSeatingId}
+                  min="1"
                   placeholder="Number"
                   type="number" 
-                  onChange={(e) => setSeatingId(e.target.value)}
+                  onInput={(e) => setSeatingId(e.target.value)}
                 />
               </div>
             </FlexRow>
@@ -222,8 +235,9 @@ const EditView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Route ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !flightRouteId ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? flightRouteId < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={flightRouteId}
+                  min="1"
                   placeholder="Number"
                   type="number" 
                   onInput={(e) => setRouteId(e.target.value)}
@@ -247,13 +261,13 @@ const EditView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Duration</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !hours ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? hours < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={selectedHours || 0}
                   type="number" 
                   onInput={(e) => setHours(e.target.value)}
                 />
                 <input 
-                  className={"form-control " +  (isSubmitted ? !minutes ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? minutes < 0 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={selectedMinutes}
                   type="number"
                   max = "60" 
@@ -270,6 +284,7 @@ const EditView = (props) => {
                 >
                   <option value="INACTIVE">INACTIVE</option>
                   <option value="ACTIVE">ACTIVE</option>
+                  <option value="GROUNDED">GROUNDED</option>
                 </select>
               </div>
         

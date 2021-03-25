@@ -12,9 +12,6 @@ import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
 
-// Styles
-import './style.css';
-
 const PasswordRecoveryPage = (props) => {
 
   const [submitted, setSubmitted] = useState(false);

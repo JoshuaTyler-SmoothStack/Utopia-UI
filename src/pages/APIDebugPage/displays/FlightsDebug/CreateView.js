@@ -11,12 +11,14 @@ import ChangeOperationReadout from '../ChangeOperationReadout';
 import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
 
 const CreateView = (props) => {
-  const [flightAirplaneId, setAirplaneId] = useState("");
-  const [flightSeatingId, setSeatingId] = useState("");
-  const [flightRouteId, setRouteId] = useState("");
-  const [flightDepartureTime, setDateTime] = useState("");
-  const [hours, setHours] = useState("");
-  const [minutes, setMinutes] = useState("");
+  const dateTimeNow = moment().utc().format("YYYY-MM-DDTHH:mm");
+  
+  const [flightAirplaneId, setAirplaneId] = useState(1);
+  const [flightSeatingId, setSeatingId] = useState(1);
+  const [flightRouteId, setRouteId] = useState(1);
+  const [flightDepartureTime, setDateTime] = useState(dateTimeNow);
+  const [hours, setHours] = useState(1);
+  const [minutes, setMinutes] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { flights } = Store.getState();
@@ -25,16 +27,14 @@ const CreateView = (props) => {
   const resultsPending = resultsStatus === "PENDING";
   const status = flights.create.status;
 
-  const dateTimeNow = moment().utc().format("YYYY-MM-DDTHH:mm");
-
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!flightAirplaneId) return false;
-    if(!flightSeatingId) return false;
-    if(!flightRouteId) return false;
+    if(flightAirplaneId <= 0) return false;
+    if(flightSeatingId <= 0) return false;
+    if(flightRouteId <= 0) return false;
     if(!flightDepartureTime) return false;
-    if(!hours) return false;
-    if(!minutes) return false;
+    if(hours <= 0) return false;
+    if(minutes < 0) return false;
     return true;
   };
 
@@ -42,7 +42,7 @@ const CreateView = (props) => {
     if(!handleValidate()) return;
 
     const flightDuration = (hours * 3600) + (minutes * 60) ;
-    var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
+    var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss');
     
     const newFlight = {
       flightAirplaneId : flightAirplaneId,
@@ -52,8 +52,6 @@ const CreateView = (props) => {
       flightDuration : flightDuration,
       flightStatus: "INACTIVE"
     };
-
-    //Date format: "2021-03-09 18:45:00"
 
     FlightsDispatcher.onCreate(null, newFlight);
   };
@@ -67,8 +65,10 @@ const CreateView = (props) => {
             className="m-1" 
             style={{minHeight: "4rem"}} 
             name="Flight"
-            result={"Created Flight with Airplane ID: " + flightAirplaneId + 
-            " and RouteId: " + flightRouteId + "."}
+            result={flights.create.resultsStatus !== "ERROR"
+              ? "Created Flight with Airplane ID: " + flightAirplaneId + " and RouteId: " + flightRouteId + "."
+              : flights.create.results.error
+            }
             status={resultsStatus || "DISABLED"}
           />
           
@@ -115,10 +115,11 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Airplane ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !flightAirplaneId ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? flightAirplaneId < 1 ? "is-invalid" : "is-valid" : "")}
                   defaultValue={flightAirplaneId}
+                  min="1"
                   placeholder="Number"
-                  type="number" 
+                  type="number"
                   onInput={(e) => setAirplaneId(e.target.value)}
                 />
               </div>
@@ -126,8 +127,9 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Seating ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !flightSeatingId ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? flightSeatingId < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={flightSeatingId}
+                  min="1"
                   placeholder="Number"
                   type="number" 
                   onChange={(e) => setSeatingId(e.target.value)}
@@ -139,10 +141,11 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Route ID</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !flightRouteId ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? flightRouteId < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={flightRouteId}
+                  min="1"
                   placeholder="Number"
-                  type="number" 
+                  type="number"
                   onInput={(e) => setRouteId(e.target.value)}
                 />
               </div>
@@ -164,16 +167,19 @@ const CreateView = (props) => {
               <div className="mt-3 ml-3" style={{width:"14rem"}}>
                 <label className="form-label">Duration</label>
                 <input 
-                  className={"form-control " +  (isSubmitted ? !hours ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? hours < 1 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={hours}
+                  min="1"
                   placeholder="Hours"
                   type="number" 
                   onInput={(e) => setHours(e.target.value)}
                 />
                 <input 
-                  className={"form-control " +  (isSubmitted ? !minutes ? "is-invalid" : "is-valid" : "")} 
+                  className={"form-control " +  (isSubmitted ? minutes < 0 ? "is-invalid" : "is-valid" : "")} 
                   defaultValue={minutes}
                   placeholder="Minutes"
+                  step="10"
+                  min="0"
                   type="number"
                   max = "60" 
                   onInput={(e) => setMinutes(e.target.value)}

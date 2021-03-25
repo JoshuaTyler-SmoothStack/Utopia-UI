@@ -10,9 +10,6 @@ import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher
 import NavBar from '../../componentgroups/NavBar';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
-
-// Styles
-import './style.css';
 import ErrorMessage from '../../components/ErrorMessage';
 
 const ForgotPasswordPage = (props) => {

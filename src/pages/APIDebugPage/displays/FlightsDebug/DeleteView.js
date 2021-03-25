@@ -58,6 +58,26 @@ const DeleteView = () => {
                 <input type="text" readOnly className="form-control" value={selectedFlight.flightAirplane.airplaneId}/>
               </div>
             </FlexRow>
+            <FlexRow>
+              <div className="mt-3">
+                <label className="form-label">Route ID</label>
+                <input type="text" readOnly className="form-control" value={selectedFlight.flightRoute.routeId}/>
+              </div>
+              <div className="mt-3 ml-3">
+                <label className="form-label">Departure</label>
+                <input type="text" readOnly className="form-control" value={selectedFlight.flightDepartureTime}/>
+              </div>
+            </FlexRow>
+            <FlexRow>
+              <div className="mt-3">
+                <label className="form-label">Origin</label>
+                <input type="text" readOnly className="form-control" value={selectedFlight.flightRoute.routeOrigin.airportIataId}/>
+              </div>
+              <div className="mt-3 ml-3">
+                <label className="form-label">Destination</label>
+                <input type="text" readOnly className="form-control" value={selectedFlight.flightRoute.routeDestination.airportIataId}/>
+              </div>
+            </FlexRow>
           </FlexColumn>
           
 
