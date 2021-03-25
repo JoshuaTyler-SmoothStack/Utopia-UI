@@ -27,6 +27,7 @@ const DeleteProfile = (props) => {
     setIsDeleted(true);
     setTimeout(() => {
       setRedirect(true);
+      AuthenticationDispatcher.onLogout();
     }, 3500);
   };
 

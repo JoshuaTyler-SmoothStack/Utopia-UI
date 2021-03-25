@@ -26,7 +26,7 @@ const FlightSearch = (props) => {
   const [isRecommendationsMounted, setIsRecommendationsMounted] = useState(false);
   const isResultsPending = props.isPending || flights.status === "PENDING" || false;
 
-  const dateNow = "2021-03-26T00:00";
+  const dateNow = "2021-03-25T00:00";
 
   const isActiveOriginRecommendations =
     isFocusOrigin && originRecommendations.length > 0;
@@ -275,8 +275,10 @@ const FlightSearch = (props) => {
 
       {/* Buttons */}
       <div className="row mt-3 mb-3">
+        
         {/* Results Info */}
         <FlexRow className="col-8" justify="around">
+         
           {/* DropDown */}
           <DropDown
             buttonClassName="btn-secondary dropdown-toggle"

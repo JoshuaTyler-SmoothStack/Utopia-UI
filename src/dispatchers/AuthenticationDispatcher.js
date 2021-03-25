@@ -70,6 +70,11 @@ class AuthenticationDispatcher extends BaseDispatcher {
             type: Constants.authentication.errorCreateAccount,
             payload: httpResponseBody.error,
           });
+        } else if(!httpResponseBody) {
+          Store.reduce({
+            type: Constants.authentication.errorCreateAccount,
+            payload: httpResponseBody.error,
+          });
         } else {
           Store.reduce({ type: Constants.authentication.createAccountSuccess });
           AuthenticationDispatcher.onLogin(email, password);

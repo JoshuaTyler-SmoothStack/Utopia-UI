@@ -21,48 +21,139 @@ const STYLE_VALID = "is-valid";
 const CreateAccountPage = (props) => {
 
   const { authentication } = Store.getState();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isSubmitted, setSubmitted] = useState(false);
-  const [passwordMatch, setPasswordMatch] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const [validPassword, setValidPassword] = useState(false);
-  const [validPhone, setValidPhone] = useState(false);
-  const [validEmail, setValidEmail] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [validFirstName, setValidFirstName] = useState("");
+  const [validLastName, setValidLastName] = useState("");
+  const [validEmail, setValidEmail] = useState("");
+  const [validPhone, setValidPhone] = useState("");
+  const [validPassword, setValidPassword] = useState("");
+  const [validConfirmPassword, setValidConfirmPassword] = useState("");
 
-  const JSON_WEB_TOKEN = localStorage.getItem("JSON_WEB_TOKEN");
-
-  const handleSubmit = (e) => {
-
-    setSubmitted(true);
-    AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
+  // First Name
+  const validateAndSetFirstName = (value) => {
+    setFirstName(value);
+    if(value.trim().length === 0) {
+      setErrorMessage("First name cannot be empty.");
+      setValidFirstName("FALSE");
+    } else if(value.length > 100) {
+      setErrorMessage("First name cannot be longer than 100 characters.");
+      setValidFirstName("FALSE");
+    } else {
+      setErrorMessage("");
+      setValidFirstName("TRUE");
+    }
   };
 
-  const handleValidate = (currentEmail, currentPhone, currentPassword, currentConfirmPassword) => {
-    console.log(REGEX_EMAIL.test(currentEmail), REGEX_PHONE.test(currentPhone), REGEX_PASSWORD_STRONG.test(currentPassword));
-    setValidEmail(REGEX_EMAIL.test(currentEmail));
-    setValidPhone(REGEX_PHONE.test(currentPhone));
-    setValidPassword(REGEX_PASSWORD_STRONG.test(currentPassword));
-    setPasswordMatch(password === currentConfirmPassword);
+  // Last Name
+  const validateAndSetLastName = (value) => {
+    setLastName(value);
+    if(value.trim().length === 0) {
+      setErrorMessage("Last name cannot be empty.");
+      setValidLastName("FALSE");
+    } else if(value.length > 100) {
+      setErrorMessage("Last name cannot be longer than 100 characters.");
+      setValidLastName("FALSE");
+    } else {
+      setErrorMessage("");
+      setValidLastName("TRUE");
+    }
   };
 
-  // if (authentication.status === "SUCCESS" && authentication.userId) {
-  //   setTimeout(() => {
-  //     setRedirectToHome(true);
-  //   }, 3400);
-  // }
-  console.log(REGEX_EMAIL.test(email), REGEX_PHONE.test(phone), REGEX_PASSWORD_STRONG.test(password));
+  // Email
+  const validateAndSetEmail = (value) => {
+    setEmail(value);
+    if(value.trim().length === 0) {
+      setErrorMessage("Email cannot be empty.");
+      setValidEmail("FALSE");
+    } else if(!new RegExp("^(.+)@(.+)$").test(value)) {
+      setErrorMessage("Invalid Email Address.");
+      setValidEmail("FALSE");
+    } else {
+      setErrorMessage("");
+      setValidEmail("TRUE");
+    }
+  };
+
+  // Phone
+  const validateAndSetPhone = (value) => {
+    setPhone(value);
+    if(value.trim().length === 0) {
+      setErrorMessage("Phone cannot be empty.");
+      setValidPhone("FALSE");
+    } else if(!new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)) {
+      setErrorMessage("Invalid Phone Number.");
+      setValidPhone("FALSE");
+    } else {
+      setErrorMessage("");
+      setValidPhone("TRUE");
+    }
+  };
+
+  // Password
+  const validateAndSetPassword = (value) => {
+    setPassword(value);
+    if(value.trim().length === 0) {
+      setErrorMessage("Password cannot be empty.");
+      setValidPassword("FALSE");
+    } else if(value < 8) {
+      setErrorMessage(
+        "Password must be 8 characters minimum" +
+        "and contain at least 1 uppercase, lowercase, " +
+        "number, and special character (!@#$%^&*)."
+      );
+      setValidPassword("FALSE");
+    } else {
+      setErrorMessage("");
+      setValidPassword("TRUE");
+    }
+  };
+
+  // Confirm Password
+  const validateAndSetConfirmPassword = (value) => {
+    setConfirmPassword(value);
+    if(!value === password) {
+      setErrorMessage("Passwords do not match.");
+      setValidConfirmPassword("FALSE");
+    } else {
+      setErrorMessage("");
+      setValidConfirmPassword("TRUE");
+    }
+  };
+
+  const handleSubmit = () => {
+    validateAndSetFirstName(firstName);
+    validateAndSetLastName(lastName);
+    validateAndSetEmail(email);
+    validateAndSetPhone(phone);
+    validateAndSetPassword(password);
+    validateAndSetConfirmPassword(confirmPassword);
+    if(validFirstName === "TRUE" &&
+       validLastName === "TRUE" &&
+       validEmail  === "TRUE" &&
+       validPhone  === "TRUE" &&
+       validPassword === "TRUE") {
+      AuthenticationDispatcher.onCreateAccount(firstName, lastName, email, phone, password);
+    }
+  };
+
+  if(authentication.userId && !redirectToHome) {
+    setTimeout(() => {
+      setRedirectToHome(true);
+    }, 3000);
+  }
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ height: "100vh", width: "100vw" }}>
-      {(redirectToHome) && <Redirect to={Constants.pagePaths.home} />}
-      {JSON_WEB_TOKEN && <Redirect to={Constants.pagePaths.profile} />}
-
       <div className="row">
+
         {/* Navbar */}
         <NavBar className="col-12" />
 
@@ -80,13 +171,15 @@ const CreateAccountPage = (props) => {
             <div className="card-body">
 
               {/* Error */}
-              {authentication.status === "ERROR" && <ErrorMessage>{authentication.error}</ErrorMessage>}
+              {(errorMessage || authentication.status === "ERROR") &&
+                <ErrorMessage>{errorMessage || authentication.error}</ErrorMessage>
+              }
 
               {/* Pending */}
               {authentication.status === "PENDING" && <LogoGif style={{ width: "100%" }} />}
 
               {/* Success */}
-              {(authentication.status === "SUCCESS" && isSubmitted) &&
+              {authentication.userId &&
                 <FlexColumn>
                   <h3 className="text-success kit-text-shadow-thin">
                     Account Created!
@@ -100,141 +193,124 @@ const CreateAccountPage = (props) => {
 
               {/* Default */}
               {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
-                <form name="form" onSubmit={(e) => handleSubmit(e)}>
+              <form name="form">
 
-                  {/* Firstname */}
-                  {(isSubmitted && !firstName)
-                    ? <label className="text-danger kit-shake">First Name *</label>
-                    : <label>First Name</label>
-                  }
-                  <input type="text"
-                    className={STYLE_INPUTTEXT +
-                      (isSubmitted ? (firstName ? STYLE_VALID : STYLE_INVALID) : "")
+                {/* First Name */}
+                <div className="mr-auto">
+                  <label className="form-label">First Name</label>
+                  <input
+                    className={
+                      STYLE_INPUTTEXT +
+                      (validFirstName === "TRUE" && STYLE_VALID) + " " +
+                      (validFirstName === "FALSE" && STYLE_INVALID)
                     }
-                    name="firstName"
+                    type="text"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => validateAndSetFirstName(e.target.value)}
                   />
+                </div>
 
-                  {/* Lastname */}
-                  {(isSubmitted && !lastName)
-                    ? <label className="text-danger kit-shake">Last Name *</label>
-                    : <label>Last Name</label>
-                  }
-                  <input type="text"
-                    className={STYLE_INPUTTEXT +
-                      (isSubmitted ? (lastName ? STYLE_VALID : STYLE_INVALID) : "")
+                {/* Last Name */}
+                <div className="mr-auto">
+                  <label className="form-label">Last Name</label>
+                  <input
+                    className={
+                      STYLE_INPUTTEXT +
+                      (validLastName === "TRUE" && STYLE_VALID) + " " +
+                      (validLastName === "FALSE" && STYLE_INVALID)
                     }
-                    name="lastName"
+                    type="text"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => validateAndSetLastName(e.target.value)}
                   />
+                </div>
 
-                  {/* Email */}
-                  {isSubmitted
-                    ? !email
-                      ? <label className="text-danger kit-shake">Email *</label>
-                      : !validEmail
-                        ? <label className="text-danger kit-shake">Invalid Email *</label>
-                        : <label>Email</label>
-                    : <label>Email</label>
-                  }
-                  <input type="text"
-                    className={STYLE_INPUTTEXT +
-                      (email
-                        ? !validEmail ? STYLE_INVALID : STYLE_VALID
-                        : isSubmitted ? STYLE_INVALID : ""
-                      )}
-                    name="email"
+                {/* Email */}
+                <div className="mr-auto">
+                  <label className="form-label">Email</label>
+                  <input
+                    className={
+                      STYLE_INPUTTEXT +
+                      (validEmail === "TRUE" && STYLE_VALID) + " " +
+                      (validEmail === "FALSE" && STYLE_INVALID)
+                    }
+                    type="email"
                     value={email}
-                    onChange={(e) => {
-                      handleValidate(e.target.value, phone, password, confirmPassword);
-                      setEmail(e.target.value);
-                    }}
+                    onChange={(e) => validateAndSetEmail(e.target.value)}
                   />
+                </div>
 
-                  {/* Phone */}
-                  {isSubmitted
-                    ? !phone
-                      ? <label className="text-danger kit-shake">Phone *</label>
-                      : !validPhone
-                        ? <label className="text-danger kit-shake">Invalid Phone *</label>
-                        : <label>Phone</label>
-                    : <label>Phone</label>
-                  }
-                  <input type="phone"
-                    className={STYLE_INPUTTEXT +
-                      (phone
-                        ? !validPhone ? STYLE_INVALID : STYLE_VALID
-                        : isSubmitted ? STYLE_INVALID : ""
-                      )}
-                    name="phone" value={phone}
-                    onChange={(e) => {
-                      handleValidate(email, e.target.value, password, confirmPassword);
-                      setPhone(e.target.value);
-                    }}
+                {/* Phone */}
+                <div className="mr-auto">
+                  <label className="form-label">Phone</label>
+                  <input
+                    className={
+                      STYLE_INPUTTEXT +
+                      (validPhone === "TRUE" && STYLE_VALID) + " " +
+                      (validPhone === "FALSE" && STYLE_INVALID)
+                    }
+                    type="tel"
+                    pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    value={phone}
+                    onChange={(e) => validateAndSetPhone(e.target.value)}
                   />
+                </div>
 
-                  {/* Password */}
-                  {isSubmitted
-                    ? !password
-                      ? <label className="text-danger kit-shake">Password *</label>
-                      : !validPassword
-                        ? <label className="text-danger kit-shake">{"Minimun: 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special e.g. (!@#$%^&*)"}</label>
-                        : <label>Password</label>
-                    : <label>Password</label>
-                  }
-                  <input type="password"
-                    className={STYLE_INPUTTEXT +
-                      (password
-                        ? !validPassword ? STYLE_INVALID : STYLE_VALID
-                        : isSubmitted ? STYLE_INVALID : ""
-                      )}
-                    name="password"
+                {/* Password */}
+                <div className="mr-auto">
+                  <label className="form-label">Password</label>
+                  <input
+                    className={
+                      STYLE_INPUTTEXT +
+                      (validPassword === "TRUE" && STYLE_VALID) + " " +
+                      (validPassword === "FALSE" && STYLE_INVALID)
+                    }
+                    type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(e) => {
-                      handleValidate(email, phone, e.target.value, confirmPassword);
-                      setPassword(e.target.value);
-                    }}
+                    onChange={(e) => validateAndSetPassword(e.target.value)}
                   />
+                </div>
 
-                  {/* Password - Confirm */}
-                  {isSubmitted
-                    ? !confirmPassword
-                      ? <label className="text-danger kit-shake">Confirm Password *</label>
-                      : !passwordMatch
-                        ? <label className="text-danger kit-shake">Passwords do not match *</label>
-                        : <label>Confirm Password</label>
-                    : <label>Confirm Password</label>
-                  }
-                  <input type="password"
-                    className={STYLE_INPUTTEXT +
-                      (confirmPassword
-                        ? !passwordMatch ? STYLE_INVALID : STYLE_VALID
-                        : isSubmitted ? STYLE_INVALID : ""
-                      )}
-                    name="confirmPassword"
+                {/* Confirm Password */}
+                <div className="mr-auto">
+                  <label className="form-label">Confirm Password</label>
+                  <input
+                    className={
+                      STYLE_INPUTTEXT +
+                      (validConfirmPassword === "TRUE" && STYLE_VALID) + " " +
+                      (validConfirmPassword === "FALSE" && STYLE_INVALID)
+                    }
+                    type={showPassword ? "text" : "password"}
                     value={confirmPassword}
-                    onChange={(e) => {
-                      handleValidate(email, phone, password, e.target.value);
-                      setConfirmPassword(e.target.value);
-                    }}
+                    onChange={(e) => validateAndSetConfirmPassword(e.target.value)}
                   />
+                </div>
+              </form>}
 
-                  {/* Buttons */}
-                  <FlexRow className="form-group mt-4" justify="around">
-                    <Link to={Constants.pagePaths.home}>
-                      <button className="btn btn-secondary">Cancel</button>
-                    </Link>
-                    <button className="btn btn-success text-white kit-text-shadow-thin" type="submit">
-                      + Create Account
-                  </button>
-                  </FlexRow>
-                </form>}
+              {/* Buttons */}
+              <FlexRow className="mt-4" justify="around">
+
+                {/* Cancel */}
+                <Link to={Constants.pagePaths.home}>
+                  <button className="btn btn-secondary">Cancel</button>
+                </Link>
+
+                {/* Submit */}
+                {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
+                <button className="btn btn-success text-white kit-text-shadow-thin"
+                  onClick={() => handleSubmit()}
+                >
+                  + Create Account
+                </button>}
+              </FlexRow>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Redirects */}
+      {(redirectToHome) && <Redirect to={Constants.pagePaths.home} />}
+
     </div>
   );
 };

@@ -5,15 +5,13 @@ import Store from '../../reducers/Store';
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import UsersDispatcher from '../../dispatchers/UsersDispatcher';
 import axios from 'axios';
+
 // Components
 import { Redirect } from 'react-router';
 import NavBar from '../../componentgroups/NavBar';
 import LogoGif from '../../components/LogoGif';
 import FlexColumn from '../../components/FlexColumn';
 import FlexRow from '../../components/FlexRow';
-
-// Styles
-import './style.css';
 
 const PasswordRecoveryPage = (props) => {
 
