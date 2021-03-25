@@ -29,7 +29,6 @@ const Stage5 = (props) => {
   const sex = props.sex || "Unselected";
 
   const [errorMessage, setErrorMessage] = useState("");
-  const [isBookingCreated, setIsBookingCreated] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
@@ -184,8 +183,6 @@ const Stage5 = (props) => {
         newBooking.bookingGuestPhone = phone;
       }
       BookingsDispatcher.onCreate("", newBooking);
-    } else {
-      console.log("not valid")
     }
   };
 
@@ -204,9 +201,9 @@ const Stage5 = (props) => {
           <div className="card-body">
 
             {/* Error */}
-            {errorMessage &&
+            {(errorMessage || bookings.create.results.error) &&
             <ErrorMessage className="bg-warning mb-3 p-2 text-white rounded">
-              {errorMessage}
+              {errorMessage || bookings.create.results.error}
             </ErrorMessage>
             }
 
@@ -223,7 +220,7 @@ const Stage5 = (props) => {
             }
 
             {/* Success */}
-            {isBookingCreated &&
+            {bookings.create.resultsStatus === "SUCCESS" &&
               <FlexColumn>
                 <h3 className="text-success kit-text-shadow-thin">
                   Booking Confirmed!
@@ -231,11 +228,20 @@ const Stage5 = (props) => {
                 <FlexRow>
                   <h5>{bookings.create.results.bookingConfirmationCode}</h5>
                 </FlexRow>
+
+                {/* Close Button */}
+                <FlexRow className="w-100">
+                  <button className="btn btn-dark btn-lg"
+                    onClick={() => setRedirectToHome(true)}
+                  >
+                    Close
+                  </button>
+                </FlexRow>
               </FlexColumn>
             }
 
             {/* Default */}
-            {(!isBookingCreated && bookings.create.resultsStatus !== "PENDING") &&
+            {bookings.create.resultsStatus !== "SUCCESS" &&
               <div className="row">
 
                 {/* FirstName */}
