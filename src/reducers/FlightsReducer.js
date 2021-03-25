@@ -31,7 +31,7 @@ export const defaultFlightsReducerState = {
       activeCount: 0,
       destination: "",
       flightType: "One-Way",
-      origin: ""
+      origin: "",
     },
     originToDestination: [],
     destinationToOrigin: [],

@@ -19,13 +19,15 @@ class BookingsCreatePage extends Component {
     super(props);
     this.state = {
       currentStage: 1,
-      firstName: "",
-      lastName: "",
-      email: "",
-      passportId: "",
-      dateOfBirth: "",
-      sex: "",
       address: "",
+      dateOfBirth: "",
+      email: "",
+      firstName: "",
+      flightId: 0,
+      lastName: "",
+      passportId: "",
+      phone: "",
+      sex: "",
       isAgreement: false,
       isVeteran: false,
     };
@@ -33,8 +35,20 @@ class BookingsCreatePage extends Component {
 
   render() {
     const { authentication, breakPoint } = Store.getState();
-    const { currentStage, firstName, lastName, email, passportId,
-      dateOfBirth, sex, address, isAgreement, isVeteran } = this.state;
+    const {
+      currentStage,
+      address,
+      dateOfBirth,
+      email,
+      firstName,
+      flightId,
+      lastName,
+      passportId,
+      phone,
+      sex,
+      isAgreement,
+      isVeteran ,
+    } = this.state;
 
     const selectedStage = authentication.userId ? currentStage+1 : currentStage;
     const stageCount = authentication.userId ? 4 : 5;
@@ -120,7 +134,29 @@ class BookingsCreatePage extends Component {
 
                 {/* Confirm Success & Redirect to Bookings Page */}
                 {selectedStage === 5 &&
-                  <Stage5/>
+                  <Stage5
+                    className="col-12 col-sm-10 col-md-8"
+                    address={address}
+                    dateOfBirth={dateOfBirth}
+                    lastName={lastName}
+                    email={email}
+                    firstName={firstName}
+                    flightId={flightId}
+                    passportId={passportId}
+                    phone={phone}
+                    isVeteran={isVeteran}
+                    sex={sex}
+                    onAddress={(value) => this.setState({address: value})}
+                    onDateOfBirth={(value) => this.setState({dateOfBirth: value})}
+                    onLastName={(value) => this.setState({lastName: value})}
+                    onEmail={(value) => this.setState({email: value})}
+                    onFirstName={(value) => this.setState({firstName: value})}
+                    onFlightId={(value) => this.setState({flightId: value})}
+                    onPassportId={(value) => this.setState({passportId: value})}
+                    onPhone={(value) => this.setState({phone: value})}
+                    onIsVeteran={(value) => this.setState({isVeteran: value})}
+                    onSex={(value) => this.setState({sex: value})}
+                  />
                 }
 
                 {/* Previous & Next Buttons */}

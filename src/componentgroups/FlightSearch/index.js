@@ -1,4 +1,5 @@
 // Libraries
+import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import Store from "../../reducers/Store";
 import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
@@ -19,14 +20,13 @@ const FLIGHT_TYPE_ROUNDTRIP = "Round-Trip";
 const FlightSearch = (props) => {
   
   const { airports, flights } = Store.getState();
+  const [dateNow, setDateNow] = useState(moment().format("YYYY-MM-DDTHH:mm"));
   const [destinationRecommendations, setDestinationRecommendations] = useState([]);
   const [originRecommendations, setOriginRecommendations] = useState([]);
   const [isFocusDestination, setIsFocusDestination] = useState(false);
   const [isFocusOrigin, setIsFocusOrigin] = useState(false);
   const [isRecommendationsMounted, setIsRecommendationsMounted] = useState(false);
   const isResultsPending = props.isPending || flights.status === "PENDING" || false;
-
-  const dateNow = "2021-03-25T00:00";
 
   const isActiveOriginRecommendations =
     isFocusOrigin && originRecommendations.length > 0;
@@ -75,8 +75,9 @@ const FlightSearch = (props) => {
       setIsRecommendationsMounted(true);
       handleAirportRecommendations("origin", "");
       handleAirportRecommendations("destination", "");
+      FlightsDispatcher.onSetFilter("departureTimeAfter", dateNow);
     }
-  }, [isRecommendationsMounted, setIsRecommendationsMounted, handleAirportRecommendations]);
+  }, [isRecommendationsMounted, setIsRecommendationsMounted, handleAirportRecommendations, dateNow]);
 
   return (
     <div className={props.className || ""} style={props.style}>

@@ -38,7 +38,7 @@ const DropDown = (props) => {
 
   // MouseDown & TouchDown Outside Element Listener
   useEffect(() => {
-    const handleClick = (event) => {  
+    const handleClick = (event) => {
       const { target } = event;
       if(rootNode.current && !rootNode.current.contains(target)) {
         handleSelect(null);
@@ -56,9 +56,9 @@ const DropDown = (props) => {
   let optionsRender = [];
   if(options) {
     if(options.length) {
-      for(var i in options) {
+      for(let i in options) {
         const option = options[i];
-        let optionRender = 
+        const optionRender =
         <li key={"option-" + i}><button 
           className={"dropdown-item " + (selection === option && "active")}
           type="button"
@@ -69,30 +69,32 @@ const DropDown = (props) => {
         optionsRender.push(optionRender);
       }
     } else {
-      optionsRender = 
-      <li><button 
+      optionsRender =
+      <li>
+        <button
           className={"dropdown-item " + (selection === options && "active")}
           type="button"
           onClick={() => handleSelect(options)}
         >
           {options + (props.optionsName ? (" " + props.optionsName) : "")}
-      </button></li>;
+        </button>
+      </li>;
     }
   } else {
-    optionsRender = options === "PENDING" 
+    optionsRender = options === "PENDING"
       ? <div className="spinner-border"/>
-      : <div>{"No options available."}</div>
+      : <div>{"No options available."}</div>;
   }
 
   return ( 
-    <div className={"drop" + 
+    <div className={"drop" +
       (props.type || "down") + " " +
-      (props.className || "")} 
+      (props.className || "")}
       style={props.style}
       ref={rootNode}
     >
       <FocusLock props={{isLocked: !isDropDownActive}}>
-        <button 
+        <button
           className={"btn w-100 " + (props.buttonClassName || "")}
           style={{textAlign:"left"}}
           type="button"
@@ -100,8 +102,8 @@ const DropDown = (props) => {
         >
           {selection ? (selection + (props.optionsName ? (" " + props.optionsName) : "")) : "No selection available."}
         </button>
-        <ul className={"dropdown-menu " + 
-          (props.align ? "dropdown-menu-" + props.align : "")+ " " + 
+        <ul className={"dropdown-menu " +
+          (props.align ? "dropdown-menu-" + props.align : "")+ " " +
           ((isDropDownActive || props.isActive) ? "show" : "")}
         >
           {optionsRender}
