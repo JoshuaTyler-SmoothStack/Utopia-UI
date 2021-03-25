@@ -18,7 +18,7 @@ const UserProfilePage = (props) => {
 
   const { authentication, users } = Store.getState();
   const history = useHistory();
-  if (!localStorage.getItem("JSON_WEB_TOKEN")) {
+  if (!authentication.userId) {
     history.push(Constants.pagePaths.home);
   }
 

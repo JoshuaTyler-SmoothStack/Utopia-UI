@@ -104,10 +104,9 @@ class App extends Component {
             </Route>
 
             {/* Profile Page */}
-            {authentication.userId &&
             <Route exact path={Constants.pagePaths.profile}>
               <UserProfilePage />
-            </Route>}
+            </Route>
 
             {/* 404 - No Path */}
             <Route path={"/pagenotfound"}>

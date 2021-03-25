@@ -1,9 +1,8 @@
 // Libraries
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Constants from "../../resources/constants.json";
-import Store from '../../reducers/Store';
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 // Components
@@ -82,7 +81,7 @@ const ForgotPasswordPage = (props) => {
 
                   {/* Error */}
                   {errorMessage &&
-                  <ErrorMessage className="bg-warning p-2 text-white rounded">
+                  <ErrorMessage className="bg-warning mb-3 p-2 text-white rounded">
                     {errorMessage}
                   </ErrorMessage>
                   }
@@ -114,20 +113,30 @@ const ForgotPasswordPage = (props) => {
 
                   {/* Default */}
                   {(!isSuccess && !loading) &&
-                  <form name="form" onSubmit={(e) => handleSubmit(e)}>
-                    <label htmlFor="email">Email address{submitted && !email &&
+                  <form name="form">
+                    <label className="h5 text-dark" htmlFor="email">Email address{submitted && !email &&
                       <span className="required"> is required</span>
                     } {submitted && email && !validateEmail &&
                       <span className="required"> invalid email format </span>}
                     </label>
                     <input type="text" className="form-control" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 
-                    <div className="form-group">
-                      <button className="btn btn-lg btn-primary btn-block btn-signin form-submit-button btn-submit"> Reset Password </button>
-                    </div>
-                    <div className="form-group">
-                      <a href='/home' className="btn btn-lg btn-secondary btn-block btn-signin form-submit-button btn-submit btn-cancel-local" >Cancel</a>
-                    </div>
+                    {/* Buttons */}
+                    <FlexRow className="mt-3 w-100" justify="around">
+                      {/* Cancel */}
+                      <Link to={Constants.pagePaths.home}>
+                        <button className="btn btn-dark btn-lg">
+                          Cancel
+                        </button>
+                      </Link>
+
+                      {/* Submit */}
+                      <button className="btn btn-primary btn-lg"
+                        onClick={(e) => handleSubmit(e)}
+                      >
+                        Reset Password
+                      </button>
+                    </FlexRow>
                   </form>}
                 </div>
 

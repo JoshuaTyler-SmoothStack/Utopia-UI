@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { REGEX_EMAIL, REGEX_PHONE, REGEX_PASSWORD_STRONG } from '../../resources/regex';
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 import Store from '../../reducers/Store';
 import Constants from "../../resources/constants.json";
@@ -29,6 +28,7 @@ const CreateAccountPage = (props) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [validFirstName, setValidFirstName] = useState("");
   const [validLastName, setValidLastName] = useState("");
@@ -119,7 +119,7 @@ const CreateAccountPage = (props) => {
   // Confirm Password
   const validateAndSetConfirmPassword = (value) => {
     setConfirmPassword(value);
-    if(!value === password) {
+    if(value !== password) {
       setErrorMessage("Passwords do not match.");
       setValidConfirmPassword("FALSE");
     } else {
@@ -129,6 +129,7 @@ const CreateAccountPage = (props) => {
   };
 
   const handleSubmit = () => {
+    setIsSubmitted(true);
     validateAndSetFirstName(firstName);
     validateAndSetLastName(lastName);
     validateAndSetEmail(email);
@@ -171,8 +172,10 @@ const CreateAccountPage = (props) => {
             <div className="card-body">
 
               {/* Error */}
-              {(errorMessage || authentication.status === "ERROR") &&
-                <ErrorMessage>{errorMessage || authentication.error}</ErrorMessage>
+              {(errorMessage || (authentication.status === "ERROR" && isSubmitted)) &&
+                <ErrorMessage className="bg-warning h5 text-center text-white mb-3 p-2 rounded">
+                  {errorMessage || (isSubmitted && authentication.error)}
+                </ErrorMessage>
               }
 
               {/* Pending */}
