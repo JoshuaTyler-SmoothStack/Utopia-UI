@@ -39,7 +39,7 @@ const DeleteProfile = (props) => {
       zIndex={zIndex}
       onClose={props.onClose}
     >
-      <div className="container-fluid">
+      <div className="container-fluid w-100">
         <div className="row">
           <div className={props.className || ""} style={props.style}>
             <div className="row">
@@ -68,22 +68,31 @@ const DeleteProfile = (props) => {
               </FlexRow>
 
               {/* Header */}
-              <div className="col-12 bg-white rounded p-2 kit-border-shadow">
-                <FlexRow className="h-100 row d-flex justify-content-center" justify="start">
-                  <h3>Are you sure you want to delete your account?</h3>
+              {!isDeleted &&
+                <div className="col-12 bg-white rounded p-2 kit-border-shadow">
+                  <FlexRow className="h-100 row d-flex justify-content-center" justify="start">
+                    <h3>Are you sure you want to delete your account?</h3>
 
-                </FlexRow>
-              </div>
+                    <button className="btn btn-info ml-2 text-black" onClick={() => props.onClose()} >
+                      Cancel
+                </button>
+                    <button className="btn btn-success ml-2 text-black " onClick={deleteAccount}>
+                      Yes/ Delete
+                </button>
+
+                  </FlexRow>
+                  {/* Body */}
+                </div>
+              }
 
               {isDeleted &&
-
-                <div>
-                  <FlexRow>
-                    <h1>Account successfully deleted</h1>
-                    <div className="spinner-border ml-2" />
+                <div className="col-12 bg-white rounded p-2 kit-border-shadow">
+                  <FlexRow className="h-100 row d-flex justify-content-center" justify="start">
+                    <h3>Account successfully deleted</h3>
+                    <h5>Redirecting to home page <div className="spinner-border ml-2" /></h5>
                   </FlexRow>
+                  {/* Body */}
                 </div>
-
               }
 
               {isDeleted && redirect &&
@@ -94,27 +103,13 @@ const DeleteProfile = (props) => {
 
               }
 
-
-              {/* Body */}
-              <FlexRow className="col-12 mt-2">
-                <div className="row rounded d-flex justify-content-center" wrap="no-wrap">
-
-                  <button className="btn btn-info ml-2 text-black" onClick={() => props.onClose()} >
-                    Cancel
-                </button>
-                  <button className="btn btn-success ml-2 text-black " onClick={deleteAccount}>
-                    Yes/ Delete
-                </button>
-                </div>
-              </FlexRow>
-
             </div>
           </div>
         </div>
       </div>
 
       {/* Redirects */}
-      {redirect && <Redirect to={Constants.pagePaths.home}/>}
+      {redirect && <Redirect to={Constants.pagePaths.home} />}
 
     </Modal>
   );
