@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import KitUtils from "../kitutils/KitUtils_v1.0.0";
+import KitUtils from "../kitutils/KitUtils";
 
 const ErrorMessage = (props) => {
   useEffect(() =>  {

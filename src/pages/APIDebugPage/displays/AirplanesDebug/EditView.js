@@ -3,7 +3,7 @@ import _ from "lodash";
 import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
-import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
+import KitUtils from '../../../../kitutils/KitUtils';
 
 // Components
 import ChangeOperationReadout from '../ChangeOperationReadout';

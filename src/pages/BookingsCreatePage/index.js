@@ -12,7 +12,7 @@ import Stage2 from "./Stage2";
 import Stage3 from "./Stage3";
 import Stage4 from "./Stage4";
 import Stage5 from "./Stage5";
-import KitUtils from "../../kitutils/KitUtils_v1.0.0";
+import KitUtils from "../../kitutils/KitUtils";
 
 class BookingsCreatePage extends Component {
   constructor(props) {

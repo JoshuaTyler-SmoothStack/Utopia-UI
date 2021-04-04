@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Link, Redirect } from "react-router-dom";
 import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher";
 import Constants from "../../resources/constants.json";
-import KitUtils from "../../kitutils/KitUtils_v1.0.0";
+import KitUtils from "../../kitutils/KitUtils";
 import Store from "../../reducers/Store";
 
 // Components

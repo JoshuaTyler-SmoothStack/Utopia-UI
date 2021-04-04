@@ -24,14 +24,14 @@ const DropDown = (props) => {
 
   // Escape Key Listener
   useEffect(() => {
-    const handleKeyPress = (event) => {  
+    const handleKeyPress = (event) => {
       const { keyCode } = event;
       if (keyCode === ESCAPE_KEY) {
-        event.preventDefault();  
+        event.preventDefault();
         handleSelect(null);
       }
     };
- 
+
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [handleSelect]);
@@ -56,17 +56,19 @@ const DropDown = (props) => {
   let optionsRender = [];
   if(options) {
     if(options.length) {
-      for(let i in options) {
-        const option = options[i];
-        const optionRender =
-        <li key={"option-" + i}><button 
-          className={"dropdown-item " + (selection === option && "active")}
-          type="button"
-          onClick={() => handleSelect(option)}
-        >
-          {option + (props.optionsName ? (" " + props.optionsName) : "")}
-        </button></li>;
-        optionsRender.push(optionRender);
+      for(const i in options) {
+        if(options[i]) {
+          const option = options[i];
+          const optionRender =
+          <li key={"option-" + i}><button 
+            className={"dropdown-item " + (selection === option && "active")}
+            type="button"
+            onClick={() => handleSelect(option)}
+          >
+            {option + (props.optionsName ? (" " + props.optionsName) : "")}
+          </button></li>;
+          optionsRender.push(optionRender);
+        }
       }
     } else {
       optionsRender =
@@ -86,7 +88,7 @@ const DropDown = (props) => {
       : <div>{"No options available."}</div>;
   }
 
-  return ( 
+  return (
     <div className={"drop" +
       (props.type || "down") + " " +
       (props.className || "")}

@@ -113,7 +113,7 @@ class InputText extends React.Component {
         textInput = (
           <div
             className={
-              "d-flex flex-column justify-content-center align-items-center " + 
+              "d-flex flex-column justify-content-center align-items-center " +
               (!isHover ? "text-light " : "")
             }
             style={{...style, cursor: "text"}}
@@ -194,7 +194,7 @@ class InputText extends React.Component {
   handleValueChange = (event) => {
     const { onChange } = this.props;
     const value = event.target.value;
-    this.setState({ value: value, error: "" });
+    this.setState({ value, error: "" });
     if (onChange) onChange(value);
   };
 }
