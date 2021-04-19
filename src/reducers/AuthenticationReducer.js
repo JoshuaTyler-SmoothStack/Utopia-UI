@@ -16,7 +16,7 @@ class AuthenticationReducer extends BaseReducer {
         return {
           error: action.payload || "[ERROR]: 404 - Not Found!",
           status: "ERROR",
-          userId: "UNKNOWN",
+          userId: "",
         };
 
       case this.constantsParent.errorCreateAccount:
