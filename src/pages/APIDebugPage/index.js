@@ -6,6 +6,7 @@ import AirplanesDebug from "./displays/AirplanesDebug";
 import AirportsDebug from "./displays/AirportsDebug";
 import BookingsDebug from "./displays/BookingsDebug";
 import PassengersDebug from "./displays/PassengersDebug";
+import PaymentsDebug from "./displays/PaymentsDebug";
 import FlightsDebug from "./displays/FlightsDebug";
 import RoutesDebug from "./displays/RoutesDebug";
 import UsersDebug from "./displays/UsersDebug";
@@ -46,6 +47,7 @@ class APIDebugPage extends Component {
             {activeDisplay === "AIRPORTS" && <AirportsDebug/>}
             {activeDisplay === "BOOKINGS" && <BookingsDebug/>}
             {activeDisplay === "PASSENGERS" && <PassengersDebug/>}
+            {activeDisplay === "PAYMENTS" && <PaymentsDebug/>}
             {activeDisplay === "FLIGHTS" && <FlightsDebug/>}
             {activeDisplay === "ROUTES" && <RoutesDebug/>}
             {activeDisplay === "USERS" && <UsersDebug/>}
