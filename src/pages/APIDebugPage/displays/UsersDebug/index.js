@@ -2,10 +2,11 @@
 import UsersDispatcher from "../../../../dispatchers/UsersDispatcher";
 import React, { Component } from "react";
 import Store from "../../../../reducers/Store";
+import { Link } from 'react-router-dom';
+import Constants from "../../../../resources/constants.json";
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
-import CreateView from "./CreateView";
 import DeleteView from "./DeleteView";
 import DropDown from "../../../../components/DropDown";
 import EditView from "./EditView";
@@ -35,7 +36,6 @@ class UsersDebug extends Component {
     const usersMSStatus = users.status;
 
     // Modal Toggles
-    const isCreatePromptActive = users.create.isActive;
     const isDeletePromptActive = users.delete.isActive;
     const isEditPromptActive = users.edit.isActive;
 
@@ -104,7 +104,6 @@ class UsersDebug extends Component {
             "col-12 bg-light " +
             ((usersMSStatus === "INACTIVE" ||
               usersMSStatus === "ERROR" ||
-              isCreatePromptActive ||
               isDeletePromptActive ||
               isEditPromptActive) &&
               "kit-opacity-50 kit-no-user kit-pointer-none")
@@ -195,14 +194,9 @@ class UsersDebug extends Component {
 
           {/* Success State */}
           {usersMSStatus === "SUCCESS" &&
-            !isCreatePromptActive &&
             !isDeletePromptActive &&
             !isEditPromptActive &&
             this.handleRenderUsersList(searchResults)}
-
-          {usersMSStatus === "SUCCESS" && isCreatePromptActive && (
-            <CreateView />
-          )}
 
           {usersMSStatus === "SUCCESS" && isDeletePromptActive && (
             <DeleteView />
@@ -234,6 +228,8 @@ class UsersDebug extends Component {
   };
 
   handleRenderUsersList = (usersList) => {
+    const buttonClassName = "btn btn-secondary m-1";
+    const buttonStyle = {width: "12rem"};
     const { users } = Store.getState();
     const resultsDisplayed = Number(users.search.resultsPerPage);
     const resultsStart =
@@ -383,13 +379,11 @@ class UsersDebug extends Component {
               </th>
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
-                    style={{ whiteSpace: "nowrap" }}
-                    onClick={() => UsersDispatcher.onPromptCreate()}
-                  >
-                    + Create New
+                <Link to={Constants.pagePaths.createAccount}>
+                  <button className={buttonClassName} style={buttonStyle}>
+                    {"Create Account"}
                   </button>
+                </Link>
                 </FlexRow>
               </th>
             </tr>

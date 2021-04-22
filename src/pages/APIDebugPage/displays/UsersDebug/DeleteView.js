@@ -1,5 +1,5 @@
 // Libraries
-import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
+import UsersDispatcher from "../../../../dispatchers/UsersDispatcher";
 import Store from "../../../../reducers/Store";
 
 // Components
@@ -8,11 +8,11 @@ import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
 const DeleteView = () => {
-  const { airports } = Store.getState();
+  const { users } = Store.getState();
 
-  const resultsStatus = airports.delete.resultsStatus;
-  const selectedAirport = airports.selected;
-  const status = airports.delete.status;
+  const resultsStatus = users.delete.resultsStatus;
+  const selectedUser = users.selected;
+  const status = users.delete.status;
 
   return(
     <FlexColumn>
@@ -22,7 +22,7 @@ const DeleteView = () => {
           <ChangeOperationReadout 
             className="m-1" 
             style={{minHeight: "4rem"}} 
-            name="Airport" 
+            name="User" 
             result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
             status={resultsStatus}
           />
@@ -34,8 +34,8 @@ const DeleteView = () => {
           <FlexRow>
             <button className="btn btn-light m-3"
               onClick={() => {
-                AirportsDispatcher.onCancel();
-                AirportsDispatcher.onRequest();
+                UsersDispatcher.onCancel();
+                UsersDispatcher.onRequest();
               }}
             >
               Close
@@ -46,16 +46,26 @@ const DeleteView = () => {
 
       {status !== "PENDING" &&
         <FlexColumn>
-          {/* Airport */}
+          {/* User */}
           <FlexColumn>
             <FlexRow>
               <div className="mt-3">
-                <label className="form-label">IATA ID</label>
-                <input type="text" readOnly className="form-control" value={selectedAirport.airportIataId}/>
+                <label className="form-label">User ID</label>
+                <input type="text" readOnly className="form-control" value={selectedUser.userId}/>
               </div>
               <div className="mt-3 ml-3">
-                <label className="form-label">City</label>
-                <input type="text" readOnly className="form-control" value={selectedAirport.airportCityName}/>
+                <label className="form-label">Email</label>
+                <input type="text" readOnly className="form-control" value={selectedUser.userEmail}/>
+              </div>
+            </FlexRow>
+            <FlexRow>
+              <div className="mt-3">
+                <label className="form-label">First Name</label>
+                <input type="text" readOnly className="form-control" value={selectedUser.userFirstName}/>
+              </div>
+              <div className="mt-3 ml-3">
+                <label className="form-label">Last Name</label>
+                <input type="text" readOnly className="form-control" value={selectedUser.userLastName}/>
               </div>
             </FlexRow>
           </FlexColumn>
@@ -64,12 +74,12 @@ const DeleteView = () => {
           {/* Buttons */}
           <FlexRow>
             <button className="btn btn-light m-3"
-              onClick={() => AirportsDispatcher.onCancel()}
+              onClick={() => UsersDispatcher.onCancel()}
             >
               Cancel
             </button>
             <button className="btn btn-primary m-3"
-              onClick={() => AirportsDispatcher.onDelete("/" + selectedAirport.airportIataId)}
+              onClick={() => UsersDispatcher.onDelete("/" + selectedUser.userId)}
             >
               Confirm Delete (cannot be undone)
             </button>

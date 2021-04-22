@@ -39,6 +39,64 @@ class UsersDispatcher extends BaseDispatcher {
     );
   }
 
+  static onEditManage(httpPath, httpBody) {
+    console.log(httpBody);
+    Store.reduce({ type: this.getConstantsParent().requestEdit });
+    Orchestration.createRequestWithBody(
+      Constants.httpRequest.put,
+      this.apiPathManage + (httpPath || ""),
+      httpBody,
+      (httpError) => this.onError(httpError),
+      (httpResponseBody) => {
+        if (httpResponseBody.error) {
+          Store.reduce({
+            type: this.getConstantsParent().responseEdit,
+            payload: {
+              results: httpResponseBody.error,
+              resultsStatus: "ERROR",
+            },
+          });
+        } else {
+          Store.reduce({
+            type: this.getConstantsParent().responseEdit,
+            payload: {
+              results: httpResponseBody,
+              resultsStatus: "SUCCESS",
+            },
+          });
+        }
+      }
+    );
+  }
+
+  static onDelete(httpPath) {
+    Store.reduce({ type: this.getConstantsParent().requestDelete });
+    Orchestration.createRequest(
+      Constants.httpRequest.delete,
+      this.apiPathManage + (httpPath || ""),
+      (httpError) => this.onError(httpError),
+      (httpResponseBody) => {
+        if (httpResponseBody.error) {
+          Store.reduce({
+            type: this.getConstantsParent().responseDelete,
+            payload: {
+              results: httpResponseBody,
+              resultsStatus: "ERROR",
+            },
+          });
+        } else {
+          Store.reduce({
+            type: this.getConstantsParent().responseDelete,
+            payload: {
+              results: httpResponseBody,
+              resultsStatus: "SUCCESS",
+            },
+          });
+        }
+      }
+    );
+  }
+
   static onRequest(httpPath) {
     Store.reduce({ type: this.getConstantsParent().request });
     Orchestration.createRequest(
