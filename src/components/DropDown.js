@@ -5,6 +5,7 @@ const ESCAPE_KEY = 27;
 
 const DropDown = (props) => {
   // @PROP: align - string
+  // @PROP: buttonClassName - string
   // @PROP: options - [string]
   // @PROP: optionsName - string
   // @PROP: selection - string
