@@ -44,6 +44,10 @@ const EditView = (props) => {
     ? selectedUser.userPhone !== results.userPhone
     : true;
 
+  const userRoleChanged = results
+    ? selectedUser.userRole !== results.userRole
+    : true;
+
   const resultsPending = resultsStatus === "PENDING";
   const noChangesMade = _.isEqual(selectedUser, results);
 
@@ -78,9 +82,30 @@ const EditView = (props) => {
         <ChangeOperationReadout 
           className="m-1" 
           style={{minHeight: "4rem"}} 
-          name="User" 
-          result={results ? results.userEmail : ". . ."}
-          status={userEmailChanged ? resultsStatus : "DISABLED"} 
+          name="First Name" 
+          result={results ? results.userFirstName : ". . ."}
+          status={userFirstNameChanged ? resultsStatus : "DISABLED"} 
+        />
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Last Name" 
+          result={results ? results.userLastName : ". . ."}
+          status={userLastNameChanged ? resultsStatus : "DISABLED"} 
+        />
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Phone" 
+          result={results ? results.userPhone : ". . ."}
+          status={userPhoneChanged ? resultsStatus : "DISABLED"} 
+        />
+        <ChangeOperationReadout 
+          className="m-1" 
+          style={{minHeight: "4rem"}} 
+          name="Role" 
+          result={results ? results.userRole : ". . ."}
+          status={userRoleChanged ? resultsStatus : "DISABLED"} 
         />
 
         <FlexRow>
@@ -169,7 +194,7 @@ const EditView = (props) => {
               className={"form-control " +  (isSubmitted ? !userPhone ? "is-invalid" : "is-valid" : "")}
               defaultValue={selectedUser.userPhone}
               type="text" 
-              onChange={(e) => setUserFirstName(e.target.value)}
+              onChange={(e) => setUserPhone(e.target.value)}
             />
           </div>
           <div className="mt-3 ml-3" style={{width:"14rem"}}>
@@ -178,7 +203,7 @@ const EditView = (props) => {
               className={"form-control " +  (isSubmitted ? !userRole ? "is-invalid" : "is-valid" : "")}
               defaultValue={selectedUser.userRole}
               type="text" 
-              onChange={(e) => setUserFirstName(e.target.value)}
+              onChange={(e) => setUserRole(e.target.value)}
             />
           </div>
         </FlexRow>
