@@ -14,13 +14,13 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
-import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class FlightsDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isReferenceIDsActive: false,
       searchTerms: "",
       currentSort: "up",
       sortedItem: "flightId",
@@ -29,10 +29,9 @@ class FlightsDebug extends Component {
 
   render() {
     const { flights } = Store.getState();
-    const { searchTerms } = this.state;
+    const { isReferenceIDsActive, searchTerms } = this.state;
 
     // Microservice Status
-    const flightsMSHealth = flights.health;
     const flightsMSStatus = flights.status;
 
     // Modal Toggles
@@ -53,20 +52,6 @@ class FlightsDebug extends Component {
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
           <div className="row mt-1">
-            {/* MS Orchestration Indicators */}
-            <OrchestrationHeader
-              className="col-12 col-md-6"
-              name="Flight MS"
-              health={flightsMSHealth}
-              status={
-                flightsMSStatus === "INACTIVE" ? "PENDING" : flightsMSStatus
-              }
-              style={{ maxWidth: "30rem" }}
-              onTriggerError={() => FlightsDispatcher.onError()}
-              onTriggerFakeAPICall={() =>
-                FlightsDispatcher.onFakeAPICall(searchResults)
-              }
-            />
 
             {/* Search Bar */}
             <div className="col-12 col-md-5">
@@ -88,7 +73,13 @@ class FlightsDebug extends Component {
                 <button
                   className="btn btn-success ml-2 text-white kit-text-shadow-thin"
                   type="submit"
-                  onClick={() =>FlightsDispatcher.onSearchAndFilter("/search", searchTerms, searchFilters)}
+                  onClick={() =>
+                    FlightsDispatcher.onSearchAndFilter(
+                      "/search",
+                      searchTerms,
+                      searchFilters
+                    )
+                  }
                 >
                   search
                 </button>
@@ -109,22 +100,35 @@ class FlightsDebug extends Component {
               "kit-opacity-50 kit-no-user kit-pointer-none")
           }
         >
-          {/* Filters */}
-          <div className="row p-2 justify-content-center p-2">
-            {/* # of Filters Active */}
-            <div className="col-auto list-group ml-2">
-              <div
-                className="list-group-item"
-                style={{ fontSize: "0.85rem", padding: "0.5rem" }}
-              >
-                {searchFilters.activeCount + " filters active"}
-              </div>
-            </div>
-          </div>
 
           {/* Resuts Count & Page Selection */}
-          <div className="row justify-content-center p-2">
-            <FlexColumn className="col-4 col-md-3 text-center">
+          <div className="row justify-content-center pb-1">
+
+            {/* Toggle Reference Data */}
+            <FlexRow
+              className="col-auto p-0 bg-dark rounded mt-2"
+              wrap={"no-wrap"}
+            >
+              <button
+                className={
+                  "btn text-white " + (isReferenceIDsActive && "btn-success")
+                }
+                onClick={() => this.handleIncludeReferenceIDs(true)}
+              >
+                Show IDs
+              </button>
+              <button
+                className={
+                  "btn text-white " + (!isReferenceIDsActive && "btn-success")
+                }
+                onClick={() => this.handleIncludeReferenceIDs(false)}
+              >
+                Hide
+              </button>
+            </FlexRow>
+
+            {/* DropDown */}
+            <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
                 selection={flights.search.resultsPerPage}
@@ -134,7 +138,8 @@ class FlightsDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-6 col-md-3 text-center">
+            {/* Readout */}
+            <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
                 currentPage={flights.search.resultsPage}
                 itemsPerPage={flights.search.resultsPerPage}
@@ -142,7 +147,8 @@ class FlightsDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-8 mt-2 col-md-3 text-center">
+            {/* Pagination */}
+            <FlexColumn className="col-auto text-center mt-2">
               <Pagination
                 currentPage={flights.search.resultsPage}
                 totalPages={Math.ceil(
@@ -221,7 +227,11 @@ class FlightsDebug extends Component {
     FlightsDispatcher.onRequest();
   }
 
-  onSortChange = (e) => {
+  handleIncludeReferenceIDs = (isActive) => {
+    this.setState({ isReferenceIDsActive: isActive });
+  };
+
+  hanldeSortChange = (e) => {
     const { currentSort } = this.state;
     let nextSort;
 
@@ -243,7 +253,7 @@ class FlightsDebug extends Component {
       flights.search.resultsPerPage * (flights.search.resultsPage - 1);
 
     const flightsTable = [];
-    const { currentSort, sortedItem } = this.state;
+    const { currentSort, isReferenceIDsActive, sortedItem } = this.state;
     switch (sortedItem) {
       case "flightDuration":
         flightsList.sort((a, b) => {
@@ -272,16 +282,24 @@ class FlightsDebug extends Component {
       case "flightOrigin":
         flightsList.sort((a, b) => {
           return currentSort === "up"
-            ? a.flightRoute.routeOrigin.airportCityName.localeCompare(b.flightRoute.routeOrigin.airportCityName)
-            : b.flightRoute.routeOrigin.airportCityName.localeCompare(a.flightRoute.routeOrigin.airportCityName)
+            ? a.flightRoute.routeOrigin.airportCityName.localeCompare(
+                b.flightRoute.routeOrigin.airportCityName
+              )
+            : b.flightRoute.routeOrigin.airportCityName.localeCompare(
+                a.flightRoute.routeOrigin.airportCityName
+              );
         });
         break;
 
       case "flightDestination":
         flightsList.sort((a, b) => {
           return currentSort === "up"
-            ? a.flightRoute.routeDestination.airportCityName.localeCompare(b.flightRoute.routeDestination.airportCityName)
-            : b.flightRoute.routeDestination.airportCityName.localeCompare(a.flightRoute.routeDestination.airportCityName)
+            ? a.flightRoute.routeDestination.airportCityName.localeCompare(
+                b.flightRoute.routeDestination.airportCityName
+              )
+            : b.flightRoute.routeDestination.airportCityName.localeCompare(
+                a.flightRoute.routeDestination.airportCityName
+              );
         });
         break;
 
@@ -343,13 +361,13 @@ class FlightsDebug extends Component {
           <tr key={index}>
             <th scrop="row">{index}</th>
             <td>{flightId}</td>
-            <td>{flightsList[i].flightAirplane.airplaneId}</td>
-            <td>{flightsList[i].flightRoute.routeId}</td>
+            {isReferenceIDsActive && <td>{flightsList[i].flightAirplane.airplaneId}</td>}
+            {isReferenceIDsActive && <td>{flightsList[i].flightRoute.routeId}</td>}
             <td>{flightsList[i].flightRoute.routeOrigin.airportCityName}</td>
             <td>{flightsList[i].flightRoute.routeDestination.airportCityName}</td>
             <td>{departureTime}</td>
             <td>{duration}</td>
-            <td>{flightsList[i].flightSeatingId}</td>
+            {isReferenceIDsActive && <td>{flightsList[i].flightSeatingId}</td>}
             <td>{flightsList[i].flightStatus}</td>
 
             {/* Edit */}
@@ -387,37 +405,37 @@ class FlightsDebug extends Component {
                 <button
                   className="btn text-white"
                   value="flightId"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
               </th>
-              <th scope="col">
+              {isReferenceIDsActive && <th scope="col">
                 Airplane ID
                 <button
                   className="btn text-white"
                   value="flightAirplaneId"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
-              </th>
-              <th scope="col">
+              </th>}
+              {isReferenceIDsActive && <th scope="col">
                 Route ID
                 <button
                   className="btn text-white"
                   value="flightRouteId"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
-              </th>
+              </th>}
               <th scope="col">
                 Origin
                 <button
                   className="btn text-white"
                   value="flightOrigin"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
@@ -427,7 +445,7 @@ class FlightsDebug extends Component {
                 <button
                   className="btn text-white"
                   value="flightDestination"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
@@ -437,7 +455,7 @@ class FlightsDebug extends Component {
                 <button
                   className="btn text-white"
                   value="flightDepartureTime"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
@@ -447,27 +465,27 @@ class FlightsDebug extends Component {
                 <button
                   className="btn text-white"
                   value="flightDuration"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
               </th>
-              <th scope="col">
+              {isReferenceIDsActive && <th scope="col">
                 Seating ID
                 <button
                   className="btn text-white"
                   value="flightSeatingId"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
-              </th>
+              </th>}
               <th scope="col">
                 Status
                 <button
                   className="btn text-white"
                   value="flightStatus"
-                  onClick={this.onSortChange}
+                  onClick={this.hanldeSortChange}
                 >
                   ⇅
                 </button>
@@ -488,7 +506,7 @@ class FlightsDebug extends Component {
           <tbody>
             {flightsTable}
             <tr>
-              <td colSpan="5"></td>
+              <td colSpan={isReferenceIDsActive ? "12" : "9"}></td>
               {/* Space at end of table for aesthetic */}
             </tr>
           </tbody>

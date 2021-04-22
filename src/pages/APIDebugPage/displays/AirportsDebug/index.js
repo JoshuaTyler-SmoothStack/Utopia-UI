@@ -51,24 +51,10 @@ class AirportsDebug extends Component {
       >
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
-          <div className="row mt-1">
-            {/* MS Orchestration Indicators */}
-            <OrchestrationHeader
-              className="col-12 col-md-6"
-              name="Airport MS"
-              health={airportsMSHealth}
-              status={
-                airportsMSStatus === "INACTIVE" ? "PENDING" : airportsMSStatus
-              }
-              style={{ maxWidth: "30rem" }}
-              onTriggerError={() => AirportsDispatcher.onError()}
-              onTriggerFakeAPICall={() =>
-                AirportsDispatcher.onFakeAPICall(searchResults)
-              }
-            />
+          <div className="row p-2">
 
             {/* Search Bar */}
-            <div className="col-12 col-md-5">
+            <div className="col-12">
               {/* Search */}
               <FlexRow className="mt-1" justify="end" wrap="no-wrap">
                 <input
@@ -110,22 +96,9 @@ class AirportsDebug extends Component {
               "kit-opacity-50 kit-no-user kit-pointer-none")
           }
         >
-          {/* Filters */}
-          <div className="row p-2 justify-content-center p-2">
-            {/* # of Filters Active */}
-            <div className="col-auto list-group ml-2">
-              <div
-                className="list-group-item"
-                style={{ fontSize: "0.85rem", padding: "0.5rem" }}
-              >
-                {searchFilters.activeCount + " filters active"}
-              </div>
-            </div>
-          </div>
-
           {/* Resuts Count & Page Selection */}
-          <div className="row justify-content-center p-2">
-            <FlexColumn className="col-4 col-md-3 text-center">
+          <div className="row justify-content-center pb-1">
+            <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
                 selection={airports.search.resultsPerPage}
@@ -135,7 +108,7 @@ class AirportsDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-6 col-md-3 text-center">
+            <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
                 currentPage={airports.search.resultsPage}
                 itemsPerPage={airports.search.resultsPerPage}
@@ -143,7 +116,7 @@ class AirportsDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-8 mt-2 col-md-3 text-center">
+            <FlexColumn className="col-auto text-center mt-2">
               <Pagination
                 currentPage={airports.search.resultsPage}
                 totalPages={Math.ceil(
