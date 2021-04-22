@@ -28,7 +28,7 @@ const CreateAccountPage = (props) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  /* const [showPassword, setShowPassword] = useState(false); */ const showPassword = false;
   const [validFirstName, setValidFirstName] = useState("");
   const [validLastName, setValidLastName] = useState("");
   const [validEmail, setValidEmail] = useState("");

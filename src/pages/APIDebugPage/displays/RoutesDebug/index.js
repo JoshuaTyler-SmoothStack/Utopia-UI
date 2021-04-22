@@ -13,7 +13,6 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
-import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class RoutesDebug extends Component {
@@ -41,7 +40,6 @@ class RoutesDebug extends Component {
 
     // Search Results vars
     const searchError = routes.search.error;
-    const searchFilters = routes.search.filters;
     const searchResults = routes.search.results;
 
     return (
@@ -51,7 +49,7 @@ class RoutesDebug extends Component {
       >
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
-          <div className="row mt-1">
+          <div className="row p-2">
 
             {/* Search Bar */}
             <div className="col-12">

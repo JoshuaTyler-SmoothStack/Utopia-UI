@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Constants from "../../resources/constants.json";
-import Store from '../../reducers/Store';
+import Store from "../../reducers/Store";
 
 // Components
-import BookingsDispatcher from '../../dispatchers/BookingsDispatcher';
-import ErrorMessage from '../../components/ErrorMessage';
+import BookingsDispatcher from "../../dispatchers/BookingsDispatcher";
+import ErrorMessage from "../../components/ErrorMessage";
 import FlexColumn from "../../components/FlexColumn";
-import FlexRow from '../../components/FlexRow';
-import { Redirect } from 'react-router';
-import DropDown from '../../components/DropDown';
+import FlexRow from "../../components/FlexRow";
+import { Redirect } from "react-router";
+import DropDown from "../../components/DropDown";
 
 const STYLE_INPUTTEXT = "form-control mb-2 ";
 const STYLE_INVALID = "is-invalid";
 const STYLE_VALID = "is-valid";
 
 const Stage5 = (props) => {
-
   const { authentication, bookings, passengers } = Store.getState();
   const address = props.address || "";
   const dateOfBirth = props.dateOfBirth || "";
@@ -48,7 +47,7 @@ const Stage5 = (props) => {
   // Address
   const validateAndSetAddress = (value) => {
     props.onAddress(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Address cannot be empty.");
       setValidAddress("FALSE");
     } else {
@@ -60,7 +59,7 @@ const Stage5 = (props) => {
   // DateOfBirth
   const validateAndSetDateOfBirth = (value) => {
     props.onDateOfBirth(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Date Of Birth cannot be empty.");
       setValidDateOfBirth("FALSE");
     } else {
@@ -72,10 +71,10 @@ const Stage5 = (props) => {
   // First Name
   const validateAndSetFirstName = (value) => {
     props.onFirstName(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("First name cannot be empty.");
       setValidFirstName("FALSE");
-    } else if(value.length > 100) {
+    } else if (value.length > 100) {
       setErrorMessage("First name cannot be longer than 100 characters.");
       setValidFirstName("FALSE");
     } else {
@@ -87,7 +86,7 @@ const Stage5 = (props) => {
   // FlightId
   const validateAndSetFlightId = (value) => {
     props.onFlightId(value);
-    if(value === 0) {
+    if (value === 0) {
       setErrorMessage("FlightId cannot be 0.");
       setValidFlightId("FALSE");
     } else {
@@ -99,10 +98,10 @@ const Stage5 = (props) => {
   // Last Name
   const validateAndSetLastName = (value) => {
     props.onLastName(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Last name cannot be empty.");
       setValidLastName("FALSE");
-    } else if(value.length > 100) {
+    } else if (value.length > 100) {
       setErrorMessage("Last name cannot be longer than 100 characters.");
       setValidLastName("FALSE");
     } else {
@@ -114,10 +113,10 @@ const Stage5 = (props) => {
   // Email
   const validateAndSetEmail = (value) => {
     props.onEmail(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Email cannot be empty.");
       setValidEmail("FALSE");
-    } else if(!new RegExp("^(.+)@(.+)$").test(value)) {
+    } else if (!new RegExp("^(.+)@(.+)$").test(value)) {
       setErrorMessage("Invalid Email Address.");
       setValidEmail("FALSE");
     } else {
@@ -129,7 +128,7 @@ const Stage5 = (props) => {
   // PassportId
   const validateAndSetPassportId = (value) => {
     props.onPassportId(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("PassportId cannot be empty.");
       setValidPassportId("FALSE");
     } else {
@@ -141,10 +140,12 @@ const Stage5 = (props) => {
   // Phone
   const validateAndSetPhone = (value) => {
     props.onPhone(value);
-    if(value.trim().length === 0) {
+    if (value.trim().length === 0) {
       setErrorMessage("Phone cannot be empty.");
       setValidPhone("FALSE");
-    } else if(!new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)) {
+    } else if (
+      !new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)
+    ) {
       setErrorMessage("Invalid Phone Number.");
       setValidPhone("FALSE");
     } else {
@@ -164,21 +165,26 @@ const Stage5 = (props) => {
     validateAndSetPassportId(passportId);
     validateAndSetPhone(phone);
 
-    const validBookingInformation = authentication.userId || (validEmail && validPhone);
-    if(!validBookingInformation) {
-      setErrorMessage("You must login or provide a valid email & phone number.");
+    const validBookingInformation =
+      authentication.userId || (validEmail && validPhone);
+    if (!validBookingInformation) {
+      setErrorMessage(
+        "You must login or provide a valid email & phone number."
+      );
     }
 
-    if(validBookingInformation &&
+    if (
+      validBookingInformation &&
       validAddress === "TRUE" &&
       validDateOfBirth === "TRUE" &&
       validFirstName === "TRUE" &&
       validLastName === "TRUE" &&
-      validPassportId  === "TRUE") {
-      
+      validPassportId === "TRUE"
+    ) {
       const newBooking = {};
-      if(authentication.userId) newBooking.bookingUserId = authentication.userId;
-      if(validEmail && validPhone) {
+      if (authentication.userId)
+        newBooking.bookingUserId = authentication.userId;
+      if (validEmail && validPhone) {
         newBooking.bookingGuestEmail = email;
         newBooking.bookingGuestPhone = phone;
       }
@@ -189,26 +195,23 @@ const Stage5 = (props) => {
   return (
     <div className={props.className || ""} justify="around" style={props.style}>
       <div class="row">
-
         {/* Card */}
         <div className="w-100 card p-2 mt-3 ml-auto mr-auto">
-
           {/* Header */}
           <h2 className="card-title">Confirm Booking</h2>
           <hr className="w-100 mt-0"></hr>
 
           {/* Body */}
           <div className="card-body">
-
             {/* Error */}
-            {(errorMessage || bookings.create.results.error) &&
-            <ErrorMessage className="bg-warning mb-3 p-2 text-white rounded">
-              {errorMessage || bookings.create.results.error}
-            </ErrorMessage>
-            }
+            {(errorMessage || bookings.create.results.error) && (
+              <ErrorMessage className="bg-warning mb-3 p-2 text-white rounded">
+                {errorMessage || bookings.create.results.error}
+              </ErrorMessage>
+            )}
 
             {/* Pending */}
-            {bookings.create.resultsStatus === "PENDING" &&
+            {bookings.create.resultsStatus === "PENDING" && (
               <FlexColumn>
                 <h3 className="text-dark kit-text-shadow-thin">
                   Verifying Booking . . .
@@ -217,10 +220,10 @@ const Stage5 = (props) => {
                   <div className="spinner-border ml-2" />
                 </FlexRow>
               </FlexColumn>
-            }
+            )}
 
             {/* Success */}
-            {bookings.create.resultsStatus === "SUCCESS" &&
+            {bookings.create.resultsStatus === "SUCCESS" && (
               <FlexColumn>
                 <h3 className="text-success kit-text-shadow-thin">
                   Booking Confirmed!
@@ -231,26 +234,27 @@ const Stage5 = (props) => {
 
                 {/* Close Button */}
                 <FlexRow className="w-100">
-                  <button className="btn btn-dark btn-lg"
+                  <button
+                    className="btn btn-dark btn-lg"
                     onClick={() => setRedirectToHome(true)}
                   >
                     Close
                   </button>
                 </FlexRow>
               </FlexColumn>
-            }
+            )}
 
             {/* Default */}
-            {bookings.create.resultsStatus !== "SUCCESS" &&
+            {bookings.create.resultsStatus !== "SUCCESS" && (
               <div className="row">
-
                 {/* FirstName */}
                 <div className="col-12 col-sm-6">
                   <label className="form-label">First Name</label>
                   <input
                     className={
                       STYLE_INPUTTEXT +
-                      (validFirstName === "TRUE" && STYLE_VALID) + " " +
+                      (validFirstName === "TRUE" && STYLE_VALID) +
+                      " " +
                       (validFirstName === "FALSE" && STYLE_INVALID)
                     }
                     type="text"
@@ -265,7 +269,8 @@ const Stage5 = (props) => {
                   <input
                     className={
                       STYLE_INPUTTEXT +
-                      (validLastName === "TRUE" && STYLE_VALID) + " " +
+                      (validLastName === "TRUE" && STYLE_VALID) +
+                      " " +
                       (validLastName === "FALSE" && STYLE_INVALID)
                     }
                     type="text"
@@ -280,7 +285,8 @@ const Stage5 = (props) => {
                   <input
                     className={
                       STYLE_INPUTTEXT +
-                      (validEmail === "TRUE" && STYLE_VALID) + " " +
+                      (validEmail === "TRUE" && STYLE_VALID) +
+                      " " +
                       (validFirstName === "FALSE" && STYLE_INVALID)
                     }
                     type="text"
@@ -295,7 +301,8 @@ const Stage5 = (props) => {
                   <input
                     className={
                       STYLE_INPUTTEXT +
-                      (validEmail === "TRUE" && STYLE_VALID) + " " +
+                      (validEmail === "TRUE" && STYLE_VALID) +
+                      " " +
                       (validFirstName === "FALSE" && STYLE_INVALID)
                     }
                     type="text"
@@ -310,7 +317,8 @@ const Stage5 = (props) => {
                   <input
                     className={
                       STYLE_INPUTTEXT +
-                      (validEmail === "TRUE" && STYLE_VALID) + " " +
+                      (validEmail === "TRUE" && STYLE_VALID) +
+                      " " +
                       (validFirstName === "FALSE" && STYLE_INVALID)
                     }
                     type="text"
@@ -325,7 +333,8 @@ const Stage5 = (props) => {
                   <input
                     className={
                       STYLE_INPUTTEXT +
-                      (validEmail === "TRUE" && STYLE_VALID) + " " +
+                      (validEmail === "TRUE" && STYLE_VALID) +
+                      " " +
                       (validFirstName === "FALSE" && STYLE_INVALID)
                     }
                     type="text"
@@ -360,16 +369,18 @@ const Stage5 = (props) => {
 
                 {/* Veteran Status */}
                 <FlexRow className="col-12 mt-4" wrap="no-wrap">
-                  <FlexRow justify="start" style={{width:"2rem"}}>
+                  <FlexRow justify="start" style={{ width: "2rem" }}>
                     <input
                       className="form-check-input ml-1"
-                      style={{height:"1.5rem", width:"1.5rem"}}
+                      style={{ height: "1.5rem", width: "1.5rem" }}
                       type="checkbox"
                       checked={isVeteran}
                       onChange={() => props.onIsVeteran(!isVeteran)}
                     />
                   </FlexRow>
-                  <span className="ml-1">U.S. Military Active Duty / Veteran.</span>
+                  <span className="ml-1">
+                    U.S. Military Active Duty / Veteran.
+                  </span>
                 </FlexRow>
 
                 {/* Divider */}
@@ -377,22 +388,20 @@ const Stage5 = (props) => {
 
                 {/* Confirm Button */}
                 <FlexRow className="w-100">
-                  <button className="btn btn-success btn-lg text-white kit-border-shadow-thin"
+                  <button
+                    className="btn btn-success btn-lg text-white kit-border-shadow-thin"
                     onClick={() => handleSubmit()}
                   >
                     Confirm
                   </button>
                 </FlexRow>
               </div>
-            }
+            )}
           </div>
-        </div> {/* Card End */}
-
+        </div>{" "}
+        {/* Card End */}
         {/* Redirects */}
-        {redirectToHome &&
-          <Redirect to={Constants.pagePaths.home} />
-        }
-
+        {redirectToHome && <Redirect to={Constants.pagePaths.home} />}
       </div>
     </div>
   );

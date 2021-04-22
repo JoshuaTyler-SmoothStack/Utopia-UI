@@ -30,7 +30,7 @@ const UserProfilePage = (props) => {
   const [userEmail, setUserEmail] = useState('');
   const [isProfileUpdating, setIsProfileUpdating] = useState(true);
 
-  useEffect((e) => {
+  useEffect(() => {
     if (isProfileUpdating && users.status !== "PENDING") {
       AuthenticationDispatcher.getUserById(authentication.userId)
         .then(res => {
@@ -42,7 +42,7 @@ const UserProfilePage = (props) => {
           console.log("error: " + error.response);
         });
     }
-  }, [isProfileUpdating, users]);
+  }, [authentication, isProfileUpdating, users]);
 
   return (
     <div className="container-fluid" style={{ minHeight: "100vh" }}>

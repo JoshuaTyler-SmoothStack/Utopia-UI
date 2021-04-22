@@ -5,13 +5,12 @@ import Store from "../../reducers/Store";
 // Components
 import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
-import UsersDispatcher from '../../dispatchers/UsersDispatcher';
-import ErrorMessage from '../../components/ErrorMessage';
+import UsersDispatcher from "../../dispatchers/UsersDispatcher";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const ZINDEX_DEFAULT = 2;
 
 const UpdateUserProfile = (props) => {
-
   const userFirstName = props.userFirstName || "";
   const userLastName = props.userLastName || "";
   const userPhone = props.userPhone || "";
@@ -21,21 +20,18 @@ const UpdateUserProfile = (props) => {
   const [validEmail, setValidEmail] = useState("");
   const [validPhone, setValidPhone] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [validPassword, setValidPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
+  // const [validPassword, setValidPassword] = useState("");
+  // const [showPassword, setShowPassword] = useState(false);
 
   const STYLE_INPUTTEXT = "form-control mb-2 ";
   const STYLE_INVALID = "is-invalid";
   const STYLE_VALID = "is-valid";
 
-  const { authentication, users } = Store.getState();
-
+  const { authentication } = Store.getState();
 
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
-
 
   const validateAndSetFirstName = (value) => {
     props.onUserFirstName(value);
@@ -87,7 +83,9 @@ const UpdateUserProfile = (props) => {
     if (value.trim().length === 0) {
       setErrorMessage("Phone cannot be empty.");
       setValidPhone("FALSE");
-    } else if (!new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)) {
+    } else if (
+      !new RegExp("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$").test(value)
+    ) {
       setErrorMessage("Invalid Phone Number.");
       setValidPhone("FALSE");
     } else {
@@ -102,20 +100,20 @@ const UpdateUserProfile = (props) => {
     validateAndSetLastName(userLastName);
     validateAndSetEmail(userEmail);
     validateAndSetPhone(userPhone);
-    if (validFirstName === "TRUE" &&
+    if (
+      validFirstName === "TRUE" &&
       validLastName === "TRUE" &&
       validEmail === "TRUE" &&
-      validPhone === "TRUE") {
+      validPhone === "TRUE"
+    ) {
       const newUser = {
-        userFirstName: userFirstName,
-        userLastName: userLastName,
-        userEmail: userEmail,
-        userPhone: userPhone,
-      }
+        userFirstName,
+        userLastName,
+        userEmail,
+        userPhone,
+      };
 
-      UsersDispatcher.onEdit(
-        `/${authentication.userId}`, newUser
-      );
+      UsersDispatcher.onEdit(`/${authentication.userId}`, newUser);
       props.onClose();
     }
   }
@@ -128,11 +126,8 @@ const UpdateUserProfile = (props) => {
       zIndex={zIndex}
       onClose={props.onClose}
     >
-
-
       {/* Content */}
       <div className={"col-12 col-sm-10 col-md-8 col-lg-6 m-auto"}>
-
         {/* Card */}
         <div className="card p-2 mt-3 ml-auto mr-auto">
           <FlexRow>
@@ -163,25 +158,23 @@ const UpdateUserProfile = (props) => {
 
           {/* Body */}
           <div className="card-body">
-
             {/*eError*/}
-            {errorMessage &&
+            {errorMessage && (
               <ErrorMessage className="bg-warning h5 text-center text-white mb-3 p-2 rounded">
                 {errorMessage}
               </ErrorMessage>
-            }
-
+            )}
 
             {/* Default */}
             <form name="form d-flex flex-column justify-content-center align-items-center">
-
               {/* First Name */}
               <div className="mr-auto">
                 <label className="form-label">First Name</label>
                 <input
                   className={
                     STYLE_INPUTTEXT +
-                    (validFirstName === "TRUE" && STYLE_VALID) + " " +
+                    (validFirstName === "TRUE" && STYLE_VALID) +
+                    " " +
                     (validFirstName === "FALSE" && STYLE_INVALID)
                   }
                   type="text"
@@ -196,7 +189,8 @@ const UpdateUserProfile = (props) => {
                 <input
                   className={
                     STYLE_INPUTTEXT +
-                    (validLastName === "TRUE" && STYLE_VALID) + " " +
+                    (validLastName === "TRUE" && STYLE_VALID) +
+                    " " +
                     (validLastName === "FALSE" && STYLE_INVALID)
                   }
                   type="text"
@@ -211,7 +205,8 @@ const UpdateUserProfile = (props) => {
                 <input
                   className={
                     STYLE_INPUTTEXT +
-                    (validEmail === "TRUE" && STYLE_VALID) + " " +
+                    (validEmail === "TRUE" && STYLE_VALID) +
+                    " " +
                     (validEmail === "FALSE" && STYLE_INVALID)
                   }
                   type="email"
@@ -226,7 +221,8 @@ const UpdateUserProfile = (props) => {
                 <input
                   className={
                     STYLE_INPUTTEXT +
-                    (validPhone === "TRUE" && STYLE_VALID) + " " +
+                    (validPhone === "TRUE" && STYLE_VALID) +
+                    " " +
                     (validPhone === "FALSE" && STYLE_INVALID)
                   }
                   type="tel"
@@ -237,17 +233,21 @@ const UpdateUserProfile = (props) => {
               </div>
               <FlexRow className="col-12 p-2">
                 {/* Save */}
-                <button className="btn btn-success ml-2 text-black " onClick={(e) => handleSubmit(e)}> Save</button>
+                <button
+                  className="btn btn-success ml-2 text-black "
+                  onClick={(e) => handleSubmit(e)}
+                >
+                  {" "}
+                  Save
+                </button>
               </FlexRow>
             </form>
             <FlexRow />
           </div>
         </div>
       </div>
-
     </Modal>
   );
 };
-
 
 export default UpdateUserProfile;

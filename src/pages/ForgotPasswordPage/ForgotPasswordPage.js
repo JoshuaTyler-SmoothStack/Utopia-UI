@@ -14,8 +14,6 @@ import ErrorMessage from '../../components/ErrorMessage';
 const ForgotPasswordPage = (props) => {
 
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [validateEmail, setValidateEmail] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -26,9 +24,8 @@ const ForgotPasswordPage = (props) => {
     history.push(Constants.pagePaths.home);
   }
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
     setErrorMessage("");
     if (!email) {
       setErrorMessage("An email is required.");
@@ -39,7 +36,7 @@ const ForgotPasswordPage = (props) => {
     if (!regexEmailValidation.test(email)) {
       setErrorMessage("");
       setErrorMessage("Invalid Email format");
-      return setValidateEmail(false);
+      return;
     }
 
     setLoading(true);
@@ -57,7 +54,7 @@ const ForgotPasswordPage = (props) => {
             : "Unexpected error occured"
         );
       });
-  }
+  };
 
   return (
     <div className="container-fluid kit-bg-blue" style={{ minHeight: "100vh" }}>

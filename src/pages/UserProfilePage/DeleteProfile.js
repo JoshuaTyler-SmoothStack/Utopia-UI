@@ -15,9 +15,9 @@ const ZINDEX_DEFAULT = 2;
 const DeleteProfile = (props) => {
 
   const [redirect, setRedirect] = useState(false);
-  const { authentication, users } = Store.getState();
   const [isDeleted, setIsDeleted] = useState(false);
 
+  const { authentication  } = Store.getState();
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;

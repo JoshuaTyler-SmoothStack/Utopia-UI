@@ -51,7 +51,7 @@ class FlightsDebug extends Component {
       >
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
-          <div className="row mt-1">
+          <div className="row p-2">
 
             {/* Search Bar */}
             <div className="col-12 col-md-5">

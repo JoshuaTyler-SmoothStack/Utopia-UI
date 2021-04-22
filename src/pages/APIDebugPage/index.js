@@ -15,7 +15,7 @@ import NavBar from "../../componentgroups/NavBar";
 class APIDebugPage extends Component {
   constructor(props) {
     super(props);
-    this.navbar = React.createRef()
+    this.navbar = React.createRef();
     this.state = {
       activeDisplay: "AIRPLANES",
     };
@@ -26,22 +26,21 @@ class APIDebugPage extends Component {
     return (
       <div className="container-fluid">
         <div className="row">
-          
           {/* Navbar */}
           <NavBar className="col-12" />
 
           {/* Siderbar */}
           <LocalSidebar
-            className={"col-4 col-md-2 p-0"} 
-            style={{position:"absolute", zIndex:"1", top:"4rem"}}
-            activeDisplay={activeDisplay} 
-            onSelectDisplay={(e) => this.setState({activeDisplay: e})}
-            onToggle={(e) => this.setState({isActive_Sidebar: e})}
+            className={"col-4 col-md-2 col-xl-1 p-0"}
+            style={{ position: "absolute", zIndex: "1", top: "4rem" }}
+            activeDisplay={activeDisplay}
+            onSelectDisplay={(e) => this.setState({ activeDisplay: e })}
+            onToggle={(e) => this.setState({ isActive_Sidebar: e })}
           />
 
           {/* Content */}
-          <div className="col-0 col-md-2 bg-dark"/>
-          <div className="col-12 col-md-10">
+          <div className="col-0 col-md-2 col-xl-1 bg-dark" />
+          <div className="col-12 col-md-10 col-xl-11">
             {/* Debug Displays */}
             {activeDisplay === "AIRPLANES" && <AirplanesDebug/>}
             {activeDisplay === "AIRPORTS" && <AirportsDebug/>}

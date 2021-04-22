@@ -13,7 +13,6 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
-import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class AirplanesDebug extends Component {
@@ -39,7 +38,6 @@ class AirplanesDebug extends Component {
 
     // Search Results vars
     const searchError = airplanes.search.error;
-    const searchFilters = airplanes.search.filters;
     const searchResults = airplanes.search.results;
 
     return (
@@ -209,7 +207,7 @@ class AirplanesDebug extends Component {
           <tr key={index}>
             <th scrop="row">{index}</th>
             <td>{airplaneId}</td>
-            <td>{airplanesList[i].airplaneTypeId}</td>
+            <td>{airplanesList[i].airplaneType.airplaneTypeId}</td>
 
             {/* Edit */}
             <td>

@@ -13,7 +13,6 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
-import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class AirportsDebug extends Component {
@@ -41,7 +40,6 @@ class AirportsDebug extends Component {
 
     // Search Results vars
     const searchError = airports.search.error;
-    const searchFilters = airports.search.filters;
     const searchResults = airports.search.results;
 
     return (
