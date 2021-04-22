@@ -54,7 +54,7 @@ class FlightsDebug extends Component {
           <div className="row p-2">
 
             {/* Search Bar */}
-            <div className="col-12 col-md-5">
+            <div className="col-12">
               {/* Search */}
               <FlexRow className="mt-1" justify="end" wrap="no-wrap">
                 <input

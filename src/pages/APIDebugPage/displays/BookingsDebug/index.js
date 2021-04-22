@@ -239,7 +239,7 @@ class BookingsDebug extends Component {
     const bookingsTable = [];
     if (!bookingsList.length) bookingsList = [bookingsList];
     for (let i = resultsStart; i < resultsStart + resultsDisplayed && i < bookingsList.length; i++) {
-      
+
       const bookingId = bookingsList[i].bookingId;
       if (bookingId) {
         const index = Number(i) + 1;

@@ -19,13 +19,14 @@ class AirplanesDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isAdditionalInfoActive: false,
       searchTerms: "",
     };
   }
 
   render() {
     const { airplanes } = Store.getState();
-    const { searchTerms } = this.state;
+    const { isAdditionalInfoActive, searchTerms } = this.state;
 
     // Microservice Status
     const airplanesMSHealth = airplanes.health;
@@ -88,6 +89,31 @@ class AirplanesDebug extends Component {
 
           {/* Resuts Count & Page Selection */}
           <div className="row justify-content-center pb-1">
+
+            {/* Toggle Reference Data */}
+            <FlexRow
+              className="col-auto p-0 bg-dark rounded mt-2"
+              wrap={"no-wrap"}
+            >
+              <button
+                className={
+                  "btn text-white " + (isAdditionalInfoActive && "btn-success")
+                }
+                onClick={() => this.handleIncludeAdditionalInfo(true)}
+              >
+                Show More Info
+              </button>
+              <button
+                className={
+                  "btn text-white " + (!isAdditionalInfoActive && "btn-success")
+                }
+                onClick={() => this.handleIncludeAdditionalInfo(false)}
+              >
+                Hide
+              </button>
+            </FlexRow>
+
+            {/* DropDown */}
             <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
@@ -98,6 +124,7 @@ class AirplanesDebug extends Component {
               />
             </FlexColumn>
 
+            {/* Readout */}
             <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
                 currentPage={airplanes.search.resultsPage}
@@ -106,6 +133,7 @@ class AirplanesDebug extends Component {
               />
             </FlexColumn>
 
+            {/* Pagination */}
             <FlexColumn className="col-auto text-center mt-2">
               <Pagination
                 currentPage={airplanes.search.resultsPage}
@@ -187,8 +215,13 @@ class AirplanesDebug extends Component {
     AirplanesDispatcher.onRequest();
   }
 
+  handleIncludeAdditionalInfo = (isActive) => {
+    this.setState({ isAdditionalInfoActive: isActive });
+  };
+
   handleRenderAirplanesList = (airplanesList) => {
     const { airplanes } = Store.getState();
+    const { isAdditionalInfoActive } = this.state;
     const resultsDisplayed = Number(airplanes.search.resultsPerPage);
     const resultsStart =
       airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1);
@@ -207,7 +240,9 @@ class AirplanesDebug extends Component {
           <tr key={index}>
             <th scrop="row">{index}</th>
             <td>{airplaneId}</td>
-            <td>{airplanesList[i].airplaneType.airplaneTypeId}</td>
+            <td>{airplanesList[i].airplaneType.airplaneTypeName}</td>
+            {isAdditionalInfoActive && <td>{airplanesList[i].airplaneType.airplaneTypeId}</td>}
+            {isAdditionalInfoActive && <td>{airplanesList[i].airplaneType.airplaneTypeCapacity}</td>}
 
             {/* Edit */}
             <td>
@@ -244,7 +279,9 @@ class AirplanesDebug extends Component {
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
-              <th scope="col">Type ID</th>
+              <th scope="col">Type</th>
+              {isAdditionalInfoActive && <th scope="col">Type ID</th>}
+              {isAdditionalInfoActive && <th scope="col">Capacity</th>}
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
@@ -261,7 +298,7 @@ class AirplanesDebug extends Component {
           <tbody>
             {airplanesTable}
             <tr>
-              <td colSpan="5"></td>
+              <td colSpan={isAdditionalInfoActive ? "7" : "5"}></td>
               {/* Space at end of table for aesthetic */}
             </tr>
           </tbody>
