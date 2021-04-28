@@ -10,20 +10,23 @@ import FlexRow from "../../../../components/FlexRow";
 const DeleteView = () => {
   const { airplanes } = Store.getState();
 
-  const resultsStatus = airplanes.delete.resultsStatus;
+  const { resultsStatus, status } = airplanes.delete;
   const selectedAirplane = airplanes.selected;
-  const status = airplanes.delete.status;
 
-  return(
+  return (
     <FlexColumn>
-      {status === "PENDING" && 
+      {status === "PENDING" && (
         <FlexColumn className="mt-5">
           {/* Change Readout */}
-          <ChangeOperationReadout 
-            className="m-1" 
-            style={{minHeight: "4rem"}} 
-            name="Airplane" 
-            result={resultsStatus === "SUCCESS" ? "Successfully Deleted" : "Failed To Delete"}
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Airplane"
+            result={
+              resultsStatus === "SUCCESS"
+                ? "Successfully Deleted"
+                : "Failed To Delete"
+            }
             status={resultsStatus}
           />
 
@@ -32,7 +35,8 @@ const DeleteView = () => {
 
           {/* Button */}
           <FlexRow>
-            <button className="btn btn-light m-3"
+            <button
+              className="btn btn-light m-3"
               onClick={() => {
                 AirplanesDispatcher.onCancel();
                 AirplanesDispatcher.onRequest();
@@ -42,41 +46,54 @@ const DeleteView = () => {
             </button>
           </FlexRow>
         </FlexColumn>
-      }
+      )}
 
-      {status !== "PENDING" &&
+      {status !== "PENDING" && (
         <FlexColumn>
           {/* Airplane */}
           <FlexColumn>
             <FlexRow>
               <div className="mt-3">
                 <label className="form-label">Airplane ID</label>
-                <input type="text" readOnly className="form-control" value={selectedAirplane.airplaneId}/>
+                <input
+                  type="text"
+                  readOnly
+                  className="form-control"
+                  value={selectedAirplane.airplaneId}
+                />
               </div>
               <div className="mt-3 ml-3">
                 <label className="form-label">Type ID</label>
-                <input type="text" readOnly className="form-control" value={selectedAirplane.airplaneTypeId}/>
+                <input
+                  type="text"
+                  readOnly
+                  className="form-control"
+                  value={selectedAirplane.airplaneType ? selectedAirplane.airplaneType.airplaneTypeId : "unkown"}
+                />
               </div>
             </FlexRow>
           </FlexColumn>
-          
 
           {/* Buttons */}
           <FlexRow>
-            <button className="btn btn-light m-3"
+            <button
+              className="btn btn-light m-3"
               onClick={() => AirplanesDispatcher.onCancel()}
             >
               Cancel
             </button>
-            <button className="btn btn-primary m-3"
-              onClick={() => AirplanesDispatcher.onDelete("/" + selectedAirplane.airplaneId)}
+            <button
+              className="btn btn-primary m-3"
+              onClick={() =>
+                AirplanesDispatcher.onDelete("/" + selectedAirplane.airplaneId)
+              }
             >
               Confirm Delete (cannot be undone)
             </button>
           </FlexRow>
         </FlexColumn>
-      }
+      )}
     </FlexColumn>
   );
-}
+};
 export default DeleteView;
