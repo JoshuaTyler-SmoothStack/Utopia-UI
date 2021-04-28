@@ -1,29 +1,35 @@
 // Libraries
 import _ from "lodash";
-import React, { useState } from 'react';
-import Store from '../../../../reducers/Store';
+import React, { useState } from "react";
+import Store from "../../../../reducers/Store";
 import FlightsDispatcher from "../../../../dispatchers/FlightsDispatcher";
-import KitUtils from '../../../../kitutils/KitUtils';
-import moment from 'moment';
+import KitUtils from "../../../../kitutils/KitUtils";
+import moment from "moment";
 
 // Components
-import ChangeOperationReadout from '../ChangeOperationReadout';
+import ChangeOperationReadout from "../ChangeOperationReadout";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 
-
 const EditView = (props) => {
-
   const { flights } = Store.getState();
   const selectedFlight = flights.selected;
 
   const selectedHours = Math.floor(selectedFlight.flightDuration / 3600);
-  const selectedMinutes = Math.floor(selectedFlight.flightDuration % 3600 / 60);
-  const selectedDateTime = selectedFlight.flightDepartureTime.split('.')[0];
-  
-  const [flightAirplaneId, setAirplaneId] = useState(selectedFlight.flightAirplane.airplaneId);
-  const [flightSeatingId, setSeatingId] = useState(selectedFlight.flightSeatingId);
-  const [flightRouteId, setRouteId] = useState(selectedFlight.flightRoute.routeId);
+  const selectedMinutes = Math.floor(
+    (selectedFlight.flightDuration % 3600) / 60
+  );
+  const selectedDateTime = selectedFlight.flightDepartureTime.split(".")[0];
+
+  const [flightAirplaneId, setAirplaneId] = useState(
+    selectedFlight.flightAirplane.airplaneId
+  );
+  const [flightSeatingId, setSeatingId] = useState(
+    selectedFlight.flightSeatingId
+  );
+  const [flightRouteId, setRouteId] = useState(
+    selectedFlight.flightRoute.routeId
+  );
   const [flightDepartureTime, setDateTime] = useState(selectedDateTime);
   const [hours, setHours] = useState(selectedHours);
   const [minutes, setMinutes] = useState(selectedMinutes);
@@ -31,14 +37,14 @@ const EditView = (props) => {
   const [isReverted, setIsReverted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const results = flights.edit.results
-  const resultsStatus = flights.edit.resultsStatus;
+  const { results, resultsStatus } = flights.edit;
   const status = flights.edit.status;
 
   const dateTimeNow = moment().utc().format("YYYY-MM-DDTHH:mm");
 
   const flightAirplaneIdChanged = results.flightId
-    ? selectedFlight.flightAirplane.airplaneId !== results.flightAirplane.airplaneId
+    ? selectedFlight.flightAirplane.airplaneId !==
+      results.flightAirplane.airplaneId
     : true;
   const flightSeatingIdChanged = results.flightId
     ? selectedFlight.flightSeatingId !== results.flightSeatingId
@@ -61,31 +67,33 @@ const EditView = (props) => {
 
   const handleValidate = () => {
     setIsSubmitted(true);
-    if(!flightAirplaneId) return false;
-    if(!flightSeatingId) return false;
-    if(!flightRouteId) return false;
-    if(!flightDepartureTime) return false;
-    if(!hours) return false;
-    if(!minutes) return false;
+    if (!flightAirplaneId) return false;
+    if (!flightSeatingId) return false;
+    if (!flightRouteId) return false;
+    if (!flightDepartureTime) return false;
+    if (!hours) return false;
+    if (!minutes) return false;
     return true;
   };
 
   const handleSubmit = () => {
-    if(!handleValidate()) return;
-    const flightDuration = (hours * 3600) + (minutes * 60) ;
-    var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
-    
+    if (!handleValidate()) return;
+    const flightDuration = hours * 3600 + minutes * 60;
+    const formattedDate = moment(flightDepartureTime)
+      .format("YYYY-MM-DD HH:mm:ss")
+      .toString();
+
     const newFlight = {
+      flightAirplaneId,
+      flightSeatingId,
+      flightRouteId,
+      flightDuration,
+      flightStatus,
       flightId: selectedFlight.flightId,
-      flightAirplaneId : flightAirplaneId,
-      flightSeatingId : flightSeatingId,
-      flightRouteId : flightRouteId,
-      flightDepartureTime : formattedDate,
-      flightDuration : flightDuration,
-      flightStatus: flightStatus
+      flightDepartureTime: formattedDate,
     };
 
-    if(!_.isEqual(selectedFlight, newFlight)) {
+    if (!_.isEqual(selectedFlight, newFlight)) {
       FlightsDispatcher.onEdit(null, newFlight);
     } else {
       FlightsDispatcher.onEditFake(newFlight);
@@ -94,59 +102,61 @@ const EditView = (props) => {
 
   return (
     <FlexColumn>
+      {(status === "PENDING" || status === "ERROR") && (
+        <FlexColumn className="mt-5">
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Airplane ID"
+            result={
+              results.flightId ? results.flightAirplane.airplaneId : ". . ."
+            }
+            status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"}
+          />
 
-      {(status === "PENDING" || status === "ERROR") && 
-      <FlexColumn className="mt-5">
-        <ChangeOperationReadout 
-          className="m-1" 
-          style={{minHeight: "4rem"}} 
-          name="Airplane ID" 
-          result={results.flightId ? results.flightAirplane.airplaneId : ". . ."}
-          status={flightAirplaneIdChanged ? resultsStatus : "DISABLED"} 
-        />
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Seating ID"
+            result={results.flightId ? results.flightSeatingId : ". . ."}
+            status={flightSeatingIdChanged ? resultsStatus : "DISABLED"}
+          />
 
-        <ChangeOperationReadout 
-          className="m-1" 
-          style={{minHeight: "4rem"}} 
-          name="Seating ID" 
-          result={results.flightId ? results.flightSeatingId : ". . ."}
-          status={flightSeatingIdChanged ? resultsStatus : "DISABLED"} 
-        />
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Route ID"
+            result={results.flightId ? results.flightRoute.routeId : ". . ."}
+            status={flightRouteIdChanged ? resultsStatus : "DISABLED"}
+          />
 
-        <ChangeOperationReadout 
-          className="m-1" 
-          style={{minHeight: "4rem"}} 
-          name="Route ID" 
-          result={results.flightId ? results.flightRoute.routeId : ". . ."}
-          status={flightRouteIdChanged ? resultsStatus : "DISABLED"} 
-        />
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Duration"
+            result={results.flightId ? results.flightDuration : ". . ."}
+            status={flightDurationChanged ? resultsStatus : "DISABLED"}
+          />
 
-        <ChangeOperationReadout 
-          className="m-1" 
-          style={{minHeight: "4rem"}} 
-          name="Duration" 
-          result={results.flightId ? results.flightDuration : ". . ."}
-          status={flightDurationChanged ? resultsStatus : "DISABLED"} 
-        />
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Departure"
+            result={results.flightId ? results.flightDepartureTime : ". . ."}
+            status={flightDepartureTimeChanged ? resultsStatus : "DISABLED"}
+          />
 
-        <ChangeOperationReadout 
-          className="m-1" 
-          style={{minHeight: "4rem"}} 
-          name="Departure" 
-          result={results.flightId ? results.flightDepartureTime : ". . ."}
-          status={flightDepartureTimeChanged ? resultsStatus : "DISABLED"} 
-        />
+          <ChangeOperationReadout
+            className="m-1"
+            style={{ minHeight: "4rem" }}
+            name="Status"
+            result={results.flightId ? results.flightStatus : ". . ."}
+            status={flightStatusChanged ? resultsStatus : "DISABLED"}
+          />
 
-        <ChangeOperationReadout 
-          className="m-1" 
-          style={{minHeight: "4rem"}} 
-          name="Status" 
-          result={results.flightId ? results.flightStatus : ". . ."}
-          status={flightStatusChanged ? resultsStatus : "DISABLED"} 
-        />
-
-        <FlexRow>
-            <button className="btn btn-light m-3"
+          <FlexRow>
+            <button
+              className="btn btn-light m-3"
               onClick={() => {
                 FlightsDispatcher.onCancel();
                 FlightsDispatcher.onRequest();
@@ -154,116 +164,150 @@ const EditView = (props) => {
             >
               Close
             </button>
-            
-            {(status !== "ERROR" && noChangesMade && !isReverted) &&
-              <button className={"btn btn-danger m-3 disabled"}
+
+            {status !== "ERROR" && noChangesMade && !isReverted && (
+              <button
+                className={"btn btn-danger m-3 disabled"}
                 onClick={() => KitUtils.soundAlert()}
               >
                 {"Revert Changes (no changes made)"}
-              </button>}
+              </button>
+            )}
 
-
-            {(status !== "ERROR" && !noChangesMade && !isReverted) &&
-              <button className={"btn btn-danger m-3" + (!resultsPending || " disabled")}
-                onClick={resultsPending 
-                  ? () => KitUtils.soundSuccess() 
-                  : () => {
-                    FlightsDispatcher.onEdit(null, selectedFlight);
-                    setIsReverted(true);
-                  }
+            {status !== "ERROR" && !noChangesMade && !isReverted && (
+              <button
+                className={
+                  "btn btn-danger m-3" + (!resultsPending || " disabled")
+                }
+                onClick={
+                  resultsPending
+                    ? () => KitUtils.soundSuccess()
+                    : () => {
+                        FlightsDispatcher.onEdit(null, selectedFlight);
+                        setIsReverted(true);
+                      }
                 }
               >
-                {resultsPending ? "Revert Changes (please wait)" : "Revert Changes"}
+                {resultsPending
+                  ? "Revert Changes (please wait)"
+                  : "Revert Changes"}
               </button>
-            }
-        </FlexRow>
-      </FlexColumn>
-    }
+            )}
+          </FlexRow>
+        </FlexColumn>
+      )}
 
-
-    {(status !== "ERROR" && status !== "PENDING") &&
-    <FlexColumn>
-      {/* Flight */}
-      <FlexColumn>
-      <FlexRow>
-              <div className="mt-3" style={{width:"14rem"}}>
+      {status !== "ERROR" && status !== "PENDING" && (
+        <FlexColumn>
+          {/* Flight */}
+          <FlexColumn>
+            <FlexRow>
+              <div className="mt-3" style={{ width: "14rem" }}>
                 <label className="form-label">Flight ID</label>
-                <input 
+                <input
                   className={"form-control"}
                   value={selectedFlight.flightId}
                   type="number"
                   readOnly
                 />
               </div>
-              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+              <div className="mt-3 ml-3" style={{ width: "14rem" }}>
                 <label className="form-label">Airplane ID</label>
-                <input 
-                  className={"form-control " +  (isSubmitted ? !flightAirplaneId ? "is-invalid" : "is-valid" : "")} 
+                <input
+                  className={
+                    "form-control " +
+                    (isSubmitted
+                      ? !flightAirplaneId
+                        ? "is-invalid"
+                        : "is-valid"
+                      : "")
+                  }
                   defaultValue={flightAirplaneId}
                   placeholder="Number"
-                  type="number" 
+                  type="number"
                   onInput={(e) => setAirplaneId(e.target.value)}
                 />
               </div>
 
-              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+              <div className="mt-3 ml-3" style={{ width: "14rem" }}>
                 <label className="form-label">Seating ID</label>
-                <input 
-                  className={"form-control " +  (isSubmitted ? !flightSeatingId ? "is-invalid" : "is-valid" : "")} 
+                <input
+                  className={
+                    "form-control " +
+                    (isSubmitted
+                      ? !flightSeatingId
+                        ? "is-invalid"
+                        : "is-valid"
+                      : "")
+                  }
                   defaultValue={flightSeatingId}
                   placeholder="Number"
-                  type="number" 
+                  type="number"
                   onChange={(e) => setSeatingId(e.target.value)}
                 />
               </div>
             </FlexRow>
 
             <FlexRow>
-              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+              <div className="mt-3 ml-3" style={{ width: "14rem" }}>
                 <label className="form-label">Route ID</label>
-                <input 
-                  className={"form-control " +  (isSubmitted ? !flightRouteId ? "is-invalid" : "is-valid" : "")} 
+                <input
+                  className={
+                    "form-control " +
+                    (isSubmitted
+                      ? !flightRouteId
+                        ? "is-invalid"
+                        : "is-valid"
+                      : "")
+                  }
                   defaultValue={flightRouteId}
                   placeholder="Number"
-                  type="number" 
+                  type="number"
                   onInput={(e) => setRouteId(e.target.value)}
                 />
               </div>
 
-              <div className="mt-3 ml-3" style={{width:"20rem"}}>
+              <div className="mt-3 ml-3" style={{ width: "20rem" }}>
                 <label className="form-label">Departure (UTC)</label>
-                <input 
+                <input
                   className={"form-control"}
-                  defaultValue={moment(selectedDateTime).format('YYYY-MM-DDTHH:mm').toString()}
+                  defaultValue={moment(selectedDateTime)
+                    .format("YYYY-MM-DDTHH:mm")
+                    .toString()}
                   type="datetime-local"
                   min={dateTimeNow}
                   onChange={(e) => setDateTime(e.target.value)}
                 />
               </div>
-        
             </FlexRow>
 
             <FlexRow>
-              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+              <div className="mt-3 ml-3" style={{ width: "14rem" }}>
                 <label className="form-label">Duration</label>
-                <input 
-                  className={"form-control " +  (isSubmitted ? !hours ? "is-invalid" : "is-valid" : "")} 
+                <input
+                  className={
+                    "form-control " +
+                    (isSubmitted ? (!hours ? "is-invalid" : "is-valid") : "")
+                  }
                   defaultValue={selectedHours || 0}
-                  type="number" 
+                  type="number"
                   onInput={(e) => setHours(e.target.value)}
                 />
-                <input 
-                  className={"form-control " +  (isSubmitted ? !minutes ? "is-invalid" : "is-valid" : "")} 
+                <input
+                  className={
+                    "form-control " +
+                    (isSubmitted ? (!minutes ? "is-invalid" : "is-valid") : "")
+                  }
                   defaultValue={selectedMinutes}
                   type="number"
-                  max = "60" 
+                  max="60"
                   onInput={(e) => setMinutes(e.target.value)}
                 />
               </div>
 
-              <div className="mt-3 ml-3" style={{width:"14rem"}}>
+              <div className="mt-3 ml-3" style={{ width: "14rem" }}>
                 <label className="form-label">Status</label>
-                <select 
+                <select
                   className={"form-control"}
                   value={flightStatus}
                   onChange={(e) => setFlightStatus(e.target.value)}
@@ -272,27 +316,28 @@ const EditView = (props) => {
                   <option value="ACTIVE">ACTIVE</option>
                 </select>
               </div>
-        
             </FlexRow>
             <hr className="w-100"></hr>
-      </FlexColumn>     
+          </FlexColumn>
 
-
-      {/* Buttons */}
-      <FlexRow>
-        <button className="btn btn-light m-3"
-          onClick={() => FlightsDispatcher.onCancel()}
-        >
-          Cancel
-        </button>
-        <button className="btn btn-danger m-3"
-          onClick={() => handleSubmit()}
-        >
-          Save Changes
-        </button>
-      </FlexRow>
-    </FlexColumn>}
-  </FlexColumn>
+          {/* Buttons */}
+          <FlexRow>
+            <button
+              className="btn btn-light m-3"
+              onClick={() => FlightsDispatcher.onCancel()}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-danger m-3"
+              onClick={() => handleSubmit()}
+            >
+              Save Changes
+            </button>
+          </FlexRow>
+        </FlexColumn>
+      )}
+    </FlexColumn>
   );
-}
+};
 export default EditView;
