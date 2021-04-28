@@ -1,5 +1,5 @@
 import Store from "./reducers/Store";
-import constants from "./resources/constants.json";
+import Constants from "./resources/constants.json";
 
 class Orchestration {
 
@@ -22,8 +22,8 @@ class Orchestration {
       : {...contentNegotiation, ...requestHeaders};
 
     // Body
-    const body = (requestType !== constants.httpRequest.get
-      && requestType !== constants.httpRequest.delete)
+    const body = (requestType !== Constants.httpRequest.get
+      && requestType !== Constants.httpRequest.delete)
       ? JSON.stringify(requestBody)
       : null;
 
@@ -33,7 +33,7 @@ class Orchestration {
       : "/" + requestPath;
 
     // Request
-    fetch("https://myxf5vevqc.execute-api.us-east-1.amazonaws.com/dev" + formattedRequestPath, {
+    fetch("https://3vaimli724.execute-api.us-east-1.amazonaws.com/dev" + formattedRequestPath, {
       headers,
       body,
       method: requestType,
@@ -65,7 +65,7 @@ class Orchestration {
   }
 
   static validate(onError, onSuccess) {
-    Orchestration.createRequest(constants.httpRequest.get, "actuator/health",
+    Orchestration.createRequest(Constants.httpRequest.get, "actuator/health",
     onError2 => {
       console.error("[ERROR] could not validate Orchestrator Service!");
       onError(onError2);

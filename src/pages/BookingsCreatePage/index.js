@@ -36,28 +36,33 @@ class BookingsCreatePage extends Component {
   render() {
     const { authentication, breakPoint } = Store.getState();
     const {
-      currentStage,
       address,
+      cardAddress,
+      cardExpiration,
+      cardHolderName,
+      cardNumber,
+      cardSecurityCode,
+      currentStage,
       dateOfBirth,
       email,
       firstName,
       flightId,
+      isAgreement,
+      isVeteran ,
       lastName,
       passportId,
       phone,
       sex,
-      isAgreement,
-      isVeteran ,
     } = this.state;
 
-    const selectedStage = authentication.userId ? currentStage+1 : currentStage;
+    const selectedStage = authentication.userId ? currentStage + 1 : currentStage;
     const stageCount = authentication.userId ? 4 : 5;
     const stageNames = authentication.userId
-      ? ["Passneger Info", "Regulations", "Payment", "Complete"]
-      : ["Login/Guest", "Passneger Info", "Regulations", "Payment", "Complete"];
+      ? ["Passeneger Info", "Regulations", "Payment", "Complete"]
+      : ["Login/Guest", "Passeneger Info", "Regulations", "Payment", "Complete"];
 
     return (
-      <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth:"1400px",  overflowY: "hidden" }}>
+      <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth:"1400px",  overflow: "auto" }}>
         <div className="row">
 
           {/* Navbar */}
@@ -66,7 +71,7 @@ class BookingsCreatePage extends Component {
           {/* Body */}
           <div className="col-12">
             <div className="row">
-              
+
               {/* Header */}
               <div className="col-12">
                 <FlexRow className="row w-100 p-3">
@@ -89,10 +94,10 @@ class BookingsCreatePage extends Component {
               {/* Body */}
               <div className="col-12">
                 <FlexRow className="row w-100">
-                
+
                 {/* Login or provide guest info - Stage 1 */}
                 {selectedStage === 1 &&
-                  <Stage1 className="col-12 col-sm-10 col-md-8"
+                  <Stage1 className={"col-12 col-sm-10 col-md-8"}
                     breakPoint={breakPoint}
                     firstName={firstName}
                     lastName={lastName}
@@ -105,7 +110,7 @@ class BookingsCreatePage extends Component {
 
                 {/* Stage 2 - Create Passenger */}
                 {selectedStage === 2 &&
-                  <Stage2 className="col-12 col-sm-10 col-md-8"
+                  <Stage2 className={"col-12 col-sm-10 col-md-8"}
                     address={address}
                     dateOfBirth={dateOfBirth}
                     isVeteran={isVeteran}
@@ -121,7 +126,7 @@ class BookingsCreatePage extends Component {
 
                 {/* Stage 3 - Agree to Terms */}
                 {selectedStage === 3 &&
-                  <Stage3 className="col-12 col-sm-10 col-md-8"
+                  <Stage3 className={"col-12 col-sm-10 col-md-8"}
                     isAgreement={isAgreement}
                     onIsAgreement={(value) => this.setState({isAgreement: value})}
                   />
@@ -129,13 +134,25 @@ class BookingsCreatePage extends Component {
 
                 {/* Pay for Booking */}
                 {selectedStage === 4 &&
-                  <Stage4/>
+                  <Stage4 className={"col-12 col-sm-10 col-md-8"}
+                    cardAddress={cardAddress}
+                    cardExpiration={cardExpiration}
+                    cardHolderName={cardHolderName}
+                    cardNumber={cardNumber}
+                    cardSecurityCode={cardSecurityCode}
+                    passengerAddress={address}
+                    onCardAddress={(value) => this.setState({cardAddress: value})}
+                    onCardExpiration={(value) => this.setState({cardExpiration: value})}
+                    onCardHolderName={(value) => this.setState({cardHolderName: value})}
+                    onCardNumber={(value) => this.setState({cardNumber: value})}
+                    onCardSecurityCode={(value) => this.setState({cardSecurityCode: value})}
+                  />
                 }
 
                 {/* Confirm Success & Redirect to Bookings Page */}
                 {selectedStage === 5 &&
                   <Stage5
-                    className="col-12 col-sm-10 col-md-8"
+                    className={"col-12 col-sm-10 col-md-8"}
                     address={address}
                     dateOfBirth={dateOfBirth}
                     lastName={lastName}

@@ -194,7 +194,7 @@ const Stage5 = (props) => {
 
   return (
     <div className={props.className || ""} justify="around" style={props.style}>
-      <div class="row">
+      <div className="row">
         {/* Card */}
         <div className="w-100 card p-2 mt-3 ml-auto mr-auto">
           {/* Header */}

@@ -249,7 +249,7 @@ class AirplanesDebug extends Component {
               <button
                 className="btn btn-info"
                 onClick={() =>
-                  AirplanesDispatcher.onPromptEdit("/" + airplaneId)
+                  AirplanesDispatcher.onPromptEdit(`/${airplaneId}`)
                 }
               >
                 Edit
@@ -261,7 +261,7 @@ class AirplanesDebug extends Component {
               <button
                 className="btn btn-primary"
                 onClick={() =>
-                  AirplanesDispatcher.onPromptDelete("/" + airplaneId)
+                  AirplanesDispatcher.onPromptDelete(`/${airplaneId}`)
                 }
               >
                 Delete
