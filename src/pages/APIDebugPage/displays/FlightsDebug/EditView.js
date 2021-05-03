@@ -95,9 +95,9 @@ const EditView = (props) => {
 
     if (!_.isEqual(selectedFlight, newFlight)) {
       const editedFlight = {
-        flightAirplane : flightAirplaneId,
-        flightSeatingId : flightSeatingId,
-        flightRoute : flightRouteId,
+        flightAirplane : parseInt(flightAirplaneId),
+        flightSeatingId : parseInt(flightSeatingId),
+        flightRoute : parseInt(flightRouteId),
         flightDuration : flightDuration,
         flightStatus : flightStatus,
         flightId: selectedFlight.flightId,
