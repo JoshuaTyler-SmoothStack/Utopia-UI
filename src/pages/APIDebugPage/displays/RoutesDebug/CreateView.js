@@ -44,7 +44,7 @@ const CreateView = (props) => {
             className="m-1"
             style={{ minHeight: "4rem" }}
             name="Route"
-            result={`Created Route with Origin IATA: ${results.routeOrigin.airportIataId} and Destination IATA: ${results.routeDestination.airportIataId}.`}
+            result={`Created Route with Origin IATA: ${results.routeOrigin ? results.routeOrigin.airportIataId : "Loading . . ."} and Destination IATA: ${results.routeDestination ? results.routeDestination.airportIataId : "Loading . . ."}.`}
             status={resultsStatus || "DISABLED"}
           />
 

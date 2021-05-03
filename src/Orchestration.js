@@ -3,6 +3,7 @@ import Constants from "./resources/constants.json";
 
 class Orchestration {
 
+  static apiEndpoint = "https://3vaimli724.execute-api.us-east-1.amazonaws.com/dev";
   static contentType = "json";
 
   static httpRequest(requestType, requestPath, requestHeaders, requestBody, httpError, httpResponseBody) {
@@ -33,7 +34,7 @@ class Orchestration {
       : "/" + requestPath;
 
     // Request
-    fetch("https://3vaimli724.execute-api.us-east-1.amazonaws.com/dev" + formattedRequestPath, {
+    fetch(Orchestration.apiEndpoint + formattedRequestPath, {
       headers,
       body,
       method: requestType,
