@@ -213,7 +213,7 @@ const Stage5 = (props) => {
             {/* Pending */}
             {bookings.create.resultsStatus === "PENDING" && (
               <FlexColumn>
-                <h3 className="text-dark kit-text-shadow-thin">
+                <h3 className="text-dark kit-text-shadow-dark">
                   Verifying Booking . . .
                 </h3>
                 <FlexRow>
@@ -225,7 +225,7 @@ const Stage5 = (props) => {
             {/* Success */}
             {bookings.create.resultsStatus === "SUCCESS" && (
               <FlexColumn>
-                <h3 className="text-success kit-text-shadow-thin">
+                <h3 className="text-success kit-text-shadow-dark">
                   Booking Confirmed!
                 </h3>
                 <FlexRow>

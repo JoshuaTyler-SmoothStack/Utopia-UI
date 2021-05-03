@@ -69,7 +69,7 @@ class UsersDebug extends Component {
                   }
                 />
                 <button
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
+                  className="btn btn-success ml-2 text-white kit-text-shadow-dark"
                   type="submit"
                   onClick={() =>
                     UsersDispatcher.onSearchAndFilter("/search", searchTerms)

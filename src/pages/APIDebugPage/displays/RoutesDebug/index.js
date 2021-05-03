@@ -69,7 +69,7 @@ class RoutesDebug extends Component {
                   }
                 />
                 <button
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
+                  className="btn btn-success ml-2 text-white kit-text-shadow-dark"
                   type="submit"
                   onClick={() =>
                     RoutesDispatcher.onSearchAndFilter("/search", searchTerms)
@@ -316,7 +316,7 @@ class RoutesDebug extends Component {
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
+                    className="btn btn-success text-white kit-text-shadow-dark"
                     style={{ whiteSpace: "nowrap" }}
                     onClick={() => RoutesDispatcher.onPromptCreate()}
                   >

@@ -63,7 +63,7 @@ class AirplanesDebug extends Component {
                   onChange={(e) => this.setState({ searchTerms: e.target.value })}
                 />
                 <button
-                  className={"btn btn-success ml-2 text-white kit-text-shadow-thin"}
+                  className={"btn btn-success ml-2 text-white kit-text-shadow-dark"}
                   type={"submit"}
                   onClick={() => AirplanesDispatcher.onSearchAndFilter("/search", searchTerms)}
                 >
@@ -285,7 +285,7 @@ class AirplanesDebug extends Component {
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
+                    className="btn btn-success text-white kit-text-shadow-dark"
                     style={{ whiteSpace: "nowrap" }}
                     onClick={() => AirplanesDispatcher.onPromptCreate()}
                   >
