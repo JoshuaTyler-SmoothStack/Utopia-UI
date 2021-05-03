@@ -312,7 +312,7 @@ const SeatingModal = (props) => {
                   {/* Confirm */}
                   <button
                     className={
-                      "btn btn-success text-white kit-text-shadow-thin" +
+                      "btn btn-success text-white kit-text-shadow-dark" +
                       ((selectingEmerencyExitRow && !isEmergencyExitRowAgreement) && " disabled")
                     }
                     onClick={() => handleConfirmSeat()}

@@ -180,7 +180,7 @@ const CreateAccountPage = (props) => {
               {/* Success */}
               {authentication.userId &&
                 <FlexColumn>
-                  <h3 className="text-success kit-text-shadow-thin">
+                  <h3 className="text-success kit-text-shadow-dark">
                     Account Created!
                   </h3>
                   <FlexRow>
@@ -296,7 +296,7 @@ const CreateAccountPage = (props) => {
 
                 {/* Submit */}
                 {(authentication.status === "INACTIVE" || authentication.status === "ERROR") &&
-                  <button className="btn btn-success text-white kit-text-shadow-thin"
+                  <button className="btn btn-success text-white kit-text-shadow-dark"
                     onClick={() => handleSubmit()}
                   >
                     + Create Account

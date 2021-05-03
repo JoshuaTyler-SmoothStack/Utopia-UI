@@ -341,7 +341,7 @@ const FlightSearch = (props) => {
         {/* Search Button */}
         <div className="col-4 ml-auto">
           <button
-            className="btn btn-lg btn-success text-white kit-text-shadow-thin"
+            className="btn btn-lg btn-success text-white kit-text-shadow-dark"
             style={{ minWidth: "50%" }}
             onClick={() => props.onSubmit()}
           >

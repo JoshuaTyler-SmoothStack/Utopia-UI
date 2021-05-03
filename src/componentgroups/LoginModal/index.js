@@ -182,7 +182,7 @@ class LoginModal extends Component {
 
                   {/* Login */}
                   <button
-                    className="btn btn-success btn-lg text-white kit-text-shadow-thin"
+                    className="btn btn-success btn-lg text-white kit-text-shadow-dark"
                     onClick={() => this.handleLogin()}
                     style={{ width: "33%" }}
                   >
