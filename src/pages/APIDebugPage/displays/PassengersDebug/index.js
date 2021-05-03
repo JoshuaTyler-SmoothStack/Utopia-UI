@@ -13,7 +13,6 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
-import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class PassengersDebug extends Component {
@@ -40,7 +39,6 @@ class PassengersDebug extends Component {
 
     // Search Results vars
     const searchError = passengers.search.error;
-    const searchFilters = passengers.search.filters;
     const searchResults = passengers.search.results;
 
     return (
@@ -50,26 +48,10 @@ class PassengersDebug extends Component {
       >
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
-          <div className="row mt-1">
-            {/* MS Orchestration Indicators */}
-            <OrchestrationHeader
-              className="col-12 col-md-6"
-              name="Passenger MS"
-              health={passengersMSHealth}
-              status={
-                passengersMSStatus === "INACTIVE"
-                  ? "PENDING"
-                  : passengersMSStatus
-              }
-              style={{ maxWidth: "30rem" }}
-              onTriggerError={() => PassengersDispatcher.onError()}
-              onTriggerFakeAPICall={() =>
-                PassengersDispatcher.onFakeAPICall(searchResults)
-              }
-            />
+          <div className="row p-2">
 
             {/* Search Bar */}
-            <div className="col-12 col-md-5">
+            <div className="col-12">
               {/* Search */}
               <FlexRow className="mt-1" justify="end" wrap="no-wrap">
                 <input
@@ -86,7 +68,7 @@ class PassengersDebug extends Component {
                   }
                 />
                 <button
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
+                  className="btn btn-success ml-2 text-white kit-text-shadow-dark"
                   type="submit"
                   onClick={() =>
                     PassengersDispatcher.onSearchAndFilter(
@@ -114,45 +96,34 @@ class PassengersDebug extends Component {
               "kit-opacity-50 kit-no-user kit-pointer-none")
           }
         >
-          {/* Filters */}
-          <div className="row p-2 justify-content-center p-2">
+          {/* Resuts Count & Page Selection */}
+          <div className="row justify-content-center pb-1">
+
             {/* Toggle Reference Data */}
             <FlexRow
-              className="col-auto p-0 bg-dark rounded kit-border-shadow ml-1"
+              className="col-auto p-0 bg-dark rounded mt-2"
               wrap={"no-wrap"}
             >
               <button
                 className={
                   "btn text-white " + (isPassengerInfoActive && "btn-success")
                 }
-                onClick={() => this.handleIncludeReferenceIDs(true)}
+                onClick={() => this.handleIncludePassengerInfo(true)}
               >
-                Show Passenger Info
+                Show IDs
               </button>
               <button
                 className={
                   "btn text-white " + (!isPassengerInfoActive && "btn-success")
                 }
-                onClick={() => this.handleIncludeReferenceIDs(false)}
+                onClick={() => this.handleIncludePassengerInfo(false)}
               >
                 Hide
               </button>
             </FlexRow>
 
-            {/* # of Filters Active */}
-            <div className="col-auto list-group ml-2">
-              <div
-                className="list-group-item"
-                style={{ fontSize: "0.85rem", padding: "0.5rem" }}
-              >
-                {searchFilters.activeCount + " filters active"}
-              </div>
-            </div>
-          </div>
-
-          {/* Resuts Count & Page Selection */}
-          <div className="row justify-content-center p-2">
-            <FlexColumn className="col-4 col-md-3 text-center">
+            {/* DropDown */}
+            <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
                 selection={passengers.search.resultsPerPage}
@@ -162,7 +133,8 @@ class PassengersDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-6 col-md-3 text-center">
+            {/* Readout */}
+            <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
                 currentPage={passengers.search.resultsPage}
                 itemsPerPage={passengers.search.resultsPerPage}
@@ -170,7 +142,8 @@ class PassengersDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-8 mt-2 col-md-3 text-center">
+            {/* Pagination */}
+            <FlexColumn className="col-auto text-center mt-2">
               <Pagination
                 currentPage={passengers.search.resultsPage}
                 totalPages={Math.ceil(
@@ -251,7 +224,7 @@ class PassengersDebug extends Component {
     PassengersDispatcher.onRequest();
   }
 
-  handleIncludeReferenceIDs = (isActive) => {
+  handleIncludePassengerInfo = (isActive) => {
     this.setState({ isPassengerInfoActive: isActive });
   };
 
@@ -358,7 +331,7 @@ class PassengersDebug extends Component {
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
+                    className="btn btn-success text-white kit-text-shadow-dark"
                     style={{ whiteSpace: "nowrap" }}
                     onClick={() => PassengersDispatcher.onPromptCreate()}
                   >

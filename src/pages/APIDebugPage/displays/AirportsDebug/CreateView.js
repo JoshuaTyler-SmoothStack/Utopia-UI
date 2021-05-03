@@ -7,7 +7,7 @@ import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ChangeOperationReadout from '../ChangeOperationReadout';
-import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
+import KitUtils from '../../../../kitutils/KitUtils';
 
 const CreateView = (props) => {
   const [airportIataId, setAirportIataId] = useState("");

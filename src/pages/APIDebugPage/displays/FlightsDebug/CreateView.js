@@ -8,7 +8,7 @@ import moment from 'moment';
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ChangeOperationReadout from '../ChangeOperationReadout';
-import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
+import KitUtils from '../../../../kitutils/KitUtils';
 
 const CreateView = (props) => {
   const [flightAirplaneId, setAirplaneId] = useState("");
@@ -24,6 +24,8 @@ const CreateView = (props) => {
   const resultsStatus = flights.create.resultsStatus;
   const resultsPending = resultsStatus === "PENDING";
   const status = flights.create.status;
+
+  const dateTimeNow = moment().utc().format("YYYY-MM-DDTHH:mm");
 
   const handleValidate = () => {
     setIsSubmitted(true);
@@ -65,8 +67,8 @@ const CreateView = (props) => {
             className="m-1" 
             style={{minHeight: "4rem"}} 
             name="Flight"
-            result={"Created Flight with Airplane ID: " + results.flightAirplane.airplaneId + 
-            " and RouteId: " + results.flightRoute.routeId + "."}
+            result={"Created Flight with Airplane ID: " + flightAirplaneId + 
+            " and RouteId: " + flightRouteId + "."}
             status={resultsStatus || "DISABLED"}
           />
           
@@ -150,6 +152,8 @@ const CreateView = (props) => {
                 <input 
                   className={"form-control"}
                   type="datetime-local"
+                  defaultValue={dateTimeNow}
+                  min={dateTimeNow}
                   onChange={(e) => setDateTime(e.target.value)}
                 />
               </div>

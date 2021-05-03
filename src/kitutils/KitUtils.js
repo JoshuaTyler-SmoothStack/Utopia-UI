@@ -4,29 +4,35 @@ import soundAlert from "../sounds/Funk.mp3";
 import soundSuccess from "../sounds/Ding.mp3";
 
 class KitUtils {
-
   /*====================
   Animation
   ====================*/
-  static lerp(currentValue, endValue, stepValue, stepTime, isSubtractive, onChange) {
+  static lerp(
+    currentValue,
+    endValue,
+    stepValue,
+    stepTime,
+    isSubtractive,
+    onChange
+  ) {
     currentValue = isSubtractive
-    ? parseFloat(currentValue) - parseFloat(stepValue)
-    : parseFloat(currentValue) + parseFloat(stepValue);
-    
+      ? parseFloat(currentValue) - parseFloat(stepValue)
+      : parseFloat(currentValue) + parseFloat(stepValue);
+
     onChange(currentValue);
 
     const valueReached = isSubtractive
-    ? currentValue <= endValue
-    : currentValue >= endValue;
+      ? currentValue <= endValue
+      : currentValue >= endValue;
 
-    if(!valueReached) {
+    if (!valueReached) {
       setTimeout(() => {
         KitUtils.lerp(
-          currentValue, 
-          endValue, 
-          stepValue, 
-          stepTime, 
-          isSubtractive, 
+          currentValue,
+          endValue,
+          stepValue,
+          stepTime,
+          isSubtractive,
           onChange
         );
       }, stepTime);
@@ -40,7 +46,7 @@ class KitUtils {
   static isAsyncQueueActive = false;
 
   static Async(asyncFunction) {
-    if(!KitUtils.asyncQueue) {
+    if (!KitUtils.asyncQueue) {
       KitUtils.asyncQueue = [];
     }
     const cancelableRef = KitUtils.createCancelable();
@@ -49,23 +55,25 @@ class KitUtils {
   }
 
   static AsyncStart() {
-    if(!KitUtils.isAsyncQueueActive) {
+    if (!KitUtils.isAsyncQueueActive) {
       KitUtils.isAsyncQueueActive = true;
       KitUtils.AsyncNext();
     }
   }
 
   static AsyncNext() {
-    if(!KitUtils.asyncQueue || KitUtils.asyncQueue.length < 1) {
+    if (!KitUtils.asyncQueue || KitUtils.asyncQueue.length < 1) {
       KitUtils.isAsyncQueueActive = false;
     } else {
       const nextAsync = KitUtils.asyncQueue.shift();
       const isCanceled = KitUtils.getCancelable(nextAsync[0], true);
-      if(!isCanceled) {
+      if (!isCanceled) {
         (async () => {
           try {
             await nextAsync[1]();
-          } catch(error) {console.error("[ERROR] Async function failed: " + error);}
+          } catch (error) {
+            console.error("[ERROR] Async function failed: " + error);
+          }
         })().then(() => {
           KitUtils.AsyncNext();
         });
@@ -80,15 +88,15 @@ class KitUtils {
   ====================*/
   static cancelableRefs = {};
   static cancel(key) {
-    if(KitUtils.cancelableRefs.hasOwnProperty(key)) {
+    if (KitUtils.cancelableRefs.hasOwnProperty(key)) {
       KitUtils.cancelableRefs[key].isCanceled = true;
     }
   }
 
   static createCancelable() {
     const newKey = _.uniqueId("cancelable-");
-    const newCancelable = {[newKey] : {isCanceled: false}};
-    if(!KitUtils.cancelableRefs) {
+    const newCancelable = { [newKey]: { isCanceled: false } };
+    if (!KitUtils.cancelableRefs) {
       KitUtils.cancelableRefs = {};
     }
     _.merge(KitUtils.cancelableRefs, newCancelable);
@@ -96,9 +104,9 @@ class KitUtils {
   }
 
   static getCancelable(key, shouldRemove) {
-    if(KitUtils.cancelableRefs.hasOwnProperty(key)) {
+    if (KitUtils.cancelableRefs.hasOwnProperty(key)) {
       const value = KitUtils.cancelableRefs[key].isCanceled;
-      if(shouldRemove) {
+      if (shouldRemove) {
         _.omit(KitUtils.cancelableRefs, key);
       }
       return value;
@@ -110,7 +118,7 @@ class KitUtils {
   Sound Effects
   ====================*/
   static playSound(sound) {
-    var newSound = new Audio(sound);
+    const newSound = new Audio(sound);
     newSound.play().catch(() => {
       // Insert here to know if
       //sound has failed to play
@@ -133,6 +141,5 @@ class KitUtils {
       onComplete();
     }, delay);
   }
-
 }
 export default KitUtils;

@@ -9,10 +9,9 @@ import AuthenticationDispatcher from "../../dispatchers/AuthenticationDispatcher
 import Store from '../../reducers/Store';
 
 const LocalUserButtons = (props) => {
+  const { authentication } = Store.getState();
   const buttonClassName = "btn btn-secondary m-1";
   const buttonStyle = { width: "10rem" };
-
-  const { authentication } = Store.getState();
 
   return (
     <FlexColumn
@@ -21,7 +20,7 @@ const LocalUserButtons = (props) => {
       justify={"around"}
       style={props.style}>
 
-      {authentication.userToken &&
+      {authentication.userId &&
         <div>
           <Link to={Constants.pagePaths.profile}>
             <button className={buttonClassName} style={buttonStyle}>
@@ -37,7 +36,7 @@ const LocalUserButtons = (props) => {
         </div>
       }
 
-      {!authentication.userToken &&
+      {!authentication.userId &&
         <div>
           {/* Login */}
           <button className={buttonClassName} style={buttonStyle}

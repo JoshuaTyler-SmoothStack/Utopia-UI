@@ -13,7 +13,6 @@ import ErrorMessage from "../../../../components/ErrorMessage";
 import FlexColumn from "../../../../components/FlexColumn";
 import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
-import OrchestrationHeader from "../OrchestrationHeader";
 import Pagination from "../../../../components/Pagination";
 
 class RoutesDebug extends Component {
@@ -41,7 +40,6 @@ class RoutesDebug extends Component {
 
     // Search Results vars
     const searchError = routes.search.error;
-    const searchFilters = routes.search.filters;
     const searchResults = routes.search.results;
 
     return (
@@ -51,24 +49,10 @@ class RoutesDebug extends Component {
       >
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
-          <div className="row mt-1">
-            {/* MS Orchestration Indicators */}
-            <OrchestrationHeader
-              className="col-12 col-md-6"
-              name="Route MS"
-              health={routesMSHealth}
-              status={
-                routesMSStatus === "INACTIVE" ? "PENDING" : routesMSStatus
-              }
-              style={{ maxWidth: "30rem" }}
-              onTriggerError={() => RoutesDispatcher.onError()}
-              onTriggerFakeAPICall={() =>
-                RoutesDispatcher.onFakeAPICall(searchResults)
-              }
-            />
+          <div className="row p-2">
 
             {/* Search Bar */}
-            <div className="col-12 col-md-5">
+            <div className="col-12">
               {/* Search */}
               <FlexRow className="mt-1" justify="end" wrap="no-wrap">
                 <input
@@ -85,7 +69,7 @@ class RoutesDebug extends Component {
                   }
                 />
                 <button
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
+                  className="btn btn-success ml-2 text-white kit-text-shadow-dark"
                   type="submit"
                   onClick={() =>
                     RoutesDispatcher.onSearchAndFilter("/search", searchTerms)
@@ -110,22 +94,11 @@ class RoutesDebug extends Component {
               "kit-opacity-50 kit-no-user kit-pointer-none")
           }
         >
-          {/* Filters */}
-          <div className="row p-2 justify-content-center p-2">
-            {/* # of Filters Active */}
-            <div className="col-auto list-group ml-2">
-              <div
-                className="list-group-item"
-                style={{ fontSize: "0.85rem", padding: "0.5rem" }}
-              >
-                {searchFilters.activeCount + " filters active"}
-              </div>
-            </div>
-          </div>
-
           {/* Resuts Count & Page Selection */}
-          <div className="row justify-content-center p-2">
-            <FlexColumn className="col-4 col-md-3 text-center">
+          <div className="row justify-content-center pb-1">
+
+            {/* DropDown */}
+            <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
                 selection={routes.search.resultsPerPage}
@@ -135,7 +108,8 @@ class RoutesDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-6 col-md-3 text-center">
+            {/* Readout */}
+            <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
                 currentPage={routes.search.resultsPage}
                 itemsPerPage={routes.search.resultsPerPage}
@@ -143,7 +117,8 @@ class RoutesDebug extends Component {
               />
             </FlexColumn>
 
-            <FlexColumn className="col-8 mt-2 col-md-3 text-center">
+            {/* Pagination */}
+            <FlexColumn className="col-auto text-center mt-2">
               <Pagination
                 currentPage={routes.search.resultsPage}
                 totalPages={Math.ceil(
@@ -276,8 +251,8 @@ class RoutesDebug extends Component {
           <tr key={index}>
             <th scrop="row">{index}</th>
             <td>{routeId}</td>
-            <td>{routesList[i].routeOriginIataId}</td>
-            <td>{routesList[i].routeDestinationIataId}</td>
+            <td>{routesList[i].routeOrigin.airportIataId}</td>
+            <td>{routesList[i].routeDestination.airportIataId}</td>
             {/* Edit */}
             <td>
               <button
@@ -341,7 +316,7 @@ class RoutesDebug extends Component {
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
+                    className="btn btn-success text-white kit-text-shadow-dark"
                     style={{ whiteSpace: "nowrap" }}
                     onClick={() => RoutesDispatcher.onPromptCreate()}
                   >

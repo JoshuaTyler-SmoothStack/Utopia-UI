@@ -9,7 +9,7 @@ import { Redirect } from "react-router";
 import ErrorMessage from "../../components/ErrorMessage";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
-import KitUtils from "../../kitutils/KitUtils_v1.0.0";
+import KitUtils from "../../kitutils/KitUtils";
 import Modal from "../../components/Modal";
 
 const ALPHABET = [ "A", "B", "C", "D", "E", "F", "G", "H"];
@@ -312,7 +312,7 @@ const SeatingModal = (props) => {
                   {/* Confirm */}
                   <button
                     className={
-                      "btn btn-success text-white kit-text-shadow-thin" +
+                      "btn btn-success text-white kit-text-shadow-dark" +
                       ((selectingEmerencyExitRow && !isEmergencyExitRowAgreement) && " disabled")
                     }
                     onClick={() => handleConfirmSeat()}

@@ -70,6 +70,11 @@ class AuthenticationDispatcher extends BaseDispatcher {
             type: Constants.authentication.errorCreateAccount,
             payload: httpResponseBody.error,
           });
+        } else if(!httpResponseBody) {
+          Store.reduce({
+            type: Constants.authentication.errorCreateAccount,
+            payload: httpResponseBody.error,
+          });
         } else {
           Store.reduce({ type: Constants.authentication.createAccountSuccess });
           AuthenticationDispatcher.onLogin(email, password);
@@ -183,6 +188,10 @@ class AuthenticationDispatcher extends BaseDispatcher {
 
   static getUserById(userId) {
     return axios.get(`https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/${userId}`)
+  }
+
+  static deleteAccount(userId) {
+    return axios.delete(`https://hackzt9qgg.execute-api.us-east-1.amazonaws.com/dev/auth/${userId}`)
   }
 
   static onLogout() {

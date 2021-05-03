@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
-import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
 
 // Images
 import gifEarthSpinning from "../../images/EarthWithHotAirBalloon.gif";
@@ -12,7 +11,7 @@ class StartupPage extends Component {
     super(props);
 
     this.state = {
-      loadingText: "Tap anywhere to continue . . ."
+      loadingText: "Tap anywhere to continue . . .",
     };
   }
 
@@ -74,17 +73,13 @@ class StartupPage extends Component {
         <FlexRow>
           <a 
             href="https://github.com/JoshuaTyler-SmoothStack/Utopia-UI" 
-            className="h5 kit-link kit-text-shadow-thin mb-2"
+            className="h5 kit-link kit-text-shadow-dark mb-2"
           >
             {"©2021 Utopia Airlines"}
           </a>
         </FlexRow>
       </FlexColumn>
     );
-  }
-
-  componentDidMount() {
-    // AirportsDispatcher.onRequest();
   }
 
   handleLoadingProgressCheck() {

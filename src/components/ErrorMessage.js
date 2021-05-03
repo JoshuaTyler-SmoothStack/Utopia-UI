@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import KitUtils from "../kitutils/KitUtils_v1.0.0";
+import KitUtils from "../kitutils/KitUtils";
 
 const ErrorMessage = (props) => {
   useEffect(() =>  {
@@ -13,7 +13,7 @@ const ErrorMessage = (props) => {
   const message = props.message || "Error";
 
   return (
-    <div className={"text-danger " + (props.className || "")}>
+    <div className={(props.className || "text-danger")} style={props.style}>
       {children || message}
     </div>
   );

@@ -1,11 +1,12 @@
 // Libraries
-import AirportsDispatcher from "../../../../dispatchers/AirportsDispatcher";
+import UsersDispatcher from "../../../../dispatchers/UsersDispatcher";
 import React, { Component } from "react";
 import Store from "../../../../reducers/Store";
+import { Link } from 'react-router-dom';
+import Constants from "../../../../resources/constants.json";
 
 // Components
 import ChangeOperationReadout from "../ChangeOperationReadout";
-import CreateView from "./CreateView";
 import DeleteView from "./DeleteView";
 import DropDown from "../../../../components/DropDown";
 import EditView from "./EditView";
@@ -15,7 +16,7 @@ import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
 import Pagination from "../../../../components/Pagination";
 
-class AirportsDebug extends Component {
+class UsersDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,21 +27,20 @@ class AirportsDebug extends Component {
   }
 
   render() {
-    const { airports } = Store.getState();
+    const { users } = Store.getState();
     const { searchTerms } = this.state;
 
     // Microservice Status
-    const airportsMSHealth = airports.health;
-    const airportsMSStatus = airports.status;
+    const usersMSHealth = users.health;
+    const usersMSStatus = users.status;
 
     // Modal Toggles
-    const isCreatePromptActive = airports.create.isActive;
-    const isDeletePromptActive = airports.delete.isActive;
-    const isEditPromptActive = airports.edit.isActive;
+    const isDeletePromptActive = users.delete.isActive;
+    const isEditPromptActive = users.edit.isActive;
 
     // Search Results vars
-    const searchError = airports.search.error;
-    const searchResults = airports.search.results;
+    const searchError = users.search.error;
+    const searchResults = users.search.results;
 
     return (
       <div
@@ -61,7 +61,7 @@ class AirportsDebug extends Component {
                     "form-control " + (searchError && " is-invalid kit-shake")
                   }
                   label={searchError}
-                  placeholder="IATA ID, City"
+                  placeholder=""
                   type="search"
                   style={{ maxWidth: "15rem" }}
                   onChange={(e) =>
@@ -72,7 +72,7 @@ class AirportsDebug extends Component {
                   className="btn btn-success ml-2 text-white kit-text-shadow-dark"
                   type="submit"
                   onClick={() =>
-                    AirportsDispatcher.onSearchAndFilter("/search", searchTerms)
+                    UsersDispatcher.onSearchAndFilter("/search", searchTerms)
                   }
                 >
                   search
@@ -86,42 +86,42 @@ class AirportsDebug extends Component {
         <div
           className={
             "col-12 bg-light " +
-            ((airportsMSStatus === "INACTIVE" ||
-              airportsMSStatus === "ERROR" ||
-              isCreatePromptActive ||
+            ((usersMSStatus === "INACTIVE" ||
+              usersMSStatus === "ERROR" ||
               isDeletePromptActive ||
               isEditPromptActive) &&
               "kit-opacity-50 kit-no-user kit-pointer-none")
           }
         >
+
           {/* Resuts Count & Page Selection */}
           <div className="row justify-content-center pb-1">
             <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
-                selection={airports.search.resultsPerPage}
+                selection={users.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => AirportsDispatcher.onSelectItemsPerPage(e)}
+                onSelect={(e) => UsersDispatcher.onSelectItemsPerPage(e)}
               />
             </FlexColumn>
 
             <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
-                currentPage={airports.search.resultsPage}
-                itemsPerPage={airports.search.resultsPerPage}
-                itemsTotal={airports.search.results.length}
+                currentPage={users.search.resultsPage}
+                itemsPerPage={users.search.resultsPerPage}
+                itemsTotal={users.search.results.length}
               />
             </FlexColumn>
 
             <FlexColumn className="col-auto text-center mt-2">
               <Pagination
-                currentPage={airports.search.resultsPage}
+                currentPage={users.search.resultsPage}
                 totalPages={Math.ceil(
-                  airports.search.results.length /
-                    Math.max(airports.search.resultsPerPage, 1)
+                  users.search.results.length /
+                    Math.max(users.search.resultsPerPage, 1)
                 )}
-                onSelectPage={(e) => AirportsDispatcher.onSelectItemsPage(e)}
+                onSelectPage={(e) => UsersDispatcher.onSelectItemsPage(e)}
               />
             </FlexColumn>
           </div>
@@ -130,14 +130,14 @@ class AirportsDebug extends Component {
         {/* Body */}
         <div className="col-12" style={{ overflow: "auto" }}>
           {/* Error State */}
-          {airportsMSStatus === "ERROR" && (
+          {usersMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {airportsMSHealth === "HEALTHY" ? airports.error : "No Airport MS connection."}
+                {usersMSHealth === "HEALTHY" ? users.error : "No User MS connection."}
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"
-                onClick={() => AirportsDispatcher.onCancel()}
+                onClick={() => UsersDispatcher.onCancel()}
               >
                 Back
               </button>
@@ -145,7 +145,7 @@ class AirportsDebug extends Component {
           )}
 
           {/* Inactive State */}
-          {airportsMSStatus === "INACTIVE" && (
+          {usersMSStatus === "INACTIVE" && (
             <FlexColumn style={{ minHeight: "10rem" }}>
               <ChangeOperationReadout
                 className="m-1"
@@ -157,38 +157,33 @@ class AirportsDebug extends Component {
           )}
 
           {/* Pending State */}
-          {(airportsMSStatus === "PENDING" ||
-            airportsMSStatus === "INACTIVE") && (
+          {(usersMSStatus === "PENDING" ||
+            usersMSStatus === "INACTIVE") && (
             <FlexColumn style={{ minHeight: "10rem" }}>
               <div className="spinner-border" />
             </FlexColumn>
           )}
 
           {/* Success State */}
-          {airportsMSStatus === "SUCCESS" &&
-            !isCreatePromptActive &&
+          {usersMSStatus === "SUCCESS" &&
             !isDeletePromptActive &&
             !isEditPromptActive &&
-            this.handleRenderAirportsList(searchResults)}
+            this.handleRenderUsersList(searchResults)}
 
-          {airportsMSStatus === "SUCCESS" && isCreatePromptActive && (
-            <CreateView />
-          )}
-
-          {airportsMSStatus === "SUCCESS" && isDeletePromptActive && (
+          {usersMSStatus === "SUCCESS" && isDeletePromptActive && (
             <DeleteView />
           )}
 
-          {airportsMSStatus === "SUCCESS" && isEditPromptActive && <EditView />}
+          {usersMSStatus === "SUCCESS" && isEditPromptActive && <EditView />}
         </div>
       </div>
     );
   }
 
   componentDidMount() {
-    AirportsDispatcher.onCancel();
-    AirportsDispatcher.onHealth();
-    AirportsDispatcher.onRequest();
+    UsersDispatcher.onCancel();
+    UsersDispatcher.onHealth();
+    UsersDispatcher.onRequest();
   }
 
   onSortChange = (e) => {
@@ -204,60 +199,94 @@ class AirportsDebug extends Component {
     });
   };
 
-  handleRenderAirportsList = (airportsList) => {
-    const { airports } = Store.getState();
-    const resultsDisplayed = Number(airports.search.resultsPerPage);
+  handleRenderUsersList = (usersList) => {
+    const buttonClassName = "btn btn-secondary m-1";
+    const buttonStyle = {width: "12rem"};
+    const { users } = Store.getState();
+    const resultsDisplayed = Number(users.search.resultsPerPage);
     const resultsStart =
-      airports.search.resultsPerPage * (airports.search.resultsPage - 1);
+      users.search.resultsPerPage * (users.search.resultsPage - 1);
 
-    const airportsTable = [];
-    if (this.state.sortedItem === "airportIataId")
-      airportsList.sort((a, b) => {
-        return this.state.currentSort === "up"
-          ? a.airportIataId.localeCompare(b.airportIataId)
-          : b.airportIataId.localeCompare(a.airportIataId);
-      });
-    else
-      airportsList.sort((a, b) => {
-        return this.state.currentSort === "up"
-          ? a.airportCityName.localeCompare(b.airportCityName)
-          : b.airportCityName.localeCompare(a.airportCityName);
-      });
+    const usersTable = [];
+    const { currentSort, sortedItem } = this.state;
+    switch (sortedItem) {
+      case "userEmail":
+        usersList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.userEmail.localeCompare(b.userEmail)
+            : b.userEmail.localeCompare(a.userEmail)
+        });
+      break;
 
-    if (!airportsList.length) airportsList = [airportsList];
+      case "userFirstName":
+        usersList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.userFirstName.localeCompare(b.userFirstName)
+            : b.userFirstName.localeCompare(a.userFirstName)
+        });
+      break;
+
+      case "userLastName":
+        usersList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.userLastName.localeCompare(b.userLastName)
+            : b.userLastName.localeCompare(a.userLastName)
+        });
+      break;
+
+      case "userRole":
+        usersList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.userRole.localeCompare(b.userRole)
+            : b.userRole.localeCompare(a.userRole)
+        });
+      break;
+      
+      default:
+        usersList.sort((a, b) => {
+          return currentSort === "up"
+            ? a.userId - b.userId
+            : b.userId - a.userId;
+        });
+    }
+
+    if (!usersList.length) usersList = [usersList];
     for (
       let i = resultsStart;
-      i < resultsStart + resultsDisplayed && i < airportsList.length;
+      i < resultsStart + resultsDisplayed && i < usersList.length;
       i++
     ) {
-      
-      const airportIataId = airportsList[i].airportIataId;
-      if (airportIataId) {
+      const userId = usersList[i].userId;
+      if (userId) {
         const index = Number(i) + 1;
-        airportsTable.push(
+        usersTable.push(
           <tr key={index}>
             <th scrop="row">{index}</th>
-            <td>{airportIataId}</td>
-            <td>{airportsList[i].airportCityName}</td>
-  
+            <td>{userId}</td>
+            <td>{usersList[i].userEmail}</td>
+            <td>{usersList[i].userFirstName}</td>
+            <td>{usersList[i].userLastName}</td>
+            <td>{usersList[i].userPhone}</td>
+            <td>{usersList[i].userRole}</td>
+
             {/* Edit */}
             <td>
               <button
                 className="btn btn-info"
                 onClick={() =>
-                  AirportsDispatcher.onPromptEdit("/" + airportIataId)
+                  UsersDispatcher.onPromptEdit("/" + userId)
                 }
               >
                 Edit
               </button>
             </td>
-  
+
             {/* Delete */}
             <td>
               <button
                 className="btn btn-primary"
                 onClick={() =>
-                  AirportsDispatcher.onPromptDelete("/" + airportIataId)
+                  UsersDispatcher.onPromptDelete("/" + userId)
                 }
               >
                 Delete
@@ -274,21 +303,47 @@ class AirportsDebug extends Component {
           <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">
-                IATA ID
+              <th scope="col">ID
                 <button
                   className="btn text-white"
-                  value="airportIataId"
+                  value="userId"
                   onClick={this.onSortChange}
                 >
                   ⇅
                 </button>
               </th>
-              <th scope="col">
-                City
+              <th scope="col">Email
                 <button
                   className="btn text-white"
-                  value="airportCityName"
+                  value="userEmail"
+                  onClick={this.onSortChange}
+                >
+                    ⇅
+                </button>
+              </th>
+              <th scope="col">First Name
+                <button
+                  className="btn text-white"
+                  value="userFirstName"
+                  onClick={this.onSortChange}
+                >
+                    ⇅
+                </button>
+              </th>
+              <th scope="col">Last Name
+                <button
+                  className="btn text-white"
+                  value="userLastName"
+                  onClick={this.onSortChange}
+                >
+                  ⇅
+                </button>
+              </th>
+              <th scope="col">Phone</th>
+              <th scope="col">Role
+                <button
+                  className="btn text-white"
+                  value="userRole"
                   onClick={this.onSortChange}
                 >
                   ⇅
@@ -296,19 +351,17 @@ class AirportsDebug extends Component {
               </th>
               <th scope="col" colSpan="2">
                 <FlexRow>
-                  <button
-                    className="btn btn-success text-white kit-text-shadow-dark"
-                    style={{ whiteSpace: "nowrap" }}
-                    onClick={() => AirportsDispatcher.onPromptCreate()}
-                  >
-                    + Create New
+                <Link to={Constants.pagePaths.createAccount}>
+                  <button className={buttonClassName} style={buttonStyle}>
+                    {"Create Account"}
                   </button>
+                </Link>
                 </FlexRow>
               </th>
             </tr>
           </thead>
           <tbody>
-            {airportsTable}
+            {usersTable}
             <tr>
               <td colSpan="5"></td>
               {/* Space at end of table for aesthetic */}
@@ -319,4 +372,4 @@ class AirportsDebug extends Component {
     );
   };
 }
-export default AirportsDebug;
+export default UsersDebug;

@@ -1,5 +1,5 @@
 import BaseDispatcher from "./BaseDispatcher";
-import constants from "../resources/constants.json"
+import constants from "../resources/constants.json";
 
 class BookingsDispatcher extends BaseDispatcher {
   static apiPath = constants.bookings.apiPath;

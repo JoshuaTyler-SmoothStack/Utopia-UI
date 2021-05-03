@@ -16,12 +16,12 @@ class AuthenticationReducer extends BaseReducer {
         return {
           error: action.payload || "[ERROR]: 404 - Not Found!",
           status: "ERROR",
-          userId: "UNKNOWN",
+          userId: "",
         };
 
       case this.constantsParent.errorCreateAccount:
         return {
-          error: action.payload || "Invalid User Account",
+          error: action.payload || "A user with this email address already exists.",
           status: "ERROR",
         };
 
@@ -29,7 +29,7 @@ class AuthenticationReducer extends BaseReducer {
         return {
           error: "Invalid email or password.",
           status: "ERROR",
-          userId: "UNKNOWN",
+          userId: "",
         };
 
       case this.constantsParent.errorForgotPassword:

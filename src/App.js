@@ -1,10 +1,11 @@
 // Libraries
 import _ from "lodash";
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 import Constants from "./resources/constants.json";
 import Store from "./reducers/Store";
+import AirportsDispatcher from "./dispatchers/AirportsDispatcher";
+import AuthenticationDispatcher from "./dispatchers/AuthenticationDispatcher";
 
 // Components
 import LoginModal from "./componentgroups/LoginModal";
@@ -32,16 +33,6 @@ const BREAKPOINT_LARGE = 992;
 const BREAKPOINT_XLARGE = 1200;
 const BREAKPOINT_XXLARGE = 1400;
 const RESIZE_MINIMUM_WAIT_TIME = 100;
-const PAGE_ADDRESSES_WHITELIST = [
-  Constants.pagePaths.boot,
-  Constants.pagePaths.createAccount,
-  Constants.pagePaths.debug,
-  Constants.pagePaths.home,
-  Constants.pagePaths.flightSearch,
-  Constants.pagePaths.forgotPassword,
-  Constants.pagePaths.passwordRecovery,
-  Constants.pagePaths.profile,
-];
 
 class App extends Component {
   constructor(props) {
@@ -65,7 +56,6 @@ class App extends Component {
   render() {
     const { authentication } = this.state;
     const ISACTIVE_LOGINUI = authentication.isActive_LoginUI;
-    const currentPath = window.location.pathname;
 
     return (
       <main>
@@ -74,8 +64,8 @@ class App extends Component {
           <Switch>
 
             {/* API Debug Page */}
-            <Route path={Constants.pagePaths.debug}>
-              <APIDebugPage />
+            <Route exact path={Constants.pagePaths.debug}>
+              <APIDebugPage/>
             </Route>
 
             {/* Boot Page */}
@@ -84,28 +74,28 @@ class App extends Component {
             </Route>
 
             {/* Booking Create Page */}
-            <Route path={Constants.pagePaths.bookingsCreate}>
-              <BookingsCreatePage />
+            <Route exact path={Constants.pagePaths.bookingsCreate}>
+              <BookingsCreatePage/>
             </Route>
 
             {/* Create Account Page */}
-            <Route path={Constants.pagePaths.createAccount}>
-              <CreateAccountPage />
+            <Route exact path={Constants.pagePaths.createAccount}>
+              <CreateAccountPage/>
             </Route>
 
             {/* Flight Search Page */}
-            <Route path={Constants.pagePaths.flightSearch}>
-              <FlightSearchPage />
+            <Route exact path={Constants.pagePaths.flightSearch}>
+              <FlightSearchPage/>
             </Route>
 
             {/* Forgot Password Page */}
-            <Route path={Constants.pagePaths.forgotPassword}>
-              <ForgotPasswordPage />
+            <Route exact path={Constants.pagePaths.forgotPassword}>
+              <ForgotPasswordPage/>
             </Route>
 
             {/* Landing Page */}
-            <Route path={Constants.pagePaths.home}>
-              <LandingPage />
+            <Route exact path={Constants.pagePaths.home}>
+              <LandingPage/>
             </Route>
 
             {/* Password Recovery Page */}
@@ -114,14 +104,15 @@ class App extends Component {
             </Route>
 
             {/* Profile Page */}
-            <Route path={Constants.pagePaths.profile}>
-              {authentication.userId ? <UserProfilePage /> : <LandingPage />}
+            <Route exact path={Constants.pagePaths.profile}>
+              <UserProfilePage />
             </Route>
 
             {/* 404 - No Path */}
-            {!PAGE_ADDRESSES_WHITELIST.includes(currentPath) && (
-              <PageNotFoundPage />
-            )}
+            <Route path={"/pagenotfound"}>
+              <PageNotFoundPage/>
+            </Route>
+            <Redirect to="/pagenotfound"/>
 
           </Switch>
 
@@ -134,7 +125,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // AuthenticationDispatcher.onLoginWithToken();
+    AirportsDispatcher.onRequest();
+    AuthenticationDispatcher.onLoginWithToken();
     this.setState({ isAppStateMounted: true });
     this.handleResize();
     window.addEventListener('locationchange', () => Store.refreshState());
@@ -142,7 +134,7 @@ class App extends Component {
   }
 
   componentDidUpdate() {
-    // console.log(this.state);
+    console.log(this.state);
   }
 
   handleResize = () => {
@@ -157,7 +149,6 @@ class App extends Component {
     if (window.innerWidth >= BREAKPOINT_XXLARGE) newSize = "xx_large";
 
     if (breakPoint !== newSize) {
-      // console.log(newSize);
       this.setState({ breakPoint: newSize });
     }
   };

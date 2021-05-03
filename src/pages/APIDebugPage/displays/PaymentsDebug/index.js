@@ -1,5 +1,5 @@
 // Libraries
-import AirplanesDispatcher from "../../../../dispatchers/AirplanesDispatcher";
+import PaymentsDispatcher from "../../../../dispatchers/PaymentsDispatcher";
 import React, { Component } from "react";
 import Store from "../../../../reducers/Store";
 
@@ -15,31 +15,31 @@ import FlexRow from "../../../../components/FlexRow";
 import ItemsIndexReadout from "../../../../components/ItemsIndexReadout";
 import Pagination from "../../../../components/Pagination";
 
-class AirplanesDebug extends Component {
+class PaymentsDebug extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAdditionalInfoActive: false,
+      isPaymentInfoActive: false,
       searchTerms: "",
     };
   }
 
   render() {
-    const { airplanes } = Store.getState();
-    const { isAdditionalInfoActive, searchTerms } = this.state;
+    const { payments } = Store.getState();
+    const { isPaymentInfoActive, searchTerms } = this.state;
 
     // Microservice Status
-    const airplanesMSHealth = airplanes.health;
-    const airplanesMSStatus = airplanes.status;
+    const paymentsMSHealth = payments.health;
+    const paymentsMSStatus = payments.status;
 
     // Modal Toggles
-    const isCreatePromptActive = airplanes.create.isActive;
-    const isDeletePromptActive = airplanes.delete.isActive;
-    const isEditPromptActive = airplanes.edit.isActive;
+    const isCreatePromptActive = payments.create.isActive;
+    const isDeletePromptActive = payments.delete.isActive;
+    const isEditPromptActive = payments.edit.isActive;
 
     // Search Results vars
-    const searchError = airplanes.search.error;
-    const searchResults = airplanes.search.results;
+    const searchError = payments.search.error;
+    const searchResults = payments.search.results;
 
     return (
       <div
@@ -49,23 +49,33 @@ class AirplanesDebug extends Component {
         {/* Header */}
         <div className="col-12 bg-light kit-border-shadow">
           <div className="row p-2">
+
             {/* Search Bar */}
             <div className="col-12">
               {/* Search */}
-              <FlexRow className="mt-1 ml-auto" justify="end" wrap="no-wrap">
+              <FlexRow className="mt-1" justify="end" wrap="no-wrap">
                 <input
-                  aria-label="Search"
-                  className={"form-control " + (searchError && " is-invalid kit-shake")}
+                  aria-label={"Search"}
+                  className={
+                    "form-control " + (searchError && " is-invalid kit-shake")
+                  }
                   label={searchError}
-                  placeholder="ID, TypeID"
-                  type="search"
+                  placeholder={"search by IDs"}
+                  type={"search"}
                   style={{ maxWidth: "15rem" }}
-                  onChange={(e) => this.setState({ searchTerms: e.target.value })}
+                  onChange={(e) =>
+                    this.setState({ searchTerms: e.target.value })
+                  }
                 />
                 <button
-                  className={"btn btn-success ml-2 text-white kit-text-shadow-dark"}
-                  type={"submit"}
-                  onClick={() => AirplanesDispatcher.onSearchAndFilter("/search", searchTerms)}
+                  className="btn btn-success ml-2 text-white kit-text-shadow-dark"
+                  type="submit"
+                  onClick={() =>
+                    PaymentsDispatcher.onSearchAndFilter(
+                      "/search",
+                      searchTerms
+                    )
+                  }
                 >
                   search
                 </button>
@@ -78,70 +88,46 @@ class AirplanesDebug extends Component {
         <div
           className={
             "col-12 bg-light " +
-            ((airplanesMSStatus === "INACTIVE" ||
-              airplanesMSStatus === "ERROR" ||
+            ((paymentsMSStatus === "INACTIVE" ||
+              paymentsMSStatus === "ERROR" ||
               isCreatePromptActive ||
               isDeletePromptActive ||
               isEditPromptActive) &&
               "kit-opacity-50 kit-no-user kit-pointer-none")
           }
         >
-
           {/* Resuts Count & Page Selection */}
           <div className="row justify-content-center pb-1">
-
-            {/* Toggle Reference Data */}
-            <FlexRow
-              className="col-auto p-0 bg-dark rounded mt-2"
-              wrap={"no-wrap"}
-            >
-              <button
-                className={
-                  "btn text-white " + (isAdditionalInfoActive && "btn-success")
-                }
-                onClick={() => this.handleIncludeAdditionalInfo(true)}
-              >
-                Show More Info
-              </button>
-              <button
-                className={
-                  "btn text-white " + (!isAdditionalInfoActive && "btn-success")
-                }
-                onClick={() => this.handleIncludeAdditionalInfo(false)}
-              >
-                Hide
-              </button>
-            </FlexRow>
 
             {/* DropDown */}
             <FlexColumn className="col-auto text-center mt-2">
               <DropDown
                 buttonClassName="btn-secondary dropdown-toggle"
-                selection={airplanes.search.resultsPerPage}
+                selection={payments.search.resultsPerPage}
                 options={["3", "10", "25", "50"]}
                 optionsName="items"
-                onSelect={(e) => AirplanesDispatcher.onSelectItemsPerPage(e)}
+                onSelect={(e) => PaymentsDispatcher.onSelectItemsPerPage(e)}
               />
             </FlexColumn>
 
             {/* Readout */}
             <FlexColumn className="col-auto text-center mt-2">
               <ItemsIndexReadout
-                currentPage={airplanes.search.resultsPage}
-                itemsPerPage={airplanes.search.resultsPerPage}
-                itemsTotal={airplanes.search.results.length}
+                currentPage={payments.search.resultsPage}
+                itemsPerPage={payments.search.resultsPerPage}
+                itemsTotal={payments.search.results.length}
               />
             </FlexColumn>
 
             {/* Pagination */}
             <FlexColumn className="col-auto text-center mt-2">
               <Pagination
-                currentPage={airplanes.search.resultsPage}
+                currentPage={payments.search.resultsPage}
                 totalPages={Math.ceil(
-                  airplanes.search.results.length /
-                    Math.max(airplanes.search.resultsPerPage, 1)
+                  payments.search.results.length /
+                    Math.max(payments.search.resultsPerPage, 1)
                 )}
-                onSelectPage={(e) => AirplanesDispatcher.onSelectItemsPage(e)}
+                onSelectPage={(e) => PaymentsDispatcher.onSelectItemsPage(e)}
               />
             </FlexColumn>
           </div>
@@ -150,16 +136,16 @@ class AirplanesDebug extends Component {
         {/* Body */}
         <div className="col-12" style={{ overflow: "auto" }}>
           {/* Error State */}
-          {airplanesMSStatus === "ERROR" && (
+          {paymentsMSStatus === "ERROR" && (
             <FlexColumn className="h-100">
               <ErrorMessage className="h1" soundAlert={true}>
-                {airplanesMSHealth === "HEALTHY"
-                  ? airplanes.error
-                  : "No Airplane MS connection."}
+                {paymentsMSHealth === "HEALTHY"
+                  ? payments.error
+                  : "No Payment MS connection."}
               </ErrorMessage>
               <button
                 className="btn btn-light m-3"
-                onClick={() => AirplanesDispatcher.onCancel()}
+                onClick={() => PaymentsDispatcher.onCancel()}
               >
                 Back
               </button>
@@ -167,7 +153,7 @@ class AirplanesDebug extends Component {
           )}
 
           {/* Inactive State */}
-          {airplanesMSStatus === "INACTIVE" && (
+          {paymentsMSStatus === "INACTIVE" && (
             <FlexColumn style={{ minHeight: "10rem" }}>
               <ChangeOperationReadout
                 className="m-1"
@@ -179,29 +165,29 @@ class AirplanesDebug extends Component {
           )}
 
           {/* Pending State */}
-          {(airplanesMSStatus === "PENDING" ||
-            airplanesMSStatus === "INACTIVE") && (
+          {(paymentsMSStatus === "PENDING" ||
+            paymentsMSStatus === "INACTIVE") && (
             <FlexColumn style={{ minHeight: "10rem" }}>
               <div className="spinner-border" />
             </FlexColumn>
           )}
 
           {/* Success State */}
-          {airplanesMSStatus === "SUCCESS" &&
+          {paymentsMSStatus === "SUCCESS" &&
             !isCreatePromptActive &&
             !isDeletePromptActive &&
             !isEditPromptActive &&
-            this.handleRenderAirplanesList(searchResults)}
+            this.handleRenderPaymentsList(searchResults)}
 
-          {airplanesMSStatus === "SUCCESS" && isCreatePromptActive && (
+          {paymentsMSStatus === "SUCCESS" && isCreatePromptActive && (
             <CreateView />
           )}
 
-          {airplanesMSStatus === "SUCCESS" && isDeletePromptActive && (
+          {paymentsMSStatus === "SUCCESS" && isDeletePromptActive && (
             <DeleteView />
           )}
 
-          {airplanesMSStatus === "SUCCESS" && isEditPromptActive && (
+          {paymentsMSStatus === "SUCCESS" && isEditPromptActive && (
             <EditView />
           )}
         </div>
@@ -210,46 +196,47 @@ class AirplanesDebug extends Component {
   }
 
   componentDidMount() {
-    AirplanesDispatcher.onCancel();
-    AirplanesDispatcher.onHealth();
-    AirplanesDispatcher.onRequest();
+    PaymentsDispatcher.onCancel();
+    PaymentsDispatcher.onHealth();
+    PaymentsDispatcher.onRequest();
   }
 
-  handleIncludeAdditionalInfo = (isActive) => {
-    this.setState({ isAdditionalInfoActive: isActive });
+  handleIncludePaymentInfo = (isActive) => {
+    this.setState({ isPaymentInfoActive: isActive });
   };
 
-  handleRenderAirplanesList = (airplanesList) => {
-    const { airplanes } = Store.getState();
-    const { isAdditionalInfoActive } = this.state;
-    const resultsDisplayed = Number(airplanes.search.resultsPerPage);
+  handleRenderPaymentsList = (paymentsList) => {
+    const { payments } = Store.getState();
+    const { isPaymentInfoActive } = this.state;
+    const resultsDisplayed = Number(payments.search.resultsPerPage);
     const resultsStart =
-      airplanes.search.resultsPerPage * (airplanes.search.resultsPage - 1);
+      payments.search.resultsPerPage * (payments.search.resultsPage - 1);
 
-    const airplanesTable = [];
-    if (!airplanesList.length) airplanesList = [airplanesList];
+    const paymentsTable = [];
+    if (!paymentsList.length) paymentsList = [paymentsList];
     for (
       let i = resultsStart;
-      i < resultsStart + resultsDisplayed && i < airplanesList.length;
+      i < resultsStart + resultsDisplayed && i < paymentsList.length;
       i++
     ) {
-      const airplaneId = airplanesList[i].airplaneId;
-      if (airplaneId) {
+      const paymentId = paymentsList[i].paymentId;
+
+      if (paymentId) {
         const index = Number(i) + 1;
-        airplanesTable.push(
+        paymentsTable.push(
           <tr key={index}>
-            <th scrop="row">{index}</th>
-            <td>{airplaneId}</td>
-            <td>{airplanesList[i].airplaneType.airplaneTypeName}</td>
-            {isAdditionalInfoActive && <td>{airplanesList[i].airplaneType.airplaneTypeId}</td>}
-            {isAdditionalInfoActive && <td>{airplanesList[i].airplaneType.airplaneTypeCapacity}</td>}
+            <th scope="col">{index}</th>
+            <td>{paymentsList[i].paymentId}</td>
+            <td>{paymentsList[i].paymentBookingUuid}</td>
+            <td>{paymentsList[i].paymentStripeUuid}</td>
+            <td>{paymentsList[i].paymentStatus}</td>
 
             {/* Edit */}
             <td>
               <button
                 className="btn btn-info"
                 onClick={() =>
-                  AirplanesDispatcher.onPromptEdit(`/${airplaneId}`)
+                  PaymentsDispatcher.onPromptEdit("/" + paymentId)
                 }
               >
                 Edit
@@ -261,7 +248,7 @@ class AirplanesDebug extends Component {
               <button
                 className="btn btn-primary"
                 onClick={() =>
-                  AirplanesDispatcher.onPromptDelete(`/${airplaneId}`)
+                  PaymentsDispatcher.onPromptDelete("/" + paymentId)
                 }
               >
                 Delete
@@ -279,15 +266,15 @@ class AirplanesDebug extends Component {
             <tr>
               <th scope="col">#</th>
               <th scope="col">ID</th>
-              <th scope="col">Type</th>
-              {isAdditionalInfoActive && <th scope="col">Type ID</th>}
-              {isAdditionalInfoActive && <th scope="col">Capacity</th>}
+              <th scope="col">Booking UUID</th>
+              <th scope="col">Stripe UUID</th>
+              <th scope="col">Status</th>
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
                     className="btn btn-success text-white kit-text-shadow-dark"
                     style={{ whiteSpace: "nowrap" }}
-                    onClick={() => AirplanesDispatcher.onPromptCreate()}
+                    onClick={() => PaymentsDispatcher.onPromptCreate()}
                   >
                     + Create New
                   </button>
@@ -296,9 +283,9 @@ class AirplanesDebug extends Component {
             </tr>
           </thead>
           <tbody>
-            {airplanesTable}
+            {paymentsTable}
             <tr>
-              <td colSpan={isAdditionalInfoActive ? "7" : "5"}></td>
+              <td colSpan="7"></td>
               {/* Space at end of table for aesthetic */}
             </tr>
           </tbody>
@@ -307,4 +294,4 @@ class AirplanesDebug extends Component {
     );
   };
 }
-export default AirplanesDebug;
+export default PaymentsDebug;

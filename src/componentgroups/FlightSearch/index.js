@@ -1,4 +1,5 @@
 // Libraries
+import moment from "moment";
 import React, { useCallback, useEffect, useState } from "react";
 import Store from "../../reducers/Store";
 import AirportsDispatcher from "../../dispatchers/AirportsDispatcher";
@@ -18,12 +19,16 @@ const FLIGHT_TYPE_ROUNDTRIP = "Round-Trip";
 
 const FlightSearch = (props) => {
   const { airports, flights } = Store.getState();
+  const dateNow = moment().format("YYYY-MM-DDTHH:mm");
   const [destinationRecommendations, setDestinationRecommendations] = useState([]);
   const [originRecommendations, setOriginRecommendations] = useState([]);
   const [isFocusDestination, setIsFocusDestination] = useState(false);
   const [isFocusOrigin, setIsFocusOrigin] = useState(false);
-  const [isRecommendationsMounted, setIsRecommendationsMounted] = useState(false);
-  const isResultsPending = props.isPending || flights.status === "PENDING" || false;
+  const [isRecommendationsMounted, setIsRecommendationsMounted] = useState(
+    false
+  );
+  const isResultsPending =
+    props.isPending || flights.status === "PENDING" || false;
 
   const isActiveOriginRecommendations =
     isFocusOrigin && originRecommendations.length > 0;
@@ -31,49 +36,68 @@ const FlightSearch = (props) => {
     isFocusDestination && destinationRecommendations.length > 0;
 
   // Recommend Airport search results
-  const handleAirportRecommendations = useCallback((type, inputText) => {
-    const matchingAirports = [];
-    inputText = inputText.trim().toLowerCase();
+  const handleAirportRecommendations = useCallback(
+    (type, inputText) => {
+      const matchingAirports = [];
+      inputText = inputText.trim().toLowerCase();
 
-    // Grab Airports if needed
-    if (airports.search.results.length < 1) {
-      AirportsDispatcher.onRequest();
-    }
+      // Grab Airports if needed
+      if (airports.search.results.length < 1) {
+        AirportsDispatcher.onRequest();
+      }
 
-    // Do not recommend anything if the search is empty
-    if(inputText !== "") {
+      // Do not recommend anything if the search is empty
+      if (inputText !== "") {
+        // Loop Airports
+        for (const i in airports.search.results) {
+          if (airports.search.results[i]) {
+            const airport = airports.search.results[i];
+            const airportAsString = (
+              airport.airportIataId + airport.airportCityName
+            ).toLowerCase();
 
-      // Loop Airports
-      for (const i in airports.search.results) {
-        if (airports.search.results[i]) {
-          const airport = airports.search.results[i];
-          const airportAsString = (airport.airportIataId + airport.airportCityName).toLowerCase();
-
-          // Only select matching Airports
-          if (airportAsString.includes(inputText)) {
-            const formattedAirport = String(`${airport.airportIataId}: ${airport.airportCityName}`);
-            if (type === "origin" && formattedAirport !== flights.search.filters.destination)
-              matchingAirports.push(formattedAirport);
-            if (type === "destination" && formattedAirport !== flights.search.filters.origin)
-              matchingAirports.push(formattedAirport);
+            // Only select matching Airports
+            if (airportAsString.includes(inputText)) {
+              const formattedAirport = String(
+                `${airport.airportIataId}: ${airport.airportCityName}`
+              );
+              if (
+                type === "origin" &&
+                formattedAirport !== flights.search.filters.destination
+              )
+                matchingAirports.push(formattedAirport);
+              if (
+                type === "destination" &&
+                formattedAirport !== flights.search.filters.origin
+              )
+                matchingAirports.push(formattedAirport);
+            }
           }
         }
       }
-    }
 
-    if (type === "origin") setOriginRecommendations(matchingAirports);
-    if (type === "destination") setDestinationRecommendations(matchingAirports);
-    return matchingAirports;
-  }, [airports, flights]);
+      if (type === "origin") setOriginRecommendations(matchingAirports);
+      if (type === "destination")
+        setDestinationRecommendations(matchingAirports);
+      return matchingAirports;
+    },
+    [airports, flights]
+  );
 
   // Populate Airports on mount
   useEffect(() => {
-    if(!isRecommendationsMounted) {
+    if (!isRecommendationsMounted) {
       setIsRecommendationsMounted(true);
       handleAirportRecommendations("origin", "");
       handleAirportRecommendations("destination", "");
+      FlightsDispatcher.onSetFilter("departureTimeAfter", dateNow);
     }
-  }, [isRecommendationsMounted, setIsRecommendationsMounted, handleAirportRecommendations]);
+  }, [
+    isRecommendationsMounted,
+    setIsRecommendationsMounted,
+    handleAirportRecommendations,
+    dateNow,
+  ]);
 
   return (
     <div className={props.className || ""} style={props.style}>
@@ -113,7 +137,9 @@ const FlightSearch = (props) => {
               className="m-auto"
               style={{ height: "1.5rem", width: "1.5rem" }}
               type="radio"
-              checked={flights.search.filters.flightType === FLIGHT_TYPE_ROUNDTRIP}
+              checked={
+                flights.search.filters.flightType === FLIGHT_TYPE_ROUNDTRIP
+              }
               readOnly
             />
             <label className="ml-2 mt-auto mb-auto text-center kit-no-user">
@@ -155,7 +181,7 @@ const FlightSearch = (props) => {
         {/* Origin */}
         <div
           className="col-12 col-sm-6"
-          style={{ height: "3.5rem", maxWidth:"30rem" }}
+          style={{ height: "3.5rem", maxWidth: "30rem" }}
         >
           <InputText
             className="h-100 rounded kit-border-shadow mb-0"
@@ -189,7 +215,7 @@ const FlightSearch = (props) => {
         {/* Destination */}
         <div
           className="col-12 col-sm-6 mt-2 mt-sm-0"
-          style={{ height: "3.5rem", maxWidth:"30rem" }}
+          style={{ height: "3.5rem", maxWidth: "30rem" }}
         >
           <InputText
             className="h-100 rounded kit-border-shadow mb-0"
@@ -198,7 +224,9 @@ const FlightSearch = (props) => {
             fontClass={"h4"}
             name="destination"
             value={flights.search.filters.destination}
-            onBlur={() => setTimeout(() => setIsFocusDestination(false), BLUR_DELAY)}
+            onBlur={() =>
+              setTimeout(() => setIsFocusDestination(false), BLUR_DELAY)
+            }
             onFocus={() => setIsFocusDestination(true)}
             onChange={(value) => {
               FlightsDispatcher.onSetFilter("destination", value);
@@ -233,10 +261,14 @@ const FlightSearch = (props) => {
               <input
                 className="form-label mr-auto"
                 style={{ height: "3.5rem", maxWidth: "99%" }}
+                defaultValue={
+                  flights.search.filters.departureTimeAfter || dateNow
+                }
+                min={dateNow}
                 type="datetime-local"
                 onChange={(e) =>
                   FlightsDispatcher.onSetFilter(
-                    "departureDateTime",
+                    "departureTimeAfter",
                     e.target.value
                   )
                 }
@@ -252,10 +284,14 @@ const FlightSearch = (props) => {
                 <input
                   className="form-label mr-auto"
                   style={{ height: "3.5rem", maxWidth: "99%" }}
+                  defaultValue={
+                    flights.search.filters.departureTimeBefore || dateNow
+                  }
+                  min={dateNow}
                   type="datetime-local"
                   onChange={(e) =>
                     FlightsDispatcher.onSetFilter(
-                      "returnDateTime",
+                      "departureTimeBefore",
                       e.target.value
                     )
                   }
@@ -305,7 +341,7 @@ const FlightSearch = (props) => {
         {/* Search Button */}
         <div className="col-4 ml-auto">
           <button
-            className="btn btn-lg btn-success text-white kit-text-shadow-thin"
+            className="btn btn-lg btn-success text-white kit-text-shadow-dark"
             style={{ minWidth: "50%" }}
             onClick={() => props.onSubmit()}
           >

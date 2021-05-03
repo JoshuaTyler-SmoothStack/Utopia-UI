@@ -1,34 +1,36 @@
 // Libraries
 import React, { useState } from "react";
 import Store from "../../reducers/Store";
-
-// Components
-import Modal from "../../components/Modal";
-import FlexRow from "../../components/FlexRow";
-
+import Constants from "../../resources/constants.json";
 import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
+// Components
+import { Redirect } from "react-router";
+import Modal from "../../components/Modal";
+import FlexRow from "../../components/FlexRow";
+import FlexColumn from "../../components/FlexColumn";
 
 const ZINDEX_DEFAULT = 2;
 
 const DeleteProfile = (props) => {
 
   const [redirect, setRedirect] = useState(false);
-  const { authentication, users } = Store.getState();
   const [isDeleted, setIsDeleted] = useState(false);
 
+  const { authentication  } = Store.getState();
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
 
   const deleteAccount = () => {
-    AuthenticationDispatcher.onDeleteAccount(users.selected.userId);
+    AuthenticationDispatcher.deleteAccount(authentication.userId);
     setIsDeleted(true);
     setTimeout(() => {
       setRedirect(true);
+      AuthenticationDispatcher.onLogout();
     }, 3500);
-  }
+  };
 
   return (
     <Modal
@@ -38,7 +40,7 @@ const DeleteProfile = (props) => {
       zIndex={zIndex}
       onClose={props.onClose}
     >
-      <div className="container-fluid">
+      <div className="container-fluid w-100">
         <div className="row">
           <div className={props.className || ""} style={props.style}>
             <div className="row">
@@ -67,42 +69,51 @@ const DeleteProfile = (props) => {
               </FlexRow>
 
               {/* Header */}
-              <div className="col-12 bg-white rounded p-2 kit-border-shadow">
-                <FlexRow className="h-100 row d-flex justify-content-center" justify="start">
-                  <h3>Delete Account</h3>
-                </FlexRow>
-              </div>
-              {authentication.status === "INACTIVE" && isDeleted &&
-
-                <div>
-                  <h1>Account successfully deleted</h1>
-                  <FlexRow>
-                    <h1>Account successfully deleted</h1>
-                    <h5>Redirecting . . .</h5>
-                    <div className="spinner-border ml-2" />
-                  </FlexRow>
-
+              {!isDeleted &&
+                <div className="col-12 bg-white rounded p-2 kit-border-shadow">
+                  <FlexColumn className="h-100 column" justify="start" wrap="no-wrap">
+                    <h3>Are you sure you want to delete your account?</h3>
+                    <FlexRow>
+                      <button className="btn btn-info ml-2 text-black" onClick={() => props.onClose()} >
+                        Cancel
+                </button>
+                      <button className="btn btn-primary ml-2 text-black " onClick={deleteAccount}>
+                        Yes/ Delete
+                </button>
+                    </FlexRow>
+                  </FlexColumn>
+                  {/* Body */}
                 </div>
               }
 
 
-              {/* Body */}
-              <FlexRow className="col-12 mt-2">
-                <div className="row rounded d-flex justify-content-center" wrap="no-wrap">
 
-                  <button className="btn btn-info ml-2 text-black " >
-                    Cancel
-                </button>
-                  <button className="btn btn-success ml-2 text-black " onClick={deleteAccount}>
-                    Understood/ Delete
-                </button>
+              {isDeleted &&
+                <div className="col-12 bg-white rounded p-2 kit-border-shadow">
+                  <FlexColumn className="h-100 column" justify="start" wrap="no-wrap">
+                    <h3>Account successfully deleted</h3>
+                    <h5>Redirecting to home page  <div className="spinner-border ml-2" /></h5>
+                  </FlexColumn>
+                  {/* Body */}
                 </div>
-              </FlexRow>
+              }
+
+              {isDeleted && redirect &&
+
+                <div>
+                  <Redirect to="/home" />
+                </div>
+
+              }
 
             </div>
           </div>
         </div>
       </div>
+
+      {/* Redirects */}
+      {redirect && <Redirect to={Constants.pagePaths.home} />}
+
     </Modal>
   );
 };

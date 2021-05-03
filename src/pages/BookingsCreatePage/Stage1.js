@@ -4,8 +4,10 @@ import React from 'react';
 import FlexColumn from "../../components/FlexColumn";
 import FlexRow from "../../components/FlexRow";
 import InputText from "../../components/InputText";
+import AuthenticationDispatcher from '../../dispatchers/AuthenticationDispatcher';
 
 const Stage1 = (props) => {
+
   const breakPoint = props.breakPoint || "";
   const firstName = props.firstName || "";
   const lastName = props.lastName || "";
@@ -19,7 +21,9 @@ const Stage1 = (props) => {
       {/* User Login */}
       <FlexColumn>
         <h5>Already have an account?</h5>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary"
+          onClick={() => AuthenticationDispatcher.onPromptLogin()}
+        >
           Login
         </button>
       </FlexColumn>

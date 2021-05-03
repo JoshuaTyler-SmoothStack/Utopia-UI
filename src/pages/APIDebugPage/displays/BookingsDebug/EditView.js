@@ -3,7 +3,7 @@ import _ from "lodash";
 import React, { useState } from 'react';
 import Store from '../../../../reducers/Store';
 import BookingsDispatcher from "../../../../dispatchers/BookingsDispatcher";
-import KitUtils from '../../../../kitutils/KitUtils_v1.0.0';
+import KitUtils from '../../../../kitutils/KitUtils';
 
 // Components
 import ChangeOperationReadout from '../ChangeOperationReadout';
@@ -16,8 +16,7 @@ const EditView = (props) => {
   const bookingStatusOptions = ["ACTIVE", "CANCELLED", "INACTIVE", "ONHOLD"];
 
   const { bookings } = Store.getState();
-  const results = bookings.edit.results
-  const resultsStatus = bookings.edit.resultsStatus;
+  const { results, resultsStatus } = bookings.edit;
   const resultsPending = resultsStatus === "PENDING";
   const selectedBooking = bookings.selected;
   const status = bookings.edit.status;
@@ -32,7 +31,7 @@ const EditView = (props) => {
   const [bookingGuestEmail, setBookingGuestEmail] = useState(selectedBooking.bookingGuestEmail || "unkown");
   const [bookingGuestPhone, setBookingGuestPhone] = useState(selectedBooking.bookingGuestPhone || "unkown");
 
-  const [bookingUserGuestValid, setBookingUserGuestValid] = useState(false)
+  const [bookingUserGuestValid, setBookingUserGuestValid] = useState(false);
   const [isReverted, setIsReverted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
