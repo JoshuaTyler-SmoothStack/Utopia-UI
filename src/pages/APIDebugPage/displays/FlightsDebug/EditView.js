@@ -94,7 +94,16 @@ const EditView = (props) => {
     };
 
     if (!_.isEqual(selectedFlight, newFlight)) {
-      FlightsDispatcher.onEdit(null, newFlight);
+      const editedFlight = {
+        flightAirplane : flightAirplaneId,
+        flightSeatingId : flightSeatingId,
+        flightRoute : flightRouteId,
+        flightDuration : flightDuration,
+        flightStatus : flightStatus,
+        flightId: selectedFlight.flightId,
+        flightDepartureTime: formattedDate,
+      };
+      FlightsDispatcher.onEdit(null, editedFlight);
     } else {
       FlightsDispatcher.onEditFake(newFlight);
     }

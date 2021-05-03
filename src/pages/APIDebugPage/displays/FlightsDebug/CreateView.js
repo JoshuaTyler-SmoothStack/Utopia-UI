@@ -45,9 +45,9 @@ const CreateView = (props) => {
     var formattedDate = moment(flightDepartureTime).format('YYYY-MM-DD HH:mm:ss').toString();
     
     const newFlight = {
-      flightAirplaneId : flightAirplaneId,
+      flightAirplane : flightAirplaneId,
       flightSeatingId : flightSeatingId,
-      flightRouteId : flightRouteId,
+      flightRoute : flightRouteId,
       flightDepartureTime : formattedDate,
       flightDuration : flightDuration,
       flightStatus: "INACTIVE"
