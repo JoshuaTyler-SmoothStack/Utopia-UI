@@ -118,7 +118,6 @@ class AuthenticationDispatcher extends BaseDispatcher {
       },
       (httpResponseBody) => {
         if (httpResponseBody.error || !httpResponseBody.userId) {
-
           Store.reduce({
             type: Constants.authentication.errorLogin,
             payload: httpResponseBody.error || "Invalid username or password",
@@ -175,23 +174,23 @@ class AuthenticationDispatcher extends BaseDispatcher {
   }
 
   static forgotPassword(data) {
-    return axios.post(`${Orchestration.apiEndpoint}/auth/forgot-password`, data)
+    return axios.post(`${Orchestration.apiEndpoint}/auth/forgot-password`, data);
   }
 
   static verifyUserToken(data) {
-    return axios.post(`${Orchestration.apiEndpoint}/auth/forgot-password/verify-token`, data)
+    return axios.post(`${Orchestration.apiEndpoint}/auth/forgot-password/verify-token`, data);
   }
 
   static changePassword(data) {
-    return axios.post(`${Orchestration.apiEndpoint}/auth/forgot-password/recover`, data)
+    return axios.post(`${Orchestration.apiEndpoint}/auth/forgot-password/recover`, data);
   }
 
   static getUserById(userId) {
-    return axios.get(`${Orchestration.apiEndpoint}/auth/${userId}`)
+    return axios.get(`${Orchestration.apiEndpoint}/auth/${userId}`);
   }
 
   static deleteAccount(userId) {
-    return axios.delete(`${Orchestration.apiEndpoint}/auth/${userId}`)
+    return axios.delete(`${Orchestration.apiEndpoint}/auth/${userId}`);
   }
 
   static onLogout() {
