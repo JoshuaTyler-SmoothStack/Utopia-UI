@@ -61,7 +61,8 @@ class UsersDebug extends Component {
                     "form-control " + (searchError && " is-invalid kit-shake")
                   }
                   label={searchError}
-                  placeholder=""
+                  placeholder="Search Currently Disabled"
+                  disabled
                   type="search"
                   style={{ maxWidth: "15rem" }}
                   onChange={(e) =>
@@ -70,6 +71,7 @@ class UsersDebug extends Component {
                 />
                 <button
                   className="btn btn-success ml-2 text-white kit-text-shadow-dark"
+                  disabled
                   type="submit"
                   onClick={() =>
                     UsersDispatcher.onSearchAndFilter("/search", searchTerms)

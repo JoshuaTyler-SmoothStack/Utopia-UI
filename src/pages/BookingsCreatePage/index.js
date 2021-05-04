@@ -14,22 +14,39 @@ import Stage4 from "./Stage4";
 import Stage5 from "./Stage5";
 import KitUtils from "../../kitutils/KitUtils";
 
+const SALES_TAX_SIMULATED = 0.057;
+
 class BookingsCreatePage extends Component {
   constructor(props) {
     super(props);
+
+    const { authentication, bookings } = Store.getState();
+    const { bookingFlightId, bookingSeatId, bookingSeatPrice } = bookings.search.filters;
+
     this.state = {
-      currentStage: 1,
       address: "",
+      cardAddress: "",
+      cardHolderName: "",
+      currentStage: 1,
       dateOfBirth: "",
       email: "",
       firstName: "",
       flightId: 0,
-      lastName: "",
-      passportId: "",
-      phone: "",
-      sex: "",
       isAgreement: false,
       isVeteran: false,
+      lastName: "",
+      passportId: "",
+      paymentAmount: bookingSeatPrice
+        ? `$${(Number(bookingSeatPrice.replace("$", "")) * (1 + SALES_TAX_SIMULATED)).toFixed(2)}`
+        : "Invalid Payment",
+      paymentConfirmation: "",
+      paymentTitle: `UA-${bookingFlightId || "Invalid"}, Seat: ${bookingSeatId || "Invalid"}`,
+      phone: "",
+      sex: "",
+      stageCount: authentication.userId ? 4 : 5,
+      stageNames: authentication.userId
+      ? ["Passeneger Info", "Regulations", "Payment", "Complete"]
+      : ["Login/Guest", "Passeneger Info", "Regulations", "Payment", "Complete"],
     };
   }
 
@@ -37,24 +54,26 @@ class BookingsCreatePage extends Component {
     const { authentication, breakPoint } = Store.getState();
     const {
       address,
+      cardAddress,
+      cardHolderName,
       currentStage,
       dateOfBirth,
       email,
       firstName,
-      flightId,
       isAgreement,
       isVeteran ,
       lastName,
       passportId,
+      paymentAmount,
+      paymentConfirmation,
+      paymentTitle,
       phone,
       sex,
+      stageCount,
+      stageNames,
     } = this.state;
 
     const selectedStage = authentication.userId ? currentStage + 1 : currentStage;
-    const stageCount = authentication.userId ? 4 : 5;
-    const stageNames = authentication.userId
-      ? ["Passeneger Info", "Regulations", "Payment", "Complete"]
-      : ["Login/Guest", "Passeneger Info", "Regulations", "Payment", "Complete"];
 
     return (
       <div className={"container-fluid"} style={{minHeight: "100vh", maxWidth:"1400px", overflow: "auto"}}>
@@ -92,7 +111,7 @@ class BookingsCreatePage extends Component {
 
                 {/* Login or provide guest info - Stage 1 */}
                 {selectedStage === 1 &&
-                  <Stage1 className={"col-12 col-sm-10 col-md-8"}
+                  <Stage1 className={"col-12 col-sm-10 col-md-8 row"}
                     breakPoint={breakPoint}
                     firstName={firstName}
                     lastName={lastName}
@@ -105,7 +124,7 @@ class BookingsCreatePage extends Component {
 
                 {/* Stage 2 - Create Passenger */}
                 {selectedStage === 2 &&
-                  <Stage2 className={"col-12 col-sm-10 col-md-8"}
+                  <Stage2 className={"col-12 col-sm-10 col-md-8 row"}
                     address={address}
                     dateOfBirth={dateOfBirth}
                     isVeteran={isVeteran}
@@ -130,7 +149,15 @@ class BookingsCreatePage extends Component {
                 {/* Pay for Booking */}
                 {selectedStage === 4 &&
                   <Stage4 className={"col-12 col-sm-10 col-md-8"}
-                    onPayment={(payment) => this.handlePageNext()}
+                    cardAddress={cardAddress}
+                    cardHolderName={cardHolderName}
+                    passengerAddress={address}
+                    paymentAmount={paymentAmount}
+                    paymentComplete={paymentConfirmation}
+                    paymentTitle={paymentTitle}
+                    onCardAddress={(value) => this.setState({cardAddress: value})}
+                    onCardHolderName={(value) => this.setState({cardHolderName: value})}
+                    onPaymentConfirmation={(value) => this.setState({paymentConfirmation: value})}
                   />
                 }
 
@@ -143,8 +170,9 @@ class BookingsCreatePage extends Component {
                     lastName={lastName}
                     email={email}
                     firstName={firstName}
-                    flightId={flightId}
                     passportId={passportId}
+                    paymentConfirmation={paymentConfirmation}
+                    paymentTitle={paymentTitle}
                     phone={phone}
                     isVeteran={isVeteran}
                     sex={sex}
@@ -192,13 +220,13 @@ class BookingsCreatePage extends Component {
 
   handlePageNext() {
     const { currentStage, stageCount } = this.state;
-    this.setState({currentStage: Math.min(currentStage + 1, stageCount)});
+    this.setState({ currentStage: Math.min((currentStage + 1), stageCount) });
     if(currentStage === stageCount) KitUtils.soundAlert();
   }
 
   handlePagePrevious() {
     const { currentStage } = this.state;
-    this.setState({currentStage: Math.max(currentStage - 1, 1)});
+    this.setState({ currentStage: Math.max((currentStage - 1), 1) });
     if(currentStage === 1) KitUtils.soundAlert();
   }
 

@@ -34,7 +34,7 @@ class Store {
   }
 
   static getCombinedDefaultReducerStates() {
-    return { 
+    return {
       airplanes: AirplanesReducer.getDefaultReducerState(),
       airports: AirportsReducer.getDefaultReducerState(),
       authentication: AuthenticationReducer.getDefaultReducerState(),

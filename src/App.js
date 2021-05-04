@@ -133,10 +133,6 @@ class App extends Component {
     window.addEventListener("resize", () => this.handleResize());
   }
 
-  componentDidUpdate() {
-    console.log(this.state);
-  }
-
   handleResize = () => {
     const { breakPoint } = this.state;
 

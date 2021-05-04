@@ -14,24 +14,35 @@ import Modal from "../../components/Modal";
 
 const ALPHABET = [ "A", "B", "C", "D", "E", "F", "G", "H"];
 const EMERGENCY_EXIT_ROW_MESSAGE = "Passengers seated in the emergency exit row are on the front lines of an emergency evacuation. It's important that they are able to articulate directions to other passengers. This is also one of the reasons flight attendants ask passengers seated in the emergency exit row to give a verbal yes.";
+const SEAT_PRICE_INVALID = "Price Unavailable";
 const ZINDEX_DEFAULT = 2;
 
 const SeatingModal = (props) => {
+  // @props: seatPriceFirstClass - string
+  // @props: seatPriceBusinessClass - string
+  // @props: seatPriceEcononmyClass - string
 
   const { airplanes, breakPoint, flights } = Store.getState();
+
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
+  const seatPriceFirstClass = props.seatPriceFirstClass || SEAT_PRICE_INVALID;
+  const seatPriceBusinessClass = props.seatPriceBusinessClass || SEAT_PRICE_INVALID;
+  const seatPriceEconomyClass = props.seatPriceEconomyClass || SEAT_PRICE_INVALID;
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
+
   const [errorMessage, setErrorMessage] = useState("");
   const [iActiveConfirmSeatSelection, setIsActiveConfirmSeatSelection] = useState(false);
   const [isEmergencyExitRowAgreement, setIsEmergencyExitRowAgreement] = useState(false);
   const [seatingTable, setSeatingTable] = useState(null);
+  const [seatPrice, setSeatPrice] = useState(seatPriceEconomyClass);
   const [seatSelection, setSeatSelection] = useState("");
   const [selectingEmerencyExitRow, setSelectingEmerencyExitRow] = useState(false);
   const [isRedirectingToBooking, setIsRedirectingToBooking] = useState(false);
 
-  const handleSelectSeat = (seatPosition, isAvailable, isEmergencyExitRow) => {
+  const handleSelectSeat = (seatPosition, seatPrice, isAvailable, isEmergencyExitRow) => {
     setSeatSelection(seatPosition);
+    setSeatPrice(seatPrice);
     if(!isAvailable) {
       KitUtils.soundAlert();
       setErrorMessage(String(`Seat: ${seatPosition} is occupied`));
@@ -49,7 +60,8 @@ const SeatingModal = (props) => {
     }
 
     BookingsDispatcher.onSetFilter("bookingFlightId", flights.selected.flightId);
-    BookingsDispatcher.onSetFilter("bookingPassengerSeat", seatSelection);
+    BookingsDispatcher.onSetFilter("bookingSeatPrice", seatPrice);
+    BookingsDispatcher.onSetFilter("bookingSeatId", seatSelection);
     setIsRedirectingToBooking(true);
   };
 
@@ -59,15 +71,15 @@ const SeatingModal = (props) => {
       const firstClassCapacity = flights.selected.flightAirplane.airplaneType.airplaneTypeFirstClassCapacity;
       const firstClassColumns = flights.selected.flightAirplane.airplaneType.airplaneTypeFirstClassColumns;
       const firstClassRows = firstClassCapacity / firstClassColumns;
-      
+
       const businessClassCapacity = flights.selected.flightAirplane.airplaneType.airplaneTypeBusinessClassCapacity;
       const businessClassColumns = flights.selected.flightAirplane.airplaneType.airplaneTypeBusinessClassColumns;
       const businessClassRows = businessClassCapacity / businessClassColumns;
-      
+
       const coachClassCapacity = flights.selected.flightAirplane.airplaneType.airplaneTypeCoachClassCapacity;
       const coachClassColumns = flights.selected.flightAirplane.airplaneType.airplaneTypeCoachClassColumns;
       const coachClassRows = coachClassCapacity / coachClassColumns;
-      
+
       const emergencyExitRows = flights.selected.flightAirplane.airplaneType.airplaneTypeEmergencyExitRows.split("-");
       const occupiedSeats = ["1A", "11D", "35E"];
 
@@ -81,13 +93,16 @@ const SeatingModal = (props) => {
         const rowRightSide = [];
 
         let columnCount = coachClassColumns;
-        let defaultSeatColor = "kit-bg-bronze";
+        let selectedSeatColor = "kit-bg-bronze";
+        let selectedSeatPrice = seatPriceEconomyClass;
         if(rowIndex < firstClassRows) {
-          defaultSeatColor = "kit-bg-gold";
+          selectedSeatColor = "kit-bg-gold";
+          selectedSeatPrice = seatPriceFirstClass;
           columnCount = firstClassColumns;
         }
         else if(rowIndex < (firstClassRows + businessClassRows)) {
-          defaultSeatColor = "kit-bg-silver";
+          selectedSeatColor = "kit-bg-silver";
+          selectedSeatPrice = seatPriceBusinessClass;
           columnCount = businessClassColumns;
         }
 
@@ -98,7 +113,7 @@ const SeatingModal = (props) => {
           let isAvailable = true;
           let isEmergencyExitRow = false;
           const seatPosition = String(`${rowIndex+1}${ALPHABET[columnIndex]}`);
-          let seatColor = defaultSeatColor;
+          let seatColor = selectedSeatColor;
 
           if(occupiedSeats.includes(seatPosition)) {
             seatColor = "btn-dark";
@@ -115,7 +130,7 @@ const SeatingModal = (props) => {
             <button key={String(`seat-${seatPosition}`)}
               className={String(`btn m-1 ${seatColor}`)}
               style={{minHeight:"2rem", minWidth:"2rem"}}
-              onClick={() => handleSelectSeat(seatPosition, isAvailable, isEmergencyExitRow)}
+              onClick={() => handleSelectSeat(seatPosition, selectedSeatPrice, isAvailable, isEmergencyExitRow)}
             >
               {seatPosition}
             </button>
@@ -158,7 +173,7 @@ const SeatingModal = (props) => {
         <div className="row">
           <div className={(props.className || "")} style={props.style}>
             <div className="row">
-              
+
               {/* Close Button */}
               <FlexRow>
                 <button
@@ -268,7 +283,7 @@ const SeatingModal = (props) => {
               {/* Seat Selection Confirmation */}
               {iActiveConfirmSeatSelection &&
               <FlexColumn className="col-12 mt-2" style={{maxHeight:"50vh", overflowY: "auto"}}>
-                
+
                 {/* Seat Selection */}
                 <FlexRow className="bg-white rounded p-2 mb-2">
                   <h5 className="text-light">{"You have selected seat:"}</h5>

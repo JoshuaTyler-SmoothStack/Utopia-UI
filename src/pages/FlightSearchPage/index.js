@@ -12,6 +12,10 @@ import NavBar from "../../componentgroups/NavBar";
 import SeatingModal from "../../componentgroups/SeatingModal";
 import FlightSearch from "../../componentgroups/FlightSearch";
 
+const SEAT_PRICE_FIRST = "$1239";
+const SEAT_PRICE_BUSINESS = "$527";
+const SEAT_PRICE_ECONOMY = "$184";
+
 class FlightSearchPage extends Component {
   constructor(props) {
     super(props);
@@ -51,8 +55,11 @@ class FlightSearchPage extends Component {
         {isActive_FlightModal &&
         <FlightModal
           className="col-12 col-sm-10 col-md-9 col-lg-8 bg-primary p-2 m-auto rounded kit-border-shadow"
+          seatPriceFirstClass={SEAT_PRICE_FIRST}
+          seatPriceBusinessClass={SEAT_PRICE_BUSINESS}
+          seatPriceEconomyClass={SEAT_PRICE_ECONOMY}
           zIndex="4"
-          onSelectSeat={() => {
+          onSelectSeatType={() => {
             this.setState({isActive_SeatingModal: true});
             this.handleFlightModalToggle(false, null);
           }}
@@ -63,6 +70,9 @@ class FlightSearchPage extends Component {
         {isActive_SeatingModal &&
         <SeatingModal
           className="col-12 col-sm-10 col-md-8 col-lg-7 bg-info p-2 m-auto rounded kit-border-shadow"
+          seatPriceFirstClass={SEAT_PRICE_FIRST}
+          seatPriceBusinessClass={SEAT_PRICE_BUSINESS}
+          seatPriceEconomyClass={SEAT_PRICE_ECONOMY}
           zIndex="4"
           onClose={() => {
             this.setState({isActive_SeatingModal: false});

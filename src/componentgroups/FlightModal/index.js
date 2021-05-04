@@ -10,15 +10,23 @@ import Modal from "../../components/Modal";
 import FlexRow from "../../components/FlexRow";
 import FlexColumn from "../../components/FlexColumn";
 
-const ZINDEX_DEFAULT = 2;
 const MINUTES_PER_DAY = 3600;
 const MINUTES_PER_HOUR = 60;
+const SEAT_PRICE_INVALID = "Price Unavailable";
+const ZINDEX_DEFAULT = 2;
 
 const FlightModal = (props) => {
+  // @props: seatPriceFirstClass - string
+  // @props: seatPriceBusinessClass - string
+  // @props: seatPriceEcononmyClass - string
 
   const { flights } = Store.getState();
+
   const align = props.align || "center";
   const background = props.background || "kit-bg-smoke-light";
+  const seatPriceFirstClass = props.seatPriceFirstClass || SEAT_PRICE_INVALID;
+  const seatPriceBusinessClass = props.seatPriceBusinessClass || SEAT_PRICE_INVALID;
+  const seatPriceEconomyClass = props.seatPriceEconomyClass || SEAT_PRICE_INVALID;
   const zIndex = props.zIndex || ZINDEX_DEFAULT;
 
   const departureTime = moment(flights.selected.flightDepartureTime).format('M/DD/YY | h:mm a');
@@ -39,7 +47,7 @@ const FlightModal = (props) => {
         <div className="row">
           <div className={props.className || ""} style={props.style}>
             <div className="row">
-              
+
               {/* Close Button */}
               <FlexRow>
                 <button
@@ -108,7 +116,7 @@ const FlightModal = (props) => {
                   {/* First Class */}
                   <button className="btn btn-dark rounded m-2"
                     style={{minWidth:"7rem", maxWidth:"30%"}}
-                    onClick={() => props.onSelectSeat(true)}
+                    onClick={() => props.onSelectSeatType(seatPriceFirstClass)}
                   >
                     <FlexColumn>
                       {/* Label */}
@@ -125,7 +133,7 @@ const FlightModal = (props) => {
                       </svg>
 
                       {/* Price */}
-                      <div>$1200</div>
+                      <div>{seatPriceFirstClass}</div>
                     </FlexColumn>
                   </button>
                   
@@ -133,7 +141,7 @@ const FlightModal = (props) => {
                   {/* Business Class */}
                   <button className="btn btn-dark rounded m-2"
                     style={{minWidth:"7rem", maxWidth:"30%"}}
-                    onClick={() => props.onSelectSeat(true)}
+                    onClick={() => props.onSelectSeatType(seatPriceBusinessClass)}
                   >
                     <FlexColumn>
                       {/* Label */}
@@ -150,14 +158,14 @@ const FlightModal = (props) => {
                       </svg>
                       
                       {/* Price */}
-                      <div>$700</div>
+                      <div>{seatPriceBusinessClass}</div>
                     </FlexColumn>
                   </button>
 
                   {/* Economy Class */}
                   <button className="btn btn-dark rounded m-2"
                     style={{minWidth:"7rem", maxWidth:"30%"}}
-                    onClick={() => props.onSelectSeat(true)}
+                    onClick={() => props.onSelectSeatType(seatPriceEconomyClass)}
                   >
                     <FlexColumn>
                       {/* Label */}
@@ -174,7 +182,7 @@ const FlightModal = (props) => {
                       </svg>
 
                       {/* Price */}
-                      <div>$239</div>
+                      <div>{seatPriceEconomyClass}</div>
                     </FlexColumn>
                   </button>
                 </FlexRow>

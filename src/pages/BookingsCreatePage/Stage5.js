@@ -15,14 +15,18 @@ const STYLE_INVALID = "is-invalid";
 const STYLE_VALID = "is-valid";
 
 const Stage5 = (props) => {
-  const { authentication, bookings, passengers } = Store.getState();
+  // @props: paymentConfirmation - string
+  // @props: paymentTitle - string
+
+  const { authentication, bookings } = Store.getState();
   const address = props.address || "";
   const dateOfBirth = props.dateOfBirth || "";
   const lastName = props.lastName || "";
   const email = props.email || "";
   const firstName = props.firstName || "";
-  const flightId = props.flightId || 0;
   const passportId = props.passportId || "";
+  const paymentConfirmation = props.paymentConfirmation || "";
+  const paymentTitle = props.paymentTitle || "Error";
   const phone = props.phone || "";
   const isVeteran = props.isVeteran || false;
   const sex = props.sex || "Unselected";
@@ -80,18 +84,6 @@ const Stage5 = (props) => {
     } else {
       setErrorMessage("");
       setValidFirstName("TRUE");
-    }
-  };
-
-  // FlightId
-  const validateAndSetFlightId = (value) => {
-    props.onFlightId(value);
-    if (value === 0) {
-      setErrorMessage("FlightId cannot be 0.");
-      setValidFlightId("FALSE");
-    } else {
-      setErrorMessage("");
-      setValidFlightId("TRUE");
     }
   };
 
@@ -160,7 +152,6 @@ const Stage5 = (props) => {
     validateAndSetDateOfBirth(dateOfBirth);
     validateAndSetEmail(email);
     validateAndSetFirstName(firstName);
-    validateAndSetFlightId(flightId);
     validateAndSetLastName(lastName);
     validateAndSetPassportId(passportId);
     validateAndSetPhone(phone);
@@ -247,6 +238,24 @@ const Stage5 = (props) => {
             {/* Default */}
             {bookings.create.resultsStatus !== "SUCCESS" && (
               <div className="row">
+                {/* Payment Confirmation */}
+                <FlexRow
+                  className={`col-12 ${paymentConfirmation ? "bg-success" : "bg-danger"} rounded mb-3 p-2 kit-border-shadow-sm`}
+                  justify={"start"}
+                >
+                  <FlexColumn className={"bg-white rounded p-2"}>
+                    <h5 className={"text-info"}>
+                      {!paymentTitle.includes("Invalid") ? paymentTitle : "[Invalid Selection]"}
+                    </h5>
+                  </FlexColumn>
+                  <div className={"mt-2 w-100"}>
+                    <div className={"bg-white rounded p-2"}>
+                      <h5>{"Confirmation Code:"}</h5>
+                      {paymentConfirmation || "Payment error, please refresh the page."}
+                    </div>
+                  </div>
+                </FlexRow>
+
                 {/* FirstName */}
                 <div className="col-12 col-sm-6">
                   <label className="form-label">First Name</label>
@@ -389,7 +398,7 @@ const Stage5 = (props) => {
                 {/* Confirm Button */}
                 <FlexRow className="w-100">
                   <button
-                    className="btn btn-success btn-lg text-white kit-border-shadow-thin"
+                    className="btn btn-success btn-lg text-white ml-auto mr-3 kit-border-shadow-thin"
                     onClick={() => handleSubmit()}
                   >
                     Confirm
@@ -400,6 +409,7 @@ const Stage5 = (props) => {
           </div>
         </div>{" "}
         {/* Card End */}
+
         {/* Redirects */}
         {redirectToHome && <Redirect to={Constants.pagePaths.home} />}
       </div>

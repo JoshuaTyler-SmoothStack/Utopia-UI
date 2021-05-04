@@ -22,9 +22,9 @@ const Stage2 = (props) => {
     <FlexRow className={props.className || ""} justify="around" style={props.style}>
 
       {/* Passport ID */}
-      <FlexColumn className="w-100">
+      <FlexColumn className="col-12 mt-3">
         <InputText
-          className="rounded kit-border-shadow m-3"
+          className="rounded kit-border-shadow"
           label={"Passport ID Number"}
           labelClassName={"text-info"}
           fontClass={"h4"}
@@ -40,10 +40,10 @@ const Stage2 = (props) => {
       </FlexColumn>
 
       {/* Address */}
-      <FlexRow className="w-100">
+      <FlexRow className="col-12 mt-3">
         {/* Address */}
         <InputText
-          className="rounded kit-border-shadow m-3"
+          className="rounded kit-border-shadow"
           label={"Address"}
           labelClassName={"text-info"}
           fontClass={"h4"}
@@ -59,13 +59,13 @@ const Stage2 = (props) => {
       </FlexRow>
 
       {/* Passenger Information */}
-      <FlexColumn className="w-100">
-        <FlexRow className="w-75">
+      <FlexColumn className="col-12">
+        <FlexRow className="row">
 
           {/* Date Of Birth */}
-          <FlexColumn className="mr-auto">
-            <label className="form-label mr-auto">Date Of Birth</label>
-            <input 
+          <FlexColumn className="col-7">
+            <label className="form-label mr-auto">Date of Birth</label>
+            <input
               className={"form-control"}
               type="date"
               value={dateOfBirth}
@@ -74,7 +74,7 @@ const Stage2 = (props) => {
           </FlexColumn>
 
           {/* Sex */}
-          <FlexColumn className="ml-3 mr-5">
+          <FlexColumn className="col-5">
             <label className="form-label mr-auto">Sex</label>
             <DropDown
               align="right"
@@ -89,7 +89,7 @@ const Stage2 = (props) => {
         </FlexRow>
 
         {/* Veteran Status */}
-        <FlexRow className="w-100" wrap="no-wrap">
+        <FlexRow className="col-12" wrap="no-wrap">
           <FlexRow justify="start" style={{width:"2rem"}}>
             <input
               className="form-check-input ml-1"

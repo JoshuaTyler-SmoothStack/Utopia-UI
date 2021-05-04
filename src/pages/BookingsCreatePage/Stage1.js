@@ -17,9 +17,9 @@ const Stage1 = (props) => {
   const onEmail = props.onEmail || null;
 
   return (
-    <FlexRow className={props.className || ""} justify="around" style={props.style}>
+    <div className={props.className || "row"} justify={"around"} wrap={"no-wrap"} style={props.style}>
       {/* User Login */}
-      <FlexColumn>
+      <FlexColumn className={"col-12 col-md-5 text-center"}>
         <h5>Already have an account?</h5>
         <button className="btn btn-primary"
           onClick={() => AuthenticationDispatcher.onPromptLogin()}
@@ -30,13 +30,18 @@ const Stage1 = (props) => {
 
       {/* Divider */}
       {breakPoint.includes("small")
-        ? <hr className="w-100 mt-2"></hr>
-        : <div className="bg-light rounded h-100" style={{minHeight:"20rem", width:"0.5rem"}}/>
+        ? <hr className="col-12 mt-2"></hr>
+        : <div className="col-2">
+            <div className="bg-light rounded" style={{minHeight:"20rem", width:"0.5rem"}}/>
+          </div>
       }
 
       {/* Guest Information */}
-      <FlexColumn wrap="no-wrap">
-        <h5>Create a Booking as a guest</h5>
+      <FlexColumn
+        className={"col-12 col-md-5 text-center"}
+        wrap={"no-wrap"}
+      >
+        <h5>Create a booking as a guest</h5>
 
         {/* First Name */}
         <InputText
@@ -83,7 +88,7 @@ const Stage1 = (props) => {
           onChange={(value) => onEmail(value)}
         />
       </FlexColumn>
-    </FlexRow>
+    </div>
   );
 };
 export default Stage1;
