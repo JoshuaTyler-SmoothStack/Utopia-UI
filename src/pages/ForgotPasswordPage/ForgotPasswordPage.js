@@ -87,7 +87,7 @@ const ForgotPasswordPage = (props) => {
                 {/* Pending */}
                 {loading &&
                   <FlexColumn>
-                    <h3 className="text-dark kit-text-shadow-thin">
+                    <h3 className="text-dark kit-text-shadow-dark">
                       Sending email . . .
                       </h3>
                     <FlexRow>
@@ -99,7 +99,7 @@ const ForgotPasswordPage = (props) => {
                 {/* Success */}
                 {isSuccess &&
                   <FlexColumn>
-                    <h3 className="text-success kit-text-shadow-thin">
+                    <h3 className="text-success kit-text-shadow-dark">
                       Email Sent!
                       </h3>
                     <FlexRow>

@@ -71,7 +71,7 @@ class FlightsDebug extends Component {
                   }
                 />
                 <button
-                  className="btn btn-success ml-2 text-white kit-text-shadow-thin"
+                  className="btn btn-success ml-2 text-white kit-text-shadow-dark"
                   type="submit"
                   onClick={() =>
                     FlightsDispatcher.onSearchAndFilter(
@@ -493,7 +493,7 @@ class FlightsDebug extends Component {
               <th scope="col" colSpan="2">
                 <FlexRow>
                   <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
+                    className="btn btn-success text-white kit-text-shadow-dark"
                     style={{ whiteSpace: "nowrap" }}
                     onClick={() => FlightsDispatcher.onPromptCreate()}
                   >

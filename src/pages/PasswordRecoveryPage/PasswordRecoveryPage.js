@@ -151,7 +151,7 @@ const PasswordRecoveryPage = (props) => {
               {/* Success */}
               {success && (
                 <FlexColumn>
-                  <h3 className="text-success kit-text-shadow-thin">
+                  <h3 className="text-success kit-text-shadow-dark">
                     Password Updated!
                   </h3>
                   <FlexRow>
@@ -210,7 +210,7 @@ const PasswordRecoveryPage = (props) => {
                 {/* Submit */}
                 {!success && (
                   <button
-                    className="btn btn-success text-white kit-text-shadow-thin"
+                    className="btn btn-success text-white kit-text-shadow-dark"
                     onClick={(e) => handleSubmit(e)}
                   >
                     + Save Password

@@ -73,7 +73,7 @@ class StartupPage extends Component {
         <FlexRow>
           <a 
             href="https://github.com/JoshuaTyler-SmoothStack/Utopia-UI" 
-            className="h5 kit-link kit-text-shadow-thin mb-2"
+            className="h5 kit-link kit-text-shadow-dark mb-2"
           >
             {"©2021 Utopia Airlines"}
           </a>

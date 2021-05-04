@@ -37,7 +37,7 @@ class PageNotFoundPage extends Component {
               {/* Button */}
               <FlexRow justify="end">
                 <Link to="/home">
-                  <button className="btn btn-success text-white kit-text-shadow-thin">
+                  <button className="btn btn-success text-white kit-text-shadow-dark">
                     Home
                   </button>
                 </Link>

@@ -37,11 +37,6 @@ class BookingsCreatePage extends Component {
     const { authentication, breakPoint } = Store.getState();
     const {
       address,
-      cardAddress,
-      cardExpiration,
-      cardHolderName,
-      cardNumber,
-      cardSecurityCode,
       currentStage,
       dateOfBirth,
       email,
@@ -83,7 +78,7 @@ class BookingsCreatePage extends Component {
                     stage={currentStage}
                     stageCount={stageCount}
                     stageNames={stageNames}
-                    stageNamesClassName={"text-white text-center kit-text-shadow-thin"}
+                    stageNamesClassName={"text-white text-center kit-text-shadow-dark"}
                     stageClassName={"bg-light rounded"}
                     stageSelectedClassName={"bg-primary rounded"}
                     stageOnClick={(stageNumber) => this.setState({currentStage: stageNumber})}
@@ -135,17 +130,7 @@ class BookingsCreatePage extends Component {
                 {/* Pay for Booking */}
                 {selectedStage === 4 &&
                   <Stage4 className={"col-12 col-sm-10 col-md-8"}
-                    cardAddress={cardAddress}
-                    cardExpiration={cardExpiration}
-                    cardHolderName={cardHolderName}
-                    cardNumber={cardNumber}
-                    cardSecurityCode={cardSecurityCode}
-                    passengerAddress={address}
-                    onCardAddress={(value) => this.setState({cardAddress: value})}
-                    onCardExpiration={(value) => this.setState({cardExpiration: value})}
-                    onCardHolderName={(value) => this.setState({cardHolderName: value})}
-                    onCardNumber={(value) => this.setState({cardNumber: value})}
-                    onCardSecurityCode={(value) => this.setState({cardSecurityCode: value})}
+                    onPayment={(payment) => this.handlePageNext()}
                   />
                 }
 
@@ -179,19 +164,13 @@ class BookingsCreatePage extends Component {
                 {/* Previous & Next Buttons */}
                 <FlexRow className="col-12 col-md-6 mt-3 bg-light rounded p-2" justify="around">
                   <button className={("btn btn-dark ") + (currentStage === 1 && "disabled")}
-                    onClick={() => {
-                      this.setState({currentStage: Math.max(currentStage-1, 1)});
-                      if(currentStage === 1) KitUtils.soundAlert();
-                    }}
+                    onClick={() => this.handlePagePrevious()}
                   >
                     Previous
                   </button>
 
                   <button className={("btn btn-dark ") + (currentStage === stageCount && "disabled")}
-                    onClick={() => {
-                      this.setState({currentStage: Math.min(currentStage+1, stageCount)});
-                      if(currentStage === stageCount) KitUtils.soundAlert();
-                    }}
+                    onClick={() => this.handlePageNext()}
                   >
                     Next
                   </button>
@@ -209,6 +188,18 @@ class BookingsCreatePage extends Component {
   componentDidMount() {
     const { airports } = Store.getState();
     if(!airports.search.results) AirportsDispatcher.onRequest();
+  }
+
+  handlePageNext() {
+    const { currentStage, stageCount } = this.state;
+    this.setState({currentStage: Math.min(currentStage + 1, stageCount)});
+    if(currentStage === stageCount) KitUtils.soundAlert();
+  }
+
+  handlePagePrevious() {
+    const { currentStage } = this.state;
+    this.setState({currentStage: Math.max(currentStage - 1, 1)});
+    if(currentStage === 1) KitUtils.soundAlert();
   }
 
   handleSubmit = () => {
