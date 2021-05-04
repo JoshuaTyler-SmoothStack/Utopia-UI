@@ -14,7 +14,7 @@ class PageNotFoundPage extends Component {
 
   render() {
     return (
-      <div className="container-fluid" style={{ height: "100vh", width: "100vw",  overflowY: "hidden" }}>
+      <div className={"container-fluid"} style={{minHeight: "100vh", maxWidth:"1400px"}}>
         <div className="row">
 
           {/* Navbar */}

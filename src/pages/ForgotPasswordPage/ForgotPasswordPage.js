@@ -57,7 +57,7 @@ const ForgotPasswordPage = (props) => {
   };
 
   return (
-    <div className="container-fluid kit-bg-blue" style={{ minHeight: "100vh" }}>
+    <div className="container-fluid kit-bg-blue" style={{minHeight: "100vh", maxWidth:"1400px"}}>
       <div class="row">
 
         {/* Navbar */}

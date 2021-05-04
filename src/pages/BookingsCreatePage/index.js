@@ -62,7 +62,7 @@ class BookingsCreatePage extends Component {
       : ["Login/Guest", "Passeneger Info", "Regulations", "Payment", "Complete"];
 
     return (
-      <div className="container-fluid" style={{ height: "100vh", width: "100vw", maxWidth:"1400px",  overflow: "auto" }}>
+      <div className={"container-fluid"} style={{minHeight: "100vh", maxWidth:"1400px", overflow: "auto"}}>
         <div className="row">
 
           {/* Navbar */}

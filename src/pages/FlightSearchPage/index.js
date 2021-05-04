@@ -26,7 +26,7 @@ class FlightSearchPage extends Component {
     const { isActive_FlightModal, isActive_SeatingModal } = this.state;
 
     return (
-      <div className="container-fluid kit-bg-blue" style={{minHeight: "100vh"}}>
+      <div className="container-fluid kit-bg-blue" style={{minHeight: "100vh", maxWidth:"1400px", overflow: "auto"}}>
         <div className="row">
 
           {/* Navbar */}

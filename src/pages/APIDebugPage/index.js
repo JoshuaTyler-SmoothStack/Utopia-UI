@@ -25,7 +25,7 @@ class APIDebugPage extends Component {
   render() {
     const { activeDisplay } = this.state;
     return (
-      <div className="container-fluid">
+      <div className={"container-fluid"} style={{minHeight: "100vh", maxWidth:"1400px", overflow: "auto"}}>
         <div className="row">
           {/* Navbar */}
           <NavBar className="col-12" />
