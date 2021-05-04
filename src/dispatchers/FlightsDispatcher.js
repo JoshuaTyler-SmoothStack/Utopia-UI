@@ -36,7 +36,6 @@ class FlightsDispatcher extends BaseDispatcher {
       }
     }
 
-    console.log(activeFilters);
     Orchestration.createRequestWithBody(
       Constants.httpRequest.post,
       this.getApiPath() + httpPath,
@@ -54,6 +53,7 @@ class FlightsDispatcher extends BaseDispatcher {
             payload: httpResponseBody.error,
           });
         } else {
+          this.onSelectItemsPage(1);
           Store.reduce({
             type: this.getConstantsParent().response,
             payload: httpResponseBody,

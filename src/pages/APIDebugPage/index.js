@@ -1,5 +1,6 @@
 // Libraries
 import React, { Component } from "react";
+import Store from "../../reducers/Store";
 
 // Components
 import AirplanesDebug from "./displays/AirplanesDebug";
@@ -23,7 +24,10 @@ class APIDebugPage extends Component {
   }
 
   render() {
+    const { breakPoint } = Store.getState();
     const { activeDisplay } = this.state;
+    const isSmallDisplay = breakPoint.includes("small");
+
     return (
       <div className={"container-fluid"} style={{minHeight: "100vh", maxWidth:"1400px", overflow: "auto"}}>
         <div className="row">
@@ -32,7 +36,7 @@ class APIDebugPage extends Component {
 
           {/* Siderbar */}
           <LocalSidebar
-            className={"col-4 col-md-2 col-xl-1 p-0"}
+            className={"col-4 col-md-2 col-xl-1"}
             style={{ position: "absolute", zIndex: "1", top: "4rem" }}
             activeDisplay={activeDisplay}
             onSelectDisplay={(e) => this.setState({ activeDisplay: e })}
@@ -40,8 +44,8 @@ class APIDebugPage extends Component {
           />
 
           {/* Content */}
-          <div className="col-0 col-md-2 col-xl-1 bg-dark" />
-          <div className="col-12 col-md-10 col-xl-11">
+          {!isSmallDisplay && <div className={"col-md-2 col-xl-1 bg-dark"}/>}
+          <div className={"col-12 col-md-10 col-xl-11"}>
             {/* Debug Displays */}
             {activeDisplay === "AIRPLANES" && <AirplanesDebug/>}
             {activeDisplay === "AIRPORTS" && <AirportsDebug/>}

@@ -196,7 +196,10 @@ class BaseDispatcher {
       this.getApiPath() + httpPath,
       activeFilters,
       (httpError) => this.onError(httpError),
-      (httpResponseBody) => this.onResponse(httpResponseBody)
+      (httpResponseBody) => {
+        this.onSelectItemsPage(1);
+        this.onResponse(httpResponseBody);
+      }
     );
   }
 
