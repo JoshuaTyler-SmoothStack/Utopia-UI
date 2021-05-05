@@ -48,7 +48,7 @@ const LocalSidebar = (props) => {
             </FlexColumn>
           )}
 
-          <ul className="navbar-nav rounded-bottom p-0 bg-dark overflow-hidden kit-border-shadow kit-no-user">
+          <ul className="navbar-nav rounded-bottom p-0 bg-dark overflow-hidden kit-no-user">
             {/* Airplanes */}
             <li
               className={
